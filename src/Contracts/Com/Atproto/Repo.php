@@ -20,70 +20,110 @@ interface Repo
     /**
      * Apply a batch transaction of repository creates, updates, and deletes. Requires auth, implemented by PDS.
      *
-     * method: post
+     * ```
+     * POST com.atproto.repo.applyWrites
+     * ```
+     *
+     * @see https://docs.bsky.app/docs/api/com-atproto-repo-apply-writes
      */
     public function applyWrites(string $repo, array $writes, ?bool $validate = null, ?string $swapCommit = null);
 
     /**
      * Create a single new repository record. Requires auth, implemented by PDS.
      *
-     * method: post
+     * ```
+     * POST com.atproto.repo.createRecord
+     * ```
+     *
+     * @see https://docs.bsky.app/docs/api/com-atproto-repo-create-record
      */
     public function createRecord(string $repo, string $collection, mixed $record, ?string $rkey = null, ?bool $validate = null, ?string $swapCommit = null);
 
     /**
      * Delete a repository record, or ensure it doesn't exist. Requires auth, implemented by PDS.
      *
-     * method: post
+     * ```
+     * POST com.atproto.repo.deleteRecord
+     * ```
+     *
+     * @see https://docs.bsky.app/docs/api/com-atproto-repo-delete-record
      */
     public function deleteRecord(string $repo, string $collection, string $rkey, ?string $swapRecord = null, ?string $swapCommit = null);
 
     /**
      * Get information about an account and repository, including the list of collections. Does not require auth.
      *
-     * method: get
+     * ```
+     * GET com.atproto.repo.describeRepo
+     * ```
+     *
+     * @see https://docs.bsky.app/docs/api/com-atproto-repo-describe-repo
      */
     public function describeRepo(string $repo);
 
     /**
      * Get a single record from a repository. Does not require auth.
      *
-     * method: get
+     * ```
+     * GET com.atproto.repo.getRecord
+     * ```
+     *
+     * @see https://docs.bsky.app/docs/api/com-atproto-repo-get-record
      */
     public function getRecord(string $repo, string $collection, string $rkey, ?string $cid = null);
 
     /**
      * Import a repo in the form of a CAR file. Requires Content-Length HTTP header to be set.
      *
-     * method: post
+     * ```
+     * POST com.atproto.repo.importRepo
+     * ```
+     *
+     * @see https://docs.bsky.app/docs/api/com-atproto-repo-import-repo
      */
     public function importRepo();
 
     /**
      * Returns a list of missing blobs for the requesting account. Intended to be used in the account migration flow.
      *
-     * method: get
+     * ```
+     * GET com.atproto.repo.listMissingBlobs
+     * ```
+     *
+     * @see https://docs.bsky.app/docs/api/com-atproto-repo-list-missing-blobs
      */
     public function listMissingBlobs(?int $limit = 500, ?string $cursor = null);
 
     /**
      * List a range of records in a repository, matching a specific collection. Does not require auth.
      *
-     * method: get
+     * ```
+     * GET com.atproto.repo.listRecords
+     * ```
+     *
+     * @see https://docs.bsky.app/docs/api/com-atproto-repo-list-records
      */
     public function listRecords(string $repo, string $collection, ?int $limit = 50, ?string $cursor = null, ?string $rkeyStart = null, ?string $rkeyEnd = null, ?bool $reverse = null);
 
     /**
      * Write a repository record, creating or updating it as needed. Requires auth, implemented by PDS.
      *
-     * method: post
+     * ```
+     * POST com.atproto.repo.putRecord
+     * ```
+     *
+     * @see https://docs.bsky.app/docs/api/com-atproto-repo-put-record
      */
     public function putRecord(string $repo, string $collection, string $rkey, mixed $record, ?bool $validate = null, ?string $swapRecord = null, ?string $swapCommit = null);
 
     /**
      * Upload a new blob, to be referenced from a repository record. The blob will be deleted if it is not referenced within a time window (eg, minutes). Blob restrictions (mimetype, size, etc) are enforced when the reference is created. Requires auth, implemented by PDS.
      *
-     * method: post
+     * ```
+     * POST com.atproto.repo.uploadBlob
+     * ```
+     *
+     * @see https://docs.bsky.app/docs/api/com-atproto-repo-upload-blob
      */
     public function uploadBlob();
 }

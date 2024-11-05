@@ -10,16 +10,24 @@ interface Actor
     public const exportAccountData = 'chat.bsky.actor.exportAccountData';
 
     /**
-     * chat.bsky.actor.deleteAccount
+     * chat.bsky.actor.deleteAccount.
      *
-     * method: post
+     * ```
+     * POST chat.bsky.actor.deleteAccount
+     * ```
+     *
+     * @see https://docs.bsky.app/docs/api/chat-bsky-actor-delete-account
      */
     public function deleteAccount();
 
     /**
-     * chat.bsky.actor.exportAccountData
+     * chat.bsky.actor.exportAccountData.
      *
-     * method: get
+     * ```
+     * GET chat.bsky.actor.exportAccountData
+     * ```
+     *
+     * @see https://docs.bsky.app/docs/api/chat-bsky-actor-export-account-data
      */
     public function exportAccountData();
 }

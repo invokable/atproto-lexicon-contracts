@@ -30,140 +30,220 @@ interface Graph
     /**
      * Get a list of starter packs created by the actor.
      *
-     * method: get
+     * ```
+     * GET app.bsky.graph.getActorStarterPacks
+     * ```
+     *
+     * @see https://docs.bsky.app/docs/api/app-bsky-graph-get-actor-starter-packs
      */
     public function getActorStarterPacks(string $actor, ?int $limit = 50, ?string $cursor = null);
 
     /**
      * Enumerates which accounts the requesting account is currently blocking. Requires auth.
      *
-     * method: get
+     * ```
+     * GET app.bsky.graph.getBlocks
+     * ```
+     *
+     * @see https://docs.bsky.app/docs/api/app-bsky-graph-get-blocks
      */
     public function getBlocks(?int $limit = 50, ?string $cursor = null);
 
     /**
      * Enumerates accounts which follow a specified account (actor).
      *
-     * method: get
+     * ```
+     * GET app.bsky.graph.getFollowers
+     * ```
+     *
+     * @see https://docs.bsky.app/docs/api/app-bsky-graph-get-followers
      */
     public function getFollowers(string $actor, ?int $limit = 50, ?string $cursor = null);
 
     /**
      * Enumerates accounts which a specified account (actor) follows.
      *
-     * method: get
+     * ```
+     * GET app.bsky.graph.getFollows
+     * ```
+     *
+     * @see https://docs.bsky.app/docs/api/app-bsky-graph-get-follows
      */
     public function getFollows(string $actor, ?int $limit = 50, ?string $cursor = null);
 
     /**
      * Enumerates accounts which follow a specified account (actor) and are followed by the viewer.
      *
-     * method: get
+     * ```
+     * GET app.bsky.graph.getKnownFollowers
+     * ```
+     *
+     * @see https://docs.bsky.app/docs/api/app-bsky-graph-get-known-followers
      */
     public function getKnownFollowers(string $actor, ?int $limit = 50, ?string $cursor = null);
 
     /**
      * Gets a 'view' (with additional context) of a specified list.
      *
-     * method: get
+     * ```
+     * GET app.bsky.graph.getList
+     * ```
+     *
+     * @see https://docs.bsky.app/docs/api/app-bsky-graph-get-list
      */
     public function getList(string $list, ?int $limit = 50, ?string $cursor = null);
 
     /**
      * Get mod lists that the requesting account (actor) is blocking. Requires auth.
      *
-     * method: get
+     * ```
+     * GET app.bsky.graph.getListBlocks
+     * ```
+     *
+     * @see https://docs.bsky.app/docs/api/app-bsky-graph-get-list-blocks
      */
     public function getListBlocks(?int $limit = 50, ?string $cursor = null);
 
     /**
      * Enumerates mod lists that the requesting account (actor) currently has muted. Requires auth.
      *
-     * method: get
+     * ```
+     * GET app.bsky.graph.getListMutes
+     * ```
+     *
+     * @see https://docs.bsky.app/docs/api/app-bsky-graph-get-list-mutes
      */
     public function getListMutes(?int $limit = 50, ?string $cursor = null);
 
     /**
      * Enumerates the lists created by a specified account (actor).
      *
-     * method: get
+     * ```
+     * GET app.bsky.graph.getLists
+     * ```
+     *
+     * @see https://docs.bsky.app/docs/api/app-bsky-graph-get-lists
      */
     public function getLists(string $actor, ?int $limit = 50, ?string $cursor = null);
 
     /**
      * Enumerates accounts that the requesting account (actor) currently has muted. Requires auth.
      *
-     * method: get
+     * ```
+     * GET app.bsky.graph.getMutes
+     * ```
+     *
+     * @see https://docs.bsky.app/docs/api/app-bsky-graph-get-mutes
      */
     public function getMutes(?int $limit = 50, ?string $cursor = null);
 
     /**
      * Enumerates public relationships between one account, and a list of other accounts. Does not require auth.
      *
-     * method: get
+     * ```
+     * GET app.bsky.graph.getRelationships
+     * ```
+     *
+     * @see https://docs.bsky.app/docs/api/app-bsky-graph-get-relationships
      */
     public function getRelationships(string $actor, ?array $others = null);
 
     /**
      * Gets a view of a starter pack.
      *
-     * method: get
+     * ```
+     * GET app.bsky.graph.getStarterPack
+     * ```
+     *
+     * @see https://docs.bsky.app/docs/api/app-bsky-graph-get-starter-pack
      */
     public function getStarterPack(string $starterPack);
 
     /**
      * Get views for a list of starter packs.
      *
-     * method: get
+     * ```
+     * GET app.bsky.graph.getStarterPacks
+     * ```
+     *
+     * @see https://docs.bsky.app/docs/api/app-bsky-graph-get-starter-packs
      */
     public function getStarterPacks(array $uris);
 
     /**
      * Enumerates follows similar to a given account (actor). Expected use is to recommend additional accounts immediately after following one account.
      *
-     * method: get
+     * ```
+     * GET app.bsky.graph.getSuggestedFollowsByActor
+     * ```
+     *
+     * @see https://docs.bsky.app/docs/api/app-bsky-graph-get-suggested-follows-by-actor
      */
     public function getSuggestedFollowsByActor(string $actor);
 
     /**
      * Creates a mute relationship for the specified account. Mutes are private in Bluesky. Requires auth.
      *
-     * method: post
+     * ```
+     * POST app.bsky.graph.muteActor
+     * ```
+     *
+     * @see https://docs.bsky.app/docs/api/app-bsky-graph-mute-actor
      */
     public function muteActor(string $actor);
 
     /**
      * Creates a mute relationship for the specified list of accounts. Mutes are private in Bluesky. Requires auth.
      *
-     * method: post
+     * ```
+     * POST app.bsky.graph.muteActorList
+     * ```
+     *
+     * @see https://docs.bsky.app/docs/api/app-bsky-graph-mute-actor-list
      */
     public function muteActorList(string $list);
 
     /**
      * Mutes a thread preventing notifications from the thread and any of its children. Mutes are private in Bluesky. Requires auth.
      *
-     * method: post
+     * ```
+     * POST app.bsky.graph.muteThread
+     * ```
+     *
+     * @see https://docs.bsky.app/docs/api/app-bsky-graph-mute-thread
      */
     public function muteThread(string $root);
 
     /**
      * Unmutes the specified account. Requires auth.
      *
-     * method: post
+     * ```
+     * POST app.bsky.graph.unmuteActor
+     * ```
+     *
+     * @see https://docs.bsky.app/docs/api/app-bsky-graph-unmute-actor
      */
     public function unmuteActor(string $actor);
 
     /**
      * Unmutes the specified list of accounts. Requires auth.
      *
-     * method: post
+     * ```
+     * POST app.bsky.graph.unmuteActorList
+     * ```
+     *
+     * @see https://docs.bsky.app/docs/api/app-bsky-graph-unmute-actor-list
      */
     public function unmuteActorList(string $list);
 
     /**
      * Unmutes the specified thread. Requires auth.
      *
-     * method: post
+     * ```
+     * POST app.bsky.graph.unmuteThread
+     * ```
+     *
+     * @see https://docs.bsky.app/docs/api/app-bsky-graph-unmute-thread
      */
     public function unmuteThread(string $root);
 }

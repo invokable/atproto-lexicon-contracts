@@ -14,28 +14,44 @@ interface Communication
     /**
      * Administrative action to create a new, re-usable communication (email for now) template.
      *
-     * method: post
+     * ```
+     * POST tools.ozone.communication.createTemplate
+     * ```
+     *
+     * @see https://docs.bsky.app/docs/api/tools-ozone-communication-create-template
      */
     public function createTemplate(string $name, string $contentMarkdown, string $subject, ?string $lang = null, ?string $createdBy = null);
 
     /**
      * Delete a communication template.
      *
-     * method: post
+     * ```
+     * POST tools.ozone.communication.deleteTemplate
+     * ```
+     *
+     * @see https://docs.bsky.app/docs/api/tools-ozone-communication-delete-template
      */
     public function deleteTemplate(string $id);
 
     /**
      * Get list of all communication templates.
      *
-     * method: get
+     * ```
+     * GET tools.ozone.communication.listTemplates
+     * ```
+     *
+     * @see https://docs.bsky.app/docs/api/tools-ozone-communication-list-templates
      */
     public function listTemplates();
 
     /**
      * Administrative action to update an existing communication template. Allows passing partial fields to patch specific fields only.
      *
-     * method: post
+     * ```
+     * POST tools.ozone.communication.updateTemplate
+     * ```
+     *
+     * @see https://docs.bsky.app/docs/api/tools-ozone-communication-update-template
      */
     public function updateTemplate(string $id, ?string $name = null, ?string $lang = null, ?string $contentMarkdown = null, ?string $subject = null, ?string $updatedBy = null, ?bool $disabled = null);
 }

@@ -11,7 +11,11 @@ interface Server
     /**
      * Get details about ozone's server configuration.
      *
-     * method: get
+     * ```
+     * GET tools.ozone.server.getConfig
+     * ```
+     *
+     * @see https://docs.bsky.app/docs/api/tools-ozone-server-get-config
      */
     public function getConfig();
 }
