@@ -5,5 +5,16 @@ Auto generated pure PHP interface and enum that you can use to create your own c
 ## Requirements
 - PHP >= 8.2
 
+## Installation
+
+```shell
+composer require revolution/atproto-lexicon-contracts
+```
+
+### Uninstall
+```shell
+composer remove revolution/atproto-lexicon-contracts
+```
+
 ## LICENCE
 MIT
