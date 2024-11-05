@@ -16,5 +16,8 @@ composer require revolution/atproto-lexicon-contracts
 composer remove revolution/atproto-lexicon-contracts
 ```
 
+## Implementation
+- Laravel https://github.com/kawax/laravel-bluesky
+
 ## LICENCE
 MIT
