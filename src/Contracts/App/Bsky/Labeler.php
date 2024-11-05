@@ -11,7 +11,11 @@ interface Labeler
     /**
      * Get information about a list of labeler services.
      *
-     * method: get
+     * ```
+     * GET app.bsky.labeler.getServices
+     * ```
+     *
+     * @see https://docs.bsky.app/docs/api/app-bsky-labeler-get-services
      */
     public function getServices(array $dids, ?bool $detailed = null);
 }

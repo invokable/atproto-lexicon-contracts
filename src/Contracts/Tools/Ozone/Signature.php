@@ -13,21 +13,33 @@ interface Signature
     /**
      * Find all correlated threat signatures between 2 or more accounts.
      *
-     * method: get
+     * ```
+     * GET tools.ozone.signature.findCorrelation
+     * ```
+     *
+     * @see https://docs.bsky.app/docs/api/tools-ozone-signature-find-correlation
      */
     public function findCorrelation(array $dids);
 
     /**
      * Get accounts that share some matching threat signatures with the root account.
      *
-     * method: get
+     * ```
+     * GET tools.ozone.signature.findRelatedAccounts
+     * ```
+     *
+     * @see https://docs.bsky.app/docs/api/tools-ozone-signature-find-related-accounts
      */
     public function findRelatedAccounts(string $did, ?string $cursor = null, ?int $limit = 50);
 
     /**
      * Search for accounts that match one or more threat signature values.
      *
-     * method: get
+     * ```
+     * GET tools.ozone.signature.searchAccounts
+     * ```
+     *
+     * @see https://docs.bsky.app/docs/api/tools-ozone-signature-search-accounts
      */
     public function searchAccounts(array $values, ?string $cursor = null, ?int $limit = 50);
 }

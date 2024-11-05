@@ -11,23 +11,35 @@ interface Moderation
     public const updateActorAccess = 'chat.bsky.moderation.updateActorAccess';
 
     /**
-     * chat.bsky.moderation.getActorMetadata
+     * chat.bsky.moderation.getActorMetadata.
      *
-     * method: get
+     * ```
+     * GET chat.bsky.moderation.getActorMetadata
+     * ```
+     *
+     * @see https://docs.bsky.app/docs/api/chat-bsky-moderation-get-actor-metadata
      */
     public function getActorMetadata(string $actor);
 
     /**
-     * chat.bsky.moderation.getMessageContext
+     * chat.bsky.moderation.getMessageContext.
      *
-     * method: get
+     * ```
+     * GET chat.bsky.moderation.getMessageContext
+     * ```
+     *
+     * @see https://docs.bsky.app/docs/api/chat-bsky-moderation-get-message-context
      */
     public function getMessageContext(string $messageId, ?string $convoId = null, ?int $before = 5, ?int $after = 5);
 
     /**
-     * chat.bsky.moderation.updateActorAccess
+     * chat.bsky.moderation.updateActorAccess.
      *
-     * method: post
+     * ```
+     * POST chat.bsky.moderation.updateActorAccess
+     * ```
+     *
+     * @see https://docs.bsky.app/docs/api/chat-bsky-moderation-update-actor-access
      */
     public function updateActorAccess(string $actor, bool $allowAccess, ?string $ref = null);
 }
