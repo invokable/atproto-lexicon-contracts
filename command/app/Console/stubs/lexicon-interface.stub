@@ -1,0 +1,12 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Revolution\AtProto\Lexicon\Contracts\{namespace};
+
+interface {name}
+{
+{const}
+
+{method}
+}

@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Console\LexiconContractsCommand;
+use App\Console\LexiconEnumCommand;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -19,6 +21,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        $this->commands([
+            LexiconEnumCommand::class,
+            LexiconContractsCommand::class,
+        ]);
     }
 }
