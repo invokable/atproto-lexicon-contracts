@@ -94,6 +94,7 @@ class LexiconContractsCommand extends Command
                 $class = $path->take(3)->implode('/');
 
                 $description = Arr::get($json, 'defs.main.description', $id);
+                $description = Str::rtrim($description, '.').'.';
 
                 // get/query parameters
                 $parameters = Arr::get($json, 'defs.main.parameters');
@@ -115,11 +116,11 @@ class LexiconContractsCommand extends Command
                     $class => collect([
                         'const' => ['name' => $name, 'id' => $id],
                         'method' => collect([
-                            "    /**",
+                            '    /**',
                             "     * $description",
-                            "     *",
+                            '     *',
                             "     * method: $type",
-                            "     */",
+                            '     */',
                             "    public function $name($params);",
                         ])->implode(PHP_EOL),
                     ]),
