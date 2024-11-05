@@ -112,6 +112,8 @@ class LexiconContractsCommand extends Command
                     default => throw new RuntimeException(),
                 };
 
+                $docs = Str::of($id)->replace('.', '-')->snake('-')->toString();
+
                 return [
                     $class => collect([
                         'const' => ['name' => $name, 'id' => $id],
@@ -119,7 +121,11 @@ class LexiconContractsCommand extends Command
                             '    /**',
                             "     * $description",
                             '     *',
-                            "     * method: $type",
+                            '     * ```',
+                            '     * '.Str::upper($type).' '.$id,
+                            '     * ```',
+                            '     *',
+                            '     * @see https://docs.bsky.app/docs/api/'.$docs,
                             '     */',
                             "    public function $name($params);",
                         ])->implode(PHP_EOL),
