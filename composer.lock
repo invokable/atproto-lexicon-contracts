@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "589cc0f65c3aaa7d4e9024d545bc1974",
+    "content-hash": "28f686ba589475e79259f95bfe1fa018",
     "packages": [
         {
             "name": "brick/math",
@@ -6784,6 +6784,61 @@
                 }
             ],
             "time": "2024-10-28T13:07:50+00:00"
+        },
+        {
+            "name": "revolution/laravel-slim",
+            "version": "1.2.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/kawax/laravel-slim.git",
+                "reference": "f23f7d8b06210ce423616b00d410daa7f31587d5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/kawax/laravel-slim/zipball/f23f7d8b06210ce423616b00d410daa7f31587d5",
+                "reference": "f23f7d8b06210ce423616b00d410daa7f31587d5",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": "^11.0",
+                "php": "^8.2"
+            },
+            "require-dev": {
+                "orchestra/testbench": "^9.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Revolution\\Slim\\SlimServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Revolution\\Slim\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "kawax",
+                    "email": "kawaxbiz@gmail.com"
+                }
+            ],
+            "description": "Set up a Laravel project to console/api only.",
+            "keywords": [
+                "artisan",
+                "console",
+                "laravel"
+            ],
+            "support": {
+                "source": "https://github.com/kawax/laravel-slim/tree/1.2.2"
+            },
+            "time": "2024-09-18T10:14:37+00:00"
         },
         {
             "name": "sebastian/cli-parser",
