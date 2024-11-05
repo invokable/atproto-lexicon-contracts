@@ -112,9 +112,9 @@ class LexiconEnumCommand extends Command
                 $name = Str::studly($name);
 
                 return collect([
-                    "    /**",
+                    '    /**',
                     "     * $description",
-                    "     */",
+                    '     */',
                     "    case $name = '$file';",
                 ])->implode(PHP_EOL);
             }, PHP_EOL.PHP_EOL);
