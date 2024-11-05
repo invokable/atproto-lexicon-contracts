@@ -22,11 +22,11 @@ jobs:
           php-version: '8.3'
           extensions: 'mbstring'
           coverage: none
+      - name: submodule update
+        run: git submodule update --remote
       - name: Install Composer dependencies
         run: composer install -q
         working-directory: ./command
-      - name: submodule update
-        run: git submodule update --remote
       - name: lexicon update
         run: composer run lexicon
         working-directory: ./command
