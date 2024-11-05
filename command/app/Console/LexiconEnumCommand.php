@@ -83,9 +83,9 @@ class LexiconEnumCommand extends Command
                 $id = Arr::get($json, 'id');
 
                 return collect([
-                    "    /**",
+                    '    /**',
                     "     * $description",
-                    "     */",
+                    '     */',
                     "    case $name = '$id';",
                 ])->implode(PHP_EOL);
             }, PHP_EOL.PHP_EOL);
