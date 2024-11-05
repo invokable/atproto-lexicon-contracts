@@ -1,6 +1,6 @@
 {
   "name": "revolution/atproto-lexicon-contracts",
-  "description": "AtProto Lexicon Contracts",
+  "description": "Auto generated pure PHP interface and enum",
   "keywords": [
     "atproto",
     "bluesky",
