@@ -205,11 +205,11 @@ class LexiconContractsCommand extends Command
         $path = Str::of($class)->explode('/')->map(fn ($item) => Str::studly($item));
 
         // "App/Bsky/Actor"
-        $file_path = $path->take(3)->implode("/");
+        $file_path = $path->take(3)->implode('/');
         // "Actor"
         $name = $path->last();
         // "App/Bsky/"
-        $namespace = $path->take(2)->implode("\\");
+        $namespace = $path->take(2)->implode('\\');
 
         $method = $contracts->implode('method', PHP_EOL.PHP_EOL);
 
