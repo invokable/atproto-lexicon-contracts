@@ -112,7 +112,11 @@ class LexiconContractsCommand extends Command
                     default => throw new RuntimeException(),
                 };
 
-                $docs = Str::of($id)->replace('.', '-')->snake('-')->toString();
+                $docs_url = Str::of($id)
+                    ->replace('.', '-')
+                    ->snake('-')
+                    ->prepend('https://docs.bsky.app/docs/api/')
+                    ->toString();
 
                 return [
                     $class => collect([
@@ -125,7 +129,7 @@ class LexiconContractsCommand extends Command
                             '     * '.Str::upper($type).' '.$id,
                             '     * ```',
                             '     *',
-                            '     * @see https://docs.bsky.app/docs/api/'.$docs,
+                            '     * @see '.$docs_url,
                             '     */',
                             "    public function $name($params);",
                         ])->implode(PHP_EOL),
