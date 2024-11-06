@@ -59,6 +59,7 @@ class LexiconEnumCommand extends Command
 
         $this->embed();
         $this->facet();
+        $this->feed();
 
         return 0;
     }
@@ -121,6 +122,36 @@ class LexiconEnumCommand extends Command
 
         $this->save($enum, 'Facet');
     }
+
+    protected function feed(): void
+    {
+        $enum = collect($this->files)
+            ->filter(fn (string $file) => Str::contains($file, '/app/bsky/feed'))
+            ->mapWithKeys(fn (string $file) => [Str::of($file)->basename()->chopEnd('.json')->studly()->toString() => $file])
+            ->map(function (string $file) {
+                $json = File::json($file);
+
+                $type = Arr::get($json, 'defs.main.type');
+                if ($type === 'record') {
+                    return $json;
+                }
+            })
+            ->filter(fn ($json) => is_array($json))
+            ->implode(function (array $json, string $name) {
+                $description = Arr::get($json, 'defs.main.description');
+                $id = Arr::get($json, 'id');
+
+                return collect([
+                    '    /**',
+                    "     * $description",
+                    '     */',
+                    "    case $name = '$id';",
+                ])->implode(PHP_EOL);
+            }, PHP_EOL.PHP_EOL);
+
+        $this->save($enum, 'Feed');
+    }
+
 
     protected function save(string $enum, string $name): void
     {
