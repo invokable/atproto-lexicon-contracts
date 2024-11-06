@@ -57,7 +57,7 @@ class LexiconContractsCommand extends Command
         $this->php_path = realpath(__DIR__.'/../../../src/Contracts/');
         $this->json_path = realpath(__DIR__.'/../../../atproto/lexicons/');
 
-        File::deleteDirectories($this->php_path);
+        File::cleanDirectory($this->php_path);
 
         $this->files = File::allFiles($this->json_path);
 
