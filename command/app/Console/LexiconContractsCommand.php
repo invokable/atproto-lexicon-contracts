@@ -240,5 +240,7 @@ class LexiconContractsCommand extends Command
         $file_path = $this->php_path."/$file_path.php";
         File::ensureDirectoryExists(dirname($file_path));
         File::put($file_path, $tmp);
+
+        $this->info($file_path);
     }
 }
