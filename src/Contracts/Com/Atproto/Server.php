@@ -74,7 +74,7 @@ interface Server
      *
      * @see https://docs.bsky.app/docs/api/com-atproto-server-create-account
      */
-    public function createAccount(string $handle, ?string $email = null, ?string $did = null, ?string $inviteCode = null, ?string $verificationCode = null, ?string $verificationPhone = null, ?string $password = null, ?string $recoveryKey = null, mixed $plcOp = null);
+    public function createAccount(string $handle, ?string $email = null, ?string $did = null, ?string $inviteCode = null, ?string $verificationCode = null, ?string $verificationPhone = null, #[\SensitiveParameter] ?string $password = null, ?string $recoveryKey = null, mixed $plcOp = null);
 
     /**
      * Create an App Password.
@@ -118,7 +118,7 @@ interface Server
      *
      * @see https://docs.bsky.app/docs/api/com-atproto-server-create-session
      */
-    public function createSession(string $identifier, string $password, ?string $authFactorToken = null);
+    public function createSession(string $identifier, #[\SensitiveParameter] string $password, ?string $authFactorToken = null);
 
     /**
      * Deactivates a currently active account. Stops serving of repo, and future writes to repo until reactivated. Used to finalize account migration with the old host after the account has been activated on the new host.
@@ -140,7 +140,7 @@ interface Server
      *
      * @see https://docs.bsky.app/docs/api/com-atproto-server-delete-account
      */
-    public function deleteAccount(string $did, string $password, string $token);
+    public function deleteAccount(string $did, #[\SensitiveParameter] string $password, string $token);
 
     /**
      * Delete the current session. Requires auth.
@@ -283,7 +283,7 @@ interface Server
      *
      * @see https://docs.bsky.app/docs/api/com-atproto-server-reset-password
      */
-    public function resetPassword(string $token, string $password);
+    public function resetPassword(string $token, #[\SensitiveParameter] string $password);
 
     /**
      * Revoke an App Password by name.
