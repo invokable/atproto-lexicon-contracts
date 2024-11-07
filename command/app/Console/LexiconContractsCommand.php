@@ -185,6 +185,8 @@ class LexiconContractsCommand extends Command
                 $require = Arr::get($property, 'require');
                 $default = Arr::get($property, 'default');
 
+                $sensitive = $name === 'password' ? '#[\SensitiveParameter]' : '';
+
                 if (! $require) {
                     if (filled($default)) {
                         $name .= ' = ';
@@ -205,7 +207,7 @@ class LexiconContractsCommand extends Command
                     }
                 }
 
-                return trim($type.' $'.$name);
+                return trim($sensitive.' '.$type.' $'.$name);
             }, ', ');
     }
 
