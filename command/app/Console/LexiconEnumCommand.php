@@ -191,6 +191,9 @@ class LexiconEnumCommand extends Command
             ->replace('{dummy}', $enum)
             ->toString();
 
-        File::put($this->php_path."/$name.php", $tmp);
+        $file_path = $this->php_path."/$name.php";
+        File::put($file_path, $tmp);
+
+        $this->info($file_path);
     }
 }
