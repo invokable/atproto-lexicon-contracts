@@ -162,7 +162,7 @@ interface Admin
      *
      * @see https://docs.bsky.app/docs/api/com-atproto-admin-update-account-password
      */
-    public function updateAccountPassword(string $did, string $password);
+    public function updateAccountPassword(string $did, #[\SensitiveParameter] string $password);
 
     /**
      * Update the service-specific admin status of a subject (account, record, or blob).
