@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace Revolution\AtProto\Lexicon\Contracts\App\Bsky;
 
+use Revolution\AtProto\Lexicon\Attributes\Get;
+use Revolution\AtProto\Lexicon\Attributes\NSID;
+use Revolution\AtProto\Lexicon\Attributes\Post;
+
 interface Labeler
 {
     public const getServices = 'app.bsky.labeler.getServices';
@@ -11,11 +15,8 @@ interface Labeler
     /**
      * Get information about a list of labeler services.
      *
-     * ```
-     * GET app.bsky.labeler.getServices
-     * ```
-     *
      * @see https://docs.bsky.app/docs/api/app-bsky-labeler-get-services
      */
+    #[Get, NSID(self::getServices)]
     public function getServices(array $dids, ?bool $detailed = null);
 }

@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace Revolution\AtProto\Lexicon\Contracts\Tools\Ozone;
 
+use Revolution\AtProto\Lexicon\Attributes\Get;
+use Revolution\AtProto\Lexicon\Attributes\NSID;
+use Revolution\AtProto\Lexicon\Attributes\Post;
+
 interface Communication
 {
     public const createTemplate = 'tools.ozone.communication.createTemplate';
@@ -14,44 +18,32 @@ interface Communication
     /**
      * Administrative action to create a new, re-usable communication (email for now) template.
      *
-     * ```
-     * POST tools.ozone.communication.createTemplate
-     * ```
-     *
      * @see https://docs.bsky.app/docs/api/tools-ozone-communication-create-template
      */
+    #[Post, NSID(self::createTemplate)]
     public function createTemplate(string $name, string $contentMarkdown, string $subject, ?string $lang = null, ?string $createdBy = null);
 
     /**
      * Delete a communication template.
      *
-     * ```
-     * POST tools.ozone.communication.deleteTemplate
-     * ```
-     *
      * @see https://docs.bsky.app/docs/api/tools-ozone-communication-delete-template
      */
+    #[Post, NSID(self::deleteTemplate)]
     public function deleteTemplate(string $id);
 
     /**
      * Get list of all communication templates.
      *
-     * ```
-     * GET tools.ozone.communication.listTemplates
-     * ```
-     *
      * @see https://docs.bsky.app/docs/api/tools-ozone-communication-list-templates
      */
+    #[Get, NSID(self::listTemplates)]
     public function listTemplates();
 
     /**
      * Administrative action to update an existing communication template. Allows passing partial fields to patch specific fields only.
      *
-     * ```
-     * POST tools.ozone.communication.updateTemplate
-     * ```
-     *
      * @see https://docs.bsky.app/docs/api/tools-ozone-communication-update-template
      */
+    #[Post, NSID(self::updateTemplate)]
     public function updateTemplate(string $id, ?string $name = null, ?string $lang = null, ?string $contentMarkdown = null, ?string $subject = null, ?string $updatedBy = null, ?bool $disabled = null);
 }
