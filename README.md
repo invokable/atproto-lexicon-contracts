@@ -1,4 +1,4 @@
-# AtProto(Bluesky) Lexicon Contracts
+# AtProto Lexicon Contracts
 
 Auto generated pure PHP interface and enum that you can use to create your own client.
 
@@ -22,7 +22,15 @@ Versioning is also automatic, so even if a breaking change is included, only the
 ```
 // composer.json
 
-"revolution/atproto-lexicon-contracts": "1.0.3",
+"revolution/atproto-lexicon-contracts": "1.0.5",
+```
+
+## Example client
+
+[PublicClient.php](./example/PublicClient.php)
+
+```bash
+php ./example/example.php
 ```
 
 ## Implementation

@@ -12,6 +12,9 @@
   "require": {
     "php": "^8.2"
   },
+  "require-dev": {
+    "guzzlehttp/guzzle": "^7.9"
+  },
   "autoload": {
     "psr-4": {
       "Revolution\\AtProto\\Lexicon\\": "src/"

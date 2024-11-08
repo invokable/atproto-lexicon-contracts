@@ -11,3 +11,4 @@
 /command export-ignore
 /atproto export-ignore
 .gitmodules export-ignore
+/example export-ignore
