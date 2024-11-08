@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace Revolution\AtProto\Lexicon\Contracts\Com\Atproto;
 
+use Revolution\AtProto\Lexicon\Attributes\Get;
+use Revolution\AtProto\Lexicon\Attributes\NSID;
+use Revolution\AtProto\Lexicon\Attributes\Post;
+
 interface Admin
 {
     public const deleteAccount = 'com.atproto.admin.deleteAccount';
@@ -24,154 +28,112 @@ interface Admin
     /**
      * Delete a user account as an administrator.
      *
-     * ```
-     * POST com.atproto.admin.deleteAccount
-     * ```
-     *
      * @see https://docs.bsky.app/docs/api/com-atproto-admin-delete-account
      */
+    #[Post, NSID(self::deleteAccount)]
     public function deleteAccount(string $did);
 
     /**
      * Disable an account from receiving new invite codes, but does not invalidate existing codes.
      *
-     * ```
-     * POST com.atproto.admin.disableAccountInvites
-     * ```
-     *
      * @see https://docs.bsky.app/docs/api/com-atproto-admin-disable-account-invites
      */
+    #[Post, NSID(self::disableAccountInvites)]
     public function disableAccountInvites(string $account, ?string $note = null);
 
     /**
      * Disable some set of codes and/or all codes associated with a set of users.
      *
-     * ```
-     * POST com.atproto.admin.disableInviteCodes
-     * ```
-     *
      * @see https://docs.bsky.app/docs/api/com-atproto-admin-disable-invite-codes
      */
+    #[Post, NSID(self::disableInviteCodes)]
     public function disableInviteCodes(?array $codes = null, ?array $accounts = null);
 
     /**
      * Re-enable an account's ability to receive invite codes.
      *
-     * ```
-     * POST com.atproto.admin.enableAccountInvites
-     * ```
-     *
      * @see https://docs.bsky.app/docs/api/com-atproto-admin-enable-account-invites
      */
+    #[Post, NSID(self::enableAccountInvites)]
     public function enableAccountInvites(string $account, ?string $note = null);
 
     /**
      * Get details about an account.
      *
-     * ```
-     * GET com.atproto.admin.getAccountInfo
-     * ```
-     *
      * @see https://docs.bsky.app/docs/api/com-atproto-admin-get-account-info
      */
+    #[Get, NSID(self::getAccountInfo)]
     public function getAccountInfo(string $did);
 
     /**
      * Get details about some accounts.
      *
-     * ```
-     * GET com.atproto.admin.getAccountInfos
-     * ```
-     *
      * @see https://docs.bsky.app/docs/api/com-atproto-admin-get-account-infos
      */
+    #[Get, NSID(self::getAccountInfos)]
     public function getAccountInfos(array $dids);
 
     /**
      * Get an admin view of invite codes.
      *
-     * ```
-     * GET com.atproto.admin.getInviteCodes
-     * ```
-     *
      * @see https://docs.bsky.app/docs/api/com-atproto-admin-get-invite-codes
      */
+    #[Get, NSID(self::getInviteCodes)]
     public function getInviteCodes(?string $sort = 'recent', ?int $limit = 100, ?string $cursor = null);
 
     /**
      * Get the service-specific admin status of a subject (account, record, or blob).
      *
-     * ```
-     * GET com.atproto.admin.getSubjectStatus
-     * ```
-     *
      * @see https://docs.bsky.app/docs/api/com-atproto-admin-get-subject-status
      */
+    #[Get, NSID(self::getSubjectStatus)]
     public function getSubjectStatus(?string $did = null, ?string $uri = null, ?string $blob = null);
 
     /**
      * Get list of accounts that matches your search query.
      *
-     * ```
-     * GET com.atproto.admin.searchAccounts
-     * ```
-     *
      * @see https://docs.bsky.app/docs/api/com-atproto-admin-search-accounts
      */
+    #[Get, NSID(self::searchAccounts)]
     public function searchAccounts(?string $email = null, ?string $cursor = null, ?int $limit = 50);
 
     /**
      * Send email to a user's account email address.
      *
-     * ```
-     * POST com.atproto.admin.sendEmail
-     * ```
-     *
      * @see https://docs.bsky.app/docs/api/com-atproto-admin-send-email
      */
+    #[Post, NSID(self::sendEmail)]
     public function sendEmail(string $recipientDid, string $content, string $senderDid, ?string $subject = null, ?string $comment = null);
 
     /**
      * Administrative action to update an account's email.
      *
-     * ```
-     * POST com.atproto.admin.updateAccountEmail
-     * ```
-     *
      * @see https://docs.bsky.app/docs/api/com-atproto-admin-update-account-email
      */
+    #[Post, NSID(self::updateAccountEmail)]
     public function updateAccountEmail(string $account, string $email);
 
     /**
      * Administrative action to update an account's handle.
      *
-     * ```
-     * POST com.atproto.admin.updateAccountHandle
-     * ```
-     *
      * @see https://docs.bsky.app/docs/api/com-atproto-admin-update-account-handle
      */
+    #[Post, NSID(self::updateAccountHandle)]
     public function updateAccountHandle(string $did, string $handle);
 
     /**
      * Update the password for a user account as an administrator.
      *
-     * ```
-     * POST com.atproto.admin.updateAccountPassword
-     * ```
-     *
      * @see https://docs.bsky.app/docs/api/com-atproto-admin-update-account-password
      */
+    #[Post, NSID(self::updateAccountPassword)]
     public function updateAccountPassword(string $did, #[\SensitiveParameter] string $password);
 
     /**
      * Update the service-specific admin status of a subject (account, record, or blob).
      *
-     * ```
-     * POST com.atproto.admin.updateSubjectStatus
-     * ```
-     *
      * @see https://docs.bsky.app/docs/api/com-atproto-admin-update-subject-status
      */
+    #[Post, NSID(self::updateSubjectStatus)]
     public function updateSubjectStatus(array $subject, ?array $takedown = null, ?array $deactivated = null);
 }

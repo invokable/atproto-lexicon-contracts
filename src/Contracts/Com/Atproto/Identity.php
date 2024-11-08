@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace Revolution\AtProto\Lexicon\Contracts\Com\Atproto;
 
+use Revolution\AtProto\Lexicon\Attributes\Get;
+use Revolution\AtProto\Lexicon\Attributes\NSID;
+use Revolution\AtProto\Lexicon\Attributes\Post;
+
 interface Identity
 {
     public const getRecommendedDidCredentials = 'com.atproto.identity.getRecommendedDidCredentials';
@@ -16,66 +20,48 @@ interface Identity
     /**
      * Describe the credentials that should be included in the DID doc of an account that is migrating to this service.
      *
-     * ```
-     * GET com.atproto.identity.getRecommendedDidCredentials
-     * ```
-     *
      * @see https://docs.bsky.app/docs/api/com-atproto-identity-get-recommended-did-credentials
      */
+    #[Get, NSID(self::getRecommendedDidCredentials)]
     public function getRecommendedDidCredentials();
 
     /**
      * Request an email with a code to in order to request a signed PLC operation. Requires Auth.
      *
-     * ```
-     * POST com.atproto.identity.requestPlcOperationSignature
-     * ```
-     *
      * @see https://docs.bsky.app/docs/api/com-atproto-identity-request-plc-operation-signature
      */
+    #[Post, NSID(self::requestPlcOperationSignature)]
     public function requestPlcOperationSignature();
 
     /**
      * Resolves a handle (domain name) to a DID.
      *
-     * ```
-     * GET com.atproto.identity.resolveHandle
-     * ```
-     *
      * @see https://docs.bsky.app/docs/api/com-atproto-identity-resolve-handle
      */
+    #[Get, NSID(self::resolveHandle)]
     public function resolveHandle(string $handle);
 
     /**
      * Signs a PLC operation to update some value(s) in the requesting DID's document.
      *
-     * ```
-     * POST com.atproto.identity.signPlcOperation
-     * ```
-     *
      * @see https://docs.bsky.app/docs/api/com-atproto-identity-sign-plc-operation
      */
+    #[Post, NSID(self::signPlcOperation)]
     public function signPlcOperation(?string $token = null, ?array $rotationKeys = null, ?array $alsoKnownAs = null, mixed $verificationMethods = null, mixed $services = null);
 
     /**
      * Validates a PLC operation to ensure that it doesn't violate a service's constraints or get the identity into a bad state, then submits it to the PLC registry.
      *
-     * ```
-     * POST com.atproto.identity.submitPlcOperation
-     * ```
-     *
      * @see https://docs.bsky.app/docs/api/com-atproto-identity-submit-plc-operation
      */
+    #[Post, NSID(self::submitPlcOperation)]
     public function submitPlcOperation(mixed $operation);
 
     /**
      * Updates the current account's handle. Verifies handle validity, and updates did:plc document if necessary. Implemented by PDS, and requires auth.
      *
-     * ```
-     * POST com.atproto.identity.updateHandle
-     * ```
-     *
      * @see https://docs.bsky.app/docs/api/com-atproto-identity-update-handle
      */
+    #[Post, NSID(self::updateHandle)]
     public function updateHandle(string $handle);
 }

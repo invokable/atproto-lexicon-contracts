@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace Revolution\AtProto\Lexicon\Contracts\Tools\Ozone;
 
+use Revolution\AtProto\Lexicon\Attributes\Get;
+use Revolution\AtProto\Lexicon\Attributes\NSID;
+use Revolution\AtProto\Lexicon\Attributes\Post;
+
 interface Setting
 {
     public const listOptions = 'tools.ozone.setting.listOptions';
@@ -13,33 +17,24 @@ interface Setting
     /**
      * List settings with optional filtering.
      *
-     * ```
-     * GET tools.ozone.setting.listOptions
-     * ```
-     *
      * @see https://docs.bsky.app/docs/api/tools-ozone-setting-list-options
      */
+    #[Get, NSID(self::listOptions)]
     public function listOptions(?int $limit = 50, ?string $cursor = null, ?string $scope = 'instance', ?string $prefix = null, ?array $keys = null);
 
     /**
      * Delete settings by key.
      *
-     * ```
-     * POST tools.ozone.setting.removeOptions
-     * ```
-     *
      * @see https://docs.bsky.app/docs/api/tools-ozone-setting-remove-options
      */
+    #[Post, NSID(self::removeOptions)]
     public function removeOptions(array $keys, string $scope);
 
     /**
      * Create or update setting option.
      *
-     * ```
-     * POST tools.ozone.setting.upsertOption
-     * ```
-     *
      * @see https://docs.bsky.app/docs/api/tools-ozone-setting-upsert-option
      */
+    #[Post, NSID(self::upsertOption)]
     public function upsertOption(string $key, string $scope, mixed $value, ?string $description = null, ?string $managerRole = null);
 }

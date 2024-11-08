@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace Revolution\AtProto\Lexicon\Contracts\Chat\Bsky;
 
+use Revolution\AtProto\Lexicon\Attributes\Get;
+use Revolution\AtProto\Lexicon\Attributes\NSID;
+use Revolution\AtProto\Lexicon\Attributes\Post;
+
 interface Convo
 {
     public const deleteMessageForSelf = 'chat.bsky.convo.deleteMessageForSelf';
@@ -22,132 +26,96 @@ interface Convo
     /**
      * chat.bsky.convo.deleteMessageForSelf.
      *
-     * ```
-     * POST chat.bsky.convo.deleteMessageForSelf
-     * ```
-     *
      * @see https://docs.bsky.app/docs/api/chat-bsky-convo-delete-message-for-self
      */
+    #[Post, NSID(self::deleteMessageForSelf)]
     public function deleteMessageForSelf(string $convoId, string $messageId);
 
     /**
      * chat.bsky.convo.getConvo.
      *
-     * ```
-     * GET chat.bsky.convo.getConvo
-     * ```
-     *
      * @see https://docs.bsky.app/docs/api/chat-bsky-convo-get-convo
      */
+    #[Get, NSID(self::getConvo)]
     public function getConvo(string $convoId);
 
     /**
      * chat.bsky.convo.getConvoForMembers.
      *
-     * ```
-     * GET chat.bsky.convo.getConvoForMembers
-     * ```
-     *
      * @see https://docs.bsky.app/docs/api/chat-bsky-convo-get-convo-for-members
      */
+    #[Get, NSID(self::getConvoForMembers)]
     public function getConvoForMembers(array $members);
 
     /**
      * chat.bsky.convo.getLog.
      *
-     * ```
-     * GET chat.bsky.convo.getLog
-     * ```
-     *
      * @see https://docs.bsky.app/docs/api/chat-bsky-convo-get-log
      */
+    #[Get, NSID(self::getLog)]
     public function getLog(?string $cursor = null);
 
     /**
      * chat.bsky.convo.getMessages.
      *
-     * ```
-     * GET chat.bsky.convo.getMessages
-     * ```
-     *
      * @see https://docs.bsky.app/docs/api/chat-bsky-convo-get-messages
      */
+    #[Get, NSID(self::getMessages)]
     public function getMessages(string $convoId, ?int $limit = 50, ?string $cursor = null);
 
     /**
      * chat.bsky.convo.leaveConvo.
      *
-     * ```
-     * POST chat.bsky.convo.leaveConvo
-     * ```
-     *
      * @see https://docs.bsky.app/docs/api/chat-bsky-convo-leave-convo
      */
+    #[Post, NSID(self::leaveConvo)]
     public function leaveConvo(string $convoId);
 
     /**
      * chat.bsky.convo.listConvos.
      *
-     * ```
-     * GET chat.bsky.convo.listConvos
-     * ```
-     *
      * @see https://docs.bsky.app/docs/api/chat-bsky-convo-list-convos
      */
+    #[Get, NSID(self::listConvos)]
     public function listConvos(?int $limit = 50, ?string $cursor = null);
 
     /**
      * chat.bsky.convo.muteConvo.
      *
-     * ```
-     * POST chat.bsky.convo.muteConvo
-     * ```
-     *
      * @see https://docs.bsky.app/docs/api/chat-bsky-convo-mute-convo
      */
+    #[Post, NSID(self::muteConvo)]
     public function muteConvo(string $convoId);
 
     /**
      * chat.bsky.convo.sendMessage.
      *
-     * ```
-     * POST chat.bsky.convo.sendMessage
-     * ```
-     *
      * @see https://docs.bsky.app/docs/api/chat-bsky-convo-send-message
      */
+    #[Post, NSID(self::sendMessage)]
     public function sendMessage(string $convoId, array $message);
 
     /**
      * chat.bsky.convo.sendMessageBatch.
      *
-     * ```
-     * POST chat.bsky.convo.sendMessageBatch
-     * ```
-     *
      * @see https://docs.bsky.app/docs/api/chat-bsky-convo-send-message-batch
      */
+    #[Post, NSID(self::sendMessageBatch)]
     public function sendMessageBatch(array $items);
 
     /**
      * chat.bsky.convo.unmuteConvo.
      *
-     * ```
-     * POST chat.bsky.convo.unmuteConvo
-     * ```
-     *
      * @see https://docs.bsky.app/docs/api/chat-bsky-convo-unmute-convo
      */
+    #[Post, NSID(self::unmuteConvo)]
     public function unmuteConvo(string $convoId);
 
     /**
      * chat.bsky.convo.updateRead.
      *
-     * ```
-     * POST chat.bsky.convo.updateRead
-     * ```
-     *
      * @see https://docs.bsky.app/docs/api/chat-bsky-convo-update-read
      */
+    #[Post, NSID(self::updateRead)]
     public function updateRead(string $convoId, ?string $messageId = null);
 }
