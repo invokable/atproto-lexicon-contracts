@@ -11,21 +11,21 @@ use Revolution\AtProto\Lexicon\Attributes\Ref;
  */
 abstract class AbstractPost
 {
-    public const NSID ='app.bsky.feed.post';
+    public const NSID = 'app.bsky.feed.post';
 
-   /**
-    * The primary post content. May be an empty string, if there are embeds.
-    */
+    /**
+     * The primary post content. May be an empty string, if there are embeds.
+     */
     protected string $text;
 
-   /**
-    * DEPRECATED: replaced by app.bsky.richtext.facet.
-    */
+    /**
+     * DEPRECATED: replaced by app.bsky.richtext.facet.
+     */
     protected ?array $entities = null;
 
-   /**
-    * Annotations of text (mentions, URLs, hashtags, etc)
-    */
+    /**
+     * Annotations of text (mentions, URLs, hashtags, etc).
+     */
     protected ?array $facets = null;
 
     #[Ref('app.bsky.feed.post#replyRef')]
@@ -33,23 +33,23 @@ abstract class AbstractPost
 
     protected ?array $embed = null;
 
-   /**
-    * Indicates human language of post primary text content.
-    */
+    /**
+     * Indicates human language of post primary text content.
+     */
     protected ?array $langs = null;
 
-   /**
-    * Self-label values for this post. Effectively content warnings.
-    */
+    /**
+     * Self-label values for this post. Effectively content warnings.
+     */
     protected ?array $labels = null;
 
-   /**
-    * Additional hashtags, in addition to any included in post text and facets.
-    */
+    /**
+     * Additional hashtags, in addition to any included in post text and facets.
+     */
     protected ?array $tags = null;
 
-   /**
-    * Client-declared timestamp when this post was originally created.
-    */
+    /**
+     * Client-declared timestamp when this post was originally created.
+     */
     protected string $createdAt;
 }

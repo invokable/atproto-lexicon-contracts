@@ -7,6 +7,7 @@ namespace Revolution\AtProto\Lexicon\Contracts\Chat\Bsky;
 use Revolution\AtProto\Lexicon\Attributes\Get;
 use Revolution\AtProto\Lexicon\Attributes\NSID;
 use Revolution\AtProto\Lexicon\Attributes\Post;
+use Revolution\AtProto\Lexicon\Attributes\Ref;
 
 interface Convo
 {
@@ -93,7 +94,7 @@ interface Convo
      * @see https://docs.bsky.app/docs/api/chat-bsky-convo-send-message
      */
     #[Post, NSID(self::sendMessage)]
-    public function sendMessage(string $convoId, array $message);
+    public function sendMessage(string $convoId, #[Ref('chat.bsky.convo.defs#messageInput')] array $message);
 
     /**
      * chat.bsky.convo.sendMessageBatch.

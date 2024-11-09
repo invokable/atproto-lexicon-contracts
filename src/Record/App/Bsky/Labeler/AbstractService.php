@@ -11,7 +11,7 @@ use Revolution\AtProto\Lexicon\Attributes\Ref;
  */
 abstract class AbstractService
 {
-    public const NSID ='app.bsky.labeler.service';
+    public const NSID = 'app.bsky.labeler.service';
 
     #[Ref('app.bsky.labeler.defs#labelerPolicies')]
     protected array $policies;

@@ -7,6 +7,7 @@ namespace Revolution\AtProto\Lexicon\Contracts\Com\Atproto;
 use Revolution\AtProto\Lexicon\Attributes\Get;
 use Revolution\AtProto\Lexicon\Attributes\NSID;
 use Revolution\AtProto\Lexicon\Attributes\Post;
+use Revolution\AtProto\Lexicon\Attributes\Ref;
 
 interface Moderation
 {
@@ -18,5 +19,5 @@ interface Moderation
      * @see https://docs.bsky.app/docs/api/com-atproto-moderation-create-report
      */
     #[Post, NSID(self::createReport)]
-    public function createReport(string $reasonType, array $subject, ?string $reason = null);
+    public function createReport(#[Ref('com.atproto.moderation.defs#reasonType')] string $reasonType, array $subject, ?string $reason = null);
 }

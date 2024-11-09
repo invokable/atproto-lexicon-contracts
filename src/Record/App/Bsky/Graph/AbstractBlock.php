@@ -11,11 +11,11 @@ use Revolution\AtProto\Lexicon\Attributes\Ref;
  */
 abstract class AbstractBlock
 {
-    public const NSID ='app.bsky.graph.block';
+    public const NSID = 'app.bsky.graph.block';
 
-   /**
-    * DID of the account to be blocked.
-    */
+    /**
+     * DID of the account to be blocked.
+     */
     protected string $subject;
 
     protected string $createdAt;
