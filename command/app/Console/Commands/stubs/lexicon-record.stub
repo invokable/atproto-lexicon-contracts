@@ -1,0 +1,15 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Revolution\AtProto\Lexicon\Record\{namespace};
+
+use Revolution\AtProto\Lexicon\Attributes\Ref;
+
+{description}
+abstract class {name}
+{
+{const}
+
+{property}
+}
