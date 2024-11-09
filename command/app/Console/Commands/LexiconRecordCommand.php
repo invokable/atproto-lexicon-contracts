@@ -99,6 +99,7 @@ class LexiconRecordCommand extends Command
             //->dump()
             ->map(function (array $property, string $name) use ($required, $id) {
                 $type = Arr::get($property, 'type');
+                $format = Arr::get($property, 'format');
 
                 $ref = null;
                 if ($type === 'ref') {
@@ -135,11 +136,12 @@ class LexiconRecordCommand extends Command
                 $description = Arr::get($property, 'description');
                 $require = in_array($name, $required, true);
 
-                return compact('type', 'ref', 'union', 'description', 'require');
+                return compact('type', 'format', 'ref', 'union', 'description', 'require');
             })
             //->dump()
             ->implode(function ($property, $name) {
                 $type = Arr::get($property, 'type');
+                $format = Arr::get($property, 'format');
                 $ref = Arr::get($property, 'ref');
                 $union = Arr::get($property, 'union');
                 $require = Arr::get($property, 'require');
@@ -175,8 +177,13 @@ class LexiconRecordCommand extends Command
                     $union = sprintf('    #[Union([%s])]', $union);
                 }
 
+                if (filled($format)) {
+                    $format = "    #[Format('$format')]";
+                }
+
                 return collect($properties)
                     ->when(filled($ref), fn ($collection) => $collection->add($ref))
+                    ->when(filled($format), fn ($collection) => $collection->add($format))
                     ->when(filled($union), fn ($collection) => $collection->add($union))
                     ->merge([
                         '    '.Str::squish("protected $type \$$name $default").';'.PHP_EOL.PHP_EOL,
