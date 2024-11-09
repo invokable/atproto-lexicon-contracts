@@ -6,16 +6,16 @@ namespace Revolution\AtProto\Lexicon\Record\App\Bsky\Actor;
 
 use Revolution\AtProto\Lexicon\Attributes\Format;
 use Revolution\AtProto\Lexicon\Attributes\Ref;
+use Revolution\AtProto\Lexicon\Attributes\Required;
 use Revolution\AtProto\Lexicon\Attributes\Union;
 
 /**
  * A declaration of a Bluesky account profile.
  */
+#[Required([])]
 abstract class AbstractProfile
 {
     public const NSID = 'app.bsky.actor.profile';
-
-    protected array $required = [];
 
     protected ?string $displayName = null;
 

@@ -6,16 +6,16 @@ namespace Revolution\AtProto\Lexicon\Record\App\Bsky\Feed;
 
 use Revolution\AtProto\Lexicon\Attributes\Format;
 use Revolution\AtProto\Lexicon\Attributes\Ref;
+use Revolution\AtProto\Lexicon\Attributes\Required;
 use Revolution\AtProto\Lexicon\Attributes\Union;
 
 /**
  * Record declaring of the existence of a feed generator, and containing metadata about it. The record can exist in any repository.
  */
+#[Required(['did', 'displayName', 'createdAt'])]
 abstract class AbstractGenerator
 {
     public const NSID = 'app.bsky.feed.generator';
-
-    protected array $required = ['did', 'displayName', 'createdAt'];
 
     #[Format('did')]
     protected string $did;

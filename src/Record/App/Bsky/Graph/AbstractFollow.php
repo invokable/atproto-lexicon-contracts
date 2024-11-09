@@ -6,16 +6,16 @@ namespace Revolution\AtProto\Lexicon\Record\App\Bsky\Graph;
 
 use Revolution\AtProto\Lexicon\Attributes\Format;
 use Revolution\AtProto\Lexicon\Attributes\Ref;
+use Revolution\AtProto\Lexicon\Attributes\Required;
 use Revolution\AtProto\Lexicon\Attributes\Union;
 
 /**
  * Record declaring a social 'follow' relationship of another account. Duplicate follows will be ignored by the AppView.
  */
+#[Required(['subject', 'createdAt'])]
 abstract class AbstractFollow
 {
     public const NSID = 'app.bsky.graph.follow';
-
-    protected array $required = ['subject', 'createdAt'];
 
     #[Format('did')]
     protected string $subject;
