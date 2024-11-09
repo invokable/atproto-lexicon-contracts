@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Revolution\AtProto\Lexicon\Record\App\Bsky\Graph;
 
 use Revolution\AtProto\Lexicon\Attributes\Ref;
+use Revolution\AtProto\Lexicon\Attributes\Union;
 
 /**
  * Record representing a list of accounts (actors). Scope includes both moderation-oriented lists and curration-oriented lists.
@@ -30,6 +31,7 @@ abstract class AbstractList
 
     protected ?string $avatar = null;
 
+    #[Union(['com.atproto.label.defs#selfLabels'])]
     protected ?array $labels = null;
 
     protected string $createdAt;

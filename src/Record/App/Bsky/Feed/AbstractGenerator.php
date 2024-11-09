@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Revolution\AtProto\Lexicon\Record\App\Bsky\Feed;
 
 use Revolution\AtProto\Lexicon\Attributes\Ref;
+use Revolution\AtProto\Lexicon\Attributes\Union;
 
 /**
  * Record declaring of the existence of a feed generator, and containing metadata about it. The record can exist in any repository.
@@ -31,6 +32,7 @@ abstract class AbstractGenerator
     /**
      * Self-label values.
      */
+    #[Union(['com.atproto.label.defs#selfLabels'])]
     protected ?array $labels = null;
 
     protected string $createdAt;

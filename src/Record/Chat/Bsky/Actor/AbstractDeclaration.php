@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Revolution\AtProto\Lexicon\Record\Chat\Bsky\Actor;
 
 use Revolution\AtProto\Lexicon\Attributes\Ref;
+use Revolution\AtProto\Lexicon\Attributes\Union;
 
 /**
  * A declaration of a Bluesky chat account.

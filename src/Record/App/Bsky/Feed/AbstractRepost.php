@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Revolution\AtProto\Lexicon\Record\App\Bsky\Feed;
 
 use Revolution\AtProto\Lexicon\Attributes\Ref;
+use Revolution\AtProto\Lexicon\Attributes\Union;
 
 /**
  * Record representing a 'repost' of an existing Bluesky post.
