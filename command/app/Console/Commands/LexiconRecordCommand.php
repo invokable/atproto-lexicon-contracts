@@ -148,7 +148,7 @@ class LexiconRecordCommand extends Command
                 if (filled($description)) {
                     $properties = [
                         '    /**',
-                        '     * '.$description,
+                        '     * '.Str::rtrim($description, '.').'.',
                         '     */',
                     ];
                 } else {
