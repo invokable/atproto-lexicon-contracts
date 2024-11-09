@@ -12,5 +12,7 @@ abstract class {name}
 {
 {const}
 
+{required}
+
 {property}
 }
