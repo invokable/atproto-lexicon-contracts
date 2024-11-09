@@ -116,6 +116,14 @@ class LexiconRecordCommand extends Command
                     $type = $this->jsons->dot()->get($ref_type);
                 }
 
+                $union = null;
+                if ($type === 'union') {
+                    $union = Arr::get($property, 'refs');
+                    if (! is_array($union)) {
+                        $union = null;
+                    }
+                }
+
                 $type = match ($type) {
                     'integer' => 'int',
                     'boolean' => 'bool',
@@ -128,12 +136,13 @@ class LexiconRecordCommand extends Command
                 $description = Arr::get($property, 'description');
                 $require = in_array($name, $required, true);
 
-                return compact('type', 'ref', 'description', 'require');
+                return compact('type', 'ref', 'union', 'description', 'require');
             })
             //->dump()
             ->implode(function ($property, $name) {
                 $type = Arr::get($property, 'type');
                 $ref = Arr::get($property, 'ref');
+                $union = Arr::get($property, 'union');
                 $require = Arr::get($property, 'require');
                 $description = Arr::get($property, 'description');
                 $default = '';
@@ -159,10 +168,19 @@ class LexiconRecordCommand extends Command
                     $ref = "    #[Ref('$ref')]";
                 }
 
+                if (filled($union)) {
+                    $union = collect($union)
+                        ->implode(function ($item) {
+                            return "'$item'";
+                        }, ', ');
+                    $union = sprintf('    #[Union([%s])]', $union);
+                }
+
                 return collect($properties)
                     ->when(filled($ref), fn ($collection) => $collection->add($ref))
+                    ->when(filled($union), fn ($collection) => $collection->add($union))
                     ->merge([
-                        '    '.Str::trim("protected $type \$$name $default").';'.PHP_EOL.PHP_EOL,
+                        '    '.Str::squish("protected $type \$$name $default").';'.PHP_EOL.PHP_EOL,
                     ])->implode(PHP_EOL);
             });
     }
