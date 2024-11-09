@@ -164,6 +164,14 @@ class LexiconContractsCommand extends Command
                     $type = $this->jsons->dot()->get($ref_type);
                 }
 
+                $union = null;
+                if ($type === 'union') {
+                    $union = Arr::get($property, 'refs');
+                    if (! is_array($union)) {
+                        $union = null;
+                    }
+                }
+
                 $type = match ($type) {
                     'integer' => 'int',
                     'boolean' => 'bool',
@@ -176,7 +184,7 @@ class LexiconContractsCommand extends Command
                 $default = Arr::get($property, 'default');
                 $require = in_array($name, $required, true);
 
-                return compact('type', 'ref', 'default', 'require');
+                return compact('type', 'ref', 'union', 'default', 'require');
             })
             ->sortByDesc(function ($property, $name) use ($required) {
                 return in_array($name, $required, true);
@@ -184,6 +192,7 @@ class LexiconContractsCommand extends Command
             ->implode(function ($property, $name) {
                 $type = Arr::get($property, 'type');
                 $ref = Arr::get($property, 'ref');
+                $union = Arr::get($property, 'union');
                 $require = Arr::get($property, 'require');
                 $default = Arr::get($property, 'default');
 
@@ -213,7 +222,15 @@ class LexiconContractsCommand extends Command
                     $ref = "#[Ref('$ref')]";
                 }
 
-                return Str::squish($sensitive.' '.$ref.' '.$type.' $'.$name);
+                if (filled($union)) {
+                    $union = collect($union)
+                        ->implode(function ($item) {
+                            return "'$item'";
+                        }, ', ');
+                    $union = sprintf('#[Union([%s])]', $union);
+                }
+
+                return Str::squish("$sensitive $ref $union $type \$$name");
             }, ', ');
     }
 
