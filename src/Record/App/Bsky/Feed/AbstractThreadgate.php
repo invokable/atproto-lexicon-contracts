@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Revolution\AtProto\Lexicon\Record\App\Bsky\Feed;
 
+use Revolution\AtProto\Lexicon\Attributes\Format;
 use Revolution\AtProto\Lexicon\Attributes\Ref;
 use Revolution\AtProto\Lexicon\Attributes\Union;
 
@@ -19,10 +20,12 @@ abstract class AbstractThreadgate
     /**
      * Reference (AT-URI) to the post record.
      */
+    #[Format('at-uri')]
     protected string $post;
 
     protected ?array $allow = null;
 
+    #[Format('datetime')]
     protected string $createdAt;
 
     /**

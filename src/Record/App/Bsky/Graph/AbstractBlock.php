@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Revolution\AtProto\Lexicon\Record\App\Bsky\Graph;
 
+use Revolution\AtProto\Lexicon\Attributes\Format;
 use Revolution\AtProto\Lexicon\Attributes\Ref;
 use Revolution\AtProto\Lexicon\Attributes\Union;
 
@@ -19,7 +20,9 @@ abstract class AbstractBlock
     /**
      * DID of the account to be blocked.
      */
+    #[Format('did')]
     protected string $subject;
 
+    #[Format('datetime')]
     protected string $createdAt;
 }

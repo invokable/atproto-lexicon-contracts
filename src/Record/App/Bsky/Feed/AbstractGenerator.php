@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Revolution\AtProto\Lexicon\Record\App\Bsky\Feed;
 
+use Revolution\AtProto\Lexicon\Attributes\Format;
 use Revolution\AtProto\Lexicon\Attributes\Ref;
 use Revolution\AtProto\Lexicon\Attributes\Union;
 
@@ -16,6 +17,7 @@ abstract class AbstractGenerator
 
     protected array $required = ['did', 'displayName', 'createdAt'];
 
+    #[Format('did')]
     protected string $did;
 
     protected string $displayName;
@@ -37,5 +39,6 @@ abstract class AbstractGenerator
     #[Union(['com.atproto.label.defs#selfLabels'])]
     protected ?array $labels = null;
 
+    #[Format('datetime')]
     protected string $createdAt;
 }

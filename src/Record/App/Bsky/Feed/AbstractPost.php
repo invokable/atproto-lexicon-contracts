@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Revolution\AtProto\Lexicon\Record\App\Bsky\Feed;
 
+use Revolution\AtProto\Lexicon\Attributes\Format;
 use Revolution\AtProto\Lexicon\Attributes\Ref;
 use Revolution\AtProto\Lexicon\Attributes\Union;
 
@@ -56,5 +57,6 @@ abstract class AbstractPost
     /**
      * Client-declared timestamp when this post was originally created.
      */
+    #[Format('datetime')]
     protected string $createdAt;
 }

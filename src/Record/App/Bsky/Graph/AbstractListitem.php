@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Revolution\AtProto\Lexicon\Record\App\Bsky\Graph;
 
+use Revolution\AtProto\Lexicon\Attributes\Format;
 use Revolution\AtProto\Lexicon\Attributes\Ref;
 use Revolution\AtProto\Lexicon\Attributes\Union;
 
@@ -19,12 +20,15 @@ abstract class AbstractListitem
     /**
      * The account which is included on the list.
      */
+    #[Format('did')]
     protected string $subject;
 
     /**
      * Reference (AT-URI) to the list record (app.bsky.graph.list).
      */
+    #[Format('at-uri')]
     protected string $list;
 
+    #[Format('datetime')]
     protected string $createdAt;
 }

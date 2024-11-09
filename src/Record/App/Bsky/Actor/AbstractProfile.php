@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Revolution\AtProto\Lexicon\Record\App\Bsky\Actor;
 
+use Revolution\AtProto\Lexicon\Attributes\Format;
 use Revolution\AtProto\Lexicon\Attributes\Ref;
 use Revolution\AtProto\Lexicon\Attributes\Union;
 
@@ -45,5 +46,6 @@ abstract class AbstractProfile
     #[Ref('com.atproto.repo.strongRef')]
     protected ?array $pinnedPost = null;
 
+    #[Format('datetime')]
     protected ?string $createdAt = null;
 }
