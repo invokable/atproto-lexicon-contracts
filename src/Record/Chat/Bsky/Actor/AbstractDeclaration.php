@@ -11,7 +11,7 @@ use Revolution\AtProto\Lexicon\Attributes\Ref;
  */
 abstract class AbstractDeclaration
 {
-    public const NSID ='chat.bsky.actor.declaration';
+    public const NSID = 'chat.bsky.actor.declaration';
 
     protected string $allowIncoming;
 }

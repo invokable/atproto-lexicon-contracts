@@ -11,20 +11,20 @@ use Revolution\AtProto\Lexicon\Attributes\Ref;
  */
 abstract class AbstractStarterpack
 {
-    public const NSID ='app.bsky.graph.starterpack';
+    public const NSID = 'app.bsky.graph.starterpack';
 
-   /**
-    * Display name for starter pack; can not be empty.
-    */
+    /**
+     * Display name for starter pack; can not be empty.
+     */
     protected string $name;
 
     protected ?string $description = null;
 
     protected ?array $descriptionFacets = null;
 
-   /**
-    * Reference (AT-URI) to the list record.
-    */
+    /**
+     * Reference (AT-URI) to the list record.
+     */
     protected string $list;
 
     protected ?array $feeds = null;

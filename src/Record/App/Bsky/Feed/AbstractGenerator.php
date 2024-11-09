@@ -11,7 +11,7 @@ use Revolution\AtProto\Lexicon\Attributes\Ref;
  */
 abstract class AbstractGenerator
 {
-    public const NSID ='app.bsky.feed.generator';
+    public const NSID = 'app.bsky.feed.generator';
 
     protected string $did;
 
@@ -23,14 +23,14 @@ abstract class AbstractGenerator
 
     protected ?string $avatar = null;
 
-   /**
-    * Declaration that a feed accepts feedback interactions from a client through app.bsky.feed.sendInteractions
-    */
+    /**
+     * Declaration that a feed accepts feedback interactions from a client through app.bsky.feed.sendInteractions.
+     */
     protected ?bool $acceptsInteractions = null;
 
-   /**
-    * Self-label values
-    */
+    /**
+     * Self-label values.
+     */
     protected ?array $labels = null;
 
     protected string $createdAt;

@@ -7,6 +7,7 @@ namespace Revolution\AtProto\Lexicon\Contracts\Com\Atproto;
 use Revolution\AtProto\Lexicon\Attributes\Get;
 use Revolution\AtProto\Lexicon\Attributes\NSID;
 use Revolution\AtProto\Lexicon\Attributes\Post;
+use Revolution\AtProto\Lexicon\Attributes\Ref;
 
 interface Admin
 {
@@ -135,5 +136,5 @@ interface Admin
      * @see https://docs.bsky.app/docs/api/com-atproto-admin-update-subject-status
      */
     #[Post, NSID(self::updateSubjectStatus)]
-    public function updateSubjectStatus(array $subject, ?array $takedown = null, ?array $deactivated = null);
+    public function updateSubjectStatus(array $subject, #[Ref('com.atproto.admin.defs#statusAttr')] ?array $takedown = null, #[Ref('com.atproto.admin.defs#statusAttr')] ?array $deactivated = null);
 }

@@ -11,17 +11,17 @@ use Revolution\AtProto\Lexicon\Attributes\Ref;
  */
 abstract class AbstractList
 {
-    public const NSID ='app.bsky.graph.list';
+    public const NSID = 'app.bsky.graph.list';
 
-   /**
-    * Defines the purpose of the list (aka, moderation-oriented or curration-oriented)
-    */
+    /**
+     * Defines the purpose of the list (aka, moderation-oriented or curration-oriented).
+     */
     #[Ref('app.bsky.graph.defs#listPurpose')]
     protected string $purpose;
 
-   /**
-    * Display name for list; can not be empty.
-    */
+    /**
+     * Display name for list; can not be empty.
+     */
     protected string $name;
 
     protected ?string $description = null;

@@ -11,19 +11,19 @@ use Revolution\AtProto\Lexicon\Attributes\Ref;
  */
 abstract class AbstractThreadgate
 {
-    public const NSID ='app.bsky.feed.threadgate';
+    public const NSID = 'app.bsky.feed.threadgate';
 
-   /**
-    * Reference (AT-URI) to the post record.
-    */
+    /**
+     * Reference (AT-URI) to the post record.
+     */
     protected string $post;
 
     protected ?array $allow = null;
 
     protected string $createdAt;
 
-   /**
-    * List of hidden reply URIs.
-    */
+    /**
+     * List of hidden reply URIs.
+     */
     protected ?array $hiddenReplies = null;
 }
