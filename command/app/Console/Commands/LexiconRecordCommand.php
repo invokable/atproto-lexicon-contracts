@@ -220,7 +220,7 @@ class LexiconRecordCommand extends Command
             ->implode(function ($item) {
                 return "'$item'";
             }, ', ');
-        $required = "    protected array \$required = [$required];";
+        $required = "#[Required([$required])]";
 
         $tmp = File::get(realpath(__DIR__.'/stubs/lexicon-record.stub'));
 
