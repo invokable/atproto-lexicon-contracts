@@ -6,16 +6,16 @@ namespace Revolution\AtProto\Lexicon\Record\App\Bsky\Graph;
 
 use Revolution\AtProto\Lexicon\Attributes\Format;
 use Revolution\AtProto\Lexicon\Attributes\Ref;
+use Revolution\AtProto\Lexicon\Attributes\Required;
 use Revolution\AtProto\Lexicon\Attributes\Union;
 
 /**
  * Record representing a list of accounts (actors). Scope includes both moderation-oriented lists and curration-oriented lists.
  */
+#[Required(['name', 'purpose', 'createdAt'])]
 abstract class AbstractList
 {
     public const NSID = 'app.bsky.graph.list';
-
-    protected array $required = ['name', 'purpose', 'createdAt'];
 
     /**
      * Defines the purpose of the list (aka, moderation-oriented or curration-oriented).

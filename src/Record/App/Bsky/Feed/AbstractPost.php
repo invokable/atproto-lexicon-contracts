@@ -6,16 +6,16 @@ namespace Revolution\AtProto\Lexicon\Record\App\Bsky\Feed;
 
 use Revolution\AtProto\Lexicon\Attributes\Format;
 use Revolution\AtProto\Lexicon\Attributes\Ref;
+use Revolution\AtProto\Lexicon\Attributes\Required;
 use Revolution\AtProto\Lexicon\Attributes\Union;
 
 /**
  * Record containing a Bluesky post.
  */
+#[Required(['text', 'createdAt'])]
 abstract class AbstractPost
 {
     public const NSID = 'app.bsky.feed.post';
-
-    protected array $required = ['text', 'createdAt'];
 
     /**
      * The primary post content. May be an empty string, if there are embeds.
