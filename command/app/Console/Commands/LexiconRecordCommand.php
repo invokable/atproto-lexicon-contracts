@@ -182,7 +182,7 @@ class LexiconRecordCommand extends Command
         if (filled($description)) {
             $description = collect([
                 '/**',
-                ' * '.$description,
+                ' * '.Str::rtrim($description, '.').'.',
                 ' */',
             ])->implode(PHP_EOL);
         }
