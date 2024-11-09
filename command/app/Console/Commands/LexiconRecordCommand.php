@@ -187,7 +187,7 @@ class LexiconRecordCommand extends Command
             ])->implode(PHP_EOL);
         }
 
-        $const = "    public const NSID ='$id';";
+        $const = "    public const NSID = '$id';";
 
         $tmp = File::get(realpath(__DIR__.'/stubs/lexicon-record.stub'));
 
