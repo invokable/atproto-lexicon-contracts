@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Revolution\AtProto\Lexicon\Record\App\Bsky\Actor;
 
 use Revolution\AtProto\Lexicon\Attributes\Ref;
+use Revolution\AtProto\Lexicon\Attributes\Union;
 
 /**
  * A declaration of a Bluesky account profile.
@@ -33,6 +34,7 @@ abstract class AbstractProfile
     /**
      * Self-label values, specific to the Bluesky application, on the overall account.
      */
+    #[Union(['com.atproto.label.defs#selfLabels'])]
     protected ?array $labels = null;
 
     #[Ref('com.atproto.repo.strongRef')]

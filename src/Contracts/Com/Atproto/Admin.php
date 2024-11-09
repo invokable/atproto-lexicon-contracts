@@ -136,5 +136,5 @@ interface Admin
      * @see https://docs.bsky.app/docs/api/com-atproto-admin-update-subject-status
      */
     #[Post, NSID(self::updateSubjectStatus)]
-    public function updateSubjectStatus(array $subject, #[Ref('com.atproto.admin.defs#statusAttr')] ?array $takedown = null, #[Ref('com.atproto.admin.defs#statusAttr')] ?array $deactivated = null);
+    public function updateSubjectStatus(#[Union(['com.atproto.admin.defs#repoRef', 'com.atproto.repo.strongRef', 'com.atproto.admin.defs#repoBlobRef'])] array $subject, #[Ref('com.atproto.admin.defs#statusAttr')] ?array $takedown = null, #[Ref('com.atproto.admin.defs#statusAttr')] ?array $deactivated = null);
 }

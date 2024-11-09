@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Revolution\AtProto\Lexicon\Record\App\Bsky\Feed;
 
 use Revolution\AtProto\Lexicon\Attributes\Ref;
+use Revolution\AtProto\Lexicon\Attributes\Union;
 
 /**
  * Record containing a Bluesky post.
@@ -31,6 +32,7 @@ abstract class AbstractPost
     #[Ref('app.bsky.feed.post#replyRef')]
     protected ?array $reply = null;
 
+    #[Union(['app.bsky.embed.images', 'app.bsky.embed.video', 'app.bsky.embed.external', 'app.bsky.embed.record', 'app.bsky.embed.recordWithMedia'])]
     protected ?array $embed = null;
 
     /**
@@ -41,6 +43,7 @@ abstract class AbstractPost
     /**
      * Self-label values for this post. Effectively content warnings.
      */
+    #[Union(['com.atproto.label.defs#selfLabels'])]
     protected ?array $labels = null;
 
     /**
