@@ -14,6 +14,8 @@ abstract class AbstractListblock
 {
     public const NSID = 'app.bsky.graph.listblock';
 
+    protected array $required = ['subject', 'createdAt'];
+
     /**
      * Reference (AT-URI) to the mod list record.
      */

@@ -14,6 +14,8 @@ abstract class AbstractPostgate
 {
     public const NSID = 'app.bsky.feed.postgate';
 
+    protected array $required = ['post', 'createdAt'];
+
     protected string $createdAt;
 
     /**

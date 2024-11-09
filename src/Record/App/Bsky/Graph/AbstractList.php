@@ -14,6 +14,8 @@ abstract class AbstractList
 {
     public const NSID = 'app.bsky.graph.list';
 
+    protected array $required = ['name', 'purpose', 'createdAt'];
+
     /**
      * Defines the purpose of the list (aka, moderation-oriented or curration-oriented).
      */

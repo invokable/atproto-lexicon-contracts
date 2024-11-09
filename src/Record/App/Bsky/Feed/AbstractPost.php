@@ -14,6 +14,8 @@ abstract class AbstractPost
 {
     public const NSID = 'app.bsky.feed.post';
 
+    protected array $required = ['text', 'createdAt'];
+
     /**
      * The primary post content. May be an empty string, if there are embeds.
      */

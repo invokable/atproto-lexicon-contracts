@@ -14,6 +14,8 @@ abstract class AbstractBlock
 {
     public const NSID = 'app.bsky.graph.block';
 
+    protected array $required = ['subject', 'createdAt'];
+
     /**
      * DID of the account to be blocked.
      */

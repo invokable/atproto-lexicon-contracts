@@ -14,5 +14,7 @@ abstract class AbstractDeclaration
 {
     public const NSID = 'chat.bsky.actor.declaration';
 
+    protected array $required = ['allowIncoming'];
+
     protected string $allowIncoming;
 }

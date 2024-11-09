@@ -14,6 +14,8 @@ abstract class AbstractListitem
 {
     public const NSID = 'app.bsky.graph.listitem';
 
+    protected array $required = ['subject', 'list', 'createdAt'];
+
     /**
      * The account which is included on the list.
      */

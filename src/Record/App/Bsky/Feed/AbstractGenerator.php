@@ -14,6 +14,8 @@ abstract class AbstractGenerator
 {
     public const NSID = 'app.bsky.feed.generator';
 
+    protected array $required = ['did', 'displayName', 'createdAt'];
+
     protected string $did;
 
     protected string $displayName;

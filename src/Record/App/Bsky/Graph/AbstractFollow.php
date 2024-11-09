@@ -14,6 +14,8 @@ abstract class AbstractFollow
 {
     public const NSID = 'app.bsky.graph.follow';
 
+    protected array $required = ['subject', 'createdAt'];
+
     protected string $subject;
 
     protected string $createdAt;

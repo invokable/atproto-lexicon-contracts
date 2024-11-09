@@ -14,6 +14,8 @@ abstract class AbstractService
 {
     public const NSID = 'app.bsky.labeler.service';
 
+    protected array $required = ['policies', 'createdAt'];
+
     #[Ref('app.bsky.labeler.defs#labelerPolicies')]
     protected array $policies;
 

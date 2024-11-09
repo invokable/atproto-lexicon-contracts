@@ -14,6 +14,8 @@ abstract class AbstractLike
 {
     public const NSID = 'app.bsky.feed.like';
 
+    protected array $required = ['subject', 'createdAt'];
+
     #[Ref('com.atproto.repo.strongRef')]
     protected array $subject;
 

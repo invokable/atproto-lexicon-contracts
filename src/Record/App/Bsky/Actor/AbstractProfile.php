@@ -14,6 +14,8 @@ abstract class AbstractProfile
 {
     public const NSID = 'app.bsky.actor.profile';
 
+    protected array $required = [];
+
     protected ?string $displayName = null;
 
     /**

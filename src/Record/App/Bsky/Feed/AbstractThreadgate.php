@@ -14,6 +14,8 @@ abstract class AbstractThreadgate
 {
     public const NSID = 'app.bsky.feed.threadgate';
 
+    protected array $required = ['post', 'createdAt'];
+
     /**
      * Reference (AT-URI) to the post record.
      */

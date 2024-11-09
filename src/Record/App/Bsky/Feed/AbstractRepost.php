@@ -14,6 +14,8 @@ abstract class AbstractRepost
 {
     public const NSID = 'app.bsky.feed.repost';
 
+    protected array $required = ['subject', 'createdAt'];
+
     #[Ref('com.atproto.repo.strongRef')]
     protected array $subject;
 
