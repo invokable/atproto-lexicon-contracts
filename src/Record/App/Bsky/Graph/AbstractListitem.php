@@ -11,16 +11,16 @@ use Revolution\AtProto\Lexicon\Attributes\Ref;
  */
 abstract class AbstractListitem
 {
-    public const NSID ='app.bsky.graph.listitem';
+    public const NSID = 'app.bsky.graph.listitem';
 
-   /**
-    * The account which is included on the list.
-    */
+    /**
+     * The account which is included on the list.
+     */
     protected string $subject;
 
-   /**
-    * Reference (AT-URI) to the list record (app.bsky.graph.list).
-    */
+    /**
+     * Reference (AT-URI) to the list record (app.bsky.graph.list).
+     */
     protected string $list;
 
     protected string $createdAt;

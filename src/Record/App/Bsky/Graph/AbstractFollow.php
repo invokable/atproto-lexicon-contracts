@@ -11,7 +11,7 @@ use Revolution\AtProto\Lexicon\Attributes\Ref;
  */
 abstract class AbstractFollow
 {
-    public const NSID ='app.bsky.graph.follow';
+    public const NSID = 'app.bsky.graph.follow';
 
     protected string $subject;
 

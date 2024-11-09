@@ -7,6 +7,7 @@ namespace Revolution\AtProto\Lexicon\Contracts\App\Bsky;
 use Revolution\AtProto\Lexicon\Attributes\Get;
 use Revolution\AtProto\Lexicon\Attributes\NSID;
 use Revolution\AtProto\Lexicon\Attributes\Post;
+use Revolution\AtProto\Lexicon\Attributes\Ref;
 
 interface Actor
 {
@@ -56,7 +57,7 @@ interface Actor
      * @see https://docs.bsky.app/docs/api/app-bsky-actor-put-preferences
      */
     #[Post, NSID(self::putPreferences)]
-    public function putPreferences(array $preferences);
+    public function putPreferences(#[Ref('app.bsky.actor.defs#preferences')] array $preferences);
 
     /**
      * Find actors (profiles) matching search criteria. Does not require auth.

@@ -11,7 +11,7 @@ use Revolution\AtProto\Lexicon\Attributes\Ref;
  */
 abstract class AbstractLike
 {
-    public const NSID ='app.bsky.feed.like';
+    public const NSID = 'app.bsky.feed.like';
 
     #[Ref('com.atproto.repo.strongRef')]
     protected array $subject;

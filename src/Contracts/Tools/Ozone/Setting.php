@@ -7,6 +7,7 @@ namespace Revolution\AtProto\Lexicon\Contracts\Tools\Ozone;
 use Revolution\AtProto\Lexicon\Attributes\Get;
 use Revolution\AtProto\Lexicon\Attributes\NSID;
 use Revolution\AtProto\Lexicon\Attributes\Post;
+use Revolution\AtProto\Lexicon\Attributes\Ref;
 
 interface Setting
 {

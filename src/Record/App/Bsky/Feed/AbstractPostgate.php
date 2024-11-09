@@ -11,18 +11,18 @@ use Revolution\AtProto\Lexicon\Attributes\Ref;
  */
 abstract class AbstractPostgate
 {
-    public const NSID ='app.bsky.feed.postgate';
+    public const NSID = 'app.bsky.feed.postgate';
 
     protected string $createdAt;
 
-   /**
-    * Reference (AT-URI) to the post record.
-    */
+    /**
+     * Reference (AT-URI) to the post record.
+     */
     protected string $post;
 
-   /**
-    * List of AT-URIs embedding this post that the author has detached from.
-    */
+    /**
+     * List of AT-URIs embedding this post that the author has detached from.
+     */
     protected ?array $detachedEmbeddingUris = null;
 
     protected ?array $embeddingRules = null;

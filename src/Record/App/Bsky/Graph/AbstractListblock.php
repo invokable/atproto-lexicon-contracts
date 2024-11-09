@@ -11,11 +11,11 @@ use Revolution\AtProto\Lexicon\Attributes\Ref;
  */
 abstract class AbstractListblock
 {
-    public const NSID ='app.bsky.graph.listblock';
+    public const NSID = 'app.bsky.graph.listblock';
 
-   /**
-    * Reference (AT-URI) to the mod list record.
-    */
+    /**
+     * Reference (AT-URI) to the mod list record.
+     */
     protected string $subject;
 
     protected string $createdAt;

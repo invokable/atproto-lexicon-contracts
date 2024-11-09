@@ -11,7 +11,7 @@ use Revolution\AtProto\Lexicon\Attributes\Ref;
  */
 abstract class AbstractRepost
 {
-    public const NSID ='app.bsky.feed.repost';
+    public const NSID = 'app.bsky.feed.repost';
 
     #[Ref('com.atproto.repo.strongRef')]
     protected array $subject;
