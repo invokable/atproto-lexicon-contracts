@@ -22,7 +22,7 @@ Versioning is also automatic, so even if a breaking change is included, only the
 ```
 // composer.json
 
-"revolution/atproto-lexicon-contracts": "1.0.6",
+"revolution/atproto-lexicon-contracts": "1.0.12",
 ```
 
 ## Example client
