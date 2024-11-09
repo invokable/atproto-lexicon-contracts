@@ -86,8 +86,7 @@ class LexiconRecordCommand extends Command
             //->dump()
             ->each(function (array $json, string $id) {
                 $property = $this->getProperties($json, $id);
-                $description = Arr::get($json, 'defs.main.description') ?? '';
-                $this->save(Str::rtrim($property), $description, $id);
+                $this->save(json: $json, id: $id, property: Str::rtrim($property));
             });
     }
 
@@ -185,7 +184,7 @@ class LexiconRecordCommand extends Command
             });
     }
 
-    protected function save(string $property, string $description, string $id): void
+    protected function save(array $json, string $id, string $property): void
     {
         // ["App", "Bsky, "Actor", "Profile]
         $path = Str::of($id)->explode('.')->map(fn ($item) => Str::studly($item));
@@ -197,6 +196,8 @@ class LexiconRecordCommand extends Command
         // "App\Bsky\Actor"
         $namespace = $path->take(3)->implode('\\');
 
+        $description = Arr::get($json, 'defs.main.description') ?? '';
+
         if (filled($description)) {
             $description = collect([
                 '/**',
@@ -207,6 +208,13 @@ class LexiconRecordCommand extends Command
 
         $const = "    public const NSID = '$id';";
 
+        $required = Arr::get($json, 'defs.main.record.required', []);
+        $required = collect($required)
+            ->implode(function ($item) {
+                return "'$item'";
+            }, ', ');
+        $required = "    protected array \$required = [$required];";
+
         $tmp = File::get(realpath(__DIR__.'/stubs/lexicon-record.stub'));
 
         $tmp = Str::of($tmp)
@@ -214,6 +222,7 @@ class LexiconRecordCommand extends Command
             ->replace('{description}', $description)
             ->replace('{name}', $name)
             ->replace('{const}', $const)
+            ->replace('{required}', $required)
             ->replace('{property}', $property)
             ->toString();
 
