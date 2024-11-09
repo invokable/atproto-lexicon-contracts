@@ -147,9 +147,9 @@ class LexiconRecordCommand extends Command
 
                 if (filled($description)) {
                     $properties = [
-                        '   /**',
-                        '    * '.$description,
-                        '    */',
+                        '    /**',
+                        '     * '.$description,
+                        '     */',
                     ];
                 } else {
                     $properties = [];
