@@ -150,6 +150,7 @@ class LexiconContractsCommand extends Command
             ->map(function ($property, $name) use ($id, $required) {
                 $type = Arr::get($property, 'type');
                 $format = Arr::get($property, 'format');
+                $knownValues = Arr::get($property, 'knownValues');
 
                 $ref = null;
                 if ($type === 'ref') {
@@ -186,7 +187,7 @@ class LexiconContractsCommand extends Command
                 $default = Arr::get($property, 'default');
                 $require = in_array($name, $required, true);
 
-                return compact('type', 'format', 'ref', 'union', 'default', 'require');
+                return compact('type', 'format', 'knownValues', 'ref', 'union', 'default', 'require');
             })
             ->sortByDesc(function ($property, $name) use ($required) {
                 return in_array($name, $required, true);
@@ -196,6 +197,7 @@ class LexiconContractsCommand extends Command
                 $format = Arr::get($property, 'format');
                 $ref = Arr::get($property, 'ref');
                 $union = Arr::get($property, 'union');
+                $knownValues = Arr::get($property, 'knownValues');
                 $require = Arr::get($property, 'require');
                 $default = Arr::get($property, 'default');
 
@@ -233,11 +235,16 @@ class LexiconContractsCommand extends Command
                     $union = sprintf('#[Union([%s])]', $union);
                 }
 
+                if (filled($knownValues)) {
+                    $knownValues = collect($knownValues)->implode(fn ($item) => "'$item'", ', ');
+                    $knownValues = sprintf('#[KnownValues([%s])]', $knownValues);
+                }
+
                 if (filled($format)) {
                     $format = "#[Format('$format')]";
                 }
 
-                return Str::squish("$sensitive $ref $union $format $type \$$name");
+                return Str::squish("$sensitive $ref $union $format $knownValues $type \$$name");
             }, ', ');
     }
 
@@ -296,6 +303,10 @@ class LexiconContractsCommand extends Command
             ->whenContains('#[Post',
                 fn (Stringable $string) => $string,
                 fn (Stringable $string) => $string->remove('use Revolution\AtProto\Lexicon\Attributes\Post;'.PHP_EOL),
+            )
+            ->whenContains('#[KnownValues',
+                fn (Stringable $string) => $string,
+                fn (Stringable $string) => $string->remove('use Revolution\AtProto\Lexicon\Attributes\KnownValues;'.PHP_EOL),
             )
             ->toString();
     }
