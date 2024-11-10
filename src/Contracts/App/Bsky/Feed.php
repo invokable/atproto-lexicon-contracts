@@ -9,6 +9,7 @@ use Revolution\AtProto\Lexicon\Attributes\Get;
 use Revolution\AtProto\Lexicon\Attributes\KnownValues;
 use Revolution\AtProto\Lexicon\Attributes\NSID;
 use Revolution\AtProto\Lexicon\Attributes\Post;
+use Revolution\AtProto\Lexicon\Attributes\Ref;
 
 interface Feed
 {
@@ -173,5 +174,5 @@ interface Feed
      * @see https://docs.bsky.app/docs/api/app-bsky-feed-send-interactions
      */
     #[Post, NSID(self::sendInteractions)]
-    public function sendInteractions(array $interactions);
+    public function sendInteractions(#[Ref('app.bsky.feed.defs#interaction')] array $interactions);
 }
