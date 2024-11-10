@@ -61,6 +61,7 @@ class LexiconEnumCommand extends Command
         $this->facet();
         $this->feed();
         $this->graph();
+        $this->threadgate();
 
         return 0;
     }
@@ -98,7 +99,7 @@ class LexiconEnumCommand extends Command
     protected function facet(): void
     {
         $file = collect($this->files)
-            ->filter(fn (string $file) => Str::contains($file, '/app/bsky/richtext'))
+            ->filter(fn (string $file) => Str::contains($file, '/app/bsky/richtext/facet'))
             ->first();
 
         $json = File::json($file);
@@ -180,6 +181,35 @@ class LexiconEnumCommand extends Command
             }, PHP_EOL.PHP_EOL);
 
         $this->save($enum, 'Graph');
+    }
+
+    protected function threadgate(): void
+    {
+        $file = collect($this->files)
+            ->filter(fn (string $file) => Str::contains($file, '/app/bsky/feed/threadgate'))
+            ->first();
+
+        $json = File::json($file);
+
+        $id = Arr::get($json, 'id');
+        $rules = Arr::get($json, 'defs.main.record.properties.allow.items.refs');
+
+        $enum = collect($rules)
+            ->mapWithKeys(fn (string $rule) => [Str::of($rule)->remove('#')->toString() => $id.$rule])
+            //->dump()
+            ->implode(function (string $rule, string $name) use ($json) {
+                $description = Arr::get($json, 'defs.'.$name.'.description');
+                $name = Str::studly($name);
+
+                return collect([
+                    '    /**',
+                    "     * $description",
+                    '     */',
+                    "    case $name = '$rule';",
+                ])->implode(PHP_EOL);
+            }, PHP_EOL.PHP_EOL);
+
+        $this->save($enum, 'ThreadGate');
     }
 
     protected function save(string $enum, string $name): void
