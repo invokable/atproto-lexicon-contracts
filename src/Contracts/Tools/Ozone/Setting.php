@@ -6,6 +6,7 @@ namespace Revolution\AtProto\Lexicon\Contracts\Tools\Ozone;
 
 use Revolution\AtProto\Lexicon\Attributes\Format;
 use Revolution\AtProto\Lexicon\Attributes\Get;
+use Revolution\AtProto\Lexicon\Attributes\KnownValues;
 use Revolution\AtProto\Lexicon\Attributes\NSID;
 use Revolution\AtProto\Lexicon\Attributes\Post;
 
@@ -21,7 +22,7 @@ interface Setting
      * @see https://docs.bsky.app/docs/api/tools-ozone-setting-list-options
      */
     #[Get, NSID(self::listOptions)]
-    public function listOptions(?int $limit = 50, ?string $cursor = null, ?string $scope = 'instance', ?string $prefix = null, ?array $keys = null);
+    public function listOptions(?int $limit = 50, ?string $cursor = null, #[KnownValues(['instance', 'personal'])] ?string $scope = 'instance', ?string $prefix = null, ?array $keys = null);
 
     /**
      * Delete settings by key.
@@ -29,7 +30,7 @@ interface Setting
      * @see https://docs.bsky.app/docs/api/tools-ozone-setting-remove-options
      */
     #[Post, NSID(self::removeOptions)]
-    public function removeOptions(array $keys, string $scope);
+    public function removeOptions(array $keys, #[KnownValues(['instance', 'personal'])] string $scope);
 
     /**
      * Create or update setting option.
@@ -37,5 +38,5 @@ interface Setting
      * @see https://docs.bsky.app/docs/api/tools-ozone-setting-upsert-option
      */
     #[Post, NSID(self::upsertOption)]
-    public function upsertOption(#[Format('nsid')] string $key, string $scope, mixed $value, ?string $description = null, ?string $managerRole = null);
+    public function upsertOption(#[Format('nsid')] string $key, #[KnownValues(['instance', 'personal'])] string $scope, mixed $value, ?string $description = null, #[KnownValues(['tools.ozone.team.defs#roleModerator', 'tools.ozone.team.defs#roleTriage', 'tools.ozone.team.defs#roleAdmin'])] ?string $managerRole = null);
 }
