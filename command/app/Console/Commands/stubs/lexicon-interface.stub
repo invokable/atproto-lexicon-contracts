@@ -6,6 +6,7 @@ namespace Revolution\AtProto\Lexicon\Contracts\{namespace};
 
 use Revolution\AtProto\Lexicon\Attributes\Format;
 use Revolution\AtProto\Lexicon\Attributes\Get;
+use Revolution\AtProto\Lexicon\Attributes\KnownValues;
 use Revolution\AtProto\Lexicon\Attributes\NSID;
 use Revolution\AtProto\Lexicon\Attributes\Post;
 use Revolution\AtProto\Lexicon\Attributes\Ref;
