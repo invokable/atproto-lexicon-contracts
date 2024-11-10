@@ -102,7 +102,7 @@ interface Convo
      * @see https://docs.bsky.app/docs/api/chat-bsky-convo-send-message-batch
      */
     #[Post, NSID(self::sendMessageBatch)]
-    public function sendMessageBatch(array $items);
+    public function sendMessageBatch(#[Ref('chat.bsky.convo.sendMessageBatch#batchItem')] array $items);
 
     /**
      * chat.bsky.convo.unmuteConvo.
