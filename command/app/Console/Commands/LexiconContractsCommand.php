@@ -149,8 +149,14 @@ class LexiconContractsCommand extends Command
         return collect($properties)
             ->map(function ($property, $name) use ($id, $required) {
                 $type = Arr::get($property, 'type');
-                $format = Arr::get($property, 'format');
                 $knownValues = Arr::get($property, 'knownValues');
+
+                $format = Arr::get($property, 'format');
+                if ($type === 'array' && empty($format)) {
+                    if (Arr::get($property, 'items.type') !== 'ref') {
+                        $format = Arr::get($property, 'items.format');
+                    }
+                }
 
                 $ref = null;
                 if ($type === 'ref') {
@@ -167,11 +173,10 @@ class LexiconContractsCommand extends Command
                     $type = $this->jsons->dot()->get($ref_type);
                 }
 
-                if ($type === 'array') {
-                    $items = Arr::get($property, 'items');
-                    if (Arr::get($items, 'type') === 'ref') {
-                        $ref = Arr::get($items, 'ref');
-                        if (Str::doesntContain($ref, '.')) {
+                if ($type === 'array' && empty($ref)) {
+                    if (Arr::get($property, 'items.type') === 'ref') {
+                        $ref = Arr::get($property, 'items.ref');
+                        if (! empty($ref) && Str::doesntContain($ref, '.')) {
                             $ref = $id.$ref;
                         }
                     }
