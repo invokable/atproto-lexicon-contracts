@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace Revolution\AtProto\Lexicon\Contracts\Tools\Ozone;
 
+use Revolution\AtProto\Lexicon\Attributes\Format;
 use Revolution\AtProto\Lexicon\Attributes\Get;
 use Revolution\AtProto\Lexicon\Attributes\NSID;
 use Revolution\AtProto\Lexicon\Attributes\Post;
-use Revolution\AtProto\Lexicon\Attributes\Ref;
-use Revolution\AtProto\Lexicon\Attributes\Union;
 
 interface Setting
 {
@@ -38,5 +37,5 @@ interface Setting
      * @see https://docs.bsky.app/docs/api/tools-ozone-setting-upsert-option
      */
     #[Post, NSID(self::upsertOption)]
-    public function upsertOption(string $key, string $scope, mixed $value, ?string $description = null, ?string $managerRole = null);
+    public function upsertOption(#[Format('nsid')] string $key, string $scope, mixed $value, ?string $description = null, ?string $managerRole = null);
 }

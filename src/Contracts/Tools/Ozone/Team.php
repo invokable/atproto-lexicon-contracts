@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace Revolution\AtProto\Lexicon\Contracts\Tools\Ozone;
 
+use Revolution\AtProto\Lexicon\Attributes\Format;
 use Revolution\AtProto\Lexicon\Attributes\Get;
 use Revolution\AtProto\Lexicon\Attributes\NSID;
 use Revolution\AtProto\Lexicon\Attributes\Post;
-use Revolution\AtProto\Lexicon\Attributes\Ref;
-use Revolution\AtProto\Lexicon\Attributes\Union;
 
 interface Team
 {
@@ -23,7 +22,7 @@ interface Team
      * @see https://docs.bsky.app/docs/api/tools-ozone-team-add-member
      */
     #[Post, NSID(self::addMember)]
-    public function addMember(string $did, string $role);
+    public function addMember(#[Format('did')] string $did, string $role);
 
     /**
      * Delete a member from ozone team. Requires admin role.
@@ -31,7 +30,7 @@ interface Team
      * @see https://docs.bsky.app/docs/api/tools-ozone-team-delete-member
      */
     #[Post, NSID(self::deleteMember)]
-    public function deleteMember(string $did);
+    public function deleteMember(#[Format('did')] string $did);
 
     /**
      * List all members with access to the ozone service.
@@ -47,5 +46,5 @@ interface Team
      * @see https://docs.bsky.app/docs/api/tools-ozone-team-update-member
      */
     #[Post, NSID(self::updateMember)]
-    public function updateMember(string $did, ?bool $disabled = null, ?string $role = null);
+    public function updateMember(#[Format('did')] string $did, ?bool $disabled = null, ?string $role = null);
 }

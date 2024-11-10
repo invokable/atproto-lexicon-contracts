@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Revolution\AtProto\Lexicon\Contracts\Com\Atproto;
 
+use Revolution\AtProto\Lexicon\Attributes\Format;
 use Revolution\AtProto\Lexicon\Attributes\Get;
 use Revolution\AtProto\Lexicon\Attributes\NSID;
 use Revolution\AtProto\Lexicon\Attributes\Post;
@@ -33,7 +34,7 @@ interface Admin
      * @see https://docs.bsky.app/docs/api/com-atproto-admin-delete-account
      */
     #[Post, NSID(self::deleteAccount)]
-    public function deleteAccount(string $did);
+    public function deleteAccount(#[Format('did')] string $did);
 
     /**
      * Disable an account from receiving new invite codes, but does not invalidate existing codes.
@@ -41,7 +42,7 @@ interface Admin
      * @see https://docs.bsky.app/docs/api/com-atproto-admin-disable-account-invites
      */
     #[Post, NSID(self::disableAccountInvites)]
-    public function disableAccountInvites(string $account, ?string $note = null);
+    public function disableAccountInvites(#[Format('did')] string $account, ?string $note = null);
 
     /**
      * Disable some set of codes and/or all codes associated with a set of users.
@@ -57,7 +58,7 @@ interface Admin
      * @see https://docs.bsky.app/docs/api/com-atproto-admin-enable-account-invites
      */
     #[Post, NSID(self::enableAccountInvites)]
-    public function enableAccountInvites(string $account, ?string $note = null);
+    public function enableAccountInvites(#[Format('did')] string $account, ?string $note = null);
 
     /**
      * Get details about an account.
@@ -65,7 +66,7 @@ interface Admin
      * @see https://docs.bsky.app/docs/api/com-atproto-admin-get-account-info
      */
     #[Get, NSID(self::getAccountInfo)]
-    public function getAccountInfo(string $did);
+    public function getAccountInfo(#[Format('did')] string $did);
 
     /**
      * Get details about some accounts.
@@ -89,7 +90,7 @@ interface Admin
      * @see https://docs.bsky.app/docs/api/com-atproto-admin-get-subject-status
      */
     #[Get, NSID(self::getSubjectStatus)]
-    public function getSubjectStatus(?string $did = null, ?string $uri = null, ?string $blob = null);
+    public function getSubjectStatus(#[Format('did')] ?string $did = null, #[Format('at-uri')] ?string $uri = null, #[Format('cid')] ?string $blob = null);
 
     /**
      * Get list of accounts that matches your search query.
@@ -105,7 +106,7 @@ interface Admin
      * @see https://docs.bsky.app/docs/api/com-atproto-admin-send-email
      */
     #[Post, NSID(self::sendEmail)]
-    public function sendEmail(string $recipientDid, string $content, string $senderDid, ?string $subject = null, ?string $comment = null);
+    public function sendEmail(#[Format('did')] string $recipientDid, string $content, #[Format('did')] string $senderDid, ?string $subject = null, ?string $comment = null);
 
     /**
      * Administrative action to update an account's email.
@@ -113,7 +114,7 @@ interface Admin
      * @see https://docs.bsky.app/docs/api/com-atproto-admin-update-account-email
      */
     #[Post, NSID(self::updateAccountEmail)]
-    public function updateAccountEmail(string $account, string $email);
+    public function updateAccountEmail(#[Format('at-identifier')] string $account, string $email);
 
     /**
      * Administrative action to update an account's handle.
@@ -121,7 +122,7 @@ interface Admin
      * @see https://docs.bsky.app/docs/api/com-atproto-admin-update-account-handle
      */
     #[Post, NSID(self::updateAccountHandle)]
-    public function updateAccountHandle(string $did, string $handle);
+    public function updateAccountHandle(#[Format('did')] string $did, #[Format('handle')] string $handle);
 
     /**
      * Update the password for a user account as an administrator.
@@ -129,7 +130,7 @@ interface Admin
      * @see https://docs.bsky.app/docs/api/com-atproto-admin-update-account-password
      */
     #[Post, NSID(self::updateAccountPassword)]
-    public function updateAccountPassword(string $did, #[\SensitiveParameter] string $password);
+    public function updateAccountPassword(#[Format('did')] string $did, #[\SensitiveParameter] string $password);
 
     /**
      * Update the service-specific admin status of a subject (account, record, or blob).

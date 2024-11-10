@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace Revolution\AtProto\Lexicon\Contracts\Com\Atproto;
 
+use Revolution\AtProto\Lexicon\Attributes\Format;
 use Revolution\AtProto\Lexicon\Attributes\Get;
 use Revolution\AtProto\Lexicon\Attributes\NSID;
 use Revolution\AtProto\Lexicon\Attributes\Post;
-use Revolution\AtProto\Lexicon\Attributes\Ref;
-use Revolution\AtProto\Lexicon\Attributes\Union;
 
 interface Sync
 {
@@ -31,7 +30,7 @@ interface Sync
      * @see https://docs.bsky.app/docs/api/com-atproto-sync-get-blob
      */
     #[Get, NSID(self::getBlob)]
-    public function getBlob(string $did, string $cid);
+    public function getBlob(#[Format('did')] string $did, #[Format('cid')] string $cid);
 
     /**
      * Get data blocks from a given repo, by CID. For example, intermediate MST nodes, or records. Does not require auth; implemented by PDS.
@@ -39,7 +38,7 @@ interface Sync
      * @see https://docs.bsky.app/docs/api/com-atproto-sync-get-blocks
      */
     #[Get, NSID(self::getBlocks)]
-    public function getBlocks(string $did, array $cids);
+    public function getBlocks(#[Format('did')] string $did, array $cids);
 
     /**
      * DEPRECATED - please use com.atproto.sync.getRepo instead.
@@ -47,7 +46,7 @@ interface Sync
      * @see https://docs.bsky.app/docs/api/com-atproto-sync-get-checkout
      */
     #[Get, NSID(self::getCheckout)]
-    public function getCheckout(string $did);
+    public function getCheckout(#[Format('did')] string $did);
 
     /**
      * DEPRECATED - please use com.atproto.sync.getLatestCommit instead.
@@ -55,7 +54,7 @@ interface Sync
      * @see https://docs.bsky.app/docs/api/com-atproto-sync-get-head
      */
     #[Get, NSID(self::getHead)]
-    public function getHead(string $did);
+    public function getHead(#[Format('did')] string $did);
 
     /**
      * Get the current commit CID & revision of the specified repo. Does not require auth.
@@ -63,7 +62,7 @@ interface Sync
      * @see https://docs.bsky.app/docs/api/com-atproto-sync-get-latest-commit
      */
     #[Get, NSID(self::getLatestCommit)]
-    public function getLatestCommit(string $did);
+    public function getLatestCommit(#[Format('did')] string $did);
 
     /**
      * Get data blocks needed to prove the existence or non-existence of record in the current version of repo. Does not require auth.
@@ -71,7 +70,7 @@ interface Sync
      * @see https://docs.bsky.app/docs/api/com-atproto-sync-get-record
      */
     #[Get, NSID(self::getRecord)]
-    public function getRecord(string $did, string $collection, string $rkey, ?string $commit = null);
+    public function getRecord(#[Format('did')] string $did, #[Format('nsid')] string $collection, string $rkey, #[Format('cid')] ?string $commit = null);
 
     /**
      * Download a repository export as CAR file. Optionally only a 'diff' since a previous revision. Does not require auth; implemented by PDS.
@@ -79,7 +78,7 @@ interface Sync
      * @see https://docs.bsky.app/docs/api/com-atproto-sync-get-repo
      */
     #[Get, NSID(self::getRepo)]
-    public function getRepo(string $did, ?string $since = null);
+    public function getRepo(#[Format('did')] string $did, ?string $since = null);
 
     /**
      * Get the hosting status for a repository, on this server. Expected to be implemented by PDS and Relay.
@@ -87,7 +86,7 @@ interface Sync
      * @see https://docs.bsky.app/docs/api/com-atproto-sync-get-repo-status
      */
     #[Get, NSID(self::getRepoStatus)]
-    public function getRepoStatus(string $did);
+    public function getRepoStatus(#[Format('did')] string $did);
 
     /**
      * List blob CIDs for an account, since some repo revision. Does not require auth; implemented by PDS.
@@ -95,7 +94,7 @@ interface Sync
      * @see https://docs.bsky.app/docs/api/com-atproto-sync-list-blobs
      */
     #[Get, NSID(self::listBlobs)]
-    public function listBlobs(string $did, ?string $since = null, ?int $limit = 500, ?string $cursor = null);
+    public function listBlobs(#[Format('did')] string $did, ?string $since = null, ?int $limit = 500, ?string $cursor = null);
 
     /**
      * Enumerates all the DID, rev, and commit CID for all repos hosted by this service. Does not require auth; implemented by PDS and Relay.

@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace Revolution\AtProto\Lexicon\Contracts\App\Bsky;
 
+use Revolution\AtProto\Lexicon\Attributes\Format;
 use Revolution\AtProto\Lexicon\Attributes\Get;
 use Revolution\AtProto\Lexicon\Attributes\NSID;
 use Revolution\AtProto\Lexicon\Attributes\Post;
-use Revolution\AtProto\Lexicon\Attributes\Ref;
-use Revolution\AtProto\Lexicon\Attributes\Union;
 
 interface Feed
 {
@@ -45,7 +44,7 @@ interface Feed
      * @see https://docs.bsky.app/docs/api/app-bsky-feed-get-actor-feeds
      */
     #[Get, NSID(self::getActorFeeds)]
-    public function getActorFeeds(string $actor, ?int $limit = 50, ?string $cursor = null);
+    public function getActorFeeds(#[Format('at-identifier')] string $actor, ?int $limit = 50, ?string $cursor = null);
 
     /**
      * Get a list of posts liked by an actor. Requires auth, actor must be the requesting account.
@@ -53,7 +52,7 @@ interface Feed
      * @see https://docs.bsky.app/docs/api/app-bsky-feed-get-actor-likes
      */
     #[Get, NSID(self::getActorLikes)]
-    public function getActorLikes(string $actor, ?int $limit = 50, ?string $cursor = null);
+    public function getActorLikes(#[Format('at-identifier')] string $actor, ?int $limit = 50, ?string $cursor = null);
 
     /**
      * Get a view of an actor's 'author feed' (post and reposts by the author). Does not require auth.
@@ -61,7 +60,7 @@ interface Feed
      * @see https://docs.bsky.app/docs/api/app-bsky-feed-get-author-feed
      */
     #[Get, NSID(self::getAuthorFeed)]
-    public function getAuthorFeed(string $actor, ?int $limit = 50, ?string $cursor = null, ?string $filter = 'posts_with_replies', ?bool $includePins = null);
+    public function getAuthorFeed(#[Format('at-identifier')] string $actor, ?int $limit = 50, ?string $cursor = null, ?string $filter = 'posts_with_replies', ?bool $includePins = null);
 
     /**
      * Get a hydrated feed from an actor's selected feed generator. Implemented by App View.
@@ -69,7 +68,7 @@ interface Feed
      * @see https://docs.bsky.app/docs/api/app-bsky-feed-get-feed
      */
     #[Get, NSID(self::getFeed)]
-    public function getFeed(string $feed, ?int $limit = 50, ?string $cursor = null);
+    public function getFeed(#[Format('at-uri')] string $feed, ?int $limit = 50, ?string $cursor = null);
 
     /**
      * Get information about a feed generator. Implemented by AppView.
@@ -77,7 +76,7 @@ interface Feed
      * @see https://docs.bsky.app/docs/api/app-bsky-feed-get-feed-generator
      */
     #[Get, NSID(self::getFeedGenerator)]
-    public function getFeedGenerator(string $feed);
+    public function getFeedGenerator(#[Format('at-uri')] string $feed);
 
     /**
      * Get information about a list of feed generators.
@@ -93,7 +92,7 @@ interface Feed
      * @see https://docs.bsky.app/docs/api/app-bsky-feed-get-feed-skeleton
      */
     #[Get, NSID(self::getFeedSkeleton)]
-    public function getFeedSkeleton(string $feed, ?int $limit = 50, ?string $cursor = null);
+    public function getFeedSkeleton(#[Format('at-uri')] string $feed, ?int $limit = 50, ?string $cursor = null);
 
     /**
      * Get like records which reference a subject (by AT-URI and CID).
@@ -101,7 +100,7 @@ interface Feed
      * @see https://docs.bsky.app/docs/api/app-bsky-feed-get-likes
      */
     #[Get, NSID(self::getLikes)]
-    public function getLikes(string $uri, ?string $cid = null, ?int $limit = 50, ?string $cursor = null);
+    public function getLikes(#[Format('at-uri')] string $uri, #[Format('cid')] ?string $cid = null, ?int $limit = 50, ?string $cursor = null);
 
     /**
      * Get a feed of recent posts from a list (posts and reposts from any actors on the list). Does not require auth.
@@ -109,7 +108,7 @@ interface Feed
      * @see https://docs.bsky.app/docs/api/app-bsky-feed-get-list-feed
      */
     #[Get, NSID(self::getListFeed)]
-    public function getListFeed(string $list, ?int $limit = 50, ?string $cursor = null);
+    public function getListFeed(#[Format('at-uri')] string $list, ?int $limit = 50, ?string $cursor = null);
 
     /**
      * Get posts in a thread. Does not require auth, but additional metadata and filtering will be applied for authed requests.
@@ -117,7 +116,7 @@ interface Feed
      * @see https://docs.bsky.app/docs/api/app-bsky-feed-get-post-thread
      */
     #[Get, NSID(self::getPostThread)]
-    public function getPostThread(string $uri, ?int $depth = 6, ?int $parentHeight = 80);
+    public function getPostThread(#[Format('at-uri')] string $uri, ?int $depth = 6, ?int $parentHeight = 80);
 
     /**
      * Gets post views for a specified list of posts (by AT-URI). This is sometimes referred to as 'hydrating' a 'feed skeleton'.
@@ -133,7 +132,7 @@ interface Feed
      * @see https://docs.bsky.app/docs/api/app-bsky-feed-get-quotes
      */
     #[Get, NSID(self::getQuotes)]
-    public function getQuotes(string $uri, ?string $cid = null, ?int $limit = 50, ?string $cursor = null);
+    public function getQuotes(#[Format('at-uri')] string $uri, #[Format('cid')] ?string $cid = null, ?int $limit = 50, ?string $cursor = null);
 
     /**
      * Get a list of reposts for a given post.
@@ -141,7 +140,7 @@ interface Feed
      * @see https://docs.bsky.app/docs/api/app-bsky-feed-get-reposted-by
      */
     #[Get, NSID(self::getRepostedBy)]
-    public function getRepostedBy(string $uri, ?string $cid = null, ?int $limit = 50, ?string $cursor = null);
+    public function getRepostedBy(#[Format('at-uri')] string $uri, #[Format('cid')] ?string $cid = null, ?int $limit = 50, ?string $cursor = null);
 
     /**
      * Get a list of suggested feeds (feed generators) for the requesting account.
@@ -165,7 +164,7 @@ interface Feed
      * @see https://docs.bsky.app/docs/api/app-bsky-feed-search-posts
      */
     #[Get, NSID(self::searchPosts)]
-    public function searchPosts(string $q, ?string $sort = 'latest', ?string $since = null, ?string $until = null, ?string $mentions = null, ?string $author = null, ?string $lang = null, ?string $domain = null, ?string $url = null, ?array $tag = null, ?int $limit = 25, ?string $cursor = null);
+    public function searchPosts(string $q, ?string $sort = 'latest', ?string $since = null, ?string $until = null, #[Format('at-identifier')] ?string $mentions = null, #[Format('at-identifier')] ?string $author = null, #[Format('language')] ?string $lang = null, ?string $domain = null, #[Format('uri')] ?string $url = null, ?array $tag = null, ?int $limit = 25, ?string $cursor = null);
 
     /**
      * Send information about interactions with feed items back to the feed generator that served them.

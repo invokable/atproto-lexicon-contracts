@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Revolution\AtProto\Lexicon\Contracts\App\Bsky;
 
+use Revolution\AtProto\Lexicon\Attributes\Format;
 use Revolution\AtProto\Lexicon\Attributes\Get;
 use Revolution\AtProto\Lexicon\Attributes\NSID;
 use Revolution\AtProto\Lexicon\Attributes\Post;
 use Revolution\AtProto\Lexicon\Attributes\Ref;
-use Revolution\AtProto\Lexicon\Attributes\Union;
 
 interface Actor
 {
@@ -34,7 +34,7 @@ interface Actor
      * @see https://docs.bsky.app/docs/api/app-bsky-actor-get-profile
      */
     #[Get, NSID(self::getProfile)]
-    public function getProfile(string $actor);
+    public function getProfile(#[Format('at-identifier')] string $actor);
 
     /**
      * Get detailed profile views of multiple actors.
