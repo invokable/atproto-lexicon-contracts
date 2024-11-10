@@ -20,7 +20,7 @@ interface Signature
      * @see https://docs.bsky.app/docs/api/tools-ozone-signature-find-correlation
      */
     #[Get, NSID(self::findCorrelation)]
-    public function findCorrelation(array $dids);
+    public function findCorrelation(#[Format('did')] array $dids);
 
     /**
      * Get accounts that share some matching threat signatures with the root account.

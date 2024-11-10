@@ -75,7 +75,7 @@ interface Admin
      * @see https://docs.bsky.app/docs/api/com-atproto-admin-get-account-infos
      */
     #[Get, NSID(self::getAccountInfos)]
-    public function getAccountInfos(array $dids);
+    public function getAccountInfos(#[Format('did')] array $dids);
 
     /**
      * Get an admin view of invite codes.

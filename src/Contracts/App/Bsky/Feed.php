@@ -86,7 +86,7 @@ interface Feed
      * @see https://docs.bsky.app/docs/api/app-bsky-feed-get-feed-generators
      */
     #[Get, NSID(self::getFeedGenerators)]
-    public function getFeedGenerators(array $feeds);
+    public function getFeedGenerators(#[Format('at-uri')] array $feeds);
 
     /**
      * Get a skeleton of a feed provided by a feed generator. Auth is optional, depending on provider requirements, and provides the DID of the requester. Implemented by Feed Generator Service.
@@ -126,7 +126,7 @@ interface Feed
      * @see https://docs.bsky.app/docs/api/app-bsky-feed-get-posts
      */
     #[Get, NSID(self::getPosts)]
-    public function getPosts(array $uris);
+    public function getPosts(#[Format('at-uri')] array $uris);
 
     /**
      * Get a list of quotes for a given post.

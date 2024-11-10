@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Revolution\AtProto\Lexicon\Contracts\Chat\Bsky;
 
+use Revolution\AtProto\Lexicon\Attributes\Format;
 use Revolution\AtProto\Lexicon\Attributes\Get;
 use Revolution\AtProto\Lexicon\Attributes\NSID;
 use Revolution\AtProto\Lexicon\Attributes\Post;
@@ -46,7 +47,7 @@ interface Convo
      * @see https://docs.bsky.app/docs/api/chat-bsky-convo-get-convo-for-members
      */
     #[Get, NSID(self::getConvoForMembers)]
-    public function getConvoForMembers(array $members);
+    public function getConvoForMembers(#[Format('did')] array $members);
 
     /**
      * chat.bsky.convo.getLog.

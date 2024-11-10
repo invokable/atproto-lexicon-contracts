@@ -29,7 +29,7 @@ interface Moderation
      * @see https://docs.bsky.app/docs/api/tools-ozone-moderation-emit-event
      */
     #[Post, NSID(self::emitEvent)]
-    public function emitEvent(#[Union(['tools.ozone.moderation.defs#modEventTakedown', 'tools.ozone.moderation.defs#modEventAcknowledge', 'tools.ozone.moderation.defs#modEventEscalate', 'tools.ozone.moderation.defs#modEventComment', 'tools.ozone.moderation.defs#modEventLabel', 'tools.ozone.moderation.defs#modEventReport', 'tools.ozone.moderation.defs#modEventMute', 'tools.ozone.moderation.defs#modEventUnmute', 'tools.ozone.moderation.defs#modEventMuteReporter', 'tools.ozone.moderation.defs#modEventUnmuteReporter', 'tools.ozone.moderation.defs#modEventReverseTakedown', 'tools.ozone.moderation.defs#modEventResolveAppeal', 'tools.ozone.moderation.defs#modEventEmail', 'tools.ozone.moderation.defs#modEventTag', 'tools.ozone.moderation.defs#accountEvent', 'tools.ozone.moderation.defs#identityEvent', 'tools.ozone.moderation.defs#recordEvent'])] array $event, #[Union(['com.atproto.admin.defs#repoRef', 'com.atproto.repo.strongRef'])] array $subject, #[Format('did')] string $createdBy, ?array $subjectBlobCids = null);
+    public function emitEvent(#[Union(['tools.ozone.moderation.defs#modEventTakedown', 'tools.ozone.moderation.defs#modEventAcknowledge', 'tools.ozone.moderation.defs#modEventEscalate', 'tools.ozone.moderation.defs#modEventComment', 'tools.ozone.moderation.defs#modEventLabel', 'tools.ozone.moderation.defs#modEventReport', 'tools.ozone.moderation.defs#modEventMute', 'tools.ozone.moderation.defs#modEventUnmute', 'tools.ozone.moderation.defs#modEventMuteReporter', 'tools.ozone.moderation.defs#modEventUnmuteReporter', 'tools.ozone.moderation.defs#modEventReverseTakedown', 'tools.ozone.moderation.defs#modEventResolveAppeal', 'tools.ozone.moderation.defs#modEventEmail', 'tools.ozone.moderation.defs#modEventTag', 'tools.ozone.moderation.defs#accountEvent', 'tools.ozone.moderation.defs#identityEvent', 'tools.ozone.moderation.defs#recordEvent'])] array $event, #[Union(['com.atproto.admin.defs#repoRef', 'com.atproto.repo.strongRef'])] array $subject, #[Format('did')] string $createdBy, #[Format('cid')] ?array $subjectBlobCids = null);
 
     /**
      * Get details about a moderation event.
@@ -53,7 +53,7 @@ interface Moderation
      * @see https://docs.bsky.app/docs/api/tools-ozone-moderation-get-records
      */
     #[Get, NSID(self::getRecords)]
-    public function getRecords(array $uris);
+    public function getRecords(#[Format('at-uri')] array $uris);
 
     /**
      * Get details about a repository.
@@ -69,7 +69,7 @@ interface Moderation
      * @see https://docs.bsky.app/docs/api/tools-ozone-moderation-get-repos
      */
     #[Get, NSID(self::getRepos)]
-    public function getRepos(array $dids);
+    public function getRepos(#[Format('did')] array $dids);
 
     /**
      * List moderation events related to a subject.
@@ -77,7 +77,7 @@ interface Moderation
      * @see https://docs.bsky.app/docs/api/tools-ozone-moderation-query-events
      */
     #[Get, NSID(self::queryEvents)]
-    public function queryEvents(?array $types = null, #[Format('did')] ?string $createdBy = null, ?string $sortDirection = 'desc', #[Format('datetime')] ?string $createdAfter = null, #[Format('datetime')] ?string $createdBefore = null, #[Format('uri')] ?string $subject = null, ?array $collections = null, #[KnownValues(['account', 'record'])] ?string $subjectType = null, ?bool $includeAllUserRecords = null, ?int $limit = 50, ?bool $hasComment = null, ?string $comment = null, ?array $addedLabels = null, ?array $removedLabels = null, ?array $addedTags = null, ?array $removedTags = null, ?array $reportTypes = null, ?string $cursor = null);
+    public function queryEvents(?array $types = null, #[Format('did')] ?string $createdBy = null, ?string $sortDirection = 'desc', #[Format('datetime')] ?string $createdAfter = null, #[Format('datetime')] ?string $createdBefore = null, #[Format('uri')] ?string $subject = null, #[Format('nsid')] ?array $collections = null, #[KnownValues(['account', 'record'])] ?string $subjectType = null, ?bool $includeAllUserRecords = null, ?int $limit = 50, ?bool $hasComment = null, ?string $comment = null, ?array $addedLabels = null, ?array $removedLabels = null, ?array $addedTags = null, ?array $removedTags = null, ?array $reportTypes = null, ?string $cursor = null);
 
     /**
      * View moderation statuses of subjects (record or repo).
@@ -85,7 +85,7 @@ interface Moderation
      * @see https://docs.bsky.app/docs/api/tools-ozone-moderation-query-statuses
      */
     #[Get, NSID(self::queryStatuses)]
-    public function queryStatuses(?bool $includeAllUserRecords = null, #[Format('uri')] ?string $subject = null, ?string $comment = null, #[Format('datetime')] ?string $reportedAfter = null, #[Format('datetime')] ?string $reportedBefore = null, #[Format('datetime')] ?string $reviewedAfter = null, #[Format('datetime')] ?string $hostingDeletedAfter = null, #[Format('datetime')] ?string $hostingDeletedBefore = null, #[Format('datetime')] ?string $hostingUpdatedAfter = null, #[Format('datetime')] ?string $hostingUpdatedBefore = null, ?array $hostingStatuses = null, #[Format('datetime')] ?string $reviewedBefore = null, ?bool $includeMuted = null, ?bool $onlyMuted = null, ?string $reviewState = null, ?array $ignoreSubjects = null, #[Format('did')] ?string $lastReviewedBy = null, ?string $sortField = 'lastReportedAt', ?string $sortDirection = 'desc', ?bool $takendown = null, ?bool $appealed = null, ?int $limit = 50, ?array $tags = null, ?array $excludeTags = null, ?string $cursor = null, ?array $collections = null, #[KnownValues(['account', 'record'])] ?string $subjectType = null);
+    public function queryStatuses(?bool $includeAllUserRecords = null, #[Format('uri')] ?string $subject = null, ?string $comment = null, #[Format('datetime')] ?string $reportedAfter = null, #[Format('datetime')] ?string $reportedBefore = null, #[Format('datetime')] ?string $reviewedAfter = null, #[Format('datetime')] ?string $hostingDeletedAfter = null, #[Format('datetime')] ?string $hostingDeletedBefore = null, #[Format('datetime')] ?string $hostingUpdatedAfter = null, #[Format('datetime')] ?string $hostingUpdatedBefore = null, ?array $hostingStatuses = null, #[Format('datetime')] ?string $reviewedBefore = null, ?bool $includeMuted = null, ?bool $onlyMuted = null, ?string $reviewState = null, #[Format('uri')] ?array $ignoreSubjects = null, #[Format('did')] ?string $lastReviewedBy = null, ?string $sortField = 'lastReportedAt', ?string $sortDirection = 'desc', ?bool $takendown = null, ?bool $appealed = null, ?int $limit = 50, ?array $tags = null, ?array $excludeTags = null, ?string $cursor = null, #[Format('nsid')] ?array $collections = null, #[KnownValues(['account', 'record'])] ?string $subjectType = null);
 
     /**
      * Find repositories based on a search term.
