@@ -167,6 +167,16 @@ class LexiconContractsCommand extends Command
                     $type = $this->jsons->dot()->get($ref_type);
                 }
 
+                if ($type === 'array') {
+                    $items = Arr::get($property, 'items');
+                    if (Arr::get($items, 'type') === 'ref') {
+                        $ref = Arr::get($items, 'ref');
+                        if (Str::doesntContain($ref, '.')) {
+                            $ref = $id.$ref;
+                        }
+                    }
+                }
+
                 $union = null;
                 if ($type === 'union') {
                     $union = Arr::get($property, 'refs');
