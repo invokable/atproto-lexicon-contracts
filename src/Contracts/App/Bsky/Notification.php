@@ -6,6 +6,7 @@ namespace Revolution\AtProto\Lexicon\Contracts\App\Bsky;
 
 use Revolution\AtProto\Lexicon\Attributes\Format;
 use Revolution\AtProto\Lexicon\Attributes\Get;
+use Revolution\AtProto\Lexicon\Attributes\KnownValues;
 use Revolution\AtProto\Lexicon\Attributes\NSID;
 use Revolution\AtProto\Lexicon\Attributes\Post;
 
@@ -47,7 +48,7 @@ interface Notification
      * @see https://docs.bsky.app/docs/api/app-bsky-notification-register-push
      */
     #[Post, NSID(self::registerPush)]
-    public function registerPush(#[Format('did')] string $serviceDid, string $token, string $platform, string $appId);
+    public function registerPush(#[Format('did')] string $serviceDid, string $token, #[KnownValues(['ios', 'android', 'web'])] string $platform, string $appId);
 
     /**
      * Notify server that the requesting account has seen notifications. Requires auth.

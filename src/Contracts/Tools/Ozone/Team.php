@@ -6,6 +6,7 @@ namespace Revolution\AtProto\Lexicon\Contracts\Tools\Ozone;
 
 use Revolution\AtProto\Lexicon\Attributes\Format;
 use Revolution\AtProto\Lexicon\Attributes\Get;
+use Revolution\AtProto\Lexicon\Attributes\KnownValues;
 use Revolution\AtProto\Lexicon\Attributes\NSID;
 use Revolution\AtProto\Lexicon\Attributes\Post;
 
@@ -22,7 +23,7 @@ interface Team
      * @see https://docs.bsky.app/docs/api/tools-ozone-team-add-member
      */
     #[Post, NSID(self::addMember)]
-    public function addMember(#[Format('did')] string $did, string $role);
+    public function addMember(#[Format('did')] string $did, #[KnownValues(['tools.ozone.team.defs#roleAdmin', 'tools.ozone.team.defs#roleModerator', 'tools.ozone.team.defs#roleTriage'])] string $role);
 
     /**
      * Delete a member from ozone team. Requires admin role.
@@ -46,5 +47,5 @@ interface Team
      * @see https://docs.bsky.app/docs/api/tools-ozone-team-update-member
      */
     #[Post, NSID(self::updateMember)]
-    public function updateMember(#[Format('did')] string $did, ?bool $disabled = null, ?string $role = null);
+    public function updateMember(#[Format('did')] string $did, ?bool $disabled = null, #[KnownValues(['tools.ozone.team.defs#roleAdmin', 'tools.ozone.team.defs#roleModerator', 'tools.ozone.team.defs#roleTriage'])] ?string $role = null);
 }

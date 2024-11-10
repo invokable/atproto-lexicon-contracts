@@ -6,6 +6,7 @@ namespace Revolution\AtProto\Lexicon\Contracts\App\Bsky;
 
 use Revolution\AtProto\Lexicon\Attributes\Format;
 use Revolution\AtProto\Lexicon\Attributes\Get;
+use Revolution\AtProto\Lexicon\Attributes\KnownValues;
 use Revolution\AtProto\Lexicon\Attributes\NSID;
 use Revolution\AtProto\Lexicon\Attributes\Post;
 
@@ -60,7 +61,7 @@ interface Feed
      * @see https://docs.bsky.app/docs/api/app-bsky-feed-get-author-feed
      */
     #[Get, NSID(self::getAuthorFeed)]
-    public function getAuthorFeed(#[Format('at-identifier')] string $actor, ?int $limit = 50, ?string $cursor = null, ?string $filter = 'posts_with_replies', ?bool $includePins = null);
+    public function getAuthorFeed(#[Format('at-identifier')] string $actor, ?int $limit = 50, ?string $cursor = null, #[KnownValues(['posts_with_replies', 'posts_no_replies', 'posts_with_media', 'posts_and_author_threads'])] ?string $filter = 'posts_with_replies', ?bool $includePins = null);
 
     /**
      * Get a hydrated feed from an actor's selected feed generator. Implemented by App View.
@@ -164,7 +165,7 @@ interface Feed
      * @see https://docs.bsky.app/docs/api/app-bsky-feed-search-posts
      */
     #[Get, NSID(self::searchPosts)]
-    public function searchPosts(string $q, ?string $sort = 'latest', ?string $since = null, ?string $until = null, #[Format('at-identifier')] ?string $mentions = null, #[Format('at-identifier')] ?string $author = null, #[Format('language')] ?string $lang = null, ?string $domain = null, #[Format('uri')] ?string $url = null, ?array $tag = null, ?int $limit = 25, ?string $cursor = null);
+    public function searchPosts(string $q, #[KnownValues(['top', 'latest'])] ?string $sort = 'latest', ?string $since = null, ?string $until = null, #[Format('at-identifier')] ?string $mentions = null, #[Format('at-identifier')] ?string $author = null, #[Format('language')] ?string $lang = null, ?string $domain = null, #[Format('uri')] ?string $url = null, ?array $tag = null, ?int $limit = 25, ?string $cursor = null);
 
     /**
      * Send information about interactions with feed items back to the feed generator that served them.

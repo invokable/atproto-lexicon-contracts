@@ -6,6 +6,7 @@ namespace Revolution\AtProto\Lexicon\Contracts\Com\Atproto;
 
 use Revolution\AtProto\Lexicon\Attributes\Format;
 use Revolution\AtProto\Lexicon\Attributes\Get;
+use Revolution\AtProto\Lexicon\Attributes\KnownValues;
 use Revolution\AtProto\Lexicon\Attributes\NSID;
 use Revolution\AtProto\Lexicon\Attributes\Post;
 use Revolution\AtProto\Lexicon\Attributes\Ref;
@@ -82,7 +83,7 @@ interface Admin
      * @see https://docs.bsky.app/docs/api/com-atproto-admin-get-invite-codes
      */
     #[Get, NSID(self::getInviteCodes)]
-    public function getInviteCodes(?string $sort = 'recent', ?int $limit = 100, ?string $cursor = null);
+    public function getInviteCodes(#[KnownValues(['recent', 'usage'])] ?string $sort = 'recent', ?int $limit = 100, ?string $cursor = null);
 
     /**
      * Get the service-specific admin status of a subject (account, record, or blob).
