@@ -118,7 +118,7 @@ interface Graph
      * @see https://docs.bsky.app/docs/api/app-bsky-graph-get-relationships
      */
     #[Get, NSID(self::getRelationships)]
-    public function getRelationships(#[Format('at-identifier')] string $actor, ?array $others = null);
+    public function getRelationships(#[Format('at-identifier')] string $actor, #[Format('at-identifier')] ?array $others = null);
 
     /**
      * Gets a view of a starter pack.
@@ -134,7 +134,7 @@ interface Graph
      * @see https://docs.bsky.app/docs/api/app-bsky-graph-get-starter-packs
      */
     #[Get, NSID(self::getStarterPacks)]
-    public function getStarterPacks(array $uris);
+    public function getStarterPacks(#[Format('at-uri')] array $uris);
 
     /**
      * Enumerates follows similar to a given account (actor). Expected use is to recommend additional accounts immediately after following one account.

@@ -38,7 +38,7 @@ interface Sync
      * @see https://docs.bsky.app/docs/api/com-atproto-sync-get-blocks
      */
     #[Get, NSID(self::getBlocks)]
-    public function getBlocks(#[Format('did')] string $did, array $cids);
+    public function getBlocks(#[Format('did')] string $did, #[Format('cid')] array $cids);
 
     /**
      * DEPRECATED - please use com.atproto.sync.getRepo instead.

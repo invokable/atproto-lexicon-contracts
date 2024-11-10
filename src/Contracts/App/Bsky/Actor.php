@@ -42,7 +42,7 @@ interface Actor
      * @see https://docs.bsky.app/docs/api/app-bsky-actor-get-profiles
      */
     #[Get, NSID(self::getProfiles)]
-    public function getProfiles(array $actors);
+    public function getProfiles(#[Format('at-identifier')] array $actors);
 
     /**
      * Get a list of suggested actors. Expected use is discovery of accounts to follow during new account onboarding.

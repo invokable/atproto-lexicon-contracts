@@ -22,7 +22,7 @@ interface Setting
      * @see https://docs.bsky.app/docs/api/tools-ozone-setting-list-options
      */
     #[Get, NSID(self::listOptions)]
-    public function listOptions(?int $limit = 50, ?string $cursor = null, #[KnownValues(['instance', 'personal'])] ?string $scope = 'instance', ?string $prefix = null, ?array $keys = null);
+    public function listOptions(?int $limit = 50, ?string $cursor = null, #[KnownValues(['instance', 'personal'])] ?string $scope = 'instance', ?string $prefix = null, #[Format('nsid')] ?array $keys = null);
 
     /**
      * Delete settings by key.
@@ -30,7 +30,7 @@ interface Setting
      * @see https://docs.bsky.app/docs/api/tools-ozone-setting-remove-options
      */
     #[Post, NSID(self::removeOptions)]
-    public function removeOptions(array $keys, #[KnownValues(['instance', 'personal'])] string $scope);
+    public function removeOptions(#[Format('nsid')] array $keys, #[KnownValues(['instance', 'personal'])] string $scope);
 
     /**
      * Create or update setting option.

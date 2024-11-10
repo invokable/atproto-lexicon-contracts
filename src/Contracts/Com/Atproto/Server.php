@@ -91,7 +91,7 @@ interface Server
      * @see https://docs.bsky.app/docs/api/com-atproto-server-create-invite-codes
      */
     #[Post, NSID(self::createInviteCodes)]
-    public function createInviteCodes(int $codeCount, int $useCount, ?array $forAccounts = null);
+    public function createInviteCodes(int $codeCount, int $useCount, #[Format('did')] ?array $forAccounts = null);
 
     /**
      * Create an authentication session.
