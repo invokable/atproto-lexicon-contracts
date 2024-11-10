@@ -9,6 +9,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
+use Illuminate\Support\Stringable;
 use RuntimeException;
 
 /**
@@ -262,10 +263,30 @@ class LexiconContractsCommand extends Command
             ->replace('{method}', $method)
             ->toString();
 
+        $tmp = $this->removeAttr($tmp);
+
         $file_path = $this->php_path."/$file_path.php";
         File::ensureDirectoryExists(dirname($file_path));
         File::put($file_path, $tmp);
 
         $this->info($file_path);
+    }
+
+    protected function removeAttr(string $str): string
+    {
+        return Str::of($str)
+            ->whenContains('#[Ref',
+                fn (Stringable $string) => $string,
+                fn (Stringable $string) => $string->remove('use Revolution\AtProto\Lexicon\Attributes\Ref;'.PHP_EOL),
+            )
+            ->whenContains('#[Union',
+                fn (Stringable $string) => $string,
+                fn (Stringable $string) => $string->remove('use Revolution\AtProto\Lexicon\Attributes\Union;'.PHP_EOL),
+            )
+            ->whenContains('#[Post',
+                fn (Stringable $string) => $string,
+                fn (Stringable $string) => $string->remove('use Revolution\AtProto\Lexicon\Attributes\Post;'.PHP_EOL),
+            )
+            ->toString();
     }
 }
