@@ -9,6 +9,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
+use Illuminate\Support\Stringable;
 
 /**
  * Generate php abstract Record class from lexicon json.
@@ -124,6 +125,19 @@ class LexiconRecordCommand extends Command
                     }
                 }
 
+                $blob = null;
+                if ($type === 'blob') {
+                    $accept = Arr::get($property, 'accept');
+                    $maxSize = Arr::get($property, 'maxSize', 0);
+
+                    if (is_array($accept)) {
+                        $blob = [
+                            'accept' => $accept,
+                            'maxSize' => $maxSize,
+                        ];
+                    }
+                }
+
                 $type = match ($type) {
                     'integer' => 'int',
                     'boolean' => 'bool',
@@ -136,7 +150,7 @@ class LexiconRecordCommand extends Command
                 $description = Arr::get($property, 'description');
                 $require = in_array($name, $required, true);
 
-                return compact('type', 'format', 'ref', 'union', 'description', 'require');
+                return compact('type', 'format', 'ref', 'union', 'blob', 'description', 'require');
             })
             //->dump()
             ->implode(function ($property, $name) {
@@ -144,6 +158,7 @@ class LexiconRecordCommand extends Command
                 $format = Arr::get($property, 'format');
                 $ref = Arr::get($property, 'ref');
                 $union = Arr::get($property, 'union');
+                $blob = Arr::get($property, 'blob');
                 $require = Arr::get($property, 'require');
                 $description = Arr::get($property, 'description');
                 $default = '';
@@ -170,11 +185,13 @@ class LexiconRecordCommand extends Command
                 }
 
                 if (filled($union)) {
-                    $union = collect($union)
-                        ->implode(function ($item) {
-                            return "'$item'";
-                        }, ', ');
+                    $union = collect($union)->implode(fn ($item) => "'$item'", ', ');
                     $union = sprintf('    #[Union([%s])]', $union);
+                }
+
+                if (filled($blob)) {
+                    $accept = collect(data_get($blob, 'accept'))->implode(fn ($item) => "'$item'", ', ');
+                    $blob = sprintf('    #[Blob(accept: [%s], maxSize: %s)]', $accept, data_get($blob, 'maxSize', 0));
                 }
 
                 if (filled($format)) {
@@ -185,6 +202,7 @@ class LexiconRecordCommand extends Command
                     ->when(filled($ref), fn ($collection) => $collection->add($ref))
                     ->when(filled($format), fn ($collection) => $collection->add($format))
                     ->when(filled($union), fn ($collection) => $collection->add($union))
+                    ->when(filled($blob), fn ($collection) => $collection->add($blob))
                     ->merge([
                         '    '.Str::squish("protected $type \$$name $default").';'.PHP_EOL.PHP_EOL,
                     ])->implode(PHP_EOL);
@@ -233,10 +251,34 @@ class LexiconRecordCommand extends Command
             ->replace('{property}', $property)
             ->toString();
 
+        $tmp = $this->removeAttr($tmp);
+
         $file_path = $this->php_path."/$file_path.php";
         File::ensureDirectoryExists(dirname($file_path));
         File::put($file_path, $tmp);
 
         $this->info($file_path);
+    }
+
+    protected function removeAttr(string $str): string
+    {
+        return Str::of($str)
+            ->whenContains('#[Ref',
+                fn (Stringable $string) => $string,
+                fn (Stringable $string) => $string->remove('use Revolution\AtProto\Lexicon\Attributes\Ref;'.PHP_EOL),
+            )
+            ->whenContains('#[Union',
+                fn (Stringable $string) => $string,
+                fn (Stringable $string) => $string->remove('use Revolution\AtProto\Lexicon\Attributes\Union;'.PHP_EOL),
+            )
+            ->whenContains('#[Format',
+                fn (Stringable $string) => $string,
+                fn (Stringable $string) => $string->remove('use Revolution\AtProto\Lexicon\Attributes\Format;'.PHP_EOL),
+            )
+            ->whenContains('#[Blob',
+                fn (Stringable $string) => $string,
+                fn (Stringable $string) => $string->remove('use Revolution\AtProto\Lexicon\Attributes\Blob;'.PHP_EOL),
+            )
+            ->toString();
     }
 }
