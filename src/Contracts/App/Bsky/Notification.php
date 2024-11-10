@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace Revolution\AtProto\Lexicon\Contracts\App\Bsky;
 
+use Revolution\AtProto\Lexicon\Attributes\Format;
 use Revolution\AtProto\Lexicon\Attributes\Get;
 use Revolution\AtProto\Lexicon\Attributes\NSID;
 use Revolution\AtProto\Lexicon\Attributes\Post;
-use Revolution\AtProto\Lexicon\Attributes\Ref;
-use Revolution\AtProto\Lexicon\Attributes\Union;
 
 interface Notification
 {
@@ -24,7 +23,7 @@ interface Notification
      * @see https://docs.bsky.app/docs/api/app-bsky-notification-get-unread-count
      */
     #[Get, NSID(self::getUnreadCount)]
-    public function getUnreadCount(?bool $priority = null, ?string $seenAt = null);
+    public function getUnreadCount(?bool $priority = null, #[Format('datetime')] ?string $seenAt = null);
 
     /**
      * Enumerate notifications for the requesting account. Requires auth.
@@ -32,7 +31,7 @@ interface Notification
      * @see https://docs.bsky.app/docs/api/app-bsky-notification-list-notifications
      */
     #[Get, NSID(self::listNotifications)]
-    public function listNotifications(?int $limit = 50, ?bool $priority = null, ?string $cursor = null, ?string $seenAt = null);
+    public function listNotifications(?int $limit = 50, ?bool $priority = null, ?string $cursor = null, #[Format('datetime')] ?string $seenAt = null);
 
     /**
      * Set notification-related preferences for an account. Requires auth.
@@ -48,7 +47,7 @@ interface Notification
      * @see https://docs.bsky.app/docs/api/app-bsky-notification-register-push
      */
     #[Post, NSID(self::registerPush)]
-    public function registerPush(string $serviceDid, string $token, string $platform, string $appId);
+    public function registerPush(#[Format('did')] string $serviceDid, string $token, string $platform, string $appId);
 
     /**
      * Notify server that the requesting account has seen notifications. Requires auth.
@@ -56,5 +55,5 @@ interface Notification
      * @see https://docs.bsky.app/docs/api/app-bsky-notification-update-seen
      */
     #[Post, NSID(self::updateSeen)]
-    public function updateSeen(string $seenAt);
+    public function updateSeen(#[Format('datetime')] string $seenAt);
 }

@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace Revolution\AtProto\Lexicon\Contracts\Com\Atproto;
 
+use Revolution\AtProto\Lexicon\Attributes\Format;
 use Revolution\AtProto\Lexicon\Attributes\Get;
 use Revolution\AtProto\Lexicon\Attributes\NSID;
 use Revolution\AtProto\Lexicon\Attributes\Post;
-use Revolution\AtProto\Lexicon\Attributes\Ref;
-use Revolution\AtProto\Lexicon\Attributes\Union;
 
 interface Server
 {
@@ -68,7 +67,7 @@ interface Server
      * @see https://docs.bsky.app/docs/api/com-atproto-server-create-account
      */
     #[Post, NSID(self::createAccount)]
-    public function createAccount(string $handle, ?string $email = null, ?string $did = null, ?string $inviteCode = null, ?string $verificationCode = null, ?string $verificationPhone = null, #[\SensitiveParameter] ?string $password = null, ?string $recoveryKey = null, mixed $plcOp = null);
+    public function createAccount(#[Format('handle')] string $handle, ?string $email = null, #[Format('did')] ?string $did = null, ?string $inviteCode = null, ?string $verificationCode = null, ?string $verificationPhone = null, #[\SensitiveParameter] ?string $password = null, ?string $recoveryKey = null, mixed $plcOp = null);
 
     /**
      * Create an App Password.
@@ -84,7 +83,7 @@ interface Server
      * @see https://docs.bsky.app/docs/api/com-atproto-server-create-invite-code
      */
     #[Post, NSID(self::createInviteCode)]
-    public function createInviteCode(int $useCount, ?string $forAccount = null);
+    public function createInviteCode(int $useCount, #[Format('did')] ?string $forAccount = null);
 
     /**
      * Create invite codes.
@@ -108,7 +107,7 @@ interface Server
      * @see https://docs.bsky.app/docs/api/com-atproto-server-deactivate-account
      */
     #[Post, NSID(self::deactivateAccount)]
-    public function deactivateAccount(?string $deleteAfter = null);
+    public function deactivateAccount(#[Format('datetime')] ?string $deleteAfter = null);
 
     /**
      * Delete an actor's account with a token and password. Can only be called after requesting a deletion token. Requires auth.
@@ -116,7 +115,7 @@ interface Server
      * @see https://docs.bsky.app/docs/api/com-atproto-server-delete-account
      */
     #[Post, NSID(self::deleteAccount)]
-    public function deleteAccount(string $did, #[\SensitiveParameter] string $password, string $token);
+    public function deleteAccount(#[Format('did')] string $did, #[\SensitiveParameter] string $password, string $token);
 
     /**
      * Delete the current session. Requires auth.
@@ -148,7 +147,7 @@ interface Server
      * @see https://docs.bsky.app/docs/api/com-atproto-server-get-service-auth
      */
     #[Get, NSID(self::getServiceAuth)]
-    public function getServiceAuth(string $aud, ?int $exp = null, ?string $lxm = null);
+    public function getServiceAuth(#[Format('did')] string $aud, ?int $exp = null, #[Format('nsid')] ?string $lxm = null);
 
     /**
      * Get information about the current auth session. Requires auth.
@@ -212,7 +211,7 @@ interface Server
      * @see https://docs.bsky.app/docs/api/com-atproto-server-reserve-signing-key
      */
     #[Post, NSID(self::reserveSigningKey)]
-    public function reserveSigningKey(?string $did = null);
+    public function reserveSigningKey(#[Format('did')] ?string $did = null);
 
     /**
      * Reset a user account password using a token.

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Revolution\AtProto\Lexicon\Record\App\Bsky\Actor;
 
+use Revolution\AtProto\Lexicon\Attributes\Blob;
 use Revolution\AtProto\Lexicon\Attributes\Format;
 use Revolution\AtProto\Lexicon\Attributes\Ref;
 use Revolution\AtProto\Lexicon\Attributes\Required;
@@ -27,11 +28,13 @@ abstract class AbstractProfile
     /**
      * Small image to be displayed next to posts from account. AKA, 'profile picture'.
      */
+    #[Blob(accept: ['image/png', 'image/jpeg'], maxSize: 1000000)]
     protected ?string $avatar = null;
 
     /**
      * Larger horizontal image to display behind profile view.
      */
+    #[Blob(accept: ['image/png', 'image/jpeg'], maxSize: 1000000)]
     protected ?string $banner = null;
 
     /**

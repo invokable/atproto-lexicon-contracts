@@ -4,11 +4,9 @@ declare(strict_types=1);
 
 namespace Revolution\AtProto\Lexicon\Contracts\Tools\Ozone;
 
+use Revolution\AtProto\Lexicon\Attributes\Format;
 use Revolution\AtProto\Lexicon\Attributes\Get;
 use Revolution\AtProto\Lexicon\Attributes\NSID;
-use Revolution\AtProto\Lexicon\Attributes\Post;
-use Revolution\AtProto\Lexicon\Attributes\Ref;
-use Revolution\AtProto\Lexicon\Attributes\Union;
 
 interface Signature
 {
@@ -30,7 +28,7 @@ interface Signature
      * @see https://docs.bsky.app/docs/api/tools-ozone-signature-find-related-accounts
      */
     #[Get, NSID(self::findRelatedAccounts)]
-    public function findRelatedAccounts(string $did, ?string $cursor = null, ?int $limit = 50);
+    public function findRelatedAccounts(#[Format('did')] string $did, ?string $cursor = null, ?int $limit = 50);
 
     /**
      * Search for accounts that match one or more threat signature values.

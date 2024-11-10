@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace Revolution\AtProto\Lexicon\Contracts\Tools\Ozone;
 
+use Revolution\AtProto\Lexicon\Attributes\Format;
 use Revolution\AtProto\Lexicon\Attributes\Get;
 use Revolution\AtProto\Lexicon\Attributes\NSID;
 use Revolution\AtProto\Lexicon\Attributes\Post;
-use Revolution\AtProto\Lexicon\Attributes\Ref;
-use Revolution\AtProto\Lexicon\Attributes\Union;
 
 interface Communication
 {
@@ -23,7 +22,7 @@ interface Communication
      * @see https://docs.bsky.app/docs/api/tools-ozone-communication-create-template
      */
     #[Post, NSID(self::createTemplate)]
-    public function createTemplate(string $name, string $contentMarkdown, string $subject, ?string $lang = null, ?string $createdBy = null);
+    public function createTemplate(string $name, string $contentMarkdown, string $subject, #[Format('language')] ?string $lang = null, #[Format('did')] ?string $createdBy = null);
 
     /**
      * Delete a communication template.
@@ -47,5 +46,5 @@ interface Communication
      * @see https://docs.bsky.app/docs/api/tools-ozone-communication-update-template
      */
     #[Post, NSID(self::updateTemplate)]
-    public function updateTemplate(string $id, ?string $name = null, ?string $lang = null, ?string $contentMarkdown = null, ?string $subject = null, ?string $updatedBy = null, ?bool $disabled = null);
+    public function updateTemplate(string $id, ?string $name = null, #[Format('language')] ?string $lang = null, ?string $contentMarkdown = null, ?string $subject = null, #[Format('did')] ?string $updatedBy = null, ?bool $disabled = null);
 }

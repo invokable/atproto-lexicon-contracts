@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace Revolution\AtProto\Lexicon\Contracts\Chat\Bsky;
 
+use Revolution\AtProto\Lexicon\Attributes\Format;
 use Revolution\AtProto\Lexicon\Attributes\Get;
 use Revolution\AtProto\Lexicon\Attributes\NSID;
 use Revolution\AtProto\Lexicon\Attributes\Post;
-use Revolution\AtProto\Lexicon\Attributes\Ref;
-use Revolution\AtProto\Lexicon\Attributes\Union;
 
 interface Moderation
 {
@@ -22,7 +21,7 @@ interface Moderation
      * @see https://docs.bsky.app/docs/api/chat-bsky-moderation-get-actor-metadata
      */
     #[Get, NSID(self::getActorMetadata)]
-    public function getActorMetadata(string $actor);
+    public function getActorMetadata(#[Format('did')] string $actor);
 
     /**
      * chat.bsky.moderation.getMessageContext.
@@ -38,5 +37,5 @@ interface Moderation
      * @see https://docs.bsky.app/docs/api/chat-bsky-moderation-update-actor-access
      */
     #[Post, NSID(self::updateActorAccess)]
-    public function updateActorAccess(string $actor, bool $allowAccess, ?string $ref = null);
+    public function updateActorAccess(#[Format('did')] string $actor, bool $allowAccess, ?string $ref = null);
 }

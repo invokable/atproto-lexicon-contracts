@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace Revolution\AtProto\Lexicon\Contracts\Com\Atproto;
 
+use Revolution\AtProto\Lexicon\Attributes\Format;
 use Revolution\AtProto\Lexicon\Attributes\Get;
 use Revolution\AtProto\Lexicon\Attributes\NSID;
 use Revolution\AtProto\Lexicon\Attributes\Post;
-use Revolution\AtProto\Lexicon\Attributes\Ref;
-use Revolution\AtProto\Lexicon\Attributes\Union;
 
 interface Identity
 {
@@ -41,7 +40,7 @@ interface Identity
      * @see https://docs.bsky.app/docs/api/com-atproto-identity-resolve-handle
      */
     #[Get, NSID(self::resolveHandle)]
-    public function resolveHandle(string $handle);
+    public function resolveHandle(#[Format('handle')] string $handle);
 
     /**
      * Signs a PLC operation to update some value(s) in the requesting DID's document.
@@ -65,5 +64,5 @@ interface Identity
      * @see https://docs.bsky.app/docs/api/com-atproto-identity-update-handle
      */
     #[Post, NSID(self::updateHandle)]
-    public function updateHandle(string $handle);
+    public function updateHandle(#[Format('handle')] string $handle);
 }
