@@ -149,6 +149,7 @@ class LexiconContractsCommand extends Command
         return collect($properties)
             ->map(function ($property, $name) use ($id, $required) {
                 $type = Arr::get($property, 'type');
+                $format = Arr::get($property, 'format');
 
                 $ref = null;
                 if ($type === 'ref') {
@@ -185,13 +186,14 @@ class LexiconContractsCommand extends Command
                 $default = Arr::get($property, 'default');
                 $require = in_array($name, $required, true);
 
-                return compact('type', 'ref', 'union', 'default', 'require');
+                return compact('type', 'format', 'ref', 'union', 'default', 'require');
             })
             ->sortByDesc(function ($property, $name) use ($required) {
                 return in_array($name, $required, true);
             })
             ->implode(function ($property, $name) {
                 $type = Arr::get($property, 'type');
+                $format = Arr::get($property, 'format');
                 $ref = Arr::get($property, 'ref');
                 $union = Arr::get($property, 'union');
                 $require = Arr::get($property, 'require');
@@ -231,7 +233,11 @@ class LexiconContractsCommand extends Command
                     $union = sprintf('#[Union([%s])]', $union);
                 }
 
-                return Str::squish("$sensitive $ref $union $type \$$name");
+                if (filled($format)) {
+                    $format = "#[Format('$format')]";
+                }
+
+                return Str::squish("$sensitive $ref $union $format $type \$$name");
             }, ', ');
     }
 
@@ -282,6 +288,10 @@ class LexiconContractsCommand extends Command
             ->whenContains('#[Union',
                 fn (Stringable $string) => $string,
                 fn (Stringable $string) => $string->remove('use Revolution\AtProto\Lexicon\Attributes\Union;'.PHP_EOL),
+            )
+            ->whenContains('#[Format',
+                fn (Stringable $string) => $string,
+                fn (Stringable $string) => $string->remove('use Revolution\AtProto\Lexicon\Attributes\Format;'.PHP_EOL),
             )
             ->whenContains('#[Post',
                 fn (Stringable $string) => $string,
