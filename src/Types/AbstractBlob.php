@@ -3,7 +3,7 @@
 namespace Revolution\AtProto\Lexicon\Types;
 
 /**
- * Blob object
+ * Blob object.
  *
  * ```
  * [

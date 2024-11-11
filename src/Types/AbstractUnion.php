@@ -3,7 +3,7 @@
 namespace Revolution\AtProto\Lexicon\Types;
 
 /**
- * Union object
+ * Union object.
  *
  * ```
  * [
