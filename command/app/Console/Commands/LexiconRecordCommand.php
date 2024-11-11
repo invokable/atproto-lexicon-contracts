@@ -126,6 +126,21 @@ class LexiconRecordCommand extends Command
                     }
                 }
 
+                if ($type === 'array' && empty($union)) {
+                    if (Arr::get($property, 'items.type') === 'union') {
+                        $union = Arr::get($property, 'items.refs');
+                        if (! is_array($union)) {
+                            $union = null;
+                        }
+                        $union = collect($union)->map(function ($ref) use ($id) {
+                            if (Str::doesntContain($ref, '.')) {
+                                $ref = $id.$ref;
+                            }
+                            return $ref;
+                        })->toArray();
+                    }
+                }
+
                 $blob = null;
                 if ($type === 'blob') {
                     $accept = Arr::get($property, 'accept');
