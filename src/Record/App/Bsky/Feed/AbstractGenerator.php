@@ -27,7 +27,7 @@ abstract class AbstractGenerator
     protected ?array $descriptionFacets = null;
 
     #[Blob(accept: ['image/png', 'image/jpeg'], maxSize: 1000000)]
-    protected ?string $avatar = null;
+    protected ?array $avatar = null;
 
     /**
      * Declaration that a feed accepts feedback interactions from a client through app.bsky.feed.sendInteractions.
