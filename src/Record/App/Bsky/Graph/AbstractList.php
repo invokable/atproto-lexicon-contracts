@@ -34,7 +34,7 @@ abstract class AbstractList
     protected ?array $descriptionFacets = null;
 
     #[Blob(accept: ['image/png', 'image/jpeg'], maxSize: 1000000)]
-    protected ?string $avatar = null;
+    protected ?array $avatar = null;
 
     #[Union(['com.atproto.label.defs#selfLabels'])]
     protected ?array $labels = null;
