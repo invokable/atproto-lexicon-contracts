@@ -174,9 +174,14 @@ class LexiconRecordCommand extends Command
                 };
 
                 $description = Arr::get($property, 'description');
+                $deprecated = null;
+                if (Str::contains($description, 'DEPRECATED')) {
+                    $deprecated = $description;
+                }
+
                 $require = in_array($name, $required, true);
 
-                return compact('type', 'format', 'knownValues', 'ref', 'union', 'blob', 'description', 'require');
+                return compact('type', 'format', 'knownValues', 'ref', 'union', 'blob', 'description', 'require', 'deprecated');
             })
             //->dump()
             ->implode(function ($property, $name) {
@@ -188,6 +193,7 @@ class LexiconRecordCommand extends Command
                 $blob = Arr::get($property, 'blob');
                 $require = Arr::get($property, 'require');
                 $description = Arr::get($property, 'description');
+                $deprecated = Arr::get($property, 'deprecated');
                 $default = '';
 
                 if (! $require) {
@@ -230,12 +236,18 @@ class LexiconRecordCommand extends Command
                     $format = "    #[Format('$format')]";
                 }
 
+                if (filled($deprecated)) {
+                    // #[\Deprecated] will be added in PHP 8.4. It will simply be ignored in 8.3 and below.
+                    $deprecated = "    #[\Deprecated]";
+                }
+
                 return collect($properties)
                     ->when(filled($ref), fn ($collection) => $collection->add($ref))
                     ->when(filled($format), fn ($collection) => $collection->add($format))
                     ->when(filled($union), fn ($collection) => $collection->add($union))
                     ->when(filled($knownValues), fn ($collection) => $collection->add($knownValues))
                     ->when(filled($blob), fn ($collection) => $collection->add($blob))
+                    ->when(filled($deprecated), fn ($collection) => $collection->add($deprecated))
                     ->merge([
                         '    '.Str::squish("protected $type \$$name $default").';'.PHP_EOL.PHP_EOL,
                     ])->implode(PHP_EOL);
