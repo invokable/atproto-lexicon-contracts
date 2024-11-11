@@ -93,5 +93,5 @@ interface Moderation
      * @see https://docs.bsky.app/docs/api/tools-ozone-moderation-search-repos
      */
     #[Get, NSID(self::searchRepos)]
-    public function searchRepos(?string $term = null, ?string $q = null, ?int $limit = 50, ?string $cursor = null);
+    public function searchRepos(#[\Deprecated] ?string $term = null, ?string $q = null, ?int $limit = 50, ?string $cursor = null);
 }

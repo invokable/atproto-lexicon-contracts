@@ -27,6 +27,7 @@ interface Temp
      *
      * @see https://docs.bsky.app/docs/api/com-atproto-temp-fetch-labels
      */
+    #[\Deprecated]
     #[Get, NSID(self::fetchLabels)]
     public function fetchLabels(?int $since = null, ?int $limit = 50);
 

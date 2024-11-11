@@ -66,7 +66,7 @@ interface Actor
      * @see https://docs.bsky.app/docs/api/app-bsky-actor-search-actors
      */
     #[Get, NSID(self::searchActors)]
-    public function searchActors(?string $term = null, ?string $q = null, ?int $limit = 25, ?string $cursor = null);
+    public function searchActors(#[\Deprecated] ?string $term = null, ?string $q = null, ?int $limit = 25, ?string $cursor = null);
 
     /**
      * Find actor suggestions for a prefix search term. Expected use is for auto-completion during text field entry. Does not require auth.
@@ -74,5 +74,5 @@ interface Actor
      * @see https://docs.bsky.app/docs/api/app-bsky-actor-search-actors-typeahead
      */
     #[Get, NSID(self::searchActorsTypeahead)]
-    public function searchActorsTypeahead(?string $term = null, ?string $q = null, ?int $limit = 10);
+    public function searchActorsTypeahead(#[\Deprecated] ?string $term = null, ?string $q = null, ?int $limit = 10);
 }
