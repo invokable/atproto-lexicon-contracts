@@ -79,112 +79,134 @@ class PublicClient implements Actor, Feed
 
     // Methods that you do not use can be left unimplemented.
 
-    #[Get, NSID(self::getPreferences)] public function getPreferences()
+    #[Get, NSID(self::getPreferences)]
+    public function getPreferences()
     {
         // TODO: Implement getPreferences() method.
     }
 
-    #[Get, NSID(self::getProfiles)] public function getProfiles(#[Format('at-identifier')] array $actors)
+    #[Get, NSID(self::getProfiles)]
+    public function getProfiles(#[Format('at-identifier')] array $actors)
     {
         // TODO: Implement getProfiles() method.
     }
 
-    #[Get, NSID(self::getSuggestions)] public function getSuggestions(?int $limit = 50, ?string $cursor = null)
+    #[Get, NSID(self::getSuggestions)]
+    public function getSuggestions(?int $limit = 50, ?string $cursor = null)
     {
         // TODO: Implement getSuggestions() method.
     }
 
-    #[Post, NSID(self::putPreferences)] public function putPreferences(#[Ref('app.bsky.actor.defs#preferences')] array $preferences)
+    #[Post, NSID(self::putPreferences)]
+    public function putPreferences(#[Ref('app.bsky.actor.defs#preferences')] array $preferences)
     {
         // TODO: Implement putPreferences() method.
     }
 
-    #[Get, NSID(self::searchActors)] public function searchActors(?string $term = null, ?string $q = null, ?int $limit = 25, ?string $cursor = null)
+    #[Get, NSID(self::searchActors)]
+    public function searchActors(?string $term = null, ?string $q = null, ?int $limit = 25, ?string $cursor = null)
     {
         // TODO: Implement searchActors() method.
     }
 
-    #[Get, NSID(self::searchActorsTypeahead)] public function searchActorsTypeahead(?string $term = null, ?string $q = null, ?int $limit = 10)
+    #[Get, NSID(self::searchActorsTypeahead)]
+    public function searchActorsTypeahead(?string $term = null, ?string $q = null, ?int $limit = 10)
     {
         // TODO: Implement searchActorsTypeahead() method.
     }
 
-    #[Get, NSID(self::describeFeedGenerator)] public function describeFeedGenerator()
+    #[Get, NSID(self::describeFeedGenerator)]
+    public function describeFeedGenerator()
     {
         // TODO: Implement describeFeedGenerator() method.
     }
 
-    #[Get, NSID(self::getActorFeeds)] public function getActorFeeds(#[Format('at-identifier')] string $actor, ?int $limit = 50, ?string $cursor = null)
+    #[Get, NSID(self::getActorFeeds)]
+    public function getActorFeeds(#[Format('at-identifier')] string $actor, ?int $limit = 50, ?string $cursor = null)
     {
         // TODO: Implement getActorFeeds() method.
     }
 
-    #[Get, NSID(self::getActorLikes)] public function getActorLikes(#[Format('at-identifier')] string $actor, ?int $limit = 50, ?string $cursor = null)
+    #[Get, NSID(self::getActorLikes)]
+    public function getActorLikes(#[Format('at-identifier')] string $actor, ?int $limit = 50, ?string $cursor = null)
     {
         // TODO: Implement getActorLikes() method.
     }
 
-    #[Get, NSID(self::getFeed)] public function getFeed(#[Format('at-uri')] string $feed, ?int $limit = 50, ?string $cursor = null)
+    #[Get, NSID(self::getFeed)]
+    public function getFeed(#[Format('at-uri')] string $feed, ?int $limit = 50, ?string $cursor = null)
     {
         // TODO: Implement getFeed() method.
     }
 
-    #[Get, NSID(self::getFeedGenerator)] public function getFeedGenerator(#[Format('at-uri')] string $feed)
+    #[Get, NSID(self::getFeedGenerator)]
+    public function getFeedGenerator(#[Format('at-uri')] string $feed)
     {
         // TODO: Implement getFeedGenerator() method.
     }
 
-    #[Get, NSID(self::getFeedGenerators)] public function getFeedGenerators(#[Format('at-uri')] array $feeds)
+    #[Get, NSID(self::getFeedGenerators)]
+    public function getFeedGenerators(#[Format('at-uri')] array $feeds)
     {
         // TODO: Implement getFeedGenerators() method.
     }
 
-    #[Get, NSID(self::getFeedSkeleton)] public function getFeedSkeleton(#[Format('at-uri')] string $feed, ?int $limit = 50, ?string $cursor = null)
+    #[Get, NSID(self::getFeedSkeleton)]
+    public function getFeedSkeleton(#[Format('at-uri')] string $feed, ?int $limit = 50, ?string $cursor = null)
     {
         // TODO: Implement getFeedSkeleton() method.
     }
 
-    #[Get, NSID(self::getLikes)] public function getLikes(#[Format('at-uri')] string $uri, #[Format('cid')] ?string $cid = null, ?int $limit = 50, ?string $cursor = null)
+    #[Get, NSID(self::getLikes)]
+    public function getLikes(#[Format('at-uri')] string $uri, #[Format('cid')] ?string $cid = null, ?int $limit = 50, ?string $cursor = null)
     {
         // TODO: Implement getLikes() method.
     }
 
-    #[Get, NSID(self::getListFeed)] public function getListFeed(#[Format('at-uri')] string $list, ?int $limit = 50, ?string $cursor = null)
+    #[Get, NSID(self::getListFeed)]
+    public function getListFeed(#[Format('at-uri')] string $list, ?int $limit = 50, ?string $cursor = null)
     {
         // TODO: Implement getListFeed() method.
     }
 
-    #[Get, NSID(self::getPostThread)] public function getPostThread(#[Format('at-uri')] string $uri, ?int $depth = 6, ?int $parentHeight = 80)
+    #[Get, NSID(self::getPostThread)]
+    public function getPostThread(#[Format('at-uri')] string $uri, ?int $depth = 6, ?int $parentHeight = 80)
     {
         // TODO: Implement getPostThread() method.
     }
 
-    #[Get, NSID(self::getPosts)] public function getPosts(#[Format('at-uri')] array $uris)
+    #[Get, NSID(self::getPosts)]
+    public function getPosts(#[Format('at-uri')] array $uris)
     {
         // TODO: Implement getPosts() method.
     }
 
-    #[Get, NSID(self::getQuotes)] public function getQuotes(#[Format('at-uri')] string $uri, #[Format('cid')] ?string $cid = null, ?int $limit = 50, ?string $cursor = null)
+    #[Get, NSID(self::getQuotes)]
+    public function getQuotes(#[Format('at-uri')] string $uri, #[Format('cid')] ?string $cid = null, ?int $limit = 50, ?string $cursor = null)
     {
         // TODO: Implement getQuotes() method.
     }
 
-    #[Get, NSID(self::getRepostedBy)] public function getRepostedBy(#[Format('at-uri')] string $uri, #[Format('cid')] ?string $cid = null, ?int $limit = 50, ?string $cursor = null)
+    #[Get, NSID(self::getRepostedBy)]
+    public function getRepostedBy(#[Format('at-uri')] string $uri, #[Format('cid')] ?string $cid = null, ?int $limit = 50, ?string $cursor = null)
     {
         // TODO: Implement getRepostedBy() method.
     }
 
-    #[Get, NSID(self::getSuggestedFeeds)] public function getSuggestedFeeds(?int $limit = 50, ?string $cursor = null)
+    #[Get, NSID(self::getSuggestedFeeds)]
+    public function getSuggestedFeeds(?int $limit = 50, ?string $cursor = null)
     {
         // TODO: Implement getSuggestedFeeds() method.
     }
 
-    #[Get, NSID(self::getTimeline)] public function getTimeline(?string $algorithm = null, ?int $limit = 50, ?string $cursor = null)
+    #[Get, NSID(self::getTimeline)]
+    public function getTimeline(?string $algorithm = null, ?int $limit = 50, ?string $cursor = null)
     {
         // TODO: Implement getTimeline() method.
     }
 
-    #[Post, NSID(self::sendInteractions)] public function sendInteractions(#[Ref('app.bsky.feed.defs#interaction')] array $interactions)
+    #[Post, NSID(self::sendInteractions)]
+    public function sendInteractions(#[Ref('app.bsky.feed.defs#interaction')] array $interactions)
     {
         // TODO: Implement sendInteractions() method.
     }
