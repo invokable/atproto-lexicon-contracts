@@ -97,6 +97,12 @@ class LexiconContractsCommand extends Command
                 $description = Arr::get($json, 'defs.main.description', $id);
                 $description = Str::rtrim($description, '.').'.';
 
+                $deprecated = null;
+                if (Str::contains($description, 'DEPRECATED')) {
+                    // #[\Deprecated] will be added in PHP 8.4. It will simply be ignored in 8.3 and below.
+                    $deprecated = '    #[\Deprecated]';
+                }
+
                 // get/query parameters
                 $parameters = Arr::get($json, 'defs.main.parameters');
                 $params = $this->getParameters($id, $parameters);
@@ -128,9 +134,10 @@ class LexiconContractsCommand extends Command
                             '     *',
                             '     * @see '.$docs_url,
                             '     */',
-                            '    #['.Str::studly($type).', NSID(self::'.$name.')]',
-                            "    public function $name($params);",
-                        ])->implode(PHP_EOL),
+                        ])
+                            ->when(filled($deprecated), fn (Collection $collection) => $collection->push($deprecated))
+                            ->push('    #['.Str::studly($type).', NSID(self::'.$name.')]')
+                            ->push("    public function $name($params);")->implode(PHP_EOL),
                     ]),
                 ];
             })
@@ -151,6 +158,12 @@ class LexiconContractsCommand extends Command
                 $type = Arr::get($property, 'type');
                 $format = Arr::get($property, 'format', Arr::get($property, 'items.format'));
                 $knownValues = Arr::get($property, 'knownValues');
+
+                $description = Arr::get($property, 'description');
+                $deprecated = null;
+                if (Str::contains($description, 'DEPRECATED')) {
+                    $deprecated = $description;
+                }
 
                 $ref = null;
                 if ($type === 'ref') {
@@ -209,7 +222,7 @@ class LexiconContractsCommand extends Command
                 $default = Arr::get($property, 'default');
                 $require = in_array($name, $required, true);
 
-                return compact('type', 'format', 'knownValues', 'ref', 'union', 'default', 'require');
+                return compact('type', 'format', 'knownValues', 'ref', 'union', 'default', 'require', 'deprecated');
             })
             ->sortByDesc(function ($property, $name) use ($required) {
                 return in_array($name, $required, true);
@@ -222,6 +235,7 @@ class LexiconContractsCommand extends Command
                 $knownValues = Arr::get($property, 'knownValues');
                 $require = Arr::get($property, 'require');
                 $default = Arr::get($property, 'default');
+                $deprecated = Arr::get($property, 'deprecated');
 
                 $sensitive = $name === 'password' ? '#[\SensitiveParameter]' : '';
 
@@ -266,7 +280,12 @@ class LexiconContractsCommand extends Command
                     $format = "#[Format('$format')]";
                 }
 
-                return Str::squish("$sensitive $ref $union $format $knownValues $type \$$name");
+                if (filled($deprecated)) {
+                    // #[\Deprecated] will be added in PHP 8.4. It will simply be ignored in 8.3 and below.
+                    $deprecated = '#[\Deprecated]';
+                }
+
+                return Str::squish("$sensitive $ref $union $format $knownValues $deprecated $type \$$name");
             }, ', ');
     }
 
