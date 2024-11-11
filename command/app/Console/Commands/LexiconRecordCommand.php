@@ -141,6 +141,15 @@ class LexiconRecordCommand extends Command
                     }
                 }
 
+                if ($type === 'array' && empty($ref)) {
+                    if (Arr::get($property, 'items.type') === 'ref') {
+                        $ref = Arr::get($property, 'items.ref');
+                        if (Str::doesntContain($ref, '.')) {
+                            $ref = $id.$ref;
+                        }
+                    }
+                }
+
                 $blob = null;
                 if ($type === 'blob') {
                     $accept = Arr::get($property, 'accept');
