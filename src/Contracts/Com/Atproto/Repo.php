@@ -8,6 +8,7 @@ use Revolution\AtProto\Lexicon\Attributes\Format;
 use Revolution\AtProto\Lexicon\Attributes\Get;
 use Revolution\AtProto\Lexicon\Attributes\NSID;
 use Revolution\AtProto\Lexicon\Attributes\Post;
+use Revolution\AtProto\Lexicon\Attributes\Union;
 
 interface Repo
 {
@@ -28,7 +29,7 @@ interface Repo
      * @see https://docs.bsky.app/docs/api/com-atproto-repo-apply-writes
      */
     #[Post, NSID(self::applyWrites)]
-    public function applyWrites(#[Format('at-identifier')] string $repo, array $writes, ?bool $validate = null, #[Format('cid')] ?string $swapCommit = null);
+    public function applyWrites(#[Format('at-identifier')] string $repo, #[Union(['com.atproto.repo.applyWrites#create', 'com.atproto.repo.applyWrites#update', 'com.atproto.repo.applyWrites#delete'])] array $writes, ?bool $validate = null, #[Format('cid')] ?string $swapCommit = null);
 
     /**
      * Create a single new repository record. Requires auth, implemented by PDS.
@@ -84,7 +85,7 @@ interface Repo
      * @see https://docs.bsky.app/docs/api/com-atproto-repo-list-records
      */
     #[Get, NSID(self::listRecords)]
-    public function listRecords(#[Format('at-identifier')] string $repo, #[Format('nsid')] string $collection, ?int $limit = 50, ?string $cursor = null, ?string $rkeyStart = null, ?string $rkeyEnd = null, ?bool $reverse = null);
+    public function listRecords(#[Format('at-identifier')] string $repo, #[Format('nsid')] string $collection, ?int $limit = 50, ?string $cursor = null, #[\Deprecated] ?string $rkeyStart = null, #[\Deprecated] ?string $rkeyEnd = null, ?bool $reverse = null);
 
     /**
      * Write a repository record, creating or updating it as needed. Requires auth, implemented by PDS.
