@@ -149,14 +149,8 @@ class LexiconContractsCommand extends Command
         return collect($properties)
             ->map(function ($property, $name) use ($id, $required) {
                 $type = Arr::get($property, 'type');
+                $format = Arr::get($property, 'format', Arr::get($property, 'items.format'));
                 $knownValues = Arr::get($property, 'knownValues');
-
-                $format = Arr::get($property, 'format');
-                if ($type === 'array' && empty($format)) {
-                    if (Arr::get($property, 'items.type') !== 'ref') {
-                        $format = Arr::get($property, 'items.format');
-                    }
-                }
 
                 $ref = null;
                 if ($type === 'ref') {
