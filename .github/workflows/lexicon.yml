@@ -37,5 +37,3 @@ jobs:
           commit-message: 'lexicon update'
           title: 'lexicon update'
           body: 'lexicon update'
-          add-paths: |
-            src/*.php
