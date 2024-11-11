@@ -136,6 +136,7 @@ class LexiconRecordCommand extends Command
                             if (Str::doesntContain($ref, '.')) {
                                 $ref = $id.$ref;
                             }
+
                             return $ref;
                         })->toArray();
                     }
