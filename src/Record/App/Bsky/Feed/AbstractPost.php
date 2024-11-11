@@ -25,11 +25,13 @@ abstract class AbstractPost
     /**
      * DEPRECATED: replaced by app.bsky.richtext.facet.
      */
+    #[Ref('app.bsky.feed.post#entity')]
     protected ?array $entities = null;
 
     /**
      * Annotations of text (mentions, URLs, hashtags, etc).
      */
+    #[Ref('app.bsky.richtext.facet')]
     protected ?array $facets = null;
 
     #[Ref('app.bsky.feed.post#replyRef')]
@@ -41,6 +43,7 @@ abstract class AbstractPost
     /**
      * Indicates human language of post primary text content.
      */
+    #[Format('language')]
     protected ?array $langs = null;
 
     /**

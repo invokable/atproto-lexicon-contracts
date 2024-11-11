@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Revolution\AtProto\Lexicon\Record\App\Bsky\Graph;
 
 use Revolution\AtProto\Lexicon\Attributes\Format;
+use Revolution\AtProto\Lexicon\Attributes\Ref;
 use Revolution\AtProto\Lexicon\Attributes\Required;
 
 /**
@@ -22,6 +23,7 @@ abstract class AbstractStarterpack
 
     protected ?string $description = null;
 
+    #[Ref('app.bsky.richtext.facet')]
     protected ?array $descriptionFacets = null;
 
     /**
@@ -30,6 +32,7 @@ abstract class AbstractStarterpack
     #[Format('at-uri')]
     protected string $list;
 
+    #[Ref('app.bsky.graph.starterpack#feedItem')]
     protected ?array $feeds = null;
 
     #[Format('datetime')]

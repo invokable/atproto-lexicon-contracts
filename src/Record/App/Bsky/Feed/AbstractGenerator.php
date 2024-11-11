@@ -6,6 +6,7 @@ namespace Revolution\AtProto\Lexicon\Record\App\Bsky\Feed;
 
 use Revolution\AtProto\Lexicon\Attributes\Blob;
 use Revolution\AtProto\Lexicon\Attributes\Format;
+use Revolution\AtProto\Lexicon\Attributes\Ref;
 use Revolution\AtProto\Lexicon\Attributes\Required;
 use Revolution\AtProto\Lexicon\Attributes\Union;
 
@@ -24,6 +25,7 @@ abstract class AbstractGenerator
 
     protected ?string $description = null;
 
+    #[Ref('app.bsky.richtext.facet')]
     protected ?array $descriptionFacets = null;
 
     #[Blob(accept: ['image/png', 'image/jpeg'], maxSize: 1000000)]
