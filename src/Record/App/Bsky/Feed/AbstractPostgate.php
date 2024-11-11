@@ -6,6 +6,7 @@ namespace Revolution\AtProto\Lexicon\Record\App\Bsky\Feed;
 
 use Revolution\AtProto\Lexicon\Attributes\Format;
 use Revolution\AtProto\Lexicon\Attributes\Required;
+use Revolution\AtProto\Lexicon\Attributes\Union;
 
 /**
  * Record defining interaction rules for a post. The record key (rkey) of the postgate record must match the record key of the post, and that record must be in the same repository.
@@ -27,7 +28,9 @@ abstract class AbstractPostgate
     /**
      * List of AT-URIs embedding this post that the author has detached from.
      */
+    #[Format('at-uri')]
     protected ?array $detachedEmbeddingUris = null;
 
+    #[Union(['app.bsky.feed.postgate#disableRule'])]
     protected ?array $embeddingRules = null;
 }

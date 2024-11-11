@@ -31,6 +31,7 @@ abstract class AbstractList
 
     protected ?string $description = null;
 
+    #[Ref('app.bsky.richtext.facet')]
     protected ?array $descriptionFacets = null;
 
     #[Blob(accept: ['image/png', 'image/jpeg'], maxSize: 1000000)]

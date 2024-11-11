@@ -6,6 +6,7 @@ namespace Revolution\AtProto\Lexicon\Record\App\Bsky\Feed;
 
 use Revolution\AtProto\Lexicon\Attributes\Format;
 use Revolution\AtProto\Lexicon\Attributes\Required;
+use Revolution\AtProto\Lexicon\Attributes\Union;
 
 /**
  * Record defining interaction gating rules for a thread (aka, reply controls). The record key (rkey) of the threadgate record must match the record key of the thread's root post, and that record must be in the same repository.
@@ -21,6 +22,7 @@ abstract class AbstractThreadgate
     #[Format('at-uri')]
     protected string $post;
 
+    #[Union(['app.bsky.feed.threadgate#mentionRule', 'app.bsky.feed.threadgate#followingRule', 'app.bsky.feed.threadgate#listRule'])]
     protected ?array $allow = null;
 
     #[Format('datetime')]
@@ -29,5 +31,6 @@ abstract class AbstractThreadgate
     /**
      * List of hidden reply URIs.
      */
+    #[Format('at-uri')]
     protected ?array $hiddenReplies = null;
 }
