@@ -100,7 +100,7 @@ class LexiconRecordCommand extends Command
             //->dump()
             ->map(function (array $property, string $name) use ($required, $id) {
                 $type = Arr::get($property, 'type');
-                $format = Arr::get($property, 'format');
+                $format = Arr::get($property, 'format', Arr::get($property, 'items.format'));
                 $knownValues = Arr::get($property, 'knownValues');
 
                 $ref = null;
