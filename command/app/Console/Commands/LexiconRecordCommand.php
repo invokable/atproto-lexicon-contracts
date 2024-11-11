@@ -142,9 +142,9 @@ class LexiconRecordCommand extends Command
                 $type = match ($type) {
                     'integer' => 'int',
                     'boolean' => 'bool',
-                    'string', 'blob' => 'string',
+                    'string' => 'string',
                     'unknown' => 'mixed',
-                    'array', 'object', 'union' => 'array',
+                    'array', 'object', 'union', 'blob' => 'array',
                     default => '',
                 };
 
