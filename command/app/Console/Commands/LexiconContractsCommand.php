@@ -184,6 +184,19 @@ class LexiconContractsCommand extends Command
                     }
                 }
 
+                if ($type === 'array' && empty($union)) {
+                    if (Arr::get($property, 'items.type') === 'union') {
+                        $union = Arr::get($property, 'items.refs');
+                        $union = collect($union)->map(function ($ref) use ($id) {
+                            if (Str::doesntContain($ref, '.')) {
+                                $ref = $id.$ref;
+                            }
+
+                            return $ref;
+                        })->toArray();
+                    }
+                }
+
                 $type = match ($type) {
                     'integer' => 'int',
                     'boolean' => 'bool',
