@@ -242,15 +242,14 @@ class LexiconRecordCommand extends Command
                 }
 
                 return collect($properties)
+                    ->when(filled($deprecated), fn ($collection) => $collection->add($deprecated))
                     ->when(filled($ref), fn ($collection) => $collection->add($ref))
                     ->when(filled($format), fn ($collection) => $collection->add($format))
                     ->when(filled($union), fn ($collection) => $collection->add($union))
                     ->when(filled($knownValues), fn ($collection) => $collection->add($knownValues))
                     ->when(filled($blob), fn ($collection) => $collection->add($blob))
-                    ->when(filled($deprecated), fn ($collection) => $collection->add($deprecated))
-                    ->merge([
-                        '    '.Str::squish("protected $type \$$name $default").';'.PHP_EOL.PHP_EOL,
-                    ])->implode(PHP_EOL);
+                    ->push('    '.Str::squish("protected $type \$$name $default").';'.PHP_EOL.PHP_EOL)
+                    ->implode(PHP_EOL);
             });
     }
 
