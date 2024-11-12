@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Revolution\AtProto\Lexicon\Enum;
 
-enum ThreadGate: string
+enum ThreadGateRule: string
 {
     /**
      * Allow replies from actors mentioned in your post.
