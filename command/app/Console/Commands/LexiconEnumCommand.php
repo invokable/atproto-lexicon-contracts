@@ -209,7 +209,7 @@ class LexiconEnumCommand extends Command
                 ])->implode(PHP_EOL);
             }, PHP_EOL.PHP_EOL);
 
-        $this->save($enum, 'ThreadGate');
+        $this->save($enum, 'ThreadGateRule');
     }
 
     protected function save(string $enum, string $name): void
