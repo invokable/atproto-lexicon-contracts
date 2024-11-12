@@ -62,6 +62,7 @@ class LexiconEnumCommand extends Command
         $this->feed();
         $this->graph();
         $this->threadgate();
+        $this->listPurpose();
 
         return 0;
     }
@@ -87,7 +88,7 @@ class LexiconEnumCommand extends Command
 
                 return collect([
                     '    /**',
-                    "     * $description",
+                    '     * '.Str::rtrim($description, '.').'.',
                     '     */',
                     "    case $name = '$id';",
                 ])->implode(PHP_EOL);
@@ -116,7 +117,7 @@ class LexiconEnumCommand extends Command
 
                 return collect([
                     '    /**',
-                    "     * $description",
+                    '     * '.Str::rtrim($description, '.').'.',
                     '     */',
                     "    case $name = '$file';",
                 ])->implode(PHP_EOL);
@@ -145,7 +146,7 @@ class LexiconEnumCommand extends Command
 
                 return collect([
                     '    /**',
-                    "     * $description",
+                    '     * '.Str::rtrim($description, '.').'.',
                     '     */',
                     "    case $name = '$id';",
                 ])->implode(PHP_EOL);
@@ -174,7 +175,7 @@ class LexiconEnumCommand extends Command
 
                 return collect([
                     '    /**',
-                    "     * $description",
+                    '     * '.Str::rtrim($description, '.').'.',
                     '     */',
                     "    case $name = '$id';",
                 ])->implode(PHP_EOL);
@@ -203,13 +204,41 @@ class LexiconEnumCommand extends Command
 
                 return collect([
                     '    /**',
-                    "     * $description",
+                    '     * '.Str::rtrim($description, '.').'.',
                     '     */',
                     "    case $name = '$rule';",
                 ])->implode(PHP_EOL);
             }, PHP_EOL.PHP_EOL);
 
         $this->save($enum, 'ThreadGateRule');
+    }
+
+    protected function listPurpose(): void
+    {
+        $file = collect($this->files)
+            ->filter(fn (string $file) => Str::contains($file, '/app/bsky/graph/defs'))
+            ->first();
+
+        $json = File::json($file);
+
+        $purposes = Arr::get($json, 'defs.listPurpose.knownValues');
+
+        $enum = collect($purposes)
+            ->mapWithKeys(fn (string $purpose) => [Str::of($purpose)->after('#')->toString() => $purpose])
+            //->dump()
+            ->implode(function (string $purpose, string $name) use ($json) {
+                $description = Arr::get($json, 'defs.'.$name.'.description');
+                $name = Str::studly($name);
+
+                return collect([
+                    '    /**',
+                    '     * '.Str::rtrim($description, '.').'.',
+                    '     */',
+                    "    case $name = '$purpose';",
+                ])->implode(PHP_EOL);
+            }, PHP_EOL.PHP_EOL);
+
+        $this->save($enum, 'ListPurpose');
     }
 
     protected function save(string $enum, string $name): void
