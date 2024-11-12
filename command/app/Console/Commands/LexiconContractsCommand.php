@@ -130,14 +130,15 @@ class LexiconContractsCommand extends Command
                         'const' => ['name' => $name, 'id' => $id],
                         'method' => collect([
                             '    /**',
-                            "     * $description",
+                            '     * '.$description,
                             '     *',
                             '     * @see '.$docs_url,
                             '     */',
                         ])
                             ->when(filled($deprecated), fn (Collection $collection) => $collection->push($deprecated))
                             ->push('    #['.Str::studly($type).', NSID(self::'.$name.')]')
-                            ->push("    public function $name($params);")->implode(PHP_EOL),
+                            ->push("    public function $name($params);")
+                            ->implode(PHP_EOL),
                     ]),
                 ];
             })
