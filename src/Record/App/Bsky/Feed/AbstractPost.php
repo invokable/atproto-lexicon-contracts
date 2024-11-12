@@ -25,8 +25,8 @@ abstract class AbstractPost
     /**
      * DEPRECATED: replaced by app.bsky.richtext.facet.
      */
-    #[Ref('app.bsky.feed.post#entity')]
     #[\Deprecated]
+    #[Ref('app.bsky.feed.post#entity')]
     protected ?array $entities = null;
 
     /**
