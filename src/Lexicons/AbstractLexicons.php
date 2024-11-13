@@ -17,4 +17,9 @@ abstract class AbstractLexicons
     {
         return $this->defs[$id] ?? [];
     }
+
+    public function all(): array
+    {
+        return $this->defs;
+    }
 }
