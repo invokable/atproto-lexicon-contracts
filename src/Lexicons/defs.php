@@ -1,6 +1,6 @@
 <?php
 /**
- * GENERATED CODE
+ * GENERATED CODE.
  */
 
 return array (
