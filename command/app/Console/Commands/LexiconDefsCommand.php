@@ -90,7 +90,7 @@ class LexiconDefsCommand extends Command
                     $def['refs'] = collect($def['refs'])->map(fn ($ref) => $this->toLexUri($ref, $baseUri))->toArray();
                 } elseif (is_array($def[$k]) && Arr::isList($def[$k])) {
                     $def[$k] = collect($def[$k])
-                        ->map(function ($item) use ($k, $baseUri) {
+                        ->map(function ($item) use ($baseUri) {
                             if (is_string($item)) {
                                 return Str::startsWith($item, '#') ? $this->toLexUri($item, $baseUri) : $item;
                             } elseif (is_array($item)) {
