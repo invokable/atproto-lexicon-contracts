@@ -96,6 +96,7 @@ class LexiconDefsCommand extends Command
                             } elseif (is_array($item)) {
                                 return $this->resolveRefUris($item, $baseUri);
                             }
+
                             return $item;
                         })->toArray();
                 } elseif (is_array($def[$k]) && Arr::isAssoc($def[$k])) {
