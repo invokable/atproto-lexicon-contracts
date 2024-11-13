@@ -48,7 +48,8 @@
         "lexicon": [
             "@php artisan bluesky:lexicon-contracts",
             "@php artisan bluesky:lexicon-enum",
-            "@php artisan bluesky:lexicon-record"
+            "@php artisan bluesky:lexicon-record",
+            "@php artisan bluesky:lexicon-defs"
         ]
     },
     "extra": {
