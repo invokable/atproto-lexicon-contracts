@@ -15445,10 +15445,6 @@ return array (
       array (
         'type' => 'object',
         'description' => 'Mute incoming reports from an account',
-        'required' => 
-        array (
-          0 => 'durationInHours',
-        ),
         'properties' => 
         array (
           'comment' => 
@@ -15458,7 +15454,7 @@ return array (
           'durationInHours' => 
           array (
             'type' => 'integer',
-            'description' => 'Indicates how long the account should remain muted.',
+            'description' => 'Indicates how long the account should remain muted. Falsy value here means a permanent mute.',
           ),
         ),
       ),
