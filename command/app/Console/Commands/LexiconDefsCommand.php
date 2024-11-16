@@ -80,6 +80,16 @@ class LexiconDefsCommand extends Command
         return 0;
     }
 
+    /**
+     * Convert a hash-only ref to a full ref.
+     * After conversion, ref starts with `lex:`.
+     *
+     * ```
+     * '#abc' => 'lex:app.bsky.actor.defs##abc'
+     * ```
+     *
+     * @see https://github.com/bluesky-social/atproto/blob/main/packages/lexicon/src/lexicons.ts
+     */
     protected function resolveRefUris(array $def, string $baseUri): array
     {
         collect($def)
@@ -107,6 +117,9 @@ class LexiconDefsCommand extends Command
         return $def;
     }
 
+    /**
+     * @see https://github.com/bluesky-social/atproto/blob/main/packages/lexicon/src/util.ts
+     */
     protected function toLexUri(string $uri, ?string $baseUri = null): string
     {
         if (Str::substrCount($uri, '#') > 2) {
