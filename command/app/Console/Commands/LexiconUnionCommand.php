@@ -265,7 +265,7 @@ class LexiconUnionCommand extends Command
         // "App\Bsky\Embed"
         $namespace = $path->take(3)->implode('\\');
 
-        $description = Arr::get($json, 'defs.main.description') ?? '';
+        $description = Arr::get($json, 'defs.main.description', Arr::get($json, 'description')) ?? '';
 
         if (filled($description)) {
             $description = collect([
