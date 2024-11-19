@@ -11,7 +11,9 @@ use Revolution\AtProto\Lexicon\Attributes\Ref;
 use Revolution\AtProto\Lexicon\Attributes\Required;
 use Revolution\AtProto\Lexicon\Attributes\Union;
 
-
+/**
+ * A representation of a record embedded in a Bluesky record (eg, a post), alongside other compatible embeds. For example, a quote post and image, or a quote post and external URL card.
+ */
 #[Required(['record', 'media'])]
 abstract class AbstractRecordWithMedia
 {
