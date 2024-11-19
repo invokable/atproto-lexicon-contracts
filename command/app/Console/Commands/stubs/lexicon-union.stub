@@ -18,7 +18,7 @@ use Revolution\AtProto\Lexicon\Attributes\Union;
 {required}
 abstract class {name}
 {
-{type}
+{const}
 
 {property}
 }
