@@ -17,7 +17,7 @@ use Revolution\AtProto\Lexicon\Attributes\Required;
 #[Required(['video'])]
 abstract class AbstractVideo
 {
-    protected string $type = 'app.bsky.embed.video';
+    public const NSID = 'app.bsky.embed.video';
 
     #[Blob(accept: ['video/mp4'], maxSize: 50000000)]
     protected array $video;

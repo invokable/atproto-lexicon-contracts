@@ -17,7 +17,7 @@ use Revolution\AtProto\Lexicon\Attributes\Union;
 #[Required(['index', 'features'])]
 abstract class AbstractFacet
 {
-    protected string $type = 'app.bsky.richtext.facet';
+    public const NSID = 'app.bsky.richtext.facet';
 
     #[Ref('app.bsky.richtext.facet#byteSlice')]
     protected array $index;
