@@ -17,7 +17,7 @@ use Revolution\AtProto\Lexicon\Attributes\Union;
 #[Required(['record', 'media'])]
 abstract class AbstractRecordWithMedia
 {
-    protected string $type = 'app.bsky.embed.recordWithMedia';
+    public const NSID = 'app.bsky.embed.recordWithMedia';
 
     #[Ref('app.bsky.embed.record')]
     protected array $record;

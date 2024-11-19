@@ -16,7 +16,7 @@ use Revolution\AtProto\Lexicon\Attributes\Required;
 #[Required(['images'])]
 abstract class AbstractImages
 {
-    protected string $type = 'app.bsky.embed.images';
+    public const NSID = 'app.bsky.embed.images';
 
     #[Ref('app.bsky.embed.images#image')]
     protected array $images;

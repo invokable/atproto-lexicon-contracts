@@ -16,7 +16,7 @@ use Revolution\AtProto\Lexicon\Attributes\Required;
 #[Required(['record'])]
 abstract class AbstractRecord
 {
-    protected string $type = 'app.bsky.embed.record';
+    public const NSID = 'app.bsky.embed.record';
 
     #[Ref('com.atproto.repo.strongRef')]
     protected array $record;

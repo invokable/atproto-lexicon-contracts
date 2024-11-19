@@ -16,7 +16,7 @@ use Revolution\AtProto\Lexicon\Attributes\Required;
 #[Required(['uri', 'cid'])]
 abstract class AbstractStrongRef
 {
-    protected string $type = 'com.atproto.repo.strongRef';
+    public const NSID = 'com.atproto.repo.strongRef';
 
     #[Format('at-uri')]
     protected string $uri;

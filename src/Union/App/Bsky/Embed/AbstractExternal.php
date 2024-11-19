@@ -16,7 +16,7 @@ use Revolution\AtProto\Lexicon\Attributes\Required;
 #[Required(['external'])]
 abstract class AbstractExternal
 {
-    protected string $type = 'app.bsky.embed.external';
+    public const NSID = 'app.bsky.embed.external';
 
     #[Ref('app.bsky.embed.external#external')]
     protected array $external;
