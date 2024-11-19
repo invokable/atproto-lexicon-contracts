@@ -20,6 +20,7 @@ interface Unspecced
     public const getTaggedSuggestions = 'app.bsky.unspecced.getTaggedSuggestions';
     public const searchActorsSkeleton = 'app.bsky.unspecced.searchActorsSkeleton';
     public const searchPostsSkeleton = 'app.bsky.unspecced.searchPostsSkeleton';
+    public const searchStarterPacksSkeleton = 'app.bsky.unspecced.searchStarterPacksSkeleton';
 
     /**
      * Get miscellaneous runtime configuration.
@@ -68,4 +69,12 @@ interface Unspecced
      */
     #[Get, NSID(self::searchPostsSkeleton)]
     public function searchPostsSkeleton(string $q, #[KnownValues(['top', 'latest'])] ?string $sort = 'latest', ?string $since = null, ?string $until = null, #[Format('at-identifier')] ?string $mentions = null, #[Format('at-identifier')] ?string $author = null, #[Format('language')] ?string $lang = null, ?string $domain = null, #[Format('uri')] ?string $url = null, ?array $tag = null, #[Format('did')] ?string $viewer = null, ?int $limit = 25, ?string $cursor = null);
+
+    /**
+     * Backend Starter Pack search, returns only skeleton.
+     *
+     * @see https://docs.bsky.app/docs/api/app-bsky-unspecced-search-starter-packs-skeleton
+     */
+    #[Get, NSID(self::searchStarterPacksSkeleton)]
+    public function searchStarterPacksSkeleton(string $q, #[Format('did')] ?string $viewer = null, ?int $limit = 25, ?string $cursor = null);
 }

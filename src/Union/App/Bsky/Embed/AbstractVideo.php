@@ -11,7 +11,9 @@ use Revolution\AtProto\Lexicon\Attributes\Blob;
 use Revolution\AtProto\Lexicon\Attributes\Ref;
 use Revolution\AtProto\Lexicon\Attributes\Required;
 
-
+/**
+ * A video embedded in a Bluesky record (eg, a post).
+ */
 #[Required(['video'])]
 abstract class AbstractVideo
 {

@@ -31,6 +31,7 @@ interface Graph
     public const muteActor = 'app.bsky.graph.muteActor';
     public const muteActorList = 'app.bsky.graph.muteActorList';
     public const muteThread = 'app.bsky.graph.muteThread';
+    public const searchStarterPacks = 'app.bsky.graph.searchStarterPacks';
     public const unmuteActor = 'app.bsky.graph.unmuteActor';
     public const unmuteActorList = 'app.bsky.graph.unmuteActorList';
     public const unmuteThread = 'app.bsky.graph.unmuteThread';
@@ -170,6 +171,14 @@ interface Graph
      */
     #[Post, NSID(self::muteThread)]
     public function muteThread(#[Format('at-uri')] string $root);
+
+    /**
+     * Find starter packs matching search criteria. Does not require auth.
+     *
+     * @see https://docs.bsky.app/docs/api/app-bsky-graph-search-starter-packs
+     */
+    #[Get, NSID(self::searchStarterPacks)]
+    public function searchStarterPacks(string $q, ?int $limit = 25, ?string $cursor = null);
 
     /**
      * Unmutes the specified account. Requires auth.

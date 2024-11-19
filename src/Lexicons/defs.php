@@ -6125,6 +6125,74 @@ return array (
       ),
     ),
   ),
+  'app.bsky.graph.searchStarterPacks' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.graph.searchStarterPacks',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'description' => 'Find starter packs matching search criteria. Does not require auth.',
+        'parameters' => 
+        array (
+          'type' => 'params',
+          'required' => 
+          array (
+            0 => 'q',
+          ),
+          'properties' => 
+          array (
+            'q' => 
+            array (
+              'type' => 'string',
+              'description' => 'Search query string. Syntax, phrase, boolean, and faceting is unspecified, but Lucene query syntax is recommended.',
+            ),
+            'limit' => 
+            array (
+              'type' => 'integer',
+              'minimum' => 1,
+              'maximum' => 100,
+              'default' => 25,
+            ),
+            'cursor' => 
+            array (
+              'type' => 'string',
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'starterPacks',
+            ),
+            'properties' => 
+            array (
+              'cursor' => 
+              array (
+                'type' => 'string',
+              ),
+              'starterPacks' => 
+              array (
+                'type' => 'array',
+                'items' => 
+                array (
+                  'type' => 'ref',
+                  'ref' => 'lex:app.bsky.graph.defs#starterPackViewBasic',
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
   'app.bsky.graph.starterpack' => 
   array (
     'lexicon' => 1,
@@ -7055,6 +7123,22 @@ return array (
           ),
         ),
       ),
+      'skeletonSearchStarterPack' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'uri',
+        ),
+        'properties' => 
+        array (
+          'uri' => 
+          array (
+            'type' => 'string',
+            'format' => 'at-uri',
+          ),
+        ),
+      ),
     ),
   ),
   'app.bsky.unspecced.getConfig' => 
@@ -7528,6 +7612,93 @@ return array (
                 array (
                   'type' => 'ref',
                   'ref' => 'lex:app.bsky.unspecced.defs#skeletonSearchPost',
+                ),
+              ),
+            ),
+          ),
+        ),
+        'errors' => 
+        array (
+          0 => 
+          array (
+            'name' => 'BadQueryString',
+          ),
+        ),
+      ),
+    ),
+  ),
+  'app.bsky.unspecced.searchStarterPacksSkeleton' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.unspecced.searchStarterPacksSkeleton',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'description' => 'Backend Starter Pack search, returns only skeleton.',
+        'parameters' => 
+        array (
+          'type' => 'params',
+          'required' => 
+          array (
+            0 => 'q',
+          ),
+          'properties' => 
+          array (
+            'q' => 
+            array (
+              'type' => 'string',
+              'description' => 'Search query string; syntax, phrase, boolean, and faceting is unspecified, but Lucene query syntax is recommended.',
+            ),
+            'viewer' => 
+            array (
+              'type' => 'string',
+              'format' => 'did',
+              'description' => 'DID of the account making the request (not included for public/unauthenticated queries).',
+            ),
+            'limit' => 
+            array (
+              'type' => 'integer',
+              'minimum' => 1,
+              'maximum' => 100,
+              'default' => 25,
+            ),
+            'cursor' => 
+            array (
+              'type' => 'string',
+              'description' => 'Optional pagination mechanism; may not necessarily allow scrolling through entire result set.',
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'starterPacks',
+            ),
+            'properties' => 
+            array (
+              'cursor' => 
+              array (
+                'type' => 'string',
+              ),
+              'hitsTotal' => 
+              array (
+                'type' => 'integer',
+                'description' => 'Count of search hits. Optional, may be rounded/truncated, and may not be possible to paginate through all hits.',
+              ),
+              'starterPacks' => 
+              array (
+                'type' => 'array',
+                'items' => 
+                array (
+                  'type' => 'ref',
+                  'ref' => 'lex:app.bsky.unspecced.defs#skeletonSearchStarterPack',
                 ),
               ),
             ),
