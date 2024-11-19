@@ -275,7 +275,7 @@ class LexiconUnionCommand extends Command
             ])->implode(PHP_EOL);
         }
 
-        $type = "    protected string \$type = '$id';";
+        $const = "    public const NSID = '$id';";
 
         $required = Arr::get($json, 'defs.main.required', []);
         $required = collect($required)
@@ -290,7 +290,7 @@ class LexiconUnionCommand extends Command
             ->replace('{namespace}', $namespace)
             ->replace('{description}', $description)
             ->replace('{name}', $name)
-            ->replace('{type}', $type)
+            ->replace('{const}', $const)
             ->replace('{required}', $required)
             ->replace('{property}', $property)
             ->toString();
