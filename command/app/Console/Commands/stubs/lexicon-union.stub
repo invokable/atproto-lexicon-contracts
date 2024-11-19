@@ -1,0 +1,24 @@
+<?php
+/**
+ * GENERATED CODE.
+ */
+
+declare(strict_types=1);
+
+namespace Revolution\AtProto\Lexicon\Union\{namespace};
+
+use Revolution\AtProto\Lexicon\Attributes\Blob;
+use Revolution\AtProto\Lexicon\Attributes\Format;
+use Revolution\AtProto\Lexicon\Attributes\KnownValues;
+use Revolution\AtProto\Lexicon\Attributes\Ref;
+use Revolution\AtProto\Lexicon\Attributes\Required;
+use Revolution\AtProto\Lexicon\Attributes\Union;
+
+{description}
+{required}
+abstract class {name}
+{
+{type}
+
+{property}
+}
