@@ -132,7 +132,7 @@ class LexiconContractsCommand extends Command
                             '    /**',
                             '     * '.$description,
                             '     *',
-                            '     * @see '.$docs_url,
+                            '     * @link '.$docs_url,
                             '     */',
                         ])
                             ->when(filled($deprecated), fn (Collection $collection) => $collection->push($deprecated))
@@ -282,8 +282,7 @@ class LexiconContractsCommand extends Command
                 }
 
                 if (filled($deprecated)) {
-                    // #[\Deprecated] will be added in PHP 8.4. It will simply be ignored in 8.3 and below.
-                    $deprecated = '#[\Deprecated]';
+                    $deprecated = '#[Deprecated]';
                 }
 
                 return Str::squish("$sensitive $ref $union $format $knownValues $deprecated $type \$$name");
@@ -349,6 +348,10 @@ class LexiconContractsCommand extends Command
             ->whenContains('#[KnownValues',
                 fn (Stringable $string) => $string,
                 fn (Stringable $string) => $string->remove('use Revolution\AtProto\Lexicon\Attributes\KnownValues;'.PHP_EOL),
+            )
+            ->whenContains('#[Deprecated',
+                fn (Stringable $string) => $string,
+                fn (Stringable $string) => $string->remove('use Revolution\AtProto\Lexicon\Attributes\Deprecated;'.PHP_EOL),
             )
             ->toString();
     }
