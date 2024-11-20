@@ -38,7 +38,7 @@ interface Feed
     /**
      * Get information about a feed generator, including policies and offered feed URIs. Does not require auth; implemented by Feed Generator services (not App View).
      *
-     * @see https://docs.bsky.app/docs/api/app-bsky-feed-describe-feed-generator
+     * @link https://docs.bsky.app/docs/api/app-bsky-feed-describe-feed-generator
      */
     #[Get, NSID(self::describeFeedGenerator)]
     public function describeFeedGenerator();
@@ -46,7 +46,7 @@ interface Feed
     /**
      * Get a list of feeds (feed generator records) created by the actor (in the actor's repo).
      *
-     * @see https://docs.bsky.app/docs/api/app-bsky-feed-get-actor-feeds
+     * @link https://docs.bsky.app/docs/api/app-bsky-feed-get-actor-feeds
      */
     #[Get, NSID(self::getActorFeeds)]
     public function getActorFeeds(#[Format('at-identifier')] string $actor, ?int $limit = 50, ?string $cursor = null);
@@ -54,7 +54,7 @@ interface Feed
     /**
      * Get a list of posts liked by an actor. Requires auth, actor must be the requesting account.
      *
-     * @see https://docs.bsky.app/docs/api/app-bsky-feed-get-actor-likes
+     * @link https://docs.bsky.app/docs/api/app-bsky-feed-get-actor-likes
      */
     #[Get, NSID(self::getActorLikes)]
     public function getActorLikes(#[Format('at-identifier')] string $actor, ?int $limit = 50, ?string $cursor = null);
@@ -62,7 +62,7 @@ interface Feed
     /**
      * Get a view of an actor's 'author feed' (post and reposts by the author). Does not require auth.
      *
-     * @see https://docs.bsky.app/docs/api/app-bsky-feed-get-author-feed
+     * @link https://docs.bsky.app/docs/api/app-bsky-feed-get-author-feed
      */
     #[Get, NSID(self::getAuthorFeed)]
     public function getAuthorFeed(#[Format('at-identifier')] string $actor, ?int $limit = 50, ?string $cursor = null, #[KnownValues(['posts_with_replies', 'posts_no_replies', 'posts_with_media', 'posts_and_author_threads'])] ?string $filter = 'posts_with_replies', ?bool $includePins = null);
@@ -70,7 +70,7 @@ interface Feed
     /**
      * Get a hydrated feed from an actor's selected feed generator. Implemented by App View.
      *
-     * @see https://docs.bsky.app/docs/api/app-bsky-feed-get-feed
+     * @link https://docs.bsky.app/docs/api/app-bsky-feed-get-feed
      */
     #[Get, NSID(self::getFeed)]
     public function getFeed(#[Format('at-uri')] string $feed, ?int $limit = 50, ?string $cursor = null);
@@ -78,7 +78,7 @@ interface Feed
     /**
      * Get information about a feed generator. Implemented by AppView.
      *
-     * @see https://docs.bsky.app/docs/api/app-bsky-feed-get-feed-generator
+     * @link https://docs.bsky.app/docs/api/app-bsky-feed-get-feed-generator
      */
     #[Get, NSID(self::getFeedGenerator)]
     public function getFeedGenerator(#[Format('at-uri')] string $feed);
@@ -86,7 +86,7 @@ interface Feed
     /**
      * Get information about a list of feed generators.
      *
-     * @see https://docs.bsky.app/docs/api/app-bsky-feed-get-feed-generators
+     * @link https://docs.bsky.app/docs/api/app-bsky-feed-get-feed-generators
      */
     #[Get, NSID(self::getFeedGenerators)]
     public function getFeedGenerators(#[Format('at-uri')] array $feeds);
@@ -94,7 +94,7 @@ interface Feed
     /**
      * Get a skeleton of a feed provided by a feed generator. Auth is optional, depending on provider requirements, and provides the DID of the requester. Implemented by Feed Generator Service.
      *
-     * @see https://docs.bsky.app/docs/api/app-bsky-feed-get-feed-skeleton
+     * @link https://docs.bsky.app/docs/api/app-bsky-feed-get-feed-skeleton
      */
     #[Get, NSID(self::getFeedSkeleton)]
     public function getFeedSkeleton(#[Format('at-uri')] string $feed, ?int $limit = 50, ?string $cursor = null);
@@ -102,7 +102,7 @@ interface Feed
     /**
      * Get like records which reference a subject (by AT-URI and CID).
      *
-     * @see https://docs.bsky.app/docs/api/app-bsky-feed-get-likes
+     * @link https://docs.bsky.app/docs/api/app-bsky-feed-get-likes
      */
     #[Get, NSID(self::getLikes)]
     public function getLikes(#[Format('at-uri')] string $uri, #[Format('cid')] ?string $cid = null, ?int $limit = 50, ?string $cursor = null);
@@ -110,7 +110,7 @@ interface Feed
     /**
      * Get a feed of recent posts from a list (posts and reposts from any actors on the list). Does not require auth.
      *
-     * @see https://docs.bsky.app/docs/api/app-bsky-feed-get-list-feed
+     * @link https://docs.bsky.app/docs/api/app-bsky-feed-get-list-feed
      */
     #[Get, NSID(self::getListFeed)]
     public function getListFeed(#[Format('at-uri')] string $list, ?int $limit = 50, ?string $cursor = null);
@@ -118,7 +118,7 @@ interface Feed
     /**
      * Get posts in a thread. Does not require auth, but additional metadata and filtering will be applied for authed requests.
      *
-     * @see https://docs.bsky.app/docs/api/app-bsky-feed-get-post-thread
+     * @link https://docs.bsky.app/docs/api/app-bsky-feed-get-post-thread
      */
     #[Get, NSID(self::getPostThread)]
     public function getPostThread(#[Format('at-uri')] string $uri, ?int $depth = 6, ?int $parentHeight = 80);
@@ -126,7 +126,7 @@ interface Feed
     /**
      * Gets post views for a specified list of posts (by AT-URI). This is sometimes referred to as 'hydrating' a 'feed skeleton'.
      *
-     * @see https://docs.bsky.app/docs/api/app-bsky-feed-get-posts
+     * @link https://docs.bsky.app/docs/api/app-bsky-feed-get-posts
      */
     #[Get, NSID(self::getPosts)]
     public function getPosts(#[Format('at-uri')] array $uris);
@@ -134,7 +134,7 @@ interface Feed
     /**
      * Get a list of quotes for a given post.
      *
-     * @see https://docs.bsky.app/docs/api/app-bsky-feed-get-quotes
+     * @link https://docs.bsky.app/docs/api/app-bsky-feed-get-quotes
      */
     #[Get, NSID(self::getQuotes)]
     public function getQuotes(#[Format('at-uri')] string $uri, #[Format('cid')] ?string $cid = null, ?int $limit = 50, ?string $cursor = null);
@@ -142,7 +142,7 @@ interface Feed
     /**
      * Get a list of reposts for a given post.
      *
-     * @see https://docs.bsky.app/docs/api/app-bsky-feed-get-reposted-by
+     * @link https://docs.bsky.app/docs/api/app-bsky-feed-get-reposted-by
      */
     #[Get, NSID(self::getRepostedBy)]
     public function getRepostedBy(#[Format('at-uri')] string $uri, #[Format('cid')] ?string $cid = null, ?int $limit = 50, ?string $cursor = null);
@@ -150,7 +150,7 @@ interface Feed
     /**
      * Get a list of suggested feeds (feed generators) for the requesting account.
      *
-     * @see https://docs.bsky.app/docs/api/app-bsky-feed-get-suggested-feeds
+     * @link https://docs.bsky.app/docs/api/app-bsky-feed-get-suggested-feeds
      */
     #[Get, NSID(self::getSuggestedFeeds)]
     public function getSuggestedFeeds(?int $limit = 50, ?string $cursor = null);
@@ -158,7 +158,7 @@ interface Feed
     /**
      * Get a view of the requesting account's home timeline. This is expected to be some form of reverse-chronological feed.
      *
-     * @see https://docs.bsky.app/docs/api/app-bsky-feed-get-timeline
+     * @link https://docs.bsky.app/docs/api/app-bsky-feed-get-timeline
      */
     #[Get, NSID(self::getTimeline)]
     public function getTimeline(?string $algorithm = null, ?int $limit = 50, ?string $cursor = null);
@@ -166,7 +166,7 @@ interface Feed
     /**
      * Find posts matching search criteria, returning views of those posts.
      *
-     * @see https://docs.bsky.app/docs/api/app-bsky-feed-search-posts
+     * @link https://docs.bsky.app/docs/api/app-bsky-feed-search-posts
      */
     #[Get, NSID(self::searchPosts)]
     public function searchPosts(string $q, #[KnownValues(['top', 'latest'])] ?string $sort = 'latest', ?string $since = null, ?string $until = null, #[Format('at-identifier')] ?string $mentions = null, #[Format('at-identifier')] ?string $author = null, #[Format('language')] ?string $lang = null, ?string $domain = null, #[Format('uri')] ?string $url = null, ?array $tag = null, ?int $limit = 25, ?string $cursor = null);
@@ -174,7 +174,7 @@ interface Feed
     /**
      * Send information about interactions with feed items back to the feed generator that served them.
      *
-     * @see https://docs.bsky.app/docs/api/app-bsky-feed-send-interactions
+     * @link https://docs.bsky.app/docs/api/app-bsky-feed-send-interactions
      */
     #[Post, NSID(self::sendInteractions)]
     public function sendInteractions(#[Ref('app.bsky.feed.defs#interaction')] array $interactions);

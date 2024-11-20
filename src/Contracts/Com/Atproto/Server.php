@@ -43,7 +43,7 @@ interface Server
     /**
      * Activates a currently deactivated account. Used to finalize account migration after the account's repo is imported and identity is setup.
      *
-     * @see https://docs.bsky.app/docs/api/com-atproto-server-activate-account
+     * @link https://docs.bsky.app/docs/api/com-atproto-server-activate-account
      */
     #[Post, NSID(self::activateAccount)]
     public function activateAccount();
@@ -51,7 +51,7 @@ interface Server
     /**
      * Returns the status of an account, especially as pertaining to import or recovery. Can be called many times over the course of an account migration. Requires auth and can only be called pertaining to oneself.
      *
-     * @see https://docs.bsky.app/docs/api/com-atproto-server-check-account-status
+     * @link https://docs.bsky.app/docs/api/com-atproto-server-check-account-status
      */
     #[Get, NSID(self::checkAccountStatus)]
     public function checkAccountStatus();
@@ -59,7 +59,7 @@ interface Server
     /**
      * Confirm an email using a token from com.atproto.server.requestEmailConfirmation.
      *
-     * @see https://docs.bsky.app/docs/api/com-atproto-server-confirm-email
+     * @link https://docs.bsky.app/docs/api/com-atproto-server-confirm-email
      */
     #[Post, NSID(self::confirmEmail)]
     public function confirmEmail(string $email, string $token);
@@ -67,7 +67,7 @@ interface Server
     /**
      * Create an account. Implemented by PDS.
      *
-     * @see https://docs.bsky.app/docs/api/com-atproto-server-create-account
+     * @link https://docs.bsky.app/docs/api/com-atproto-server-create-account
      */
     #[Post, NSID(self::createAccount)]
     public function createAccount(#[Format('handle')] string $handle, ?string $email = null, #[Format('did')] ?string $did = null, ?string $inviteCode = null, ?string $verificationCode = null, ?string $verificationPhone = null, #[\SensitiveParameter] ?string $password = null, ?string $recoveryKey = null, mixed $plcOp = null);
@@ -75,7 +75,7 @@ interface Server
     /**
      * Create an App Password.
      *
-     * @see https://docs.bsky.app/docs/api/com-atproto-server-create-app-password
+     * @link https://docs.bsky.app/docs/api/com-atproto-server-create-app-password
      */
     #[Post, NSID(self::createAppPassword)]
     public function createAppPassword(string $name, ?bool $privileged = null);
@@ -83,7 +83,7 @@ interface Server
     /**
      * Create an invite code.
      *
-     * @see https://docs.bsky.app/docs/api/com-atproto-server-create-invite-code
+     * @link https://docs.bsky.app/docs/api/com-atproto-server-create-invite-code
      */
     #[Post, NSID(self::createInviteCode)]
     public function createInviteCode(int $useCount, #[Format('did')] ?string $forAccount = null);
@@ -91,7 +91,7 @@ interface Server
     /**
      * Create invite codes.
      *
-     * @see https://docs.bsky.app/docs/api/com-atproto-server-create-invite-codes
+     * @link https://docs.bsky.app/docs/api/com-atproto-server-create-invite-codes
      */
     #[Post, NSID(self::createInviteCodes)]
     public function createInviteCodes(int $codeCount, int $useCount, #[Format('did')] ?array $forAccounts = null);
@@ -99,7 +99,7 @@ interface Server
     /**
      * Create an authentication session.
      *
-     * @see https://docs.bsky.app/docs/api/com-atproto-server-create-session
+     * @link https://docs.bsky.app/docs/api/com-atproto-server-create-session
      */
     #[Post, NSID(self::createSession)]
     public function createSession(string $identifier, #[\SensitiveParameter] string $password, ?string $authFactorToken = null);
@@ -107,7 +107,7 @@ interface Server
     /**
      * Deactivates a currently active account. Stops serving of repo, and future writes to repo until reactivated. Used to finalize account migration with the old host after the account has been activated on the new host.
      *
-     * @see https://docs.bsky.app/docs/api/com-atproto-server-deactivate-account
+     * @link https://docs.bsky.app/docs/api/com-atproto-server-deactivate-account
      */
     #[Post, NSID(self::deactivateAccount)]
     public function deactivateAccount(#[Format('datetime')] ?string $deleteAfter = null);
@@ -115,7 +115,7 @@ interface Server
     /**
      * Delete an actor's account with a token and password. Can only be called after requesting a deletion token. Requires auth.
      *
-     * @see https://docs.bsky.app/docs/api/com-atproto-server-delete-account
+     * @link https://docs.bsky.app/docs/api/com-atproto-server-delete-account
      */
     #[Post, NSID(self::deleteAccount)]
     public function deleteAccount(#[Format('did')] string $did, #[\SensitiveParameter] string $password, string $token);
@@ -123,7 +123,7 @@ interface Server
     /**
      * Delete the current session. Requires auth.
      *
-     * @see https://docs.bsky.app/docs/api/com-atproto-server-delete-session
+     * @link https://docs.bsky.app/docs/api/com-atproto-server-delete-session
      */
     #[Post, NSID(self::deleteSession)]
     public function deleteSession();
@@ -131,7 +131,7 @@ interface Server
     /**
      * Describes the server's account creation requirements and capabilities. Implemented by PDS.
      *
-     * @see https://docs.bsky.app/docs/api/com-atproto-server-describe-server
+     * @link https://docs.bsky.app/docs/api/com-atproto-server-describe-server
      */
     #[Get, NSID(self::describeServer)]
     public function describeServer();
@@ -139,7 +139,7 @@ interface Server
     /**
      * Get all invite codes for the current account. Requires auth.
      *
-     * @see https://docs.bsky.app/docs/api/com-atproto-server-get-account-invite-codes
+     * @link https://docs.bsky.app/docs/api/com-atproto-server-get-account-invite-codes
      */
     #[Get, NSID(self::getAccountInviteCodes)]
     public function getAccountInviteCodes(?bool $includeUsed = null, ?bool $createAvailable = null);
@@ -147,7 +147,7 @@ interface Server
     /**
      * Get a signed token on behalf of the requesting DID for the requested service.
      *
-     * @see https://docs.bsky.app/docs/api/com-atproto-server-get-service-auth
+     * @link https://docs.bsky.app/docs/api/com-atproto-server-get-service-auth
      */
     #[Get, NSID(self::getServiceAuth)]
     public function getServiceAuth(#[Format('did')] string $aud, ?int $exp = null, #[Format('nsid')] ?string $lxm = null);
@@ -155,7 +155,7 @@ interface Server
     /**
      * Get information about the current auth session. Requires auth.
      *
-     * @see https://docs.bsky.app/docs/api/com-atproto-server-get-session
+     * @link https://docs.bsky.app/docs/api/com-atproto-server-get-session
      */
     #[Get, NSID(self::getSession)]
     public function getSession();
@@ -163,7 +163,7 @@ interface Server
     /**
      * List all App Passwords.
      *
-     * @see https://docs.bsky.app/docs/api/com-atproto-server-list-app-passwords
+     * @link https://docs.bsky.app/docs/api/com-atproto-server-list-app-passwords
      */
     #[Get, NSID(self::listAppPasswords)]
     public function listAppPasswords();
@@ -171,7 +171,7 @@ interface Server
     /**
      * Refresh an authentication session. Requires auth using the 'refreshJwt' (not the 'accessJwt').
      *
-     * @see https://docs.bsky.app/docs/api/com-atproto-server-refresh-session
+     * @link https://docs.bsky.app/docs/api/com-atproto-server-refresh-session
      */
     #[Post, NSID(self::refreshSession)]
     public function refreshSession();
@@ -179,7 +179,7 @@ interface Server
     /**
      * Initiate a user account deletion via email.
      *
-     * @see https://docs.bsky.app/docs/api/com-atproto-server-request-account-delete
+     * @link https://docs.bsky.app/docs/api/com-atproto-server-request-account-delete
      */
     #[Post, NSID(self::requestAccountDelete)]
     public function requestAccountDelete();
@@ -187,7 +187,7 @@ interface Server
     /**
      * Request an email with a code to confirm ownership of email.
      *
-     * @see https://docs.bsky.app/docs/api/com-atproto-server-request-email-confirmation
+     * @link https://docs.bsky.app/docs/api/com-atproto-server-request-email-confirmation
      */
     #[Post, NSID(self::requestEmailConfirmation)]
     public function requestEmailConfirmation();
@@ -195,7 +195,7 @@ interface Server
     /**
      * Request a token in order to update email.
      *
-     * @see https://docs.bsky.app/docs/api/com-atproto-server-request-email-update
+     * @link https://docs.bsky.app/docs/api/com-atproto-server-request-email-update
      */
     #[Post, NSID(self::requestEmailUpdate)]
     public function requestEmailUpdate();
@@ -203,7 +203,7 @@ interface Server
     /**
      * Initiate a user account password reset via email.
      *
-     * @see https://docs.bsky.app/docs/api/com-atproto-server-request-password-reset
+     * @link https://docs.bsky.app/docs/api/com-atproto-server-request-password-reset
      */
     #[Post, NSID(self::requestPasswordReset)]
     public function requestPasswordReset(string $email);
@@ -211,7 +211,7 @@ interface Server
     /**
      * Reserve a repo signing key, for use with account creation. Necessary so that a DID PLC update operation can be constructed during an account migraiton. Public and does not require auth; implemented by PDS. NOTE: this endpoint may change when full account migration is implemented.
      *
-     * @see https://docs.bsky.app/docs/api/com-atproto-server-reserve-signing-key
+     * @link https://docs.bsky.app/docs/api/com-atproto-server-reserve-signing-key
      */
     #[Post, NSID(self::reserveSigningKey)]
     public function reserveSigningKey(#[Format('did')] ?string $did = null);
@@ -219,7 +219,7 @@ interface Server
     /**
      * Reset a user account password using a token.
      *
-     * @see https://docs.bsky.app/docs/api/com-atproto-server-reset-password
+     * @link https://docs.bsky.app/docs/api/com-atproto-server-reset-password
      */
     #[Post, NSID(self::resetPassword)]
     public function resetPassword(string $token, #[\SensitiveParameter] string $password);
@@ -227,7 +227,7 @@ interface Server
     /**
      * Revoke an App Password by name.
      *
-     * @see https://docs.bsky.app/docs/api/com-atproto-server-revoke-app-password
+     * @link https://docs.bsky.app/docs/api/com-atproto-server-revoke-app-password
      */
     #[Post, NSID(self::revokeAppPassword)]
     public function revokeAppPassword(string $name);
@@ -235,7 +235,7 @@ interface Server
     /**
      * Update an account's email.
      *
-     * @see https://docs.bsky.app/docs/api/com-atproto-server-update-email
+     * @link https://docs.bsky.app/docs/api/com-atproto-server-update-email
      */
     #[Post, NSID(self::updateEmail)]
     public function updateEmail(string $email, ?bool $emailAuthFactor = null, ?string $token = null);

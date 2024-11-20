@@ -22,7 +22,7 @@ interface Communication
     /**
      * Administrative action to create a new, re-usable communication (email for now) template.
      *
-     * @see https://docs.bsky.app/docs/api/tools-ozone-communication-create-template
+     * @link https://docs.bsky.app/docs/api/tools-ozone-communication-create-template
      */
     #[Post, NSID(self::createTemplate)]
     public function createTemplate(string $name, string $contentMarkdown, string $subject, #[Format('language')] ?string $lang = null, #[Format('did')] ?string $createdBy = null);
@@ -30,7 +30,7 @@ interface Communication
     /**
      * Delete a communication template.
      *
-     * @see https://docs.bsky.app/docs/api/tools-ozone-communication-delete-template
+     * @link https://docs.bsky.app/docs/api/tools-ozone-communication-delete-template
      */
     #[Post, NSID(self::deleteTemplate)]
     public function deleteTemplate(string $id);
@@ -38,7 +38,7 @@ interface Communication
     /**
      * Get list of all communication templates.
      *
-     * @see https://docs.bsky.app/docs/api/tools-ozone-communication-list-templates
+     * @link https://docs.bsky.app/docs/api/tools-ozone-communication-list-templates
      */
     #[Get, NSID(self::listTemplates)]
     public function listTemplates();
@@ -46,7 +46,7 @@ interface Communication
     /**
      * Administrative action to update an existing communication template. Allows passing partial fields to patch specific fields only.
      *
-     * @see https://docs.bsky.app/docs/api/tools-ozone-communication-update-template
+     * @link https://docs.bsky.app/docs/api/tools-ozone-communication-update-template
      */
     #[Post, NSID(self::updateTemplate)]
     public function updateTemplate(string $id, ?string $name = null, #[Format('language')] ?string $lang = null, ?string $contentMarkdown = null, ?string $subject = null, #[Format('did')] ?string $updatedBy = null, ?bool $disabled = null);

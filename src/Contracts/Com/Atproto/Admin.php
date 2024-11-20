@@ -35,7 +35,7 @@ interface Admin
     /**
      * Delete a user account as an administrator.
      *
-     * @see https://docs.bsky.app/docs/api/com-atproto-admin-delete-account
+     * @link https://docs.bsky.app/docs/api/com-atproto-admin-delete-account
      */
     #[Post, NSID(self::deleteAccount)]
     public function deleteAccount(#[Format('did')] string $did);
@@ -43,7 +43,7 @@ interface Admin
     /**
      * Disable an account from receiving new invite codes, but does not invalidate existing codes.
      *
-     * @see https://docs.bsky.app/docs/api/com-atproto-admin-disable-account-invites
+     * @link https://docs.bsky.app/docs/api/com-atproto-admin-disable-account-invites
      */
     #[Post, NSID(self::disableAccountInvites)]
     public function disableAccountInvites(#[Format('did')] string $account, ?string $note = null);
@@ -51,7 +51,7 @@ interface Admin
     /**
      * Disable some set of codes and/or all codes associated with a set of users.
      *
-     * @see https://docs.bsky.app/docs/api/com-atproto-admin-disable-invite-codes
+     * @link https://docs.bsky.app/docs/api/com-atproto-admin-disable-invite-codes
      */
     #[Post, NSID(self::disableInviteCodes)]
     public function disableInviteCodes(?array $codes = null, ?array $accounts = null);
@@ -59,7 +59,7 @@ interface Admin
     /**
      * Re-enable an account's ability to receive invite codes.
      *
-     * @see https://docs.bsky.app/docs/api/com-atproto-admin-enable-account-invites
+     * @link https://docs.bsky.app/docs/api/com-atproto-admin-enable-account-invites
      */
     #[Post, NSID(self::enableAccountInvites)]
     public function enableAccountInvites(#[Format('did')] string $account, ?string $note = null);
@@ -67,7 +67,7 @@ interface Admin
     /**
      * Get details about an account.
      *
-     * @see https://docs.bsky.app/docs/api/com-atproto-admin-get-account-info
+     * @link https://docs.bsky.app/docs/api/com-atproto-admin-get-account-info
      */
     #[Get, NSID(self::getAccountInfo)]
     public function getAccountInfo(#[Format('did')] string $did);
@@ -75,7 +75,7 @@ interface Admin
     /**
      * Get details about some accounts.
      *
-     * @see https://docs.bsky.app/docs/api/com-atproto-admin-get-account-infos
+     * @link https://docs.bsky.app/docs/api/com-atproto-admin-get-account-infos
      */
     #[Get, NSID(self::getAccountInfos)]
     public function getAccountInfos(#[Format('did')] array $dids);
@@ -83,7 +83,7 @@ interface Admin
     /**
      * Get an admin view of invite codes.
      *
-     * @see https://docs.bsky.app/docs/api/com-atproto-admin-get-invite-codes
+     * @link https://docs.bsky.app/docs/api/com-atproto-admin-get-invite-codes
      */
     #[Get, NSID(self::getInviteCodes)]
     public function getInviteCodes(#[KnownValues(['recent', 'usage'])] ?string $sort = 'recent', ?int $limit = 100, ?string $cursor = null);
@@ -91,7 +91,7 @@ interface Admin
     /**
      * Get the service-specific admin status of a subject (account, record, or blob).
      *
-     * @see https://docs.bsky.app/docs/api/com-atproto-admin-get-subject-status
+     * @link https://docs.bsky.app/docs/api/com-atproto-admin-get-subject-status
      */
     #[Get, NSID(self::getSubjectStatus)]
     public function getSubjectStatus(#[Format('did')] ?string $did = null, #[Format('at-uri')] ?string $uri = null, #[Format('cid')] ?string $blob = null);
@@ -99,7 +99,7 @@ interface Admin
     /**
      * Get list of accounts that matches your search query.
      *
-     * @see https://docs.bsky.app/docs/api/com-atproto-admin-search-accounts
+     * @link https://docs.bsky.app/docs/api/com-atproto-admin-search-accounts
      */
     #[Get, NSID(self::searchAccounts)]
     public function searchAccounts(?string $email = null, ?string $cursor = null, ?int $limit = 50);
@@ -107,7 +107,7 @@ interface Admin
     /**
      * Send email to a user's account email address.
      *
-     * @see https://docs.bsky.app/docs/api/com-atproto-admin-send-email
+     * @link https://docs.bsky.app/docs/api/com-atproto-admin-send-email
      */
     #[Post, NSID(self::sendEmail)]
     public function sendEmail(#[Format('did')] string $recipientDid, string $content, #[Format('did')] string $senderDid, ?string $subject = null, ?string $comment = null);
@@ -115,7 +115,7 @@ interface Admin
     /**
      * Administrative action to update an account's email.
      *
-     * @see https://docs.bsky.app/docs/api/com-atproto-admin-update-account-email
+     * @link https://docs.bsky.app/docs/api/com-atproto-admin-update-account-email
      */
     #[Post, NSID(self::updateAccountEmail)]
     public function updateAccountEmail(#[Format('at-identifier')] string $account, string $email);
@@ -123,7 +123,7 @@ interface Admin
     /**
      * Administrative action to update an account's handle.
      *
-     * @see https://docs.bsky.app/docs/api/com-atproto-admin-update-account-handle
+     * @link https://docs.bsky.app/docs/api/com-atproto-admin-update-account-handle
      */
     #[Post, NSID(self::updateAccountHandle)]
     public function updateAccountHandle(#[Format('did')] string $did, #[Format('handle')] string $handle);
@@ -131,7 +131,7 @@ interface Admin
     /**
      * Update the password for a user account as an administrator.
      *
-     * @see https://docs.bsky.app/docs/api/com-atproto-admin-update-account-password
+     * @link https://docs.bsky.app/docs/api/com-atproto-admin-update-account-password
      */
     #[Post, NSID(self::updateAccountPassword)]
     public function updateAccountPassword(#[Format('did')] string $did, #[\SensitiveParameter] string $password);
@@ -139,7 +139,7 @@ interface Admin
     /**
      * Update the service-specific admin status of a subject (account, record, or blob).
      *
-     * @see https://docs.bsky.app/docs/api/com-atproto-admin-update-subject-status
+     * @link https://docs.bsky.app/docs/api/com-atproto-admin-update-subject-status
      */
     #[Post, NSID(self::updateSubjectStatus)]
     public function updateSubjectStatus(#[Union(['com.atproto.admin.defs#repoRef', 'com.atproto.repo.strongRef', 'com.atproto.admin.defs#repoBlobRef'])] array $subject, #[Ref('com.atproto.admin.defs#statusAttr')] ?array $takedown = null, #[Ref('com.atproto.admin.defs#statusAttr')] ?array $deactivated = null);

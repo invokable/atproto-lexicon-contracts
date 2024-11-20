@@ -24,7 +24,7 @@ interface Notification
     /**
      * Count the number of unread notifications for the requesting account. Requires auth.
      *
-     * @see https://docs.bsky.app/docs/api/app-bsky-notification-get-unread-count
+     * @link https://docs.bsky.app/docs/api/app-bsky-notification-get-unread-count
      */
     #[Get, NSID(self::getUnreadCount)]
     public function getUnreadCount(?bool $priority = null, #[Format('datetime')] ?string $seenAt = null);
@@ -32,7 +32,7 @@ interface Notification
     /**
      * Enumerate notifications for the requesting account. Requires auth.
      *
-     * @see https://docs.bsky.app/docs/api/app-bsky-notification-list-notifications
+     * @link https://docs.bsky.app/docs/api/app-bsky-notification-list-notifications
      */
     #[Get, NSID(self::listNotifications)]
     public function listNotifications(?int $limit = 50, ?bool $priority = null, ?string $cursor = null, #[Format('datetime')] ?string $seenAt = null);
@@ -40,7 +40,7 @@ interface Notification
     /**
      * Set notification-related preferences for an account. Requires auth.
      *
-     * @see https://docs.bsky.app/docs/api/app-bsky-notification-put-preferences
+     * @link https://docs.bsky.app/docs/api/app-bsky-notification-put-preferences
      */
     #[Post, NSID(self::putPreferences)]
     public function putPreferences(bool $priority);
@@ -48,7 +48,7 @@ interface Notification
     /**
      * Register to receive push notifications, via a specified service, for the requesting account. Requires auth.
      *
-     * @see https://docs.bsky.app/docs/api/app-bsky-notification-register-push
+     * @link https://docs.bsky.app/docs/api/app-bsky-notification-register-push
      */
     #[Post, NSID(self::registerPush)]
     public function registerPush(#[Format('did')] string $serviceDid, string $token, #[KnownValues(['ios', 'android', 'web'])] string $platform, string $appId);
@@ -56,7 +56,7 @@ interface Notification
     /**
      * Notify server that the requesting account has seen notifications. Requires auth.
      *
-     * @see https://docs.bsky.app/docs/api/app-bsky-notification-update-seen
+     * @link https://docs.bsky.app/docs/api/app-bsky-notification-update-seen
      */
     #[Post, NSID(self::updateSeen)]
     public function updateSeen(#[Format('datetime')] string $seenAt);

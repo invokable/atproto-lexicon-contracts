@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Revolution\AtProto\Lexicon\Record\App\Bsky\Feed;
 
+use Revolution\AtProto\Lexicon\Attributes\Deprecated;
 use Revolution\AtProto\Lexicon\Attributes\Format;
 use Revolution\AtProto\Lexicon\Attributes\Ref;
 use Revolution\AtProto\Lexicon\Attributes\Required;
@@ -28,7 +29,7 @@ abstract class AbstractPost
     /**
      * DEPRECATED: replaced by app.bsky.richtext.facet.
      */
-    #[\Deprecated]
+    #[Deprecated]
     #[Ref('app.bsky.feed.post#entity')]
     protected ?array $entities = null;
 

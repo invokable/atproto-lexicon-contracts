@@ -20,7 +20,7 @@ interface Moderation
     /**
      * Submit a moderation report regarding an atproto account or record. Implemented by moderation services (with PDS proxying), and requires auth.
      *
-     * @see https://docs.bsky.app/docs/api/com-atproto-moderation-create-report
+     * @link https://docs.bsky.app/docs/api/com-atproto-moderation-create-report
      */
     #[Post, NSID(self::createReport)]
     public function createReport(#[Ref('com.atproto.moderation.defs#reasonType')] string $reasonType, #[Union(['com.atproto.admin.defs#repoRef', 'com.atproto.repo.strongRef'])] array $subject, ?string $reason = null);

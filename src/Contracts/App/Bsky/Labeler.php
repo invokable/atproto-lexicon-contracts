@@ -18,7 +18,7 @@ interface Labeler
     /**
      * Get information about a list of labeler services.
      *
-     * @see https://docs.bsky.app/docs/api/app-bsky-labeler-get-services
+     * @link https://docs.bsky.app/docs/api/app-bsky-labeler-get-services
      */
     #[Get, NSID(self::getServices)]
     public function getServices(#[Format('did')] array $dids, ?bool $detailed = null);
