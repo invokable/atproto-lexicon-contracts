@@ -237,8 +237,7 @@ class LexiconUnionCommand extends Command
                 }
 
                 if (filled($deprecated)) {
-                    // #[\Deprecated] will be added in PHP 8.4. It will simply be ignored in 8.3 and below.
-                    $deprecated = "    #[\Deprecated]";
+                    $deprecated = "    #[Deprecated]";
                 }
 
                 return collect($properties)
@@ -326,6 +325,10 @@ class LexiconUnionCommand extends Command
             ->whenContains('#[KnownValues',
                 fn (Stringable $string) => $string,
                 fn (Stringable $string) => $string->remove('use Revolution\AtProto\Lexicon\Attributes\KnownValues;'.PHP_EOL),
+            )
+            ->whenContains('#[Deprecated',
+                fn (Stringable $string) => $string,
+                fn (Stringable $string) => $string->remove('use Revolution\AtProto\Lexicon\Attributes\Deprecated;'.PHP_EOL),
             )
             ->toString();
     }
