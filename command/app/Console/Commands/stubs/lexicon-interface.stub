@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Revolution\AtProto\Lexicon\Contracts\{namespace};
 
+use Revolution\AtProto\Lexicon\Attributes\Deprecated;
 use Revolution\AtProto\Lexicon\Attributes\Format;
 use Revolution\AtProto\Lexicon\Attributes\Get;
 use Revolution\AtProto\Lexicon\Attributes\KnownValues;
