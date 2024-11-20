@@ -237,7 +237,7 @@ class LexiconRecordCommand extends Command
                 }
 
                 if (filled($deprecated)) {
-                    $deprecated = "    #[Deprecated]";
+                    $deprecated = '    #[Deprecated]';
                 }
 
                 return collect($properties)
