@@ -31,7 +31,7 @@ interface Convo
     /**
      * chat.bsky.convo.deleteMessageForSelf.
      *
-     * @see https://docs.bsky.app/docs/api/chat-bsky-convo-delete-message-for-self
+     * @link https://docs.bsky.app/docs/api/chat-bsky-convo-delete-message-for-self
      */
     #[Post, NSID(self::deleteMessageForSelf)]
     public function deleteMessageForSelf(string $convoId, string $messageId);
@@ -39,7 +39,7 @@ interface Convo
     /**
      * chat.bsky.convo.getConvo.
      *
-     * @see https://docs.bsky.app/docs/api/chat-bsky-convo-get-convo
+     * @link https://docs.bsky.app/docs/api/chat-bsky-convo-get-convo
      */
     #[Get, NSID(self::getConvo)]
     public function getConvo(string $convoId);
@@ -47,7 +47,7 @@ interface Convo
     /**
      * chat.bsky.convo.getConvoForMembers.
      *
-     * @see https://docs.bsky.app/docs/api/chat-bsky-convo-get-convo-for-members
+     * @link https://docs.bsky.app/docs/api/chat-bsky-convo-get-convo-for-members
      */
     #[Get, NSID(self::getConvoForMembers)]
     public function getConvoForMembers(#[Format('did')] array $members);
@@ -55,7 +55,7 @@ interface Convo
     /**
      * chat.bsky.convo.getLog.
      *
-     * @see https://docs.bsky.app/docs/api/chat-bsky-convo-get-log
+     * @link https://docs.bsky.app/docs/api/chat-bsky-convo-get-log
      */
     #[Get, NSID(self::getLog)]
     public function getLog(?string $cursor = null);
@@ -63,7 +63,7 @@ interface Convo
     /**
      * chat.bsky.convo.getMessages.
      *
-     * @see https://docs.bsky.app/docs/api/chat-bsky-convo-get-messages
+     * @link https://docs.bsky.app/docs/api/chat-bsky-convo-get-messages
      */
     #[Get, NSID(self::getMessages)]
     public function getMessages(string $convoId, ?int $limit = 50, ?string $cursor = null);
@@ -71,7 +71,7 @@ interface Convo
     /**
      * chat.bsky.convo.leaveConvo.
      *
-     * @see https://docs.bsky.app/docs/api/chat-bsky-convo-leave-convo
+     * @link https://docs.bsky.app/docs/api/chat-bsky-convo-leave-convo
      */
     #[Post, NSID(self::leaveConvo)]
     public function leaveConvo(string $convoId);
@@ -79,7 +79,7 @@ interface Convo
     /**
      * chat.bsky.convo.listConvos.
      *
-     * @see https://docs.bsky.app/docs/api/chat-bsky-convo-list-convos
+     * @link https://docs.bsky.app/docs/api/chat-bsky-convo-list-convos
      */
     #[Get, NSID(self::listConvos)]
     public function listConvos(?int $limit = 50, ?string $cursor = null);
@@ -87,7 +87,7 @@ interface Convo
     /**
      * chat.bsky.convo.muteConvo.
      *
-     * @see https://docs.bsky.app/docs/api/chat-bsky-convo-mute-convo
+     * @link https://docs.bsky.app/docs/api/chat-bsky-convo-mute-convo
      */
     #[Post, NSID(self::muteConvo)]
     public function muteConvo(string $convoId);
@@ -95,7 +95,7 @@ interface Convo
     /**
      * chat.bsky.convo.sendMessage.
      *
-     * @see https://docs.bsky.app/docs/api/chat-bsky-convo-send-message
+     * @link https://docs.bsky.app/docs/api/chat-bsky-convo-send-message
      */
     #[Post, NSID(self::sendMessage)]
     public function sendMessage(string $convoId, #[Ref('chat.bsky.convo.defs#messageInput')] array $message);
@@ -103,7 +103,7 @@ interface Convo
     /**
      * chat.bsky.convo.sendMessageBatch.
      *
-     * @see https://docs.bsky.app/docs/api/chat-bsky-convo-send-message-batch
+     * @link https://docs.bsky.app/docs/api/chat-bsky-convo-send-message-batch
      */
     #[Post, NSID(self::sendMessageBatch)]
     public function sendMessageBatch(#[Ref('chat.bsky.convo.sendMessageBatch#batchItem')] array $items);
@@ -111,7 +111,7 @@ interface Convo
     /**
      * chat.bsky.convo.unmuteConvo.
      *
-     * @see https://docs.bsky.app/docs/api/chat-bsky-convo-unmute-convo
+     * @link https://docs.bsky.app/docs/api/chat-bsky-convo-unmute-convo
      */
     #[Post, NSID(self::unmuteConvo)]
     public function unmuteConvo(string $convoId);
@@ -119,7 +119,7 @@ interface Convo
     /**
      * chat.bsky.convo.updateRead.
      *
-     * @see https://docs.bsky.app/docs/api/chat-bsky-convo-update-read
+     * @link https://docs.bsky.app/docs/api/chat-bsky-convo-update-read
      */
     #[Post, NSID(self::updateRead)]
     public function updateRead(string $convoId, ?string $messageId = null);

@@ -24,7 +24,7 @@ interface Identity
     /**
      * Describe the credentials that should be included in the DID doc of an account that is migrating to this service.
      *
-     * @see https://docs.bsky.app/docs/api/com-atproto-identity-get-recommended-did-credentials
+     * @link https://docs.bsky.app/docs/api/com-atproto-identity-get-recommended-did-credentials
      */
     #[Get, NSID(self::getRecommendedDidCredentials)]
     public function getRecommendedDidCredentials();
@@ -32,7 +32,7 @@ interface Identity
     /**
      * Request an email with a code to in order to request a signed PLC operation. Requires Auth.
      *
-     * @see https://docs.bsky.app/docs/api/com-atproto-identity-request-plc-operation-signature
+     * @link https://docs.bsky.app/docs/api/com-atproto-identity-request-plc-operation-signature
      */
     #[Post, NSID(self::requestPlcOperationSignature)]
     public function requestPlcOperationSignature();
@@ -40,7 +40,7 @@ interface Identity
     /**
      * Resolves a handle (domain name) to a DID.
      *
-     * @see https://docs.bsky.app/docs/api/com-atproto-identity-resolve-handle
+     * @link https://docs.bsky.app/docs/api/com-atproto-identity-resolve-handle
      */
     #[Get, NSID(self::resolveHandle)]
     public function resolveHandle(#[Format('handle')] string $handle);
@@ -48,7 +48,7 @@ interface Identity
     /**
      * Signs a PLC operation to update some value(s) in the requesting DID's document.
      *
-     * @see https://docs.bsky.app/docs/api/com-atproto-identity-sign-plc-operation
+     * @link https://docs.bsky.app/docs/api/com-atproto-identity-sign-plc-operation
      */
     #[Post, NSID(self::signPlcOperation)]
     public function signPlcOperation(?string $token = null, ?array $rotationKeys = null, ?array $alsoKnownAs = null, mixed $verificationMethods = null, mixed $services = null);
@@ -56,7 +56,7 @@ interface Identity
     /**
      * Validates a PLC operation to ensure that it doesn't violate a service's constraints or get the identity into a bad state, then submits it to the PLC registry.
      *
-     * @see https://docs.bsky.app/docs/api/com-atproto-identity-submit-plc-operation
+     * @link https://docs.bsky.app/docs/api/com-atproto-identity-submit-plc-operation
      */
     #[Post, NSID(self::submitPlcOperation)]
     public function submitPlcOperation(mixed $operation);
@@ -64,7 +64,7 @@ interface Identity
     /**
      * Updates the current account's handle. Verifies handle validity, and updates did:plc document if necessary. Implemented by PDS, and requires auth.
      *
-     * @see https://docs.bsky.app/docs/api/com-atproto-identity-update-handle
+     * @link https://docs.bsky.app/docs/api/com-atproto-identity-update-handle
      */
     #[Post, NSID(self::updateHandle)]
     public function updateHandle(#[Format('handle')] string $handle);

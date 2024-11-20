@@ -19,7 +19,7 @@ interface Actor
     /**
      * chat.bsky.actor.deleteAccount.
      *
-     * @see https://docs.bsky.app/docs/api/chat-bsky-actor-delete-account
+     * @link https://docs.bsky.app/docs/api/chat-bsky-actor-delete-account
      */
     #[Post, NSID(self::deleteAccount)]
     public function deleteAccount();
@@ -27,7 +27,7 @@ interface Actor
     /**
      * chat.bsky.actor.exportAccountData.
      *
-     * @see https://docs.bsky.app/docs/api/chat-bsky-actor-export-account-data
+     * @link https://docs.bsky.app/docs/api/chat-bsky-actor-export-account-data
      */
     #[Get, NSID(self::exportAccountData)]
     public function exportAccountData();

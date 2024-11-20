@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Revolution\AtProto\Lexicon\Contracts\Com\Atproto;
 
+use Revolution\AtProto\Lexicon\Attributes\Deprecated;
 use Revolution\AtProto\Lexicon\Attributes\Format;
 use Revolution\AtProto\Lexicon\Attributes\Get;
 use Revolution\AtProto\Lexicon\Attributes\NSID;
@@ -29,7 +30,7 @@ interface Repo
     /**
      * Apply a batch transaction of repository creates, updates, and deletes. Requires auth, implemented by PDS.
      *
-     * @see https://docs.bsky.app/docs/api/com-atproto-repo-apply-writes
+     * @link https://docs.bsky.app/docs/api/com-atproto-repo-apply-writes
      */
     #[Post, NSID(self::applyWrites)]
     public function applyWrites(#[Format('at-identifier')] string $repo, #[Union(['com.atproto.repo.applyWrites#create', 'com.atproto.repo.applyWrites#update', 'com.atproto.repo.applyWrites#delete'])] array $writes, ?bool $validate = null, #[Format('cid')] ?string $swapCommit = null);
@@ -37,7 +38,7 @@ interface Repo
     /**
      * Create a single new repository record. Requires auth, implemented by PDS.
      *
-     * @see https://docs.bsky.app/docs/api/com-atproto-repo-create-record
+     * @link https://docs.bsky.app/docs/api/com-atproto-repo-create-record
      */
     #[Post, NSID(self::createRecord)]
     public function createRecord(#[Format('at-identifier')] string $repo, #[Format('nsid')] string $collection, mixed $record, ?string $rkey = null, ?bool $validate = null, #[Format('cid')] ?string $swapCommit = null);
@@ -45,7 +46,7 @@ interface Repo
     /**
      * Delete a repository record, or ensure it doesn't exist. Requires auth, implemented by PDS.
      *
-     * @see https://docs.bsky.app/docs/api/com-atproto-repo-delete-record
+     * @link https://docs.bsky.app/docs/api/com-atproto-repo-delete-record
      */
     #[Post, NSID(self::deleteRecord)]
     public function deleteRecord(#[Format('at-identifier')] string $repo, #[Format('nsid')] string $collection, string $rkey, #[Format('cid')] ?string $swapRecord = null, #[Format('cid')] ?string $swapCommit = null);
@@ -53,7 +54,7 @@ interface Repo
     /**
      * Get information about an account and repository, including the list of collections. Does not require auth.
      *
-     * @see https://docs.bsky.app/docs/api/com-atproto-repo-describe-repo
+     * @link https://docs.bsky.app/docs/api/com-atproto-repo-describe-repo
      */
     #[Get, NSID(self::describeRepo)]
     public function describeRepo(#[Format('at-identifier')] string $repo);
@@ -61,7 +62,7 @@ interface Repo
     /**
      * Get a single record from a repository. Does not require auth.
      *
-     * @see https://docs.bsky.app/docs/api/com-atproto-repo-get-record
+     * @link https://docs.bsky.app/docs/api/com-atproto-repo-get-record
      */
     #[Get, NSID(self::getRecord)]
     public function getRecord(#[Format('at-identifier')] string $repo, #[Format('nsid')] string $collection, string $rkey, #[Format('cid')] ?string $cid = null);
@@ -69,7 +70,7 @@ interface Repo
     /**
      * Import a repo in the form of a CAR file. Requires Content-Length HTTP header to be set.
      *
-     * @see https://docs.bsky.app/docs/api/com-atproto-repo-import-repo
+     * @link https://docs.bsky.app/docs/api/com-atproto-repo-import-repo
      */
     #[Post, NSID(self::importRepo)]
     public function importRepo();
@@ -77,7 +78,7 @@ interface Repo
     /**
      * Returns a list of missing blobs for the requesting account. Intended to be used in the account migration flow.
      *
-     * @see https://docs.bsky.app/docs/api/com-atproto-repo-list-missing-blobs
+     * @link https://docs.bsky.app/docs/api/com-atproto-repo-list-missing-blobs
      */
     #[Get, NSID(self::listMissingBlobs)]
     public function listMissingBlobs(?int $limit = 500, ?string $cursor = null);
@@ -85,15 +86,15 @@ interface Repo
     /**
      * List a range of records in a repository, matching a specific collection. Does not require auth.
      *
-     * @see https://docs.bsky.app/docs/api/com-atproto-repo-list-records
+     * @link https://docs.bsky.app/docs/api/com-atproto-repo-list-records
      */
     #[Get, NSID(self::listRecords)]
-    public function listRecords(#[Format('at-identifier')] string $repo, #[Format('nsid')] string $collection, ?int $limit = 50, ?string $cursor = null, #[\Deprecated] ?string $rkeyStart = null, #[\Deprecated] ?string $rkeyEnd = null, ?bool $reverse = null);
+    public function listRecords(#[Format('at-identifier')] string $repo, #[Format('nsid')] string $collection, ?int $limit = 50, ?string $cursor = null, #[Deprecated] ?string $rkeyStart = null, #[Deprecated] ?string $rkeyEnd = null, ?bool $reverse = null);
 
     /**
      * Write a repository record, creating or updating it as needed. Requires auth, implemented by PDS.
      *
-     * @see https://docs.bsky.app/docs/api/com-atproto-repo-put-record
+     * @link https://docs.bsky.app/docs/api/com-atproto-repo-put-record
      */
     #[Post, NSID(self::putRecord)]
     public function putRecord(#[Format('at-identifier')] string $repo, #[Format('nsid')] string $collection, string $rkey, mixed $record, ?bool $validate = null, #[Format('cid')] ?string $swapRecord = null, #[Format('cid')] ?string $swapCommit = null);
@@ -101,7 +102,7 @@ interface Repo
     /**
      * Upload a new blob, to be referenced from a repository record. The blob will be deleted if it is not referenced within a time window (eg, minutes). Blob restrictions (mimetype, size, etc) are enforced when the reference is created. Requires auth, implemented by PDS.
      *
-     * @see https://docs.bsky.app/docs/api/com-atproto-repo-upload-blob
+     * @link https://docs.bsky.app/docs/api/com-atproto-repo-upload-blob
      */
     #[Post, NSID(self::uploadBlob)]
     public function uploadBlob();

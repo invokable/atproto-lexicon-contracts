@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Revolution\AtProto\Lexicon\Contracts\Com\Atproto;
 
+use Revolution\AtProto\Lexicon\Attributes\Deprecated;
 use Revolution\AtProto\Lexicon\Attributes\Format;
 use Revolution\AtProto\Lexicon\Attributes\Get;
 use Revolution\AtProto\Lexicon\Attributes\NSID;
@@ -30,7 +31,7 @@ interface Sync
     /**
      * Get a blob associated with a given account. Returns the full blob as originally uploaded. Does not require auth; implemented by PDS.
      *
-     * @see https://docs.bsky.app/docs/api/com-atproto-sync-get-blob
+     * @link https://docs.bsky.app/docs/api/com-atproto-sync-get-blob
      */
     #[Get, NSID(self::getBlob)]
     public function getBlob(#[Format('did')] string $did, #[Format('cid')] string $cid);
@@ -38,7 +39,7 @@ interface Sync
     /**
      * Get data blocks from a given repo, by CID. For example, intermediate MST nodes, or records. Does not require auth; implemented by PDS.
      *
-     * @see https://docs.bsky.app/docs/api/com-atproto-sync-get-blocks
+     * @link https://docs.bsky.app/docs/api/com-atproto-sync-get-blocks
      */
     #[Get, NSID(self::getBlocks)]
     public function getBlocks(#[Format('did')] string $did, #[Format('cid')] array $cids);
@@ -46,7 +47,7 @@ interface Sync
     /**
      * DEPRECATED - please use com.atproto.sync.getRepo instead.
      *
-     * @see https://docs.bsky.app/docs/api/com-atproto-sync-get-checkout
+     * @link https://docs.bsky.app/docs/api/com-atproto-sync-get-checkout
      */
     #[\Deprecated]
     #[Get, NSID(self::getCheckout)]
@@ -55,7 +56,7 @@ interface Sync
     /**
      * DEPRECATED - please use com.atproto.sync.getLatestCommit instead.
      *
-     * @see https://docs.bsky.app/docs/api/com-atproto-sync-get-head
+     * @link https://docs.bsky.app/docs/api/com-atproto-sync-get-head
      */
     #[\Deprecated]
     #[Get, NSID(self::getHead)]
@@ -64,7 +65,7 @@ interface Sync
     /**
      * Get the current commit CID & revision of the specified repo. Does not require auth.
      *
-     * @see https://docs.bsky.app/docs/api/com-atproto-sync-get-latest-commit
+     * @link https://docs.bsky.app/docs/api/com-atproto-sync-get-latest-commit
      */
     #[Get, NSID(self::getLatestCommit)]
     public function getLatestCommit(#[Format('did')] string $did);
@@ -72,15 +73,15 @@ interface Sync
     /**
      * Get data blocks needed to prove the existence or non-existence of record in the current version of repo. Does not require auth.
      *
-     * @see https://docs.bsky.app/docs/api/com-atproto-sync-get-record
+     * @link https://docs.bsky.app/docs/api/com-atproto-sync-get-record
      */
     #[Get, NSID(self::getRecord)]
-    public function getRecord(#[Format('did')] string $did, #[Format('nsid')] string $collection, string $rkey, #[Format('cid')] #[\Deprecated] ?string $commit = null);
+    public function getRecord(#[Format('did')] string $did, #[Format('nsid')] string $collection, string $rkey, #[Format('cid')] #[Deprecated] ?string $commit = null);
 
     /**
      * Download a repository export as CAR file. Optionally only a 'diff' since a previous revision. Does not require auth; implemented by PDS.
      *
-     * @see https://docs.bsky.app/docs/api/com-atproto-sync-get-repo
+     * @link https://docs.bsky.app/docs/api/com-atproto-sync-get-repo
      */
     #[Get, NSID(self::getRepo)]
     public function getRepo(#[Format('did')] string $did, ?string $since = null);
@@ -88,7 +89,7 @@ interface Sync
     /**
      * Get the hosting status for a repository, on this server. Expected to be implemented by PDS and Relay.
      *
-     * @see https://docs.bsky.app/docs/api/com-atproto-sync-get-repo-status
+     * @link https://docs.bsky.app/docs/api/com-atproto-sync-get-repo-status
      */
     #[Get, NSID(self::getRepoStatus)]
     public function getRepoStatus(#[Format('did')] string $did);
@@ -96,7 +97,7 @@ interface Sync
     /**
      * List blob CIDs for an account, since some repo revision. Does not require auth; implemented by PDS.
      *
-     * @see https://docs.bsky.app/docs/api/com-atproto-sync-list-blobs
+     * @link https://docs.bsky.app/docs/api/com-atproto-sync-list-blobs
      */
     #[Get, NSID(self::listBlobs)]
     public function listBlobs(#[Format('did')] string $did, ?string $since = null, ?int $limit = 500, ?string $cursor = null);
@@ -104,7 +105,7 @@ interface Sync
     /**
      * Enumerates all the DID, rev, and commit CID for all repos hosted by this service. Does not require auth; implemented by PDS and Relay.
      *
-     * @see https://docs.bsky.app/docs/api/com-atproto-sync-list-repos
+     * @link https://docs.bsky.app/docs/api/com-atproto-sync-list-repos
      */
     #[Get, NSID(self::listRepos)]
     public function listRepos(?int $limit = 500, ?string $cursor = null);
@@ -112,7 +113,7 @@ interface Sync
     /**
      * Notify a crawling service of a recent update, and that crawling should resume. Intended use is after a gap between repo stream events caused the crawling service to disconnect. Does not require auth; implemented by Relay.
      *
-     * @see https://docs.bsky.app/docs/api/com-atproto-sync-notify-of-update
+     * @link https://docs.bsky.app/docs/api/com-atproto-sync-notify-of-update
      */
     #[Post, NSID(self::notifyOfUpdate)]
     public function notifyOfUpdate(string $hostname);
@@ -120,7 +121,7 @@ interface Sync
     /**
      * Request a service to persistently crawl hosted repos. Expected use is new PDS instances declaring their existence to Relays. Does not require auth.
      *
-     * @see https://docs.bsky.app/docs/api/com-atproto-sync-request-crawl
+     * @link https://docs.bsky.app/docs/api/com-atproto-sync-request-crawl
      */
     #[Post, NSID(self::requestCrawl)]
     public function requestCrawl(string $hostname);

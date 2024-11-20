@@ -39,7 +39,7 @@ interface Graph
     /**
      * Get a list of starter packs created by the actor.
      *
-     * @see https://docs.bsky.app/docs/api/app-bsky-graph-get-actor-starter-packs
+     * @link https://docs.bsky.app/docs/api/app-bsky-graph-get-actor-starter-packs
      */
     #[Get, NSID(self::getActorStarterPacks)]
     public function getActorStarterPacks(#[Format('at-identifier')] string $actor, ?int $limit = 50, ?string $cursor = null);
@@ -47,7 +47,7 @@ interface Graph
     /**
      * Enumerates which accounts the requesting account is currently blocking. Requires auth.
      *
-     * @see https://docs.bsky.app/docs/api/app-bsky-graph-get-blocks
+     * @link https://docs.bsky.app/docs/api/app-bsky-graph-get-blocks
      */
     #[Get, NSID(self::getBlocks)]
     public function getBlocks(?int $limit = 50, ?string $cursor = null);
@@ -55,7 +55,7 @@ interface Graph
     /**
      * Enumerates accounts which follow a specified account (actor).
      *
-     * @see https://docs.bsky.app/docs/api/app-bsky-graph-get-followers
+     * @link https://docs.bsky.app/docs/api/app-bsky-graph-get-followers
      */
     #[Get, NSID(self::getFollowers)]
     public function getFollowers(#[Format('at-identifier')] string $actor, ?int $limit = 50, ?string $cursor = null);
@@ -63,7 +63,7 @@ interface Graph
     /**
      * Enumerates accounts which a specified account (actor) follows.
      *
-     * @see https://docs.bsky.app/docs/api/app-bsky-graph-get-follows
+     * @link https://docs.bsky.app/docs/api/app-bsky-graph-get-follows
      */
     #[Get, NSID(self::getFollows)]
     public function getFollows(#[Format('at-identifier')] string $actor, ?int $limit = 50, ?string $cursor = null);
@@ -71,7 +71,7 @@ interface Graph
     /**
      * Enumerates accounts which follow a specified account (actor) and are followed by the viewer.
      *
-     * @see https://docs.bsky.app/docs/api/app-bsky-graph-get-known-followers
+     * @link https://docs.bsky.app/docs/api/app-bsky-graph-get-known-followers
      */
     #[Get, NSID(self::getKnownFollowers)]
     public function getKnownFollowers(#[Format('at-identifier')] string $actor, ?int $limit = 50, ?string $cursor = null);
@@ -79,7 +79,7 @@ interface Graph
     /**
      * Gets a 'view' (with additional context) of a specified list.
      *
-     * @see https://docs.bsky.app/docs/api/app-bsky-graph-get-list
+     * @link https://docs.bsky.app/docs/api/app-bsky-graph-get-list
      */
     #[Get, NSID(self::getList)]
     public function getList(#[Format('at-uri')] string $list, ?int $limit = 50, ?string $cursor = null);
@@ -87,7 +87,7 @@ interface Graph
     /**
      * Get mod lists that the requesting account (actor) is blocking. Requires auth.
      *
-     * @see https://docs.bsky.app/docs/api/app-bsky-graph-get-list-blocks
+     * @link https://docs.bsky.app/docs/api/app-bsky-graph-get-list-blocks
      */
     #[Get, NSID(self::getListBlocks)]
     public function getListBlocks(?int $limit = 50, ?string $cursor = null);
@@ -95,7 +95,7 @@ interface Graph
     /**
      * Enumerates mod lists that the requesting account (actor) currently has muted. Requires auth.
      *
-     * @see https://docs.bsky.app/docs/api/app-bsky-graph-get-list-mutes
+     * @link https://docs.bsky.app/docs/api/app-bsky-graph-get-list-mutes
      */
     #[Get, NSID(self::getListMutes)]
     public function getListMutes(?int $limit = 50, ?string $cursor = null);
@@ -103,7 +103,7 @@ interface Graph
     /**
      * Enumerates the lists created by a specified account (actor).
      *
-     * @see https://docs.bsky.app/docs/api/app-bsky-graph-get-lists
+     * @link https://docs.bsky.app/docs/api/app-bsky-graph-get-lists
      */
     #[Get, NSID(self::getLists)]
     public function getLists(#[Format('at-identifier')] string $actor, ?int $limit = 50, ?string $cursor = null);
@@ -111,7 +111,7 @@ interface Graph
     /**
      * Enumerates accounts that the requesting account (actor) currently has muted. Requires auth.
      *
-     * @see https://docs.bsky.app/docs/api/app-bsky-graph-get-mutes
+     * @link https://docs.bsky.app/docs/api/app-bsky-graph-get-mutes
      */
     #[Get, NSID(self::getMutes)]
     public function getMutes(?int $limit = 50, ?string $cursor = null);
@@ -119,7 +119,7 @@ interface Graph
     /**
      * Enumerates public relationships between one account, and a list of other accounts. Does not require auth.
      *
-     * @see https://docs.bsky.app/docs/api/app-bsky-graph-get-relationships
+     * @link https://docs.bsky.app/docs/api/app-bsky-graph-get-relationships
      */
     #[Get, NSID(self::getRelationships)]
     public function getRelationships(#[Format('at-identifier')] string $actor, #[Format('at-identifier')] ?array $others = null);
@@ -127,7 +127,7 @@ interface Graph
     /**
      * Gets a view of a starter pack.
      *
-     * @see https://docs.bsky.app/docs/api/app-bsky-graph-get-starter-pack
+     * @link https://docs.bsky.app/docs/api/app-bsky-graph-get-starter-pack
      */
     #[Get, NSID(self::getStarterPack)]
     public function getStarterPack(#[Format('at-uri')] string $starterPack);
@@ -135,7 +135,7 @@ interface Graph
     /**
      * Get views for a list of starter packs.
      *
-     * @see https://docs.bsky.app/docs/api/app-bsky-graph-get-starter-packs
+     * @link https://docs.bsky.app/docs/api/app-bsky-graph-get-starter-packs
      */
     #[Get, NSID(self::getStarterPacks)]
     public function getStarterPacks(#[Format('at-uri')] array $uris);
@@ -143,7 +143,7 @@ interface Graph
     /**
      * Enumerates follows similar to a given account (actor). Expected use is to recommend additional accounts immediately after following one account.
      *
-     * @see https://docs.bsky.app/docs/api/app-bsky-graph-get-suggested-follows-by-actor
+     * @link https://docs.bsky.app/docs/api/app-bsky-graph-get-suggested-follows-by-actor
      */
     #[Get, NSID(self::getSuggestedFollowsByActor)]
     public function getSuggestedFollowsByActor(#[Format('at-identifier')] string $actor);
@@ -151,7 +151,7 @@ interface Graph
     /**
      * Creates a mute relationship for the specified account. Mutes are private in Bluesky. Requires auth.
      *
-     * @see https://docs.bsky.app/docs/api/app-bsky-graph-mute-actor
+     * @link https://docs.bsky.app/docs/api/app-bsky-graph-mute-actor
      */
     #[Post, NSID(self::muteActor)]
     public function muteActor(#[Format('at-identifier')] string $actor);
@@ -159,7 +159,7 @@ interface Graph
     /**
      * Creates a mute relationship for the specified list of accounts. Mutes are private in Bluesky. Requires auth.
      *
-     * @see https://docs.bsky.app/docs/api/app-bsky-graph-mute-actor-list
+     * @link https://docs.bsky.app/docs/api/app-bsky-graph-mute-actor-list
      */
     #[Post, NSID(self::muteActorList)]
     public function muteActorList(#[Format('at-uri')] string $list);
@@ -167,7 +167,7 @@ interface Graph
     /**
      * Mutes a thread preventing notifications from the thread and any of its children. Mutes are private in Bluesky. Requires auth.
      *
-     * @see https://docs.bsky.app/docs/api/app-bsky-graph-mute-thread
+     * @link https://docs.bsky.app/docs/api/app-bsky-graph-mute-thread
      */
     #[Post, NSID(self::muteThread)]
     public function muteThread(#[Format('at-uri')] string $root);
@@ -175,7 +175,7 @@ interface Graph
     /**
      * Find starter packs matching search criteria. Does not require auth.
      *
-     * @see https://docs.bsky.app/docs/api/app-bsky-graph-search-starter-packs
+     * @link https://docs.bsky.app/docs/api/app-bsky-graph-search-starter-packs
      */
     #[Get, NSID(self::searchStarterPacks)]
     public function searchStarterPacks(string $q, ?int $limit = 25, ?string $cursor = null);
@@ -183,7 +183,7 @@ interface Graph
     /**
      * Unmutes the specified account. Requires auth.
      *
-     * @see https://docs.bsky.app/docs/api/app-bsky-graph-unmute-actor
+     * @link https://docs.bsky.app/docs/api/app-bsky-graph-unmute-actor
      */
     #[Post, NSID(self::unmuteActor)]
     public function unmuteActor(#[Format('at-identifier')] string $actor);
@@ -191,7 +191,7 @@ interface Graph
     /**
      * Unmutes the specified list of accounts. Requires auth.
      *
-     * @see https://docs.bsky.app/docs/api/app-bsky-graph-unmute-actor-list
+     * @link https://docs.bsky.app/docs/api/app-bsky-graph-unmute-actor-list
      */
     #[Post, NSID(self::unmuteActorList)]
     public function unmuteActorList(#[Format('at-uri')] string $list);
@@ -199,7 +199,7 @@ interface Graph
     /**
      * Unmutes the specified thread. Requires auth.
      *
-     * @see https://docs.bsky.app/docs/api/app-bsky-graph-unmute-thread
+     * @link https://docs.bsky.app/docs/api/app-bsky-graph-unmute-thread
      */
     #[Post, NSID(self::unmuteThread)]
     public function unmuteThread(#[Format('at-uri')] string $root);

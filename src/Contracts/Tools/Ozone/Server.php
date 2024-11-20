@@ -17,7 +17,7 @@ interface Server
     /**
      * Get details about ozone's server configuration.
      *
-     * @see https://docs.bsky.app/docs/api/tools-ozone-server-get-config
+     * @link https://docs.bsky.app/docs/api/tools-ozone-server-get-config
      */
     #[Get, NSID(self::getConfig)]
     public function getConfig();

@@ -23,7 +23,7 @@ interface Set
     /**
      * Add values to a specific set. Attempting to add values to a set that does not exist will result in an error.
      *
-     * @see https://docs.bsky.app/docs/api/tools-ozone-set-add-values
+     * @link https://docs.bsky.app/docs/api/tools-ozone-set-add-values
      */
     #[Post, NSID(self::addValues)]
     public function addValues(string $name, array $values);
@@ -31,7 +31,7 @@ interface Set
     /**
      * Delete an entire set. Attempting to delete a set that does not exist will result in an error.
      *
-     * @see https://docs.bsky.app/docs/api/tools-ozone-set-delete-set
+     * @link https://docs.bsky.app/docs/api/tools-ozone-set-delete-set
      */
     #[Post, NSID(self::deleteSet)]
     public function deleteSet(string $name);
@@ -39,7 +39,7 @@ interface Set
     /**
      * Delete values from a specific set. Attempting to delete values that are not in the set will not result in an error.
      *
-     * @see https://docs.bsky.app/docs/api/tools-ozone-set-delete-values
+     * @link https://docs.bsky.app/docs/api/tools-ozone-set-delete-values
      */
     #[Post, NSID(self::deleteValues)]
     public function deleteValues(string $name, array $values);
@@ -47,7 +47,7 @@ interface Set
     /**
      * Get a specific set and its values.
      *
-     * @see https://docs.bsky.app/docs/api/tools-ozone-set-get-values
+     * @link https://docs.bsky.app/docs/api/tools-ozone-set-get-values
      */
     #[Get, NSID(self::getValues)]
     public function getValues(string $name, ?int $limit = 100, ?string $cursor = null);
@@ -55,7 +55,7 @@ interface Set
     /**
      * Query available sets.
      *
-     * @see https://docs.bsky.app/docs/api/tools-ozone-set-query-sets
+     * @link https://docs.bsky.app/docs/api/tools-ozone-set-query-sets
      */
     #[Get, NSID(self::querySets)]
     public function querySets(?int $limit = 50, ?string $cursor = null, ?string $namePrefix = null, ?string $sortBy = 'name', ?string $sortDirection = 'asc');
@@ -63,7 +63,7 @@ interface Set
     /**
      * Create or update set metadata.
      *
-     * @see https://docs.bsky.app/docs/api/tools-ozone-set-upsert-set
+     * @link https://docs.bsky.app/docs/api/tools-ozone-set-upsert-set
      */
     #[Post, NSID(self::upsertSet)]
     public function upsertSet();

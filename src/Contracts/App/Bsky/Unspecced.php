@@ -25,7 +25,7 @@ interface Unspecced
     /**
      * Get miscellaneous runtime configuration.
      *
-     * @see https://docs.bsky.app/docs/api/app-bsky-unspecced-get-config
+     * @link https://docs.bsky.app/docs/api/app-bsky-unspecced-get-config
      */
     #[Get, NSID(self::getConfig)]
     public function getConfig();
@@ -33,7 +33,7 @@ interface Unspecced
     /**
      * An unspecced view of globally popular feed generators.
      *
-     * @see https://docs.bsky.app/docs/api/app-bsky-unspecced-get-popular-feed-generators
+     * @link https://docs.bsky.app/docs/api/app-bsky-unspecced-get-popular-feed-generators
      */
     #[Get, NSID(self::getPopularFeedGenerators)]
     public function getPopularFeedGenerators(?int $limit = 50, ?string $cursor = null, ?string $query = null);
@@ -41,7 +41,7 @@ interface Unspecced
     /**
      * Get a skeleton of suggested actors. Intended to be called and then hydrated through app.bsky.actor.getSuggestions.
      *
-     * @see https://docs.bsky.app/docs/api/app-bsky-unspecced-get-suggestions-skeleton
+     * @link https://docs.bsky.app/docs/api/app-bsky-unspecced-get-suggestions-skeleton
      */
     #[Get, NSID(self::getSuggestionsSkeleton)]
     public function getSuggestionsSkeleton(#[Format('did')] ?string $viewer = null, ?int $limit = 50, ?string $cursor = null, #[Format('did')] ?string $relativeToDid = null);
@@ -49,7 +49,7 @@ interface Unspecced
     /**
      * Get a list of suggestions (feeds and users) tagged with categories.
      *
-     * @see https://docs.bsky.app/docs/api/app-bsky-unspecced-get-tagged-suggestions
+     * @link https://docs.bsky.app/docs/api/app-bsky-unspecced-get-tagged-suggestions
      */
     #[Get, NSID(self::getTaggedSuggestions)]
     public function getTaggedSuggestions();
@@ -57,7 +57,7 @@ interface Unspecced
     /**
      * Backend Actors (profile) search, returns only skeleton.
      *
-     * @see https://docs.bsky.app/docs/api/app-bsky-unspecced-search-actors-skeleton
+     * @link https://docs.bsky.app/docs/api/app-bsky-unspecced-search-actors-skeleton
      */
     #[Get, NSID(self::searchActorsSkeleton)]
     public function searchActorsSkeleton(string $q, #[Format('did')] ?string $viewer = null, ?bool $typeahead = null, ?int $limit = 25, ?string $cursor = null);
@@ -65,7 +65,7 @@ interface Unspecced
     /**
      * Backend Posts search, returns only skeleton.
      *
-     * @see https://docs.bsky.app/docs/api/app-bsky-unspecced-search-posts-skeleton
+     * @link https://docs.bsky.app/docs/api/app-bsky-unspecced-search-posts-skeleton
      */
     #[Get, NSID(self::searchPostsSkeleton)]
     public function searchPostsSkeleton(string $q, #[KnownValues(['top', 'latest'])] ?string $sort = 'latest', ?string $since = null, ?string $until = null, #[Format('at-identifier')] ?string $mentions = null, #[Format('at-identifier')] ?string $author = null, #[Format('language')] ?string $lang = null, ?string $domain = null, #[Format('uri')] ?string $url = null, ?array $tag = null, #[Format('did')] ?string $viewer = null, ?int $limit = 25, ?string $cursor = null);
@@ -73,7 +73,7 @@ interface Unspecced
     /**
      * Backend Starter Pack search, returns only skeleton.
      *
-     * @see https://docs.bsky.app/docs/api/app-bsky-unspecced-search-starter-packs-skeleton
+     * @link https://docs.bsky.app/docs/api/app-bsky-unspecced-search-starter-packs-skeleton
      */
     #[Get, NSID(self::searchStarterPacksSkeleton)]
     public function searchStarterPacksSkeleton(string $q, #[Format('did')] ?string $viewer = null, ?int $limit = 25, ?string $cursor = null);
