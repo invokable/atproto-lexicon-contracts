@@ -13,9 +13,18 @@ use Revolution\AtProto\Lexicon\Attributes\Post;
 
 interface Temp
 {
+    public const addReservedHandle = 'com.atproto.temp.addReservedHandle';
     public const checkSignupQueue = 'com.atproto.temp.checkSignupQueue';
     public const fetchLabels = 'com.atproto.temp.fetchLabels';
     public const requestPhoneVerification = 'com.atproto.temp.requestPhoneVerification';
+
+    /**
+     * Add a handle to the set of reserved handles.
+     *
+     * @link https://docs.bsky.app/docs/api/com-atproto-temp-add-reserved-handle
+     */
+    #[Post, NSID(self::addReservedHandle)]
+    public function addReservedHandle(string $handle);
 
     /**
      * Check accounts location in signup queue.

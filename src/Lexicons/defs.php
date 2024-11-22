@@ -14691,6 +14691,49 @@ return array (
       ),
     ),
   ),
+  'com.atproto.temp.addReservedHandle' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'com.atproto.temp.addReservedHandle',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'procedure',
+        'description' => 'Add a handle to the set of reserved handles.',
+        'input' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'handle',
+            ),
+            'properties' => 
+            array (
+              'handle' => 
+              array (
+                'type' => 'string',
+              ),
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'properties' => 
+            array (
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
   'com.atproto.temp.checkSignupQueue' => 
   array (
     'lexicon' => 1,
