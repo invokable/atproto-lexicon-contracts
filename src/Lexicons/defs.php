@@ -585,6 +585,7 @@ return array (
               1 => 'newest',
               2 => 'most-likes',
               3 => 'random',
+              4 => 'hotness',
             ),
           ),
           'prioritizeFollowedUsers' => 
