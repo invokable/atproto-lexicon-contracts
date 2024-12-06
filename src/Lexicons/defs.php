@@ -15609,6 +15609,11 @@ return array (
           array (
             'type' => 'string',
           ),
+          'acknowledgeAccountSubjects' => 
+          array (
+            'type' => 'boolean',
+            'description' => 'If true, all other reports on content authored by this account will be resolved (acknowledged).',
+          ),
         ),
       ),
       'modEventEscalate' => 
