@@ -372,7 +372,7 @@ class LexiconContractsCommand extends Command
                                 default => 'mixed',
                             };
                         })->implode(function ($type, $name) {
-                            return sprintf("'%s' => '%s'", $name, $type);;
+                            return sprintf("'%s' => '%s'", $name, $type);
                         }, ', ');
                         $ref_properties = "[[$ref_properties]]";
                     }
