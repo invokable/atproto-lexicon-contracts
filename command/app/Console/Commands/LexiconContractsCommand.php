@@ -426,9 +426,8 @@ class LexiconContractsCommand extends Command
                 return empty($const['output']);
             })
             ->implode(function (array $const) {
-                return sprintf("    public const %sResponse = [%s];", $const['name'], $const['output']);
+                return sprintf('    public const %sResponse = [%s];', $const['name'], $const['output']);
             }, PHP_EOL);
-
 
         $tmp = File::get(realpath(__DIR__.'/stubs/lexicon-interface.stub'));
 
