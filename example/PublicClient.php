@@ -2,6 +2,7 @@
 
 use GuzzleHttp\Client;
 use GuzzleHttp\RequestOptions;
+use JetBrains\PhpStorm\ArrayShape;
 use Revolution\AtProto\Lexicon\Attributes\Format;
 use Revolution\AtProto\Lexicon\Attributes\Get;
 use Revolution\AtProto\Lexicon\Attributes\KnownValues;
@@ -48,6 +49,7 @@ class PublicClient implements Actor, Feed
         return $this->get(self::getProfile, compact('actor'));
     }
 
+    #[ArrayShape(['cursor' => 'string', 'feed' => [['post' => 'array', 'reply' => 'array', 'reason' => 'array', 'feedContext' => 'string']]])]
     public function getAuthorFeed(#[Format('at-identifier')] string $actor, ?int $limit = 50, ?string $cursor = null, #[KnownValues(['posts_with_replies', 'posts_no_replies', 'posts_with_media', 'posts_and_author_threads'])] ?string $filter = 'posts_with_replies', ?bool $includePins = null): array
     {
         return $this->get(
@@ -121,7 +123,6 @@ class PublicClient implements Actor, Feed
         // TODO: Implement describeFeedGenerator() method.
     }
 
-    #[Get, NSID(self::getActorFeeds)]
     public function getActorFeeds(#[Format('at-identifier')] string $actor, ?int $limit = 50, ?string $cursor = null)
     {
         // TODO: Implement getActorFeeds() method.
