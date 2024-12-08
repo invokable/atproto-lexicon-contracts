@@ -44,13 +44,13 @@ class PublicClient implements Actor, Feed
         return json_decode($response->getBody()->getContents(), true);
     }
 
-    #[ArrayShape(self::getProfileResponse)]
+    #[ArrayShape(Actor::getProfileResponse)]
     public function getProfile(#[Format('at-identifier')] string $actor): array
     {
         return $this->get(self::getProfile, compact('actor'));
     }
 
-    #[ArrayShape(self::getAuthorFeedResponse)]
+    #[ArrayShape(['cursor' => 'string', 'feed' => [['post' => 'array', 'reply' => 'array', 'reason' => 'array', 'feedContext' => 'string']]])]
     public function getAuthorFeed(#[Format('at-identifier')] string $actor, ?int $limit = 50, ?string $cursor = null, #[KnownValues(['posts_with_replies', 'posts_no_replies', 'posts_with_media', 'posts_and_author_threads'])] ?string $filter = 'posts_with_replies', ?bool $includePins = null): array
     {
         return $this->get(
@@ -59,7 +59,7 @@ class PublicClient implements Actor, Feed
         );
     }
 
-    #[ArrayShape(self::searchPostsResponse)]
+    #[ArrayShape(Feed::searchPostsResponse)]
     public function searchPosts(string $q, #[KnownValues(['top', 'latest'])] ?string $sort = 'latest', ?string $since = null, ?string $until = null, #[Format('at-identifier')] ?string $mentions = null, #[Format('at-identifier')] ?string $author = null, #[Format('language')] ?string $lang = null, ?string $domain = null, #[Format('uri')] ?string $url = null, ?array $tag = null, ?int $limit = 25, ?string $cursor = null): array
     {
         return $this->get(
