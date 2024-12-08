@@ -103,7 +103,7 @@ class LexiconEnumCommand extends Command
             ->filter(fn (string $file) => Str::contains($file, '/app/bsky/richtext/facet'))
             ->first();
 
-        $json = File::json($file);
+        $json = File::json((string) $file);
 
         $id = Arr::get($json, 'id');
         $facets = Arr::get($json, 'defs.main.properties.features.items.refs');
