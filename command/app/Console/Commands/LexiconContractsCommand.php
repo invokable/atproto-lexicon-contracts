@@ -334,6 +334,7 @@ class LexiconContractsCommand extends Command
                         $ref_properties = data_get($this->jsons->get($ref_id), 'defs.'.$ref_item.'.properties');
                         $ref_properties = collect($ref_properties)->map(function ($property, $name) {
                             $type = Arr::get($property, 'type');
+
                             return match ($type) {
                                 'integer' => 'int',
                                 'boolean' => 'bool',
@@ -363,6 +364,7 @@ class LexiconContractsCommand extends Command
                         $ref_properties = data_get($this->jsons->get($ref_id), 'defs.'.$ref_item.'.properties');
                         $ref_properties = collect($ref_properties)->map(function ($property, $name) {
                             $type = Arr::get($property, 'type');
+
                             return match ($type) {
                                 'integer' => 'int',
                                 'boolean' => 'bool',
