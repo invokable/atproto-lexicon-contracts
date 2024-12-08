@@ -437,6 +437,7 @@ class LexiconContractsCommand extends Command
             ->replace('{const}', $const)
             ->replace('{output}', $output)
             ->replace('{method}', $method)
+            ->replace(PHP_EOL.PHP_EOL.PHP_EOL, PHP_EOL)
             ->toString();
 
         $tmp = $this->removeAttr($tmp);
