@@ -119,6 +119,9 @@ class LexiconContractsCommand extends Command
                     default => throw new RuntimeException(),
                 };
 
+                $output = Arr::get($json, 'defs.main.output.schema');
+                $output = $this->getOutputAttribute($id, $output);
+
                 $docs_url = Str::of($id)
                     ->replace('.', '-')
                     ->snake('-')
@@ -137,6 +140,7 @@ class LexiconContractsCommand extends Command
                         ])
                             ->when(filled($deprecated), fn (Collection $collection) => $collection->push($deprecated))
                             ->push('    #['.Str::studly($type).', NSID(self::'.$name.')]')
+                            ->when(filled($output), fn (Collection $collection) => $collection->push('    #[Output(['.$output.'])]'))
                             ->push("    public function $name($params);")
                             ->implode(PHP_EOL),
                     ]),
@@ -289,6 +293,112 @@ class LexiconContractsCommand extends Command
             }, ', ');
     }
 
+    protected function getOutputAttribute(string $id, ?array $output): string
+    {
+        $properties = Arr::get($output, 'properties', []);
+
+        if (empty($properties) && Arr::get($output, 'type') === 'ref') {
+            $ref = Arr::get($output, 'ref');
+
+            if (Str::doesntContain($ref, '.')) {
+                $ref = $id.$ref;
+            }
+            $ref_id = Str::before($ref, '#');
+            $ref_item = Str::of($ref)->remove($ref_id)->after('#')->toString();
+            if (empty($ref_item)) {
+                $ref_item = 'main';
+            }
+            $properties = data_get($this->jsons->get($ref_id), 'defs.'.$ref_item.'.properties');
+        }
+
+        return collect($properties)
+            ->map(function ($property) use ($id) {
+                $type = Arr::get($property, 'type');
+
+                $ref_properties = null;
+                $ref = null;
+                if ($type === 'ref') {
+                    $ref = Arr::get($property, 'ref');
+                    if (Str::doesntContain($ref, '.')) {
+                        $ref = $id.$ref;
+                    }
+                    $ref_id = Str::before($ref, '#');
+                    $ref_item = Str::of($ref)->remove($ref_id)->after('#')->toString();
+                    if (empty($ref_item)) {
+                        $ref_item = 'main';
+                    }
+                    $ref_type = $ref_id.'.defs.'.$ref_item.'.type';
+                    $type = $this->jsons->dot()->get($ref_type);
+
+                    if ($type === 'object') {
+                        $ref_properties = data_get($this->jsons->get($ref_id), 'defs.'.$ref_item.'.properties');
+                        $ref_properties = collect($ref_properties)->map(function ($property, $name) {
+                            $type = Arr::get($property, 'type');
+                            return match ($type) {
+                                'integer' => 'int',
+                                'boolean' => 'bool',
+                                'string' => 'string',
+                                //'unknown' => 'mixed',
+                                'array', 'object', 'union', 'ref', 'blob' => 'array',
+                                default => 'mixed',
+                            };
+                        })->implode(function ($type, $name) {
+                            return sprintf("'%s' => '%s'", $name, $type);;
+                        }, ', ');
+                        $ref_properties = "[$ref_properties]";
+                    }
+                }
+
+                if ($type === 'array' && empty($ref)) {
+                    if (Arr::get($property, 'items.type') === 'ref') {
+                        $ref = Arr::get($property, 'items.ref');
+                        if (! empty($ref) && Str::doesntContain($ref, '.')) {
+                            $ref = $id.$ref;
+                        }
+                        $ref_id = Str::before($ref, '#');
+                        $ref_item = Str::of($ref)->remove($ref_id)->after('#')->toString();
+                        if (empty($ref_item)) {
+                            $ref_item = 'main';
+                        }
+                        $ref_properties = data_get($this->jsons->get($ref_id), 'defs.'.$ref_item.'.properties');
+                        $ref_properties = collect($ref_properties)->map(function ($property, $name) {
+                            $type = Arr::get($property, 'type');
+                            return match ($type) {
+                                'integer' => 'int',
+                                'boolean' => 'bool',
+                                'string' => 'string',
+                                //'unknown' => 'mixed',
+                                'array', 'object', 'union', 'ref' => 'array',
+                                default => 'mixed',
+                            };
+                        })->implode(function ($type, $name) {
+                            return sprintf("'%s' => '%s'", $name, $type);;
+                        }, ', ');
+                        $ref_properties = "[[$ref_properties]]";
+                    }
+                }
+
+                $type = match ($type) {
+                    'integer' => 'int',
+                    'boolean' => 'bool',
+                    'string' => 'string',
+                    //'unknown' => 'mixed',
+                    'array', 'object', 'union', 'ref', 'blob' => 'array',
+                    default => 'mixed',
+                };
+
+                return compact('type', 'ref_properties');
+            })
+            ->implode(function ($property, $name) {
+                $type = Arr::get($property, 'type');
+                $ref_properties = Arr::get($property, 'ref_properties');
+
+                $type = $ref_properties ?? "'$type'";
+
+                return sprintf("'%s' => %s", $name, $type);
+            }, ', ');
+    }
+
     protected function save(Collection $contracts, string $class): void
     {
         // ["App", "Bsky, "Actor"]
@@ -352,6 +462,10 @@ class LexiconContractsCommand extends Command
             ->whenContains('#[Deprecated',
                 fn (Stringable $string) => $string,
                 fn (Stringable $string) => $string->remove('use Revolution\AtProto\Lexicon\Attributes\Deprecated;'.PHP_EOL),
+            )
+            ->whenContains('#[Output',
+                fn (Stringable $string) => $string,
+                fn (Stringable $string) => $string->remove('use Revolution\AtProto\Lexicon\Attributes\Output;'.PHP_EOL),
             )
             ->toString();
     }
