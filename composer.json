@@ -13,7 +13,8 @@
     "php": "^8.2"
   },
   "require-dev": {
-    "guzzlehttp/guzzle": "^7.9"
+    "guzzlehttp/guzzle": "^7.9",
+    "jetbrains/phpstorm-attributes": "^1.2"
   },
   "autoload": {
     "psr-4": {
