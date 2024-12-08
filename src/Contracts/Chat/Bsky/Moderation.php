@@ -10,6 +10,7 @@ namespace Revolution\AtProto\Lexicon\Contracts\Chat\Bsky;
 use Revolution\AtProto\Lexicon\Attributes\Format;
 use Revolution\AtProto\Lexicon\Attributes\Get;
 use Revolution\AtProto\Lexicon\Attributes\NSID;
+use Revolution\AtProto\Lexicon\Attributes\Output;
 use Revolution\AtProto\Lexicon\Attributes\Post;
 
 interface Moderation
@@ -18,12 +19,16 @@ interface Moderation
     public const getMessageContext = 'chat.bsky.moderation.getMessageContext';
     public const updateActorAccess = 'chat.bsky.moderation.updateActorAccess';
 
+    public const getActorMetadataResponse = ['day' => ['messagesSent' => 'int', 'messagesReceived' => 'int', 'convos' => 'int', 'convosStarted' => 'int'], 'month' => ['messagesSent' => 'int', 'messagesReceived' => 'int', 'convos' => 'int', 'convosStarted' => 'int'], 'all' => ['messagesSent' => 'int', 'messagesReceived' => 'int', 'convos' => 'int', 'convosStarted' => 'int']];
+    public const getMessageContextResponse = ['messages' => 'array'];
+
     /**
      * chat.bsky.moderation.getActorMetadata.
      *
      * @link https://docs.bsky.app/docs/api/chat-bsky-moderation-get-actor-metadata
      */
     #[Get, NSID(self::getActorMetadata)]
+    #[Output(self::getActorMetadataResponse)]
     public function getActorMetadata(#[Format('did')] string $actor);
 
     /**
@@ -32,6 +37,7 @@ interface Moderation
      * @link https://docs.bsky.app/docs/api/chat-bsky-moderation-get-message-context
      */
     #[Get, NSID(self::getMessageContext)]
+    #[Output(self::getMessageContextResponse)]
     public function getMessageContext(string $messageId, ?string $convoId = null, ?int $before = 5, ?int $after = 5);
 
     /**

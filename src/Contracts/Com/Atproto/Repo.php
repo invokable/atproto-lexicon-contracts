@@ -11,6 +11,7 @@ use Revolution\AtProto\Lexicon\Attributes\Deprecated;
 use Revolution\AtProto\Lexicon\Attributes\Format;
 use Revolution\AtProto\Lexicon\Attributes\Get;
 use Revolution\AtProto\Lexicon\Attributes\NSID;
+use Revolution\AtProto\Lexicon\Attributes\Output;
 use Revolution\AtProto\Lexicon\Attributes\Post;
 use Revolution\AtProto\Lexicon\Attributes\Union;
 
@@ -27,12 +28,23 @@ interface Repo
     public const putRecord = 'com.atproto.repo.putRecord';
     public const uploadBlob = 'com.atproto.repo.uploadBlob';
 
+    public const applyWritesResponse = ['commit' => ['cid' => 'string', 'rev' => 'string'], 'results' => 'array'];
+    public const createRecordResponse = ['uri' => 'string', 'cid' => 'string', 'commit' => ['cid' => 'string', 'rev' => 'string'], 'validationStatus' => 'string'];
+    public const deleteRecordResponse = ['commit' => ['cid' => 'string', 'rev' => 'string']];
+    public const describeRepoResponse = ['handle' => 'string', 'did' => 'string', 'didDoc' => 'mixed', 'collections' => 'array', 'handleIsCorrect' => 'bool'];
+    public const getRecordResponse = ['uri' => 'string', 'cid' => 'string', 'value' => 'mixed'];
+    public const listMissingBlobsResponse = ['cursor' => 'string', 'blobs' => [['cid' => 'string', 'recordUri' => 'string']]];
+    public const listRecordsResponse = ['cursor' => 'string', 'records' => [['uri' => 'string', 'cid' => 'string', 'value' => 'mixed']]];
+    public const putRecordResponse = ['uri' => 'string', 'cid' => 'string', 'commit' => ['cid' => 'string', 'rev' => 'string'], 'validationStatus' => 'string'];
+    public const uploadBlobResponse = ['blob' => 'array'];
+
     /**
      * Apply a batch transaction of repository creates, updates, and deletes. Requires auth, implemented by PDS.
      *
      * @link https://docs.bsky.app/docs/api/com-atproto-repo-apply-writes
      */
     #[Post, NSID(self::applyWrites)]
+    #[Output(self::applyWritesResponse)]
     public function applyWrites(#[Format('at-identifier')] string $repo, #[Union(['com.atproto.repo.applyWrites#create', 'com.atproto.repo.applyWrites#update', 'com.atproto.repo.applyWrites#delete'])] array $writes, ?bool $validate = null, #[Format('cid')] ?string $swapCommit = null);
 
     /**
@@ -41,6 +53,7 @@ interface Repo
      * @link https://docs.bsky.app/docs/api/com-atproto-repo-create-record
      */
     #[Post, NSID(self::createRecord)]
+    #[Output(self::createRecordResponse)]
     public function createRecord(#[Format('at-identifier')] string $repo, #[Format('nsid')] string $collection, mixed $record, ?string $rkey = null, ?bool $validate = null, #[Format('cid')] ?string $swapCommit = null);
 
     /**
@@ -49,6 +62,7 @@ interface Repo
      * @link https://docs.bsky.app/docs/api/com-atproto-repo-delete-record
      */
     #[Post, NSID(self::deleteRecord)]
+    #[Output(self::deleteRecordResponse)]
     public function deleteRecord(#[Format('at-identifier')] string $repo, #[Format('nsid')] string $collection, string $rkey, #[Format('cid')] ?string $swapRecord = null, #[Format('cid')] ?string $swapCommit = null);
 
     /**
@@ -57,6 +71,7 @@ interface Repo
      * @link https://docs.bsky.app/docs/api/com-atproto-repo-describe-repo
      */
     #[Get, NSID(self::describeRepo)]
+    #[Output(self::describeRepoResponse)]
     public function describeRepo(#[Format('at-identifier')] string $repo);
 
     /**
@@ -65,6 +80,7 @@ interface Repo
      * @link https://docs.bsky.app/docs/api/com-atproto-repo-get-record
      */
     #[Get, NSID(self::getRecord)]
+    #[Output(self::getRecordResponse)]
     public function getRecord(#[Format('at-identifier')] string $repo, #[Format('nsid')] string $collection, string $rkey, #[Format('cid')] ?string $cid = null);
 
     /**
@@ -81,6 +97,7 @@ interface Repo
      * @link https://docs.bsky.app/docs/api/com-atproto-repo-list-missing-blobs
      */
     #[Get, NSID(self::listMissingBlobs)]
+    #[Output(self::listMissingBlobsResponse)]
     public function listMissingBlobs(?int $limit = 500, ?string $cursor = null);
 
     /**
@@ -89,6 +106,7 @@ interface Repo
      * @link https://docs.bsky.app/docs/api/com-atproto-repo-list-records
      */
     #[Get, NSID(self::listRecords)]
+    #[Output(self::listRecordsResponse)]
     public function listRecords(#[Format('at-identifier')] string $repo, #[Format('nsid')] string $collection, ?int $limit = 50, ?string $cursor = null, #[Deprecated] ?string $rkeyStart = null, #[Deprecated] ?string $rkeyEnd = null, ?bool $reverse = null);
 
     /**
@@ -97,6 +115,7 @@ interface Repo
      * @link https://docs.bsky.app/docs/api/com-atproto-repo-put-record
      */
     #[Post, NSID(self::putRecord)]
+    #[Output(self::putRecordResponse)]
     public function putRecord(#[Format('at-identifier')] string $repo, #[Format('nsid')] string $collection, string $rkey, mixed $record, ?bool $validate = null, #[Format('cid')] ?string $swapRecord = null, #[Format('cid')] ?string $swapCommit = null);
 
     /**
@@ -105,5 +124,6 @@ interface Repo
      * @link https://docs.bsky.app/docs/api/com-atproto-repo-upload-blob
      */
     #[Post, NSID(self::uploadBlob)]
+    #[Output(self::uploadBlobResponse)]
     public function uploadBlob();
 }

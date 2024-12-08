@@ -11,6 +11,7 @@ use Revolution\AtProto\Lexicon\Attributes\Format;
 use Revolution\AtProto\Lexicon\Attributes\Get;
 use Revolution\AtProto\Lexicon\Attributes\KnownValues;
 use Revolution\AtProto\Lexicon\Attributes\NSID;
+use Revolution\AtProto\Lexicon\Attributes\Output;
 use Revolution\AtProto\Lexicon\Attributes\Post;
 
 interface Notification
@@ -21,12 +22,16 @@ interface Notification
     public const registerPush = 'app.bsky.notification.registerPush';
     public const updateSeen = 'app.bsky.notification.updateSeen';
 
+    public const getUnreadCountResponse = ['count' => 'int'];
+    public const listNotificationsResponse = ['cursor' => 'string', 'notifications' => [['uri' => 'string', 'cid' => 'string', 'author' => 'array', 'reason' => 'string', 'reasonSubject' => 'string', 'record' => 'mixed', 'isRead' => 'bool', 'indexedAt' => 'string', 'labels' => 'array']], 'priority' => 'bool', 'seenAt' => 'string'];
+
     /**
      * Count the number of unread notifications for the requesting account. Requires auth.
      *
      * @link https://docs.bsky.app/docs/api/app-bsky-notification-get-unread-count
      */
     #[Get, NSID(self::getUnreadCount)]
+    #[Output(self::getUnreadCountResponse)]
     public function getUnreadCount(?bool $priority = null, #[Format('datetime')] ?string $seenAt = null);
 
     /**
@@ -35,6 +40,7 @@ interface Notification
      * @link https://docs.bsky.app/docs/api/app-bsky-notification-list-notifications
      */
     #[Get, NSID(self::listNotifications)]
+    #[Output(self::listNotificationsResponse)]
     public function listNotifications(?int $limit = 50, ?bool $priority = null, ?string $cursor = null, #[Format('datetime')] ?string $seenAt = null);
 
     /**
