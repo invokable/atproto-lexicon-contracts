@@ -41,7 +41,7 @@ interface Notification
      */
     #[Get, NSID(self::listNotifications)]
     #[Output(self::listNotificationsResponse)]
-    public function listNotifications(?int $limit = 50, ?bool $priority = null, ?string $cursor = null, #[Format('datetime')] ?string $seenAt = null);
+    public function listNotifications(?array $reasons = null, ?int $limit = 50, ?bool $priority = null, ?string $cursor = null, #[Format('datetime')] ?string $seenAt = null);
 
     /**
      * Set notification-related preferences for an account. Requires auth.

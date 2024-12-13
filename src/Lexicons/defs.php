@@ -6716,6 +6716,16 @@ return array (
           'type' => 'params',
           'properties' => 
           array (
+            'reasons' => 
+            array (
+              'description' => 'Notification reasons to include in response.',
+              'type' => 'array',
+              'items' => 
+              array (
+                'type' => 'string',
+                'description' => 'A reason that matches the reason property of #notification.',
+              ),
+            ),
             'limit' => 
             array (
               'type' => 'integer',
