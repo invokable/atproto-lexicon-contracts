@@ -19,6 +19,7 @@ interface Unspecced
     public const getPopularFeedGenerators = 'app.bsky.unspecced.getPopularFeedGenerators';
     public const getSuggestionsSkeleton = 'app.bsky.unspecced.getSuggestionsSkeleton';
     public const getTaggedSuggestions = 'app.bsky.unspecced.getTaggedSuggestions';
+    public const getTrendingTopics = 'app.bsky.unspecced.getTrendingTopics';
     public const searchActorsSkeleton = 'app.bsky.unspecced.searchActorsSkeleton';
     public const searchPostsSkeleton = 'app.bsky.unspecced.searchPostsSkeleton';
     public const searchStarterPacksSkeleton = 'app.bsky.unspecced.searchStarterPacksSkeleton';
@@ -27,6 +28,7 @@ interface Unspecced
     public const getPopularFeedGeneratorsResponse = ['cursor' => 'string', 'feeds' => [['uri' => 'string', 'cid' => 'string', 'did' => 'string', 'creator' => 'array', 'displayName' => 'string', 'description' => 'string', 'descriptionFacets' => 'array', 'avatar' => 'string', 'likeCount' => 'int', 'acceptsInteractions' => 'bool', 'labels' => 'array', 'viewer' => 'array', 'indexedAt' => 'string']]];
     public const getSuggestionsSkeletonResponse = ['cursor' => 'string', 'actors' => [['did' => 'string']], 'relativeToDid' => 'string'];
     public const getTaggedSuggestionsResponse = ['suggestions' => [['tag' => 'string', 'subjectType' => 'string', 'subject' => 'string']]];
+    public const getTrendingTopicsResponse = ['topics' => [['topic' => 'string', 'displayName' => 'string', 'description' => 'string', 'link' => 'string']], 'suggested' => [['topic' => 'string', 'displayName' => 'string', 'description' => 'string', 'link' => 'string']]];
     public const searchActorsSkeletonResponse = ['cursor' => 'string', 'hitsTotal' => 'int', 'actors' => [['did' => 'string']]];
     public const searchPostsSkeletonResponse = ['cursor' => 'string', 'hitsTotal' => 'int', 'posts' => [['uri' => 'string']]];
     public const searchStarterPacksSkeletonResponse = ['cursor' => 'string', 'hitsTotal' => 'int', 'starterPacks' => [['uri' => 'string']]];
@@ -66,6 +68,15 @@ interface Unspecced
     #[Get, NSID(self::getTaggedSuggestions)]
     #[Output(self::getTaggedSuggestionsResponse)]
     public function getTaggedSuggestions();
+
+    /**
+     * Get a list of trending topics.
+     *
+     * @link https://docs.bsky.app/docs/api/app-bsky-unspecced-get-trending-topics
+     */
+    #[Get, NSID(self::getTrendingTopics)]
+    #[Output(self::getTrendingTopicsResponse)]
+    public function getTrendingTopics(#[Format('did')] ?string $viewer = null, ?int $limit = 10);
 
     /**
      * Backend Actors (profile) search, returns only skeleton.
