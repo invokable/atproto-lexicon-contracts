@@ -7150,6 +7150,34 @@ return array (
           ),
         ),
       ),
+      'trendingTopic' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'topic',
+          1 => 'link',
+        ),
+        'properties' => 
+        array (
+          'topic' => 
+          array (
+            'type' => 'string',
+          ),
+          'displayName' => 
+          array (
+            'type' => 'string',
+          ),
+          'description' => 
+          array (
+            'type' => 'string',
+          ),
+          'link' => 
+          array (
+            'type' => 'string',
+          ),
+        ),
+      ),
     ),
   ),
   'app.bsky.unspecced.getConfig' => 
@@ -7393,6 +7421,73 @@ return array (
           array (
             'type' => 'string',
             'format' => 'uri',
+          ),
+        ),
+      ),
+    ),
+  ),
+  'app.bsky.unspecced.getTrendingTopics' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.unspecced.getTrendingTopics',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'description' => 'Get a list of trending topics',
+        'parameters' => 
+        array (
+          'type' => 'params',
+          'properties' => 
+          array (
+            'viewer' => 
+            array (
+              'type' => 'string',
+              'format' => 'did',
+              'description' => 'DID of the account making the request (not included for public/unauthenticated queries). Used to boost followed accounts in ranking.',
+            ),
+            'limit' => 
+            array (
+              'type' => 'integer',
+              'minimum' => 1,
+              'maximum' => 25,
+              'default' => 10,
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'topics',
+              1 => 'suggested',
+            ),
+            'properties' => 
+            array (
+              'topics' => 
+              array (
+                'type' => 'array',
+                'items' => 
+                array (
+                  'type' => 'ref',
+                  'ref' => 'lex:app.bsky.unspecced.defs#trendingTopic',
+                ),
+              ),
+              'suggested' => 
+              array (
+                'type' => 'array',
+                'items' => 
+                array (
+                  'type' => 'ref',
+                  'ref' => 'lex:app.bsky.unspecced.defs#trendingTopic',
+                ),
+              ),
+            ),
           ),
         ),
       ),
