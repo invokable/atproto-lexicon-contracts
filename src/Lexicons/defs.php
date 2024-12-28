@@ -12661,6 +12661,11 @@ return array (
               array (
                 'type' => 'string',
               ),
+              'allowTakendown' => 
+              array (
+                'type' => 'boolean',
+                'description' => 'When true, instead of throwing error for takendown accounts, a valid response with a narrow scoped token will be returned',
+              ),
             ),
           ),
         ),
@@ -17051,6 +17056,21 @@ return array (
           'type' => 'params',
           'properties' => 
           array (
+            'queueCount' => 
+            array (
+              'type' => 'integer',
+              'description' => 'Number of queues being used by moderators. Subjects will be split among all queues.',
+            ),
+            'queueIndex' => 
+            array (
+              'type' => 'integer',
+              'description' => 'Index of the queue to fetch subjects from. Works only when queueCount value is specified.',
+            ),
+            'queueSeed' => 
+            array (
+              'type' => 'string',
+              'description' => 'A seeder to shuffle/balance the queue items.',
+            ),
             'includeAllUserRecords' => 
             array (
               'type' => 'boolean',
@@ -17194,10 +17214,10 @@ return array (
             'tags' => 
             array (
               'type' => 'array',
+              'maxLength' => 25,
               'items' => 
               array (
                 'type' => 'string',
-                'maxLength' => 25,
                 'description' => 'Items in this array are applied with OR filters. To apply AND filter, put all tags in the same string and separate using && characters',
               ),
             ),
