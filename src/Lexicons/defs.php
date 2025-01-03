@@ -15602,6 +15602,16 @@ return array (
             'type' => 'boolean',
             'description' => 'If true, all other reports on content authored by this account will be resolved (acknowledged).',
           ),
+          'policies' => 
+          array (
+            'type' => 'array',
+            'maxLength' => 5,
+            'items' => 
+            array (
+              'type' => 'string',
+            ),
+            'description' => 'Names/Keywords of the policies that drove the decision.',
+          ),
         ),
       ),
       'modEventReverseTakedown' => 
@@ -17002,6 +17012,15 @@ return array (
               'items' => 
               array (
                 'type' => 'string',
+              ),
+            ),
+            'policies' => 
+            array (
+              'type' => 'array',
+              'items' => 
+              array (
+                'type' => 'string',
+                'description' => 'If specified, only events where the action policies match any of the given policies are returned',
               ),
             ),
             'cursor' => 
