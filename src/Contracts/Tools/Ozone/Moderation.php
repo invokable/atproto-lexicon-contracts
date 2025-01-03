@@ -99,7 +99,7 @@ interface Moderation
      */
     #[Get, NSID(self::queryEvents)]
     #[Output(self::queryEventsResponse)]
-    public function queryEvents(?array $types = null, #[Format('did')] ?string $createdBy = null, ?string $sortDirection = 'desc', #[Format('datetime')] ?string $createdAfter = null, #[Format('datetime')] ?string $createdBefore = null, #[Format('uri')] ?string $subject = null, #[Format('nsid')] ?array $collections = null, #[KnownValues(['account', 'record'])] ?string $subjectType = null, ?bool $includeAllUserRecords = null, ?int $limit = 50, ?bool $hasComment = null, ?string $comment = null, ?array $addedLabels = null, ?array $removedLabels = null, ?array $addedTags = null, ?array $removedTags = null, ?array $reportTypes = null, ?string $cursor = null);
+    public function queryEvents(?array $types = null, #[Format('did')] ?string $createdBy = null, ?string $sortDirection = 'desc', #[Format('datetime')] ?string $createdAfter = null, #[Format('datetime')] ?string $createdBefore = null, #[Format('uri')] ?string $subject = null, #[Format('nsid')] ?array $collections = null, #[KnownValues(['account', 'record'])] ?string $subjectType = null, ?bool $includeAllUserRecords = null, ?int $limit = 50, ?bool $hasComment = null, ?string $comment = null, ?array $addedLabels = null, ?array $removedLabels = null, ?array $addedTags = null, ?array $removedTags = null, ?array $reportTypes = null, ?array $policies = null, ?string $cursor = null);
 
     /**
      * View moderation statuses of subjects (record or repo).
