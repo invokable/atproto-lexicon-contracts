@@ -50,7 +50,7 @@ interface Graph
     public const getRelationshipsResponse = ['actor' => 'string', 'relationships' => 'array'];
     public const getStarterPackResponse = ['starterPack' => ['uri' => 'string', 'cid' => 'string', 'record' => 'mixed', 'creator' => 'array', 'list' => 'array', 'listItemsSample' => 'array', 'feeds' => 'array', 'joinedWeekCount' => 'int', 'joinedAllTimeCount' => 'int', 'labels' => 'array', 'indexedAt' => 'string']];
     public const getStarterPacksResponse = ['starterPacks' => [['uri' => 'string', 'cid' => 'string', 'record' => 'mixed', 'creator' => 'array', 'listItemCount' => 'int', 'joinedWeekCount' => 'int', 'joinedAllTimeCount' => 'int', 'labels' => 'array', 'indexedAt' => 'string']]];
-    public const getSuggestedFollowsByActorResponse = ['suggestions' => [['did' => 'string', 'handle' => 'string', 'displayName' => 'string', 'description' => 'string', 'avatar' => 'string', 'associated' => 'array', 'indexedAt' => 'string', 'createdAt' => 'string', 'viewer' => 'array', 'labels' => 'array']], 'isFallback' => 'bool'];
+    public const getSuggestedFollowsByActorResponse = ['suggestions' => [['did' => 'string', 'handle' => 'string', 'displayName' => 'string', 'description' => 'string', 'avatar' => 'string', 'associated' => 'array', 'indexedAt' => 'string', 'createdAt' => 'string', 'viewer' => 'array', 'labels' => 'array']], 'isFallback' => 'bool', 'recId' => 'int'];
     public const searchStarterPacksResponse = ['cursor' => 'string', 'starterPacks' => [['uri' => 'string', 'cid' => 'string', 'record' => 'mixed', 'creator' => 'array', 'listItemCount' => 'int', 'joinedWeekCount' => 'int', 'joinedAllTimeCount' => 'int', 'labels' => 'array', 'indexedAt' => 'string']]];
 
     /**
