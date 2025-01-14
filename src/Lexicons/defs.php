@@ -1038,6 +1038,11 @@ return array (
                   'ref' => 'lex:app.bsky.actor.defs#profileView',
                 ),
               ),
+              'recId' => 
+              array (
+                'type' => 'integer',
+                'description' => 'Snowflake for this recommendation, use when submitting recommendation events.',
+              ),
             ),
           ),
         ),
@@ -5862,6 +5867,11 @@ return array (
                 'description' => 'If true, response has fallen-back to generic results, and is not scoped using relativeToDid',
                 'default' => false,
               ),
+              'recId' => 
+              array (
+                'type' => 'integer',
+                'description' => 'Snowflake for this recommendation, use when submitting recommendation events.',
+              ),
             ),
           ),
         ),
@@ -7344,6 +7354,11 @@ return array (
                 'type' => 'string',
                 'format' => 'did',
                 'description' => 'DID of the account these suggestions are relative to. If this is returned undefined, suggestions are based on the viewer.',
+              ),
+              'recId' => 
+              array (
+                'type' => 'integer',
+                'description' => 'Snowflake for this recommendation, use when submitting recommendation events.',
               ),
             ),
           ),
