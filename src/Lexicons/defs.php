@@ -10912,6 +10912,36 @@ return array (
       ),
     ),
   ),
+  'com.atproto.lexicon.schema' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'com.atproto.lexicon.schema',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'record',
+        'description' => 'Representation of Lexicon schemas themselves, when published as atproto records. Note that the schema language is not defined in Lexicon; this meta schema currently only includes a single version field (\'lexicon\'). See the atproto specifications for description of the other expected top-level fields (\'id\', \'defs\', etc).',
+        'key' => 'nsid',
+        'record' => 
+        array (
+          'type' => 'object',
+          'required' => 
+          array (
+            0 => 'lexicon',
+          ),
+          'properties' => 
+          array (
+            'lexicon' => 
+            array (
+              'type' => 'integer',
+              'description' => 'Indicates the \'version\' of the Lexicon language. Must be \'1\' for the current atproto/Lexicon schema system.',
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
   'com.atproto.moderation.createReport' => 
   array (
     'lexicon' => 1,
