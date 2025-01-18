@@ -9,6 +9,7 @@ namespace Revolution\AtProto\Lexicon\Record\App\Bsky\Feed;
 
 use Revolution\AtProto\Lexicon\Attributes\Blob;
 use Revolution\AtProto\Lexicon\Attributes\Format;
+use Revolution\AtProto\Lexicon\Attributes\KnownValues;
 use Revolution\AtProto\Lexicon\Attributes\Ref;
 use Revolution\AtProto\Lexicon\Attributes\Required;
 use Revolution\AtProto\Lexicon\Attributes\Union;
@@ -44,6 +45,9 @@ abstract class AbstractGenerator
      */
     #[Union(['com.atproto.label.defs#selfLabels'])]
     protected ?array $labels = null;
+
+    #[KnownValues(['app.bsky.feed.defs#contentModeUnspecified', 'app.bsky.feed.defs#contentModeVideo'])]
+    protected ?string $contentMode = null;
 
     #[Format('datetime')]
     protected string $createdAt;

@@ -2350,6 +2350,15 @@ return array (
             'type' => 'ref',
             'ref' => 'lex:app.bsky.feed.defs#generatorViewerState',
           ),
+          'contentMode' => 
+          array (
+            'type' => 'string',
+            'knownValues' => 
+            array (
+              0 => 'app.bsky.feed.defs#contentModeUnspecified',
+              1 => 'app.bsky.feed.defs#contentModeVideo',
+            ),
+          ),
           'indexedAt' => 
           array (
             'type' => 'string',
@@ -2519,6 +2528,16 @@ return array (
       array (
         'type' => 'token',
         'description' => 'User clicked through to the embedded content of the feed item',
+      ),
+      'contentModeUnspecified' => 
+      array (
+        'type' => 'token',
+        'description' => 'Declares the feed generator returns any types of posts.',
+      ),
+      'contentModeVideo' => 
+      array (
+        'type' => 'token',
+        'description' => 'Declares the feed generator returns posts containing app.bsky.embed.video embeds.',
       ),
       'interactionSeen' => 
       array (
@@ -2701,6 +2720,15 @@ return array (
               'refs' => 
               array (
                 0 => 'lex:com.atproto.label.defs#selfLabels',
+              ),
+            ),
+            'contentMode' => 
+            array (
+              'type' => 'string',
+              'knownValues' => 
+              array (
+                0 => 'app.bsky.feed.defs#contentModeUnspecified',
+                1 => 'app.bsky.feed.defs#contentModeVideo',
               ),
             ),
             'createdAt' => 
