@@ -15622,6 +15622,99 @@ return array (
               'type' => 'string',
             ),
           ),
+          'accountStats' => 
+          array (
+            'description' => 'Statistics related to the account subject',
+            'type' => 'ref',
+            'ref' => 'lex:tools.ozone.moderation.defs#accountStats',
+          ),
+          'recordsStats' => 
+          array (
+            'description' => 'Statistics related to the record subjects authored by the subject\'s account',
+            'type' => 'ref',
+            'ref' => 'lex:tools.ozone.moderation.defs#recordsStats',
+          ),
+        ),
+      ),
+      'accountStats' => 
+      array (
+        'description' => 'Statistics about a particular account subject',
+        'type' => 'object',
+        'properties' => 
+        array (
+          'reportCount' => 
+          array (
+            'description' => 'Total number of reports on the account',
+            'type' => 'integer',
+          ),
+          'appealCount' => 
+          array (
+            'description' => 'Total number of appeals against a moderation action on the account',
+            'type' => 'integer',
+          ),
+          'suspendCount' => 
+          array (
+            'description' => 'Number of times the account was suspended',
+            'type' => 'integer',
+          ),
+          'escalateCount' => 
+          array (
+            'description' => 'Number of times the account was escalated',
+            'type' => 'integer',
+          ),
+          'takedownCount' => 
+          array (
+            'description' => 'Number of times the account was taken down',
+            'type' => 'integer',
+          ),
+        ),
+      ),
+      'recordsStats' => 
+      array (
+        'description' => 'Statistics about a set of record subject items',
+        'type' => 'object',
+        'properties' => 
+        array (
+          'totalReports' => 
+          array (
+            'description' => 'Cumulative sum of the number of reports on the items in the set',
+            'type' => 'integer',
+          ),
+          'reportedCount' => 
+          array (
+            'description' => 'Number of items that were reported at least once',
+            'type' => 'integer',
+          ),
+          'escalatedCount' => 
+          array (
+            'description' => 'Number of items that were escalated at least once',
+            'type' => 'integer',
+          ),
+          'appealedCount' => 
+          array (
+            'description' => 'Number of items that were appealed at least once',
+            'type' => 'integer',
+          ),
+          'subjectCount' => 
+          array (
+            'description' => 'Total number of item in the set',
+            'type' => 'integer',
+          ),
+          'pendingCount' => 
+          array (
+            'description' => 'Number of item currently in "reviewOpen" or "reviewEscalated" state',
+            'type' => 'integer',
+          ),
+          'processedCount' => 
+          array (
+            'description' => 'Number of item currently in "reviewNone" or "reviewClosed" state',
+            'type' => 'integer',
+          ),
+          'takendownCount' => 
+          array (
+            'description' => 'Number of item currently taken down',
+            'type' => 'integer',
+          ),
         ),
       ),
       'subjectReviewState' => 
@@ -17274,6 +17367,8 @@ return array (
               array (
                 0 => 'lastReviewedAt',
                 1 => 'lastReportedAt',
+                2 => 'reportedRecordsCount',
+                3 => 'takendownRecordsCount',
               ),
             ),
             'sortDirection' => 
@@ -17345,6 +17440,21 @@ return array (
                 0 => 'account',
                 1 => 'record',
               ),
+            ),
+            'minAccountSuspendCount' => 
+            array (
+              'type' => 'integer',
+              'description' => 'If specified, only subjects that belong to an account that has at least this many suspensions will be returned.',
+            ),
+            'minReportedRecordsCount' => 
+            array (
+              'type' => 'integer',
+              'description' => 'If specified, only subjects that belong to an account that has at least this many reported records will be returned.',
+            ),
+            'minTakendownRecordsCount' => 
+            array (
+              'type' => 'integer',
+              'description' => 'If specified, only subjects that belong to an account that has at least this many taken down records will be returned.',
             ),
           ),
         ),
