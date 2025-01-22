@@ -2055,6 +2055,19 @@ return array (
           ),
         ),
       ),
+      'threadContext' => 
+      array (
+        'type' => 'object',
+        'description' => 'Metadata about this post within the context of the thread it is in.',
+        'properties' => 
+        array (
+          'rootAuthorLike' => 
+          array (
+            'type' => 'string',
+            'format' => 'at-uri',
+          ),
+        ),
+      ),
       'feedViewPost' => 
       array (
         'type' => 'object',
@@ -2195,6 +2208,11 @@ return array (
                 2 => 'lex:app.bsky.feed.defs#blockedPost',
               ),
             ),
+          ),
+          'threadContext' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.feed.defs#threadContext',
           ),
         ),
       ),
@@ -2933,6 +2951,7 @@ return array (
                 1 => 'posts_no_replies',
                 2 => 'posts_with_media',
                 3 => 'posts_and_author_threads',
+                4 => 'posts_with_video',
               ),
               'default' => 'posts_with_replies',
             ),
