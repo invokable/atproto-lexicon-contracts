@@ -88,7 +88,7 @@ interface Feed
      */
     #[Get, NSID(self::getAuthorFeed)]
     #[Output(self::getAuthorFeedResponse)]
-    public function getAuthorFeed(#[Format('at-identifier')] string $actor, ?int $limit = 50, ?string $cursor = null, #[KnownValues(['posts_with_replies', 'posts_no_replies', 'posts_with_media', 'posts_and_author_threads'])] ?string $filter = 'posts_with_replies', ?bool $includePins = null);
+    public function getAuthorFeed(#[Format('at-identifier')] string $actor, ?int $limit = 50, ?string $cursor = null, #[KnownValues(['posts_with_replies', 'posts_no_replies', 'posts_with_media', 'posts_and_author_threads', 'posts_with_video'])] ?string $filter = 'posts_with_replies', ?bool $includePins = null);
 
     /**
      * Get a hydrated feed from an actor's selected feed generator. Implemented by App View.
