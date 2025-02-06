@@ -7,7 +7,6 @@ declare(strict_types=1);
 
 namespace Revolution\AtProto\Lexicon\Contracts\Com\Atproto;
 
-use Revolution\AtProto\Lexicon\Attributes\Deprecated;
 use Revolution\AtProto\Lexicon\Attributes\Format;
 use Revolution\AtProto\Lexicon\Attributes\Get;
 use Revolution\AtProto\Lexicon\Attributes\NSID;
@@ -85,7 +84,7 @@ interface Sync
      * @link https://docs.bsky.app/docs/api/com-atproto-sync-get-record
      */
     #[Get, NSID(self::getRecord)]
-    public function getRecord(#[Format('did')] string $did, #[Format('nsid')] string $collection, string $rkey, #[Format('cid')] #[Deprecated] ?string $commit = null);
+    public function getRecord(#[Format('did')] string $did, #[Format('nsid')] string $collection, string $rkey);
 
     /**
      * Download a repository export as CAR file. Optionally only a 'diff' since a previous revision. Does not require auth; implemented by PDS.

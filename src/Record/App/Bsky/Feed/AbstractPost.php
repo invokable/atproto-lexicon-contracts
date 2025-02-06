@@ -7,7 +7,6 @@ declare(strict_types=1);
 
 namespace Revolution\AtProto\Lexicon\Record\App\Bsky\Feed;
 
-use Revolution\AtProto\Lexicon\Attributes\Deprecated;
 use Revolution\AtProto\Lexicon\Attributes\Format;
 use Revolution\AtProto\Lexicon\Attributes\Ref;
 use Revolution\AtProto\Lexicon\Attributes\Required;
@@ -25,13 +24,6 @@ abstract class AbstractPost
      * The primary post content. May be an empty string, if there are embeds.
      */
     protected string $text;
-
-    /**
-     * DEPRECATED: replaced by app.bsky.richtext.facet.
-     */
-    #[Deprecated]
-    #[Ref('app.bsky.feed.post#entity')]
-    protected ?array $entities = null;
 
     /**
      * Annotations of text (mentions, URLs, hashtags, etc).

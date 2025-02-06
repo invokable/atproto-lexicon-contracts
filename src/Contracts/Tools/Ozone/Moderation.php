@@ -7,7 +7,6 @@ declare(strict_types=1);
 
 namespace Revolution\AtProto\Lexicon\Contracts\Tools\Ozone;
 
-use Revolution\AtProto\Lexicon\Attributes\Deprecated;
 use Revolution\AtProto\Lexicon\Attributes\Format;
 use Revolution\AtProto\Lexicon\Attributes\Get;
 use Revolution\AtProto\Lexicon\Attributes\KnownValues;
@@ -117,5 +116,5 @@ interface Moderation
      */
     #[Get, NSID(self::searchRepos)]
     #[Output(self::searchReposResponse)]
-    public function searchRepos(#[Deprecated] ?string $term = null, ?string $q = null, ?int $limit = 50, ?string $cursor = null);
+    public function searchRepos(?string $q = null, ?int $limit = 50, ?string $cursor = null);
 }

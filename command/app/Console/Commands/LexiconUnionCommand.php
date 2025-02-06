@@ -183,6 +183,9 @@ class LexiconUnionCommand extends Command
 
                 return compact('type', 'format', 'knownValues', 'ref', 'union', 'blob', 'description', 'require', 'deprecated');
             })
+            ->reject(function ($property) {
+                return filled($property['deprecated']);
+            })
             //->dump()
             ->implode(function ($property, $name) {
                 $type = Arr::get($property, 'type');
@@ -193,7 +196,6 @@ class LexiconUnionCommand extends Command
                 $blob = Arr::get($property, 'blob');
                 $require = Arr::get($property, 'require');
                 $description = Arr::get($property, 'description');
-                $deprecated = Arr::get($property, 'deprecated');
                 $default = '';
 
                 if (! $require) {
@@ -236,12 +238,7 @@ class LexiconUnionCommand extends Command
                     $format = "    #[Format('$format')]";
                 }
 
-                if (filled($deprecated)) {
-                    $deprecated = '    #[Deprecated]';
-                }
-
                 return collect($properties)
-                    ->when(filled($deprecated), fn ($collection) => $collection->add($deprecated))
                     ->when(filled($ref), fn ($collection) => $collection->add($ref))
                     ->when(filled($format), fn ($collection) => $collection->add($format))
                     ->when(filled($union), fn ($collection) => $collection->add($union))
@@ -325,10 +322,6 @@ class LexiconUnionCommand extends Command
             ->whenContains('#[KnownValues',
                 fn (Stringable $string) => $string,
                 fn (Stringable $string) => $string->remove('use Revolution\AtProto\Lexicon\Attributes\KnownValues;'.PHP_EOL),
-            )
-            ->whenContains('#[Deprecated',
-                fn (Stringable $string) => $string,
-                fn (Stringable $string) => $string->remove('use Revolution\AtProto\Lexicon\Attributes\Deprecated;'.PHP_EOL),
             )
             ->toString();
     }

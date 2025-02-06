@@ -7,7 +7,6 @@ declare(strict_types=1);
 
 namespace Revolution\AtProto\Lexicon\Contracts\App\Bsky;
 
-use Revolution\AtProto\Lexicon\Attributes\Deprecated;
 use Revolution\AtProto\Lexicon\Attributes\Format;
 use Revolution\AtProto\Lexicon\Attributes\Get;
 use Revolution\AtProto\Lexicon\Attributes\NSID;
@@ -83,7 +82,7 @@ interface Actor
      */
     #[Get, NSID(self::searchActors)]
     #[Output(self::searchActorsResponse)]
-    public function searchActors(#[Deprecated] ?string $term = null, ?string $q = null, ?int $limit = 25, ?string $cursor = null);
+    public function searchActors(?string $q = null, ?int $limit = 25, ?string $cursor = null);
 
     /**
      * Find actor suggestions for a prefix search term. Expected use is for auto-completion during text field entry. Does not require auth.
@@ -92,5 +91,5 @@ interface Actor
      */
     #[Get, NSID(self::searchActorsTypeahead)]
     #[Output(self::searchActorsTypeaheadResponse)]
-    public function searchActorsTypeahead(#[Deprecated] ?string $term = null, ?string $q = null, ?int $limit = 10);
+    public function searchActorsTypeahead(?string $q = null, ?int $limit = 10);
 }

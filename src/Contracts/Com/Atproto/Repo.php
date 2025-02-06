@@ -7,7 +7,6 @@ declare(strict_types=1);
 
 namespace Revolution\AtProto\Lexicon\Contracts\Com\Atproto;
 
-use Revolution\AtProto\Lexicon\Attributes\Deprecated;
 use Revolution\AtProto\Lexicon\Attributes\Format;
 use Revolution\AtProto\Lexicon\Attributes\Get;
 use Revolution\AtProto\Lexicon\Attributes\NSID;
@@ -107,7 +106,7 @@ interface Repo
      */
     #[Get, NSID(self::listRecords)]
     #[Output(self::listRecordsResponse)]
-    public function listRecords(#[Format('at-identifier')] string $repo, #[Format('nsid')] string $collection, ?int $limit = 50, ?string $cursor = null, #[Deprecated] ?string $rkeyStart = null, #[Deprecated] ?string $rkeyEnd = null, ?bool $reverse = null);
+    public function listRecords(#[Format('at-identifier')] string $repo, #[Format('nsid')] string $collection, ?int $limit = 50, ?string $cursor = null, ?bool $reverse = null);
 
     /**
      * Write a repository record, creating or updating it as needed. Requires auth, implemented by PDS.

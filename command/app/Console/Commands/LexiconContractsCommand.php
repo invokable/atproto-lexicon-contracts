@@ -233,6 +233,9 @@ class LexiconContractsCommand extends Command
             ->sortByDesc(function ($property, $name) use ($required) {
                 return in_array($name, $required, true);
             })
+            ->reject(function ($property) {
+                return filled($property['deprecated']);
+            })
             ->implode(function ($property, $name) {
                 $type = Arr::get($property, 'type');
                 $format = Arr::get($property, 'format');
@@ -241,7 +244,6 @@ class LexiconContractsCommand extends Command
                 $knownValues = Arr::get($property, 'knownValues');
                 $require = Arr::get($property, 'require');
                 $default = Arr::get($property, 'default');
-                $deprecated = Arr::get($property, 'deprecated');
 
                 $sensitive = $name === 'password' ? '#[\SensitiveParameter]' : '';
 
@@ -286,11 +288,7 @@ class LexiconContractsCommand extends Command
                     $format = "#[Format('$format')]";
                 }
 
-                if (filled($deprecated)) {
-                    $deprecated = '#[Deprecated]';
-                }
-
-                return Str::squish("$sensitive $ref $union $format $knownValues $deprecated $type \$$name");
+                return Str::squish("$sensitive $ref $union $format $knownValues $type \$$name");
             }, ', ');
     }
 
@@ -471,10 +469,6 @@ class LexiconContractsCommand extends Command
             ->whenContains('#[KnownValues',
                 fn (Stringable $string) => $string,
                 fn (Stringable $string) => $string->remove('use Revolution\AtProto\Lexicon\Attributes\KnownValues;'.PHP_EOL),
-            )
-            ->whenContains('#[Deprecated',
-                fn (Stringable $string) => $string,
-                fn (Stringable $string) => $string->remove('use Revolution\AtProto\Lexicon\Attributes\Deprecated;'.PHP_EOL),
             )
             ->whenContains('#[Output',
                 fn (Stringable $string) => $string,
