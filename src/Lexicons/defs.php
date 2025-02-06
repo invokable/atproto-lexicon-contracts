@@ -373,6 +373,7 @@ return array (
             9 => 'lex:app.bsky.actor.defs#hiddenPostsPref',
             10 => 'lex:app.bsky.actor.defs#bskyAppStatePref',
             11 => 'lex:app.bsky.actor.defs#labelersPref',
+            12 => 'lex:app.bsky.actor.defs#postInteractionSettingsPref',
           ),
         ),
       ),
@@ -843,6 +844,47 @@ return array (
             'type' => 'string',
             'format' => 'datetime',
             'description' => 'The date and time at which the NUX will expire and should be considered completed.',
+          ),
+        ),
+      ),
+      'postInteractionSettingsPref' => 
+      array (
+        'type' => 'object',
+        'description' => 'Default post interaction settings for the account. These values should be applied as default values when creating new posts. These refs should mirror the threadgate and postgate records exactly.',
+        'required' => 
+        array (
+        ),
+        'properties' => 
+        array (
+          'threadgateAllowRules' => 
+          array (
+            'description' => 'Matches threadgate record. List of rules defining who can reply to this users posts. If value is an empty array, no one can reply. If value is undefined, anyone can reply.',
+            'type' => 'array',
+            'maxLength' => 5,
+            'items' => 
+            array (
+              'type' => 'union',
+              'refs' => 
+              array (
+                0 => 'lex:app.bsky.feed.threadgate#mentionRule',
+                1 => 'lex:app.bsky.feed.threadgate#followingRule',
+                2 => 'lex:app.bsky.feed.threadgate#listRule',
+              ),
+            ),
+          ),
+          'postgateEmbeddingRules' => 
+          array (
+            'description' => 'Matches postgate record. List of rules defining who can embed this users posts. If value is an empty array or is undefined, no particular rules apply and anyone can embed.',
+            'type' => 'array',
+            'maxLength' => 5,
+            'items' => 
+            array (
+              'type' => 'union',
+              'refs' => 
+              array (
+                0 => 'lex:app.bsky.feed.postgate#disableRule',
+              ),
+            ),
           ),
         ),
       ),
@@ -4163,6 +4205,7 @@ return array (
             ),
             'embeddingRules' => 
             array (
+              'description' => 'List of rules defining who can embed this post. If value is an empty array or is undefined, no particular rules apply and anyone can embed.',
               'type' => 'array',
               'maxLength' => 5,
               'items' => 
@@ -4442,6 +4485,7 @@ return array (
             ),
             'allow' => 
             array (
+              'description' => 'List of rules defining who can reply to this post. If value is an empty array, no one can reply. If value is undefined, anyone can reply.',
               'type' => 'array',
               'maxLength' => 5,
               'items' => 

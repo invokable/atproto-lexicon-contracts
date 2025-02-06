@@ -34,6 +34,9 @@ abstract class AbstractPostgate
     #[Format('at-uri')]
     protected ?array $detachedEmbeddingUris = null;
 
+    /**
+     * List of rules defining who can embed this post. If value is an empty array or is undefined, no particular rules apply and anyone can embed.
+     */
     #[Union(['app.bsky.feed.postgate#disableRule'])]
     protected ?array $embeddingRules = null;
 }
