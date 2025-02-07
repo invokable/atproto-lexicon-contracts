@@ -28,7 +28,7 @@ abstract class AbstractThreadgate
     /**
      * List of rules defining who can reply to this post. If value is an empty array, no one can reply. If value is undefined, anyone can reply.
      */
-    #[Union(['app.bsky.feed.threadgate#mentionRule', 'app.bsky.feed.threadgate#followingRule', 'app.bsky.feed.threadgate#listRule'])]
+    #[Union(['app.bsky.feed.threadgate#mentionRule', 'app.bsky.feed.threadgate#followerRule', 'app.bsky.feed.threadgate#followingRule', 'app.bsky.feed.threadgate#listRule'])]
     protected ?array $allow = null;
 
     #[Format('datetime')]

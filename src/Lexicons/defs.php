@@ -867,8 +867,9 @@ return array (
               'refs' => 
               array (
                 0 => 'lex:app.bsky.feed.threadgate#mentionRule',
-                1 => 'lex:app.bsky.feed.threadgate#followingRule',
-                2 => 'lex:app.bsky.feed.threadgate#listRule',
+                1 => 'lex:app.bsky.feed.threadgate#followerRule',
+                2 => 'lex:app.bsky.feed.threadgate#followingRule',
+                3 => 'lex:app.bsky.feed.threadgate#listRule',
               ),
             ),
           ),
@@ -4494,8 +4495,9 @@ return array (
                 'refs' => 
                 array (
                   0 => 'lex:app.bsky.feed.threadgate#mentionRule',
-                  1 => 'lex:app.bsky.feed.threadgate#followingRule',
-                  2 => 'lex:app.bsky.feed.threadgate#listRule',
+                  1 => 'lex:app.bsky.feed.threadgate#followerRule',
+                  2 => 'lex:app.bsky.feed.threadgate#followingRule',
+                  3 => 'lex:app.bsky.feed.threadgate#listRule',
                 ),
               ),
             ),
@@ -4522,6 +4524,14 @@ return array (
       array (
         'type' => 'object',
         'description' => 'Allow replies from actors mentioned in your post.',
+        'properties' => 
+        array (
+        ),
+      ),
+      'followerRule' => 
+      array (
+        'type' => 'object',
+        'description' => 'Allow replies from actors who follow you.',
         'properties' => 
         array (
         ),
@@ -15447,6 +15457,7 @@ return array (
               15 => 'lex:tools.ozone.moderation.defs#accountEvent',
               16 => 'lex:tools.ozone.moderation.defs#identityEvent',
               17 => 'lex:tools.ozone.moderation.defs#recordEvent',
+              18 => 'lex:tools.ozone.moderation.defs#modEventPriorityScore',
             ),
           ),
           'subject' => 
@@ -15528,6 +15539,7 @@ return array (
               15 => 'lex:tools.ozone.moderation.defs#accountEvent',
               16 => 'lex:tools.ozone.moderation.defs#identityEvent',
               17 => 'lex:tools.ozone.moderation.defs#recordEvent',
+              18 => 'lex:tools.ozone.moderation.defs#modEventPriorityScore',
             ),
           ),
           'subject' => 
@@ -15631,6 +15643,13 @@ return array (
           array (
             'type' => 'string',
             'description' => 'Sticky comment on the subject.',
+          ),
+          'priorityScore' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Numeric value representing the level of priority. Higher score means higher priority.',
+            'minimum' => 0,
+            'maximum' => 100,
           ),
           'muteUntil' => 
           array (
@@ -15951,6 +15970,28 @@ return array (
           array (
             'type' => 'integer',
             'description' => 'Indicates how long the label will remain on the subject. Only applies on labels that are being added.',
+          ),
+        ),
+      ),
+      'modEventPriorityScore' => 
+      array (
+        'type' => 'object',
+        'description' => 'Set priority score of the subject. Higher score means higher priority.',
+        'required' => 
+        array (
+          0 => 'score',
+        ),
+        'properties' => 
+        array (
+          'comment' => 
+          array (
+            'type' => 'string',
+          ),
+          'score' => 
+          array (
+            'type' => 'integer',
+            'minimum' => 0,
+            'maximum' => 100,
           ),
         ),
       ),
@@ -16800,6 +16841,7 @@ return array (
                   14 => 'lex:tools.ozone.moderation.defs#accountEvent',
                   15 => 'lex:tools.ozone.moderation.defs#identityEvent',
                   16 => 'lex:tools.ozone.moderation.defs#recordEvent',
+                  17 => 'lex:tools.ozone.moderation.defs#modEventPriorityScore',
                 ),
               ),
               'subject' => 
@@ -17437,6 +17479,7 @@ return array (
                 1 => 'lastReportedAt',
                 2 => 'reportedRecordsCount',
                 3 => 'takendownRecordsCount',
+                4 => 'priorityScore',
               ),
             ),
             'sortDirection' => 
@@ -17523,6 +17566,13 @@ return array (
             array (
               'type' => 'integer',
               'description' => 'If specified, only subjects that belong to an account that has at least this many taken down records will be returned.',
+            ),
+            'minPriorityScore' => 
+            array (
+              'minimum' => 0,
+              'maximum' => 100,
+              'type' => 'integer',
+              'description' => 'If specified, only subjects that have priority score value above the given value will be returned.',
             ),
           ),
         ),
