@@ -15,6 +15,11 @@ enum ThreadGateRule: string
     case MentionRule = 'app.bsky.feed.threadgate#mentionRule';
 
     /**
+     * Allow replies from actors who follow you.
+     */
+    case FollowerRule = 'app.bsky.feed.threadgate#followerRule';
+
+    /**
      * Allow replies from actors you follow.
      */
     case FollowingRule = 'app.bsky.feed.threadgate#followingRule';
