@@ -22,6 +22,7 @@ interface Moderation
     public const getRecord = 'tools.ozone.moderation.getRecord';
     public const getRecords = 'tools.ozone.moderation.getRecords';
     public const getRepo = 'tools.ozone.moderation.getRepo';
+    public const getReporterStats = 'tools.ozone.moderation.getReporterStats';
     public const getRepos = 'tools.ozone.moderation.getRepos';
     public const queryEvents = 'tools.ozone.moderation.queryEvents';
     public const queryStatuses = 'tools.ozone.moderation.queryStatuses';
@@ -32,6 +33,7 @@ interface Moderation
     public const getRecordResponse = ['uri' => 'string', 'cid' => 'string', 'value' => 'mixed', 'blobs' => [[]], 'labels' => [['ver' => 'int', 'src' => 'string', 'uri' => 'string', 'cid' => 'string', 'val' => 'string', 'neg' => 'bool', 'cts' => 'string', 'exp' => 'string', 'sig' => 'mixed']], 'indexedAt' => 'string', 'moderation' => 'mixed', 'repo' => 'mixed'];
     public const getRecordsResponse = ['records' => 'array'];
     public const getRepoResponse = ['did' => 'string', 'handle' => 'string', 'email' => 'string', 'relatedRecords' => 'array', 'indexedAt' => 'string', 'moderation' => 'mixed', 'labels' => [['ver' => 'int', 'src' => 'string', 'uri' => 'string', 'cid' => 'string', 'val' => 'string', 'neg' => 'bool', 'cts' => 'string', 'exp' => 'string', 'sig' => 'mixed']], 'invitedBy' => ['code' => 'string', 'available' => 'int', 'disabled' => 'bool', 'forAccount' => 'string', 'createdBy' => 'string', 'createdAt' => 'string', 'uses' => 'array'], 'invites' => [['code' => 'string', 'available' => 'int', 'disabled' => 'bool', 'forAccount' => 'string', 'createdBy' => 'string', 'createdAt' => 'string', 'uses' => 'array']], 'invitesDisabled' => 'bool', 'inviteNote' => 'string', 'emailConfirmedAt' => 'string', 'deactivatedAt' => 'string', 'threatSignatures' => [['property' => 'string', 'value' => 'string']]];
+    public const getReporterStatsResponse = ['stats' => [['did' => 'string', 'accountReportCount' => 'int', 'recordReportCount' => 'int', 'reportedAccountCount' => 'int', 'reportedRecordCount' => 'int', 'takendownAccountCount' => 'int', 'takendownRecordCount' => 'int', 'labeledAccountCount' => 'int', 'labeledRecordCount' => 'int']]];
     public const getReposResponse = ['repos' => 'array'];
     public const queryEventsResponse = ['cursor' => 'string', 'events' => [['id' => 'int', 'event' => 'array', 'subject' => 'array', 'subjectBlobCids' => 'array', 'createdBy' => 'string', 'createdAt' => 'string', 'creatorHandle' => 'string', 'subjectHandle' => 'string']]];
     public const queryStatusesResponse = ['cursor' => 'string', 'subjectStatuses' => [['id' => 'int', 'subject' => 'array', 'hosting' => 'array', 'subjectBlobCids' => 'array', 'subjectRepoHandle' => 'string', 'updatedAt' => 'string', 'createdAt' => 'string', 'reviewState' => 'array', 'comment' => 'string', 'priorityScore' => 'int', 'muteUntil' => 'string', 'muteReportingUntil' => 'string', 'lastReviewedBy' => 'string', 'lastReviewedAt' => 'string', 'lastReportedAt' => 'string', 'lastAppealedAt' => 'string', 'takendown' => 'bool', 'appealed' => 'bool', 'suspendUntil' => 'string', 'tags' => 'array', 'accountStats' => 'array', 'recordsStats' => 'array']]];
@@ -81,6 +83,15 @@ interface Moderation
     #[Get, NSID(self::getRepo)]
     #[Output(self::getRepoResponse)]
     public function getRepo(#[Format('did')] string $did);
+
+    /**
+     * Get reporter stats for a list of users.
+     *
+     * @link https://docs.bsky.app/docs/api/tools-ozone-moderation-get-reporter-stats
+     */
+    #[Get, NSID(self::getReporterStats)]
+    #[Output(self::getReporterStatsResponse)]
+    public function getReporterStats(#[Format('did')] array $dids);
 
     /**
      * Get details about some repositories.
