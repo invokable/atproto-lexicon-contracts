@@ -14489,6 +14489,91 @@ return array (
       ),
     ),
   ),
+  'com.atproto.sync.listReposByCollection' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'com.atproto.sync.listReposByCollection',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'description' => 'Enumerates all the DIDs which have records with the given collection NSID.',
+        'parameters' => 
+        array (
+          'type' => 'params',
+          'required' => 
+          array (
+            0 => 'collection',
+          ),
+          'properties' => 
+          array (
+            'collection' => 
+            array (
+              'type' => 'string',
+              'format' => 'nsid',
+            ),
+            'limit' => 
+            array (
+              'type' => 'integer',
+              'description' => 'Maximum size of response set. Recommend setting a large maximum (1000+) when enumerating large DID lists.',
+              'minimum' => 1,
+              'maximum' => 2000,
+              'default' => 500,
+            ),
+            'cursor' => 
+            array (
+              'type' => 'string',
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'repos',
+            ),
+            'properties' => 
+            array (
+              'cursor' => 
+              array (
+                'type' => 'string',
+              ),
+              'repos' => 
+              array (
+                'type' => 'array',
+                'items' => 
+                array (
+                  'type' => 'ref',
+                  'ref' => 'lex:com.atproto.sync.listReposByCollection#repo',
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+      'repo' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'did',
+        ),
+        'properties' => 
+        array (
+          'did' => 
+          array (
+            'type' => 'string',
+            'format' => 'did',
+          ),
+        ),
+      ),
+    ),
+  ),
   'com.atproto.sync.notifyOfUpdate' => 
   array (
     'lexicon' => 1,
@@ -16793,6 +16878,70 @@ return array (
           ),
         ),
       ),
+      'reporterStats' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'did',
+          1 => 'accountReportCount',
+          2 => 'recordReportCount',
+          3 => 'reportedAccountCount',
+          4 => 'reportedRecordCount',
+          5 => 'takendownAccountCount',
+          6 => 'takendownRecordCount',
+          7 => 'labeledAccountCount',
+          8 => 'labeledRecordCount',
+        ),
+        'properties' => 
+        array (
+          'did' => 
+          array (
+            'type' => 'string',
+            'format' => 'did',
+          ),
+          'accountReportCount' => 
+          array (
+            'type' => 'integer',
+            'description' => 'The total number of reports made by the user on accounts.',
+          ),
+          'recordReportCount' => 
+          array (
+            'type' => 'integer',
+            'description' => 'The total number of reports made by the user on records.',
+          ),
+          'reportedAccountCount' => 
+          array (
+            'type' => 'integer',
+            'description' => 'The total number of accounts reported by the user.',
+          ),
+          'reportedRecordCount' => 
+          array (
+            'type' => 'integer',
+            'description' => 'The total number of records reported by the user.',
+          ),
+          'takendownAccountCount' => 
+          array (
+            'type' => 'integer',
+            'description' => 'The total number of accounts taken down as a result of the user\'s reports.',
+          ),
+          'takendownRecordCount' => 
+          array (
+            'type' => 'integer',
+            'description' => 'The total number of records taken down as a result of the user\'s reports.',
+          ),
+          'labeledAccountCount' => 
+          array (
+            'type' => 'integer',
+            'description' => 'The total number of accounts labeled as a result of the user\'s reports.',
+          ),
+          'labeledRecordCount' => 
+          array (
+            'type' => 'integer',
+            'description' => 'The total number of records labeled as a result of the user\'s reports.',
+          ),
+        ),
+      ),
     ),
   ),
   'tools.ozone.moderation.emitEvent' => 
@@ -17078,6 +17227,64 @@ return array (
           0 => 
           array (
             'name' => 'RepoNotFound',
+          ),
+        ),
+      ),
+    ),
+  ),
+  'tools.ozone.moderation.getReporterStats' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'tools.ozone.moderation.getReporterStats',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'description' => 'Get reporter stats for a list of users.',
+        'parameters' => 
+        array (
+          'type' => 'params',
+          'required' => 
+          array (
+            0 => 'dids',
+          ),
+          'properties' => 
+          array (
+            'dids' => 
+            array (
+              'type' => 'array',
+              'maxLength' => 100,
+              'items' => 
+              array (
+                'type' => 'string',
+                'format' => 'did',
+              ),
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'stats',
+            ),
+            'properties' => 
+            array (
+              'stats' => 
+              array (
+                'type' => 'array',
+                'items' => 
+                array (
+                  'type' => 'ref',
+                  'ref' => 'lex:tools.ozone.moderation.defs#reporterStats',
+                ),
+              ),
+            ),
           ),
         ),
       ),

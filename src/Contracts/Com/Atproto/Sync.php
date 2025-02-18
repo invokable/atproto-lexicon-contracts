@@ -25,6 +25,7 @@ interface Sync
     public const getRepoStatus = 'com.atproto.sync.getRepoStatus';
     public const listBlobs = 'com.atproto.sync.listBlobs';
     public const listRepos = 'com.atproto.sync.listRepos';
+    public const listReposByCollection = 'com.atproto.sync.listReposByCollection';
     public const notifyOfUpdate = 'com.atproto.sync.notifyOfUpdate';
     public const requestCrawl = 'com.atproto.sync.requestCrawl';
 
@@ -33,6 +34,7 @@ interface Sync
     public const getRepoStatusResponse = ['did' => 'string', 'active' => 'bool', 'status' => 'string', 'rev' => 'string'];
     public const listBlobsResponse = ['cursor' => 'string', 'cids' => 'array'];
     public const listReposResponse = ['cursor' => 'string', 'repos' => [['did' => 'string', 'head' => 'string', 'rev' => 'string', 'active' => 'bool', 'status' => 'string']]];
+    public const listReposByCollectionResponse = ['cursor' => 'string', 'repos' => [['did' => 'string']]];
 
     /**
      * Get a blob associated with a given account. Returns the full blob as originally uploaded. Does not require auth; implemented by PDS.
@@ -120,6 +122,15 @@ interface Sync
     #[Get, NSID(self::listRepos)]
     #[Output(self::listReposResponse)]
     public function listRepos(?int $limit = 500, ?string $cursor = null);
+
+    /**
+     * Enumerates all the DIDs which have records with the given collection NSID.
+     *
+     * @link https://docs.bsky.app/docs/api/com-atproto-sync-list-repos-by-collection
+     */
+    #[Get, NSID(self::listReposByCollection)]
+    #[Output(self::listReposByCollectionResponse)]
+    public function listReposByCollection(#[Format('nsid')] string $collection, ?int $limit = 500, ?string $cursor = null);
 
     /**
      * Notify a crawling service of a recent update, and that crawling should resume. Intended use is after a gap between repo stream events caused the crawling service to disconnect. Does not require auth; implemented by Relay.
