@@ -19131,6 +19131,18 @@ return array (
           'type' => 'params',
           'properties' => 
           array (
+            'disabled' => 
+            array (
+              'type' => 'boolean',
+            ),
+            'roles' => 
+            array (
+              'type' => 'array',
+              'items' => 
+              array (
+                'type' => 'string',
+              ),
+            ),
             'limit' => 
             array (
               'type' => 'integer',
