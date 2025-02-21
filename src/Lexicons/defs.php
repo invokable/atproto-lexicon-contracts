@@ -11325,6 +11325,8 @@ return array (
           array (
             'type' => 'string',
             'maxLength' => 512,
+            'format' => 'record-key',
+            'description' => 'NOTE: maxLength is redundant with record-key format. Keeping it temporarily to ensure backwards compatibility.',
           ),
           'value' => 
           array (
@@ -11352,6 +11354,7 @@ return array (
           'rkey' => 
           array (
             'type' => 'string',
+            'format' => 'record-key',
           ),
           'value' => 
           array (
@@ -11378,6 +11381,7 @@ return array (
           'rkey' => 
           array (
             'type' => 'string',
+            'format' => 'record-key',
           ),
         ),
       ),
@@ -11494,6 +11498,7 @@ return array (
               'rkey' => 
               array (
                 'type' => 'string',
+                'format' => 'record-key',
                 'description' => 'The Record Key.',
                 'maxLength' => 512,
               ),
@@ -11591,6 +11596,7 @@ return array (
           'rev' => 
           array (
             'type' => 'string',
+            'format' => 'tid',
           ),
         ),
       ),
@@ -11635,6 +11641,7 @@ return array (
               'rkey' => 
               array (
                 'type' => 'string',
+                'format' => 'record-key',
                 'description' => 'The Record Key.',
               ),
               'swapRecord' => 
@@ -11794,6 +11801,7 @@ return array (
             array (
               'type' => 'string',
               'description' => 'The Record Key.',
+              'format' => 'record-key',
             ),
             'cid' => 
             array (
@@ -12104,6 +12112,7 @@ return array (
               'rkey' => 
               array (
                 'type' => 'string',
+                'format' => 'record-key',
                 'description' => 'The Record Key.',
                 'maxLength' => 512,
               ),
@@ -14057,6 +14066,7 @@ return array (
               'rev' => 
               array (
                 'type' => 'string',
+                'format' => 'tid',
               ),
             ),
           ),
@@ -14119,6 +14129,7 @@ return array (
             array (
               'type' => 'string',
               'description' => 'Record Key',
+              'format' => 'record-key',
             ),
             'commit' => 
             array (
@@ -14186,6 +14197,7 @@ return array (
             'since' => 
             array (
               'type' => 'string',
+              'format' => 'tid',
               'description' => 'The revision (\'rev\') of the repo to create a diff from.',
             ),
           ),
@@ -14279,6 +14291,7 @@ return array (
               'rev' => 
               array (
                 'type' => 'string',
+                'format' => 'tid',
                 'description' => 'Optional field, the current rev of the repo, if active=true',
               ),
             ),
@@ -14322,6 +14335,7 @@ return array (
             'since' => 
             array (
               'type' => 'string',
+              'format' => 'tid',
               'description' => 'Optional revision of the repo to list blobs since.',
             ),
             'limit' => 
@@ -14469,6 +14483,7 @@ return array (
           'rev' => 
           array (
             'type' => 'string',
+            'format' => 'tid',
           ),
           'active' => 
           array (
@@ -14751,11 +14766,13 @@ return array (
           'rev' => 
           array (
             'type' => 'string',
+            'format' => 'tid',
             'description' => 'The rev of the emitted commit. Note that this information is also in the commit object included in blocks, unless this is a tooBig event.',
           ),
           'since' => 
           array (
             'type' => 'string',
+            'format' => 'tid',
             'description' => 'The rev of the last emitted commit from this repo (if any).',
           ),
           'blocks' => 

@@ -53,7 +53,7 @@ interface Repo
      */
     #[Post, NSID(self::createRecord)]
     #[Output(self::createRecordResponse)]
-    public function createRecord(#[Format('at-identifier')] string $repo, #[Format('nsid')] string $collection, mixed $record, ?string $rkey = null, ?bool $validate = null, #[Format('cid')] ?string $swapCommit = null);
+    public function createRecord(#[Format('at-identifier')] string $repo, #[Format('nsid')] string $collection, mixed $record, #[Format('record-key')] ?string $rkey = null, ?bool $validate = null, #[Format('cid')] ?string $swapCommit = null);
 
     /**
      * Delete a repository record, or ensure it doesn't exist. Requires auth, implemented by PDS.
@@ -62,7 +62,7 @@ interface Repo
      */
     #[Post, NSID(self::deleteRecord)]
     #[Output(self::deleteRecordResponse)]
-    public function deleteRecord(#[Format('at-identifier')] string $repo, #[Format('nsid')] string $collection, string $rkey, #[Format('cid')] ?string $swapRecord = null, #[Format('cid')] ?string $swapCommit = null);
+    public function deleteRecord(#[Format('at-identifier')] string $repo, #[Format('nsid')] string $collection, #[Format('record-key')] string $rkey, #[Format('cid')] ?string $swapRecord = null, #[Format('cid')] ?string $swapCommit = null);
 
     /**
      * Get information about an account and repository, including the list of collections. Does not require auth.
@@ -80,7 +80,7 @@ interface Repo
      */
     #[Get, NSID(self::getRecord)]
     #[Output(self::getRecordResponse)]
-    public function getRecord(#[Format('at-identifier')] string $repo, #[Format('nsid')] string $collection, string $rkey, #[Format('cid')] ?string $cid = null);
+    public function getRecord(#[Format('at-identifier')] string $repo, #[Format('nsid')] string $collection, #[Format('record-key')] string $rkey, #[Format('cid')] ?string $cid = null);
 
     /**
      * Import a repo in the form of a CAR file. Requires Content-Length HTTP header to be set.
@@ -115,7 +115,7 @@ interface Repo
      */
     #[Post, NSID(self::putRecord)]
     #[Output(self::putRecordResponse)]
-    public function putRecord(#[Format('at-identifier')] string $repo, #[Format('nsid')] string $collection, string $rkey, mixed $record, ?bool $validate = null, #[Format('cid')] ?string $swapRecord = null, #[Format('cid')] ?string $swapCommit = null);
+    public function putRecord(#[Format('at-identifier')] string $repo, #[Format('nsid')] string $collection, #[Format('record-key')] string $rkey, mixed $record, ?bool $validate = null, #[Format('cid')] ?string $swapRecord = null, #[Format('cid')] ?string $swapCommit = null);
 
     /**
      * Upload a new blob, to be referenced from a repository record. The blob will be deleted if it is not referenced within a time window (eg, minutes). Blob restrictions (mimetype, size, etc) are enforced when the reference is created. Requires auth, implemented by PDS.

@@ -86,7 +86,7 @@ interface Sync
      * @link https://docs.bsky.app/docs/api/com-atproto-sync-get-record
      */
     #[Get, NSID(self::getRecord)]
-    public function getRecord(#[Format('did')] string $did, #[Format('nsid')] string $collection, string $rkey);
+    public function getRecord(#[Format('did')] string $did, #[Format('nsid')] string $collection, #[Format('record-key')] string $rkey);
 
     /**
      * Download a repository export as CAR file. Optionally only a 'diff' since a previous revision. Does not require auth; implemented by PDS.
@@ -94,7 +94,7 @@ interface Sync
      * @link https://docs.bsky.app/docs/api/com-atproto-sync-get-repo
      */
     #[Get, NSID(self::getRepo)]
-    public function getRepo(#[Format('did')] string $did, ?string $since = null);
+    public function getRepo(#[Format('did')] string $did, #[Format('tid')] ?string $since = null);
 
     /**
      * Get the hosting status for a repository, on this server. Expected to be implemented by PDS and Relay.
@@ -112,7 +112,7 @@ interface Sync
      */
     #[Get, NSID(self::listBlobs)]
     #[Output(self::listBlobsResponse)]
-    public function listBlobs(#[Format('did')] string $did, ?string $since = null, ?int $limit = 500, ?string $cursor = null);
+    public function listBlobs(#[Format('did')] string $did, #[Format('tid')] ?string $since = null, ?int $limit = 500, ?string $cursor = null);
 
     /**
      * Enumerates all the DID, rev, and commit CID for all repos hosted by this service. Does not require auth; implemented by PDS and Relay.
