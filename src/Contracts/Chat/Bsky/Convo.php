@@ -9,6 +9,7 @@ namespace Revolution\AtProto\Lexicon\Contracts\Chat\Bsky;
 
 use Revolution\AtProto\Lexicon\Attributes\Format;
 use Revolution\AtProto\Lexicon\Attributes\Get;
+use Revolution\AtProto\Lexicon\Attributes\KnownValues;
 use Revolution\AtProto\Lexicon\Attributes\NSID;
 use Revolution\AtProto\Lexicon\Attributes\Output;
 use Revolution\AtProto\Lexicon\Attributes\Post;
@@ -16,8 +17,10 @@ use Revolution\AtProto\Lexicon\Attributes\Ref;
 
 interface Convo
 {
+    public const acceptConvo = 'chat.bsky.convo.acceptConvo';
     public const deleteMessageForSelf = 'chat.bsky.convo.deleteMessageForSelf';
     public const getConvo = 'chat.bsky.convo.getConvo';
+    public const getConvoAvailability = 'chat.bsky.convo.getConvoAvailability';
     public const getConvoForMembers = 'chat.bsky.convo.getConvoForMembers';
     public const getLog = 'chat.bsky.convo.getLog';
     public const getMessages = 'chat.bsky.convo.getMessages';
@@ -29,18 +32,29 @@ interface Convo
     public const unmuteConvo = 'chat.bsky.convo.unmuteConvo';
     public const updateRead = 'chat.bsky.convo.updateRead';
 
+    public const acceptConvoResponse = ['rev' => 'string'];
     public const deleteMessageForSelfResponse = ['id' => 'string', 'rev' => 'string', 'sender' => 'mixed', 'sentAt' => 'string'];
-    public const getConvoResponse = ['convo' => ['id' => 'string', 'rev' => 'string', 'members' => 'array', 'lastMessage' => 'array', 'muted' => 'bool', 'opened' => 'bool', 'unreadCount' => 'int']];
-    public const getConvoForMembersResponse = ['convo' => ['id' => 'string', 'rev' => 'string', 'members' => 'array', 'lastMessage' => 'array', 'muted' => 'bool', 'opened' => 'bool', 'unreadCount' => 'int']];
+    public const getConvoResponse = ['convo' => ['id' => 'string', 'rev' => 'string', 'members' => 'array', 'lastMessage' => 'array', 'muted' => 'bool', 'status' => 'string', 'unreadCount' => 'int']];
+    public const getConvoAvailabilityResponse = ['canChat' => 'bool', 'convo' => ['id' => 'string', 'rev' => 'string', 'members' => 'array', 'lastMessage' => 'array', 'muted' => 'bool', 'status' => 'string', 'unreadCount' => 'int']];
+    public const getConvoForMembersResponse = ['convo' => ['id' => 'string', 'rev' => 'string', 'members' => 'array', 'lastMessage' => 'array', 'muted' => 'bool', 'status' => 'string', 'unreadCount' => 'int']];
     public const getLogResponse = ['cursor' => 'string', 'logs' => 'array'];
     public const getMessagesResponse = ['cursor' => 'string', 'messages' => 'array'];
     public const leaveConvoResponse = ['convoId' => 'string', 'rev' => 'string'];
-    public const listConvosResponse = ['cursor' => 'string', 'convos' => [['id' => 'string', 'rev' => 'string', 'members' => 'array', 'lastMessage' => 'array', 'muted' => 'bool', 'opened' => 'bool', 'unreadCount' => 'int']]];
-    public const muteConvoResponse = ['convo' => ['id' => 'string', 'rev' => 'string', 'members' => 'array', 'lastMessage' => 'array', 'muted' => 'bool', 'opened' => 'bool', 'unreadCount' => 'int']];
+    public const listConvosResponse = ['cursor' => 'string', 'convos' => [['id' => 'string', 'rev' => 'string', 'members' => 'array', 'lastMessage' => 'array', 'muted' => 'bool', 'status' => 'string', 'unreadCount' => 'int']]];
+    public const muteConvoResponse = ['convo' => ['id' => 'string', 'rev' => 'string', 'members' => 'array', 'lastMessage' => 'array', 'muted' => 'bool', 'status' => 'string', 'unreadCount' => 'int']];
     public const sendMessageResponse = ['id' => 'string', 'rev' => 'string', 'text' => 'string', 'facets' => [['index' => 'array', 'features' => 'array']], 'embed' => 'array', 'sender' => 'mixed', 'sentAt' => 'string'];
     public const sendMessageBatchResponse = ['items' => [['id' => 'string', 'rev' => 'string', 'text' => 'string', 'facets' => 'array', 'embed' => 'array', 'sender' => 'array', 'sentAt' => 'string']]];
-    public const unmuteConvoResponse = ['convo' => ['id' => 'string', 'rev' => 'string', 'members' => 'array', 'lastMessage' => 'array', 'muted' => 'bool', 'opened' => 'bool', 'unreadCount' => 'int']];
-    public const updateReadResponse = ['convo' => ['id' => 'string', 'rev' => 'string', 'members' => 'array', 'lastMessage' => 'array', 'muted' => 'bool', 'opened' => 'bool', 'unreadCount' => 'int']];
+    public const unmuteConvoResponse = ['convo' => ['id' => 'string', 'rev' => 'string', 'members' => 'array', 'lastMessage' => 'array', 'muted' => 'bool', 'status' => 'string', 'unreadCount' => 'int']];
+    public const updateReadResponse = ['convo' => ['id' => 'string', 'rev' => 'string', 'members' => 'array', 'lastMessage' => 'array', 'muted' => 'bool', 'status' => 'string', 'unreadCount' => 'int']];
+
+    /**
+     * chat.bsky.convo.acceptConvo.
+     *
+     * @link https://docs.bsky.app/docs/api/chat-bsky-convo-accept-convo
+     */
+    #[Post, NSID(self::acceptConvo)]
+    #[Output(self::acceptConvoResponse)]
+    public function acceptConvo(string $convoId);
 
     /**
      * chat.bsky.convo.deleteMessageForSelf.
@@ -59,6 +73,15 @@ interface Convo
     #[Get, NSID(self::getConvo)]
     #[Output(self::getConvoResponse)]
     public function getConvo(string $convoId);
+
+    /**
+     * Get whether the requester and the other members can chat. If an existing convo is found for these members, it is returned.
+     *
+     * @link https://docs.bsky.app/docs/api/chat-bsky-convo-get-convo-availability
+     */
+    #[Get, NSID(self::getConvoAvailability)]
+    #[Output(self::getConvoAvailabilityResponse)]
+    public function getConvoAvailability(#[Format('did')] array $members);
 
     /**
      * chat.bsky.convo.getConvoForMembers.
@@ -103,7 +126,7 @@ interface Convo
      */
     #[Get, NSID(self::listConvos)]
     #[Output(self::listConvosResponse)]
-    public function listConvos(?int $limit = 50, ?string $cursor = null);
+    public function listConvos(?int $limit = 50, ?string $cursor = null, #[KnownValues(['unread'])] ?string $readState = null, #[KnownValues(['request', 'accepted'])] ?string $status = null);
 
     /**
      * chat.bsky.convo.muteConvo.

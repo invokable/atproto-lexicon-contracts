@@ -8267,6 +8267,53 @@ return array (
       ),
     ),
   ),
+  'chat.bsky.convo.acceptConvo' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'chat.bsky.convo.acceptConvo',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'procedure',
+        'input' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'convoId',
+            ),
+            'properties' => 
+            array (
+              'convoId' => 
+              array (
+                'type' => 'string',
+              ),
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'properties' => 
+            array (
+              'rev' => 
+              array (
+                'description' => 'Rev when the convo was accepted. If not present, the convo was already accepted.',
+                'type' => 'string',
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
   'chat.bsky.convo.defs' => 
   array (
     'lexicon' => 1,
@@ -8482,9 +8529,14 @@ return array (
           array (
             'type' => 'boolean',
           ),
-          'opened' => 
+          'status' => 
           array (
-            'type' => 'boolean',
+            'type' => 'string',
+            'knownValues' => 
+            array (
+              0 => 'request',
+              1 => 'accepted',
+            ),
           ),
           'unreadCount' => 
           array (
@@ -8512,7 +8564,67 @@ return array (
           ),
         ),
       ),
+      'logAcceptConvo' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'rev',
+          1 => 'convoId',
+        ),
+        'properties' => 
+        array (
+          'rev' => 
+          array (
+            'type' => 'string',
+          ),
+          'convoId' => 
+          array (
+            'type' => 'string',
+          ),
+        ),
+      ),
       'logLeaveConvo' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'rev',
+          1 => 'convoId',
+        ),
+        'properties' => 
+        array (
+          'rev' => 
+          array (
+            'type' => 'string',
+          ),
+          'convoId' => 
+          array (
+            'type' => 'string',
+          ),
+        ),
+      ),
+      'logMuteConvo' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'rev',
+          1 => 'convoId',
+        ),
+        'properties' => 
+        array (
+          'rev' => 
+          array (
+            'type' => 'string',
+          ),
+          'convoId' => 
+          array (
+            'type' => 'string',
+          ),
+        ),
+      ),
+      'logUnmuteConvo' => 
       array (
         'type' => 'object',
         'required' => 
@@ -8563,6 +8675,36 @@ return array (
         ),
       ),
       'logDeleteMessage' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'rev',
+          1 => 'convoId',
+          2 => 'message',
+        ),
+        'properties' => 
+        array (
+          'rev' => 
+          array (
+            'type' => 'string',
+          ),
+          'convoId' => 
+          array (
+            'type' => 'string',
+          ),
+          'message' => 
+          array (
+            'type' => 'union',
+            'refs' => 
+            array (
+              0 => 'lex:chat.bsky.convo.defs#messageView',
+              1 => 'lex:chat.bsky.convo.defs#deletedMessageView',
+            ),
+          ),
+        ),
+      ),
+      'logReadMessage' => 
       array (
         'type' => 'object',
         'required' => 
@@ -8686,6 +8828,65 @@ return array (
       ),
     ),
   ),
+  'chat.bsky.convo.getConvoAvailability' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'chat.bsky.convo.getConvoAvailability',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'description' => 'Get whether the requester and the other members can chat. If an existing convo is found for these members, it is returned.',
+        'parameters' => 
+        array (
+          'type' => 'params',
+          'required' => 
+          array (
+            0 => 'members',
+          ),
+          'properties' => 
+          array (
+            'members' => 
+            array (
+              'type' => 'array',
+              'minLength' => 1,
+              'maxLength' => 10,
+              'items' => 
+              array (
+                'type' => 'string',
+                'format' => 'did',
+              ),
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'canChat',
+            ),
+            'properties' => 
+            array (
+              'canChat' => 
+              array (
+                'type' => 'boolean',
+              ),
+              'convo' => 
+              array (
+                'type' => 'ref',
+                'ref' => 'lex:chat.bsky.convo.defs#convoView',
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
   'chat.bsky.convo.getConvoForMembers' => 
   array (
     'lexicon' => 1,
@@ -8788,9 +8989,10 @@ return array (
                   'refs' => 
                   array (
                     0 => 'lex:chat.bsky.convo.defs#logBeginConvo',
-                    1 => 'lex:chat.bsky.convo.defs#logLeaveConvo',
-                    2 => 'lex:chat.bsky.convo.defs#logCreateMessage',
-                    3 => 'lex:chat.bsky.convo.defs#logDeleteMessage',
+                    1 => 'lex:chat.bsky.convo.defs#logAcceptConvo',
+                    2 => 'lex:chat.bsky.convo.defs#logLeaveConvo',
+                    3 => 'lex:chat.bsky.convo.defs#logCreateMessage',
+                    4 => 'lex:chat.bsky.convo.defs#logDeleteMessage',
                   ),
                 ),
               ),
@@ -8949,6 +9151,23 @@ return array (
             'cursor' => 
             array (
               'type' => 'string',
+            ),
+            'readState' => 
+            array (
+              'type' => 'string',
+              'knownValues' => 
+              array (
+                0 => 'unread',
+              ),
+            ),
+            'status' => 
+            array (
+              'type' => 'string',
+              'knownValues' => 
+              array (
+                0 => 'request',
+                1 => 'accepted',
+              ),
             ),
           ),
         ),
@@ -14285,7 +14504,10 @@ return array (
                 array (
                   0 => 'takendown',
                   1 => 'suspended',
-                  2 => 'deactivated',
+                  2 => 'deleted',
+                  3 => 'deactivated',
+                  4 => 'desynchronized',
+                  5 => 'throttled',
                 ),
               ),
               'rev' => 
@@ -14497,7 +14719,10 @@ return array (
             array (
               0 => 'takendown',
               1 => 'suspended',
-              2 => 'deactivated',
+              2 => 'deleted',
+              3 => 'deactivated',
+              4 => 'desynchronized',
+              5 => 'throttled',
             ),
           ),
         ),
@@ -14685,12 +14910,13 @@ return array (
             'refs' => 
             array (
               0 => 'lex:com.atproto.sync.subscribeRepos#commit',
-              1 => 'lex:com.atproto.sync.subscribeRepos#identity',
-              2 => 'lex:com.atproto.sync.subscribeRepos#account',
-              3 => 'lex:com.atproto.sync.subscribeRepos#handle',
-              4 => 'lex:com.atproto.sync.subscribeRepos#migrate',
-              5 => 'lex:com.atproto.sync.subscribeRepos#tombstone',
-              6 => 'lex:com.atproto.sync.subscribeRepos#info',
+              1 => 'lex:com.atproto.sync.subscribeRepos#sync',
+              2 => 'lex:com.atproto.sync.subscribeRepos#identity',
+              3 => 'lex:com.atproto.sync.subscribeRepos#account',
+              4 => 'lex:com.atproto.sync.subscribeRepos#handle',
+              5 => 'lex:com.atproto.sync.subscribeRepos#migrate',
+              6 => 'lex:com.atproto.sync.subscribeRepos#tombstone',
+              7 => 'lex:com.atproto.sync.subscribeRepos#info',
             ),
           ),
         ),
@@ -14727,8 +14953,7 @@ return array (
         ),
         'nullable' => 
         array (
-          0 => 'prev',
-          1 => 'since',
+          0 => 'since',
         ),
         'properties' => 
         array (
@@ -14745,23 +14970,18 @@ return array (
           'tooBig' => 
           array (
             'type' => 'boolean',
-            'description' => 'Indicates that this commit contained too many ops, or data size was too large. Consumers will need to make a separate request to get missing data.',
+            'description' => 'DEPRECATED -- replaced by #sync event and data limits. Indicates that this commit contained too many ops, or data size was too large. Consumers will need to make a separate request to get missing data.',
           ),
           'repo' => 
           array (
             'type' => 'string',
             'format' => 'did',
-            'description' => 'The repo this event comes from.',
+            'description' => 'The repo this event comes from. Note that all other message types name this field \'did\'.',
           ),
           'commit' => 
           array (
             'type' => 'cid-link',
             'description' => 'Repo commit object CID.',
-          ),
-          'prev' => 
-          array (
-            'type' => 'cid-link',
-            'description' => 'DEPRECATED -- unused. WARNING -- nullable and optional; stick with optional to ensure golang interoperability.',
           ),
           'rev' => 
           array (
@@ -14778,8 +14998,8 @@ return array (
           'blocks' => 
           array (
             'type' => 'bytes',
-            'description' => 'CAR file containing relevant blocks, as a diff since the previous repo state.',
-            'maxLength' => 1000000,
+            'description' => 'CAR file containing relevant blocks, as a diff since the previous repo state. The commit must be included as a block, and the commit block CID must be the first entry in the CAR header \'roots\' list.',
+            'maxLength' => 2000000,
           ),
           'ops' => 
           array (
@@ -14798,8 +15018,57 @@ return array (
             'items' => 
             array (
               'type' => 'cid-link',
-              'description' => 'List of new blobs (by CID) referenced by records in this commit.',
+              'description' => 'DEPRECATED -- will soon always be empty. List of new blobs (by CID) referenced by records in this commit.',
             ),
+          ),
+          'prevData' => 
+          array (
+            'type' => 'cid-link',
+            'description' => 'The root CID of the MST tree for the previous commit from this repo (indicated by the \'since\' revision field in this message). Corresponds to the \'data\' field in the repo commit object. NOTE: this field is effectively required for the \'inductive\' version of firehose.',
+          ),
+          'time' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+            'description' => 'Timestamp of when this message was originally broadcast.',
+          ),
+        ),
+      ),
+      'sync' => 
+      array (
+        'type' => 'object',
+        'description' => 'Updates the repo to a new state, without necessarily including that state on the firehose. Used to recover from broken commit streams, data loss incidents, or in situations where upstream host does not know recent state of the repository.',
+        'required' => 
+        array (
+          0 => 'seq',
+          1 => 'did',
+          2 => 'blocks',
+          3 => 'rev',
+          4 => 'time',
+        ),
+        'properties' => 
+        array (
+          'seq' => 
+          array (
+            'type' => 'integer',
+            'description' => 'The stream sequence number of this message.',
+          ),
+          'did' => 
+          array (
+            'type' => 'string',
+            'format' => 'did',
+            'description' => 'The account this repo event corresponds to. Must match that in the commit object.',
+          ),
+          'blocks' => 
+          array (
+            'type' => 'bytes',
+            'description' => 'CAR file containing the commit, as a block. The CAR header must include the commit block CID as the first \'root\'.',
+            'maxLength' => 10000,
+          ),
+          'rev' => 
+          array (
+            'type' => 'string',
+            'description' => 'The rev of the commit. This value must match that in the commit object.',
           ),
           'time' => 
           array (
@@ -14885,6 +15154,8 @@ return array (
               1 => 'suspended',
               2 => 'deleted',
               3 => 'deactivated',
+              4 => 'desynchronized',
+              5 => 'throttled',
             ),
           ),
         ),
@@ -15045,6 +15316,11 @@ return array (
           array (
             'type' => 'cid-link',
             'description' => 'For creates and updates, the new record CID. For deletions, null.',
+          ),
+          'prev' => 
+          array (
+            'type' => 'cid-link',
+            'description' => 'For updates and deletes, the previous record CID (required for inductive firehose). For creations, field should not be defined.',
           ),
         ),
       ),
@@ -17003,11 +17279,12 @@ return array (
                   10 => 'lex:tools.ozone.moderation.defs#modEventReverseTakedown',
                   11 => 'lex:tools.ozone.moderation.defs#modEventResolveAppeal',
                   12 => 'lex:tools.ozone.moderation.defs#modEventEmail',
-                  13 => 'lex:tools.ozone.moderation.defs#modEventTag',
-                  14 => 'lex:tools.ozone.moderation.defs#accountEvent',
-                  15 => 'lex:tools.ozone.moderation.defs#identityEvent',
-                  16 => 'lex:tools.ozone.moderation.defs#recordEvent',
-                  17 => 'lex:tools.ozone.moderation.defs#modEventPriorityScore',
+                  13 => 'lex:tools.ozone.moderation.defs#modEventDivert',
+                  14 => 'lex:tools.ozone.moderation.defs#modEventTag',
+                  15 => 'lex:tools.ozone.moderation.defs#accountEvent',
+                  16 => 'lex:tools.ozone.moderation.defs#identityEvent',
+                  17 => 'lex:tools.ozone.moderation.defs#recordEvent',
+                  18 => 'lex:tools.ozone.moderation.defs#modEventPriorityScore',
                 ),
               ),
               'subject' => 
