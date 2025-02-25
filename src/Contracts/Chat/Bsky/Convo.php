@@ -30,6 +30,7 @@ interface Convo
     public const sendMessage = 'chat.bsky.convo.sendMessage';
     public const sendMessageBatch = 'chat.bsky.convo.sendMessageBatch';
     public const unmuteConvo = 'chat.bsky.convo.unmuteConvo';
+    public const updateAllRead = 'chat.bsky.convo.updateAllRead';
     public const updateRead = 'chat.bsky.convo.updateRead';
 
     public const acceptConvoResponse = ['rev' => 'string'];
@@ -45,6 +46,7 @@ interface Convo
     public const sendMessageResponse = ['id' => 'string', 'rev' => 'string', 'text' => 'string', 'facets' => [['index' => 'array', 'features' => 'array']], 'embed' => 'array', 'sender' => 'mixed', 'sentAt' => 'string'];
     public const sendMessageBatchResponse = ['items' => [['id' => 'string', 'rev' => 'string', 'text' => 'string', 'facets' => 'array', 'embed' => 'array', 'sender' => 'array', 'sentAt' => 'string']]];
     public const unmuteConvoResponse = ['convo' => ['id' => 'string', 'rev' => 'string', 'members' => 'array', 'lastMessage' => 'array', 'muted' => 'bool', 'status' => 'string', 'unreadCount' => 'int']];
+    public const updateAllReadResponse = ['updatedCount' => 'int'];
     public const updateReadResponse = ['convo' => ['id' => 'string', 'rev' => 'string', 'members' => 'array', 'lastMessage' => 'array', 'muted' => 'bool', 'status' => 'string', 'unreadCount' => 'int']];
 
     /**
@@ -163,6 +165,15 @@ interface Convo
     #[Post, NSID(self::unmuteConvo)]
     #[Output(self::unmuteConvoResponse)]
     public function unmuteConvo(string $convoId);
+
+    /**
+     * chat.bsky.convo.updateAllRead.
+     *
+     * @link https://docs.bsky.app/docs/api/chat-bsky-convo-update-all-read
+     */
+    #[Post, NSID(self::updateAllRead)]
+    #[Output(self::updateAllReadResponse)]
+    public function updateAllRead(#[KnownValues(['request', 'accepted'])] ?string $status = null);
 
     /**
      * chat.bsky.convo.updateRead.
