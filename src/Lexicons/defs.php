@@ -9432,6 +9432,58 @@ return array (
       ),
     ),
   ),
+  'chat.bsky.convo.updateAllRead' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'chat.bsky.convo.updateAllRead',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'procedure',
+        'input' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'properties' => 
+            array (
+              'status' => 
+              array (
+                'type' => 'string',
+                'knownValues' => 
+                array (
+                  0 => 'request',
+                  1 => 'accepted',
+                ),
+              ),
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'updatedCount',
+            ),
+            'properties' => 
+            array (
+              'updatedCount' => 
+              array (
+                'description' => 'The count of updated convos.',
+                'type' => 'integer',
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
   'chat.bsky.convo.updateRead' => 
   array (
     'lexicon' => 1,
@@ -16269,11 +16321,7 @@ return array (
       'modEventComment' => 
       array (
         'type' => 'object',
-        'description' => 'Add a comment to a subject',
-        'required' => 
-        array (
-          0 => 'comment',
-        ),
+        'description' => 'Add a comment to a subject. An empty comment will clear any previously set sticky comment.',
         'properties' => 
         array (
           'comment' => 
