@@ -6759,6 +6759,36 @@ return array (
               'type' => 'string',
               'format' => 'datetime',
             ),
+            'reasonTypes' => 
+            array (
+              'description' => 'The set of report reason \'codes\' which are in-scope for this service to review and action. These usually align to policy categories. If not defined (distinct from empty array), all reason types are allowed.',
+              'type' => 'array',
+              'items' => 
+              array (
+                'type' => 'ref',
+                'ref' => 'lex:com.atproto.moderation.defs#reasonType',
+              ),
+            ),
+            'subjectTypes' => 
+            array (
+              'description' => 'The set of subject types (account, record, etc) this service accepts reports on.',
+              'type' => 'array',
+              'items' => 
+              array (
+                'type' => 'ref',
+                'ref' => 'lex:com.atproto.moderation.defs#subjectType',
+              ),
+            ),
+            'subjectCollections' => 
+            array (
+              'type' => 'array',
+              'description' => 'Set of record types (collection NSIDs) which can be reported to this service. If not defined (distinct from empty array), default is any record type.',
+              'items' => 
+              array (
+                'type' => 'string',
+                'format' => 'nsid',
+              ),
+            ),
           ),
         ),
       ),
@@ -11473,6 +11503,17 @@ return array (
         'type' => 'token',
         'description' => 'Appeal: appeal a previously taken moderation action',
       ),
+      'subjectType' => 
+      array (
+        'type' => 'string',
+        'description' => 'Tag describing a type of subject that might be reported.',
+        'knownValues' => 
+        array (
+          0 => 'account',
+          1 => 'record',
+          2 => 'chat',
+        ),
+      ),
     ),
   ),
   'com.atproto.repo.applyWrites' => 
@@ -12263,16 +12304,6 @@ return array (
             'cursor' => 
             array (
               'type' => 'string',
-            ),
-            'rkeyStart' => 
-            array (
-              'type' => 'string',
-              'description' => 'DEPRECATED: The lowest sort-ordered rkey to start from (exclusive)',
-            ),
-            'rkeyEnd' => 
-            array (
-              'type' => 'string',
-              'description' => 'DEPRECATED: The highest sort-ordered rkey to stop at (exclusive)',
             ),
             'reverse' => 
             array (
@@ -14402,12 +14433,6 @@ return array (
               'description' => 'Record Key',
               'format' => 'record-key',
             ),
-            'commit' => 
-            array (
-              'type' => 'string',
-              'format' => 'cid',
-              'description' => 'DEPRECATED: referenced a repo commit by CID, and retrieved record as of that commit',
-            ),
           ),
         ),
         'output' => 
@@ -14875,7 +14900,7 @@ return array (
       'main' => 
       array (
         'type' => 'procedure',
-        'description' => 'Notify a crawling service of a recent update, and that crawling should resume. Intended use is after a gap between repo stream events caused the crawling service to disconnect. Does not require auth; implemented by Relay.',
+        'description' => 'Notify a crawling service of a recent update, and that crawling should resume. Intended use is after a gap between repo stream events caused the crawling service to disconnect. Does not require auth; implemented by Relay. DEPRECATED: just use com.atproto.sync.requestCrawl',
         'input' => 
         array (
           'encoding' => 'application/json',
