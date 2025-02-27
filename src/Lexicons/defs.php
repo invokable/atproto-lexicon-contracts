@@ -6607,6 +6607,36 @@ return array (
               'ref' => 'lex:com.atproto.label.defs#label',
             ),
           ),
+          'reasonTypes' => 
+          array (
+            'description' => 'The set of report reason \'codes\' which are in-scope for this service to review and action. These usually align to policy categories. If not defined (distinct from empty array), all reason types are allowed.',
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:com.atproto.moderation.defs#reasonType',
+            ),
+          ),
+          'subjectTypes' => 
+          array (
+            'description' => 'The set of subject types (account, record, etc) this service accepts reports on.',
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:com.atproto.moderation.defs#subjectType',
+            ),
+          ),
+          'subjectCollections' => 
+          array (
+            'type' => 'array',
+            'description' => 'Set of record types (collection NSIDs) which can be reported to this service. If not defined (distinct from empty array), default is any record type.',
+            'items' => 
+            array (
+              'type' => 'string',
+              'format' => 'nsid',
+            ),
+          ),
         ),
       ),
       'labelerViewerState' => 
@@ -10653,6 +10683,43 @@ return array (
       ),
     ),
   ),
+  'com.atproto.identity.defs' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'com.atproto.identity.defs',
+    'defs' => 
+    array (
+      'identityInfo' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'did',
+          1 => 'handle',
+          2 => 'didDoc',
+        ),
+        'properties' => 
+        array (
+          'did' => 
+          array (
+            'type' => 'string',
+            'format' => 'did',
+          ),
+          'handle' => 
+          array (
+            'type' => 'string',
+            'format' => 'handle',
+            'description' => 'The validated handle of the account; or \'handle.invalid\' if the handle did not bi-directionally match the DID document.',
+          ),
+          'didDoc' => 
+          array (
+            'type' => 'unknown',
+            'description' => 'The complete DID document for the identity.',
+          ),
+        ),
+      ),
+    ),
+  ),
   'com.atproto.identity.getRecommendedDidCredentials' => 
   array (
     'lexicon' => 1,
@@ -10702,6 +10769,66 @@ return array (
       ),
     ),
   ),
+  'com.atproto.identity.refreshIdentity' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'com.atproto.identity.refreshIdentity',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'procedure',
+        'description' => 'Request that the server re-resolve an identity (DID and handle). The server may ignore this request, or require authentication, depending on the role, implementation, and policy of the server.',
+        'input' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'identifier',
+            ),
+            'properties' => 
+            array (
+              'identifier' => 
+              array (
+                'type' => 'string',
+                'format' => 'at-identifier',
+              ),
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:com.atproto.identity.defs#identityInfo',
+          ),
+        ),
+        'errors' => 
+        array (
+          0 => 
+          array (
+            'name' => 'HandleNotFound',
+            'description' => 'The resolution process confirmed that the handle does not resolve to any DID.',
+          ),
+          1 => 
+          array (
+            'name' => 'DidNotFound',
+            'description' => 'The DID resolution process confirmed that there is no current DID.',
+          ),
+          2 => 
+          array (
+            'name' => 'DidDeactivated',
+            'description' => 'The DID previously existed, but has been deactivated.',
+          ),
+        ),
+      ),
+    ),
+  ),
   'com.atproto.identity.requestPlcOperationSignature' => 
   array (
     'lexicon' => 1,
@@ -10715,6 +10842,69 @@ return array (
       ),
     ),
   ),
+  'com.atproto.identity.resolveDid' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'com.atproto.identity.resolveDid',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'description' => 'Resolves DID to DID document. Does not bi-directionally verify handle.',
+        'parameters' => 
+        array (
+          'type' => 'params',
+          'required' => 
+          array (
+            0 => 'did',
+          ),
+          'properties' => 
+          array (
+            'did' => 
+            array (
+              'type' => 'string',
+              'format' => 'did',
+              'description' => 'DID to resolve.',
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'didDoc',
+            ),
+            'properties' => 
+            array (
+              'didDoc' => 
+              array (
+                'type' => 'unknown',
+                'description' => 'The complete DID document for the identity.',
+              ),
+            ),
+          ),
+        ),
+        'errors' => 
+        array (
+          0 => 
+          array (
+            'name' => 'DidNotFound',
+            'description' => 'The DID resolution process confirmed that there is no current DID.',
+          ),
+          1 => 
+          array (
+            'name' => 'DidDeactivated',
+            'description' => 'The DID previously existed, but has been deactivated.',
+          ),
+        ),
+      ),
+    ),
+  ),
   'com.atproto.identity.resolveHandle' => 
   array (
     'lexicon' => 1,
@@ -10724,7 +10914,7 @@ return array (
       'main' => 
       array (
         'type' => 'query',
-        'description' => 'Resolves a handle (domain name) to a DID.',
+        'description' => 'Resolves an atproto handle (hostname) to a DID. Does not necessarily bi-directionally verify against the the DID document.',
         'parameters' => 
         array (
           'type' => 'params',
@@ -10760,6 +10950,71 @@ return array (
                 'format' => 'did',
               ),
             ),
+          ),
+        ),
+        'errors' => 
+        array (
+          0 => 
+          array (
+            'name' => 'HandleNotFound',
+            'description' => 'The resolution process confirmed that the handle does not resolve to any DID.',
+          ),
+        ),
+      ),
+    ),
+  ),
+  'com.atproto.identity.resolveIdentity' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'com.atproto.identity.resolveIdentity',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'description' => 'Resolves an identity (DID or Handle) to a full identity (DID document and verified handle).',
+        'parameters' => 
+        array (
+          'type' => 'params',
+          'required' => 
+          array (
+            0 => 'identifier',
+          ),
+          'properties' => 
+          array (
+            'identifier' => 
+            array (
+              'type' => 'string',
+              'format' => 'at-identifier',
+              'description' => 'Handle or DID to resolve.',
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:com.atproto.identity.defs#identityInfo',
+          ),
+        ),
+        'errors' => 
+        array (
+          0 => 
+          array (
+            'name' => 'HandleNotFound',
+            'description' => 'The resolution process confirmed that the handle does not resolve to any DID.',
+          ),
+          1 => 
+          array (
+            'name' => 'DidNotFound',
+            'description' => 'The DID resolution process confirmed that there is no current DID.',
+          ),
+          2 => 
+          array (
+            'name' => 'DidDeactivated',
+            'description' => 'The DID previously existed, but has been deactivated.',
           ),
         ),
       ),
