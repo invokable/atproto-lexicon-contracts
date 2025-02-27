@@ -16,14 +16,20 @@ use Revolution\AtProto\Lexicon\Attributes\Post;
 interface Identity
 {
     public const getRecommendedDidCredentials = 'com.atproto.identity.getRecommendedDidCredentials';
+    public const refreshIdentity = 'com.atproto.identity.refreshIdentity';
     public const requestPlcOperationSignature = 'com.atproto.identity.requestPlcOperationSignature';
+    public const resolveDid = 'com.atproto.identity.resolveDid';
     public const resolveHandle = 'com.atproto.identity.resolveHandle';
+    public const resolveIdentity = 'com.atproto.identity.resolveIdentity';
     public const signPlcOperation = 'com.atproto.identity.signPlcOperation';
     public const submitPlcOperation = 'com.atproto.identity.submitPlcOperation';
     public const updateHandle = 'com.atproto.identity.updateHandle';
 
     public const getRecommendedDidCredentialsResponse = ['rotationKeys' => 'array', 'alsoKnownAs' => 'array', 'verificationMethods' => 'mixed', 'services' => 'mixed'];
+    public const refreshIdentityResponse = ['did' => 'string', 'handle' => 'string', 'didDoc' => 'mixed'];
+    public const resolveDidResponse = ['didDoc' => 'mixed'];
     public const resolveHandleResponse = ['did' => 'string'];
+    public const resolveIdentityResponse = ['did' => 'string', 'handle' => 'string', 'didDoc' => 'mixed'];
     public const signPlcOperationResponse = ['operation' => 'mixed'];
 
     /**
@@ -36,6 +42,15 @@ interface Identity
     public function getRecommendedDidCredentials();
 
     /**
+     * Request that the server re-resolve an identity (DID and handle). The server may ignore this request, or require authentication, depending on the role, implementation, and policy of the server.
+     *
+     * @link https://docs.bsky.app/docs/api/com-atproto-identity-refresh-identity
+     */
+    #[Post, NSID(self::refreshIdentity)]
+    #[Output(self::refreshIdentityResponse)]
+    public function refreshIdentity(#[Format('at-identifier')] string $identifier);
+
+    /**
      * Request an email with a code to in order to request a signed PLC operation. Requires Auth.
      *
      * @link https://docs.bsky.app/docs/api/com-atproto-identity-request-plc-operation-signature
@@ -44,13 +59,31 @@ interface Identity
     public function requestPlcOperationSignature();
 
     /**
-     * Resolves a handle (domain name) to a DID.
+     * Resolves DID to DID document. Does not bi-directionally verify handle.
+     *
+     * @link https://docs.bsky.app/docs/api/com-atproto-identity-resolve-did
+     */
+    #[Get, NSID(self::resolveDid)]
+    #[Output(self::resolveDidResponse)]
+    public function resolveDid(#[Format('did')] string $did);
+
+    /**
+     * Resolves an atproto handle (hostname) to a DID. Does not necessarily bi-directionally verify against the the DID document.
      *
      * @link https://docs.bsky.app/docs/api/com-atproto-identity-resolve-handle
      */
     #[Get, NSID(self::resolveHandle)]
     #[Output(self::resolveHandleResponse)]
     public function resolveHandle(#[Format('handle')] string $handle);
+
+    /**
+     * Resolves an identity (DID or Handle) to a full identity (DID document and verified handle).
+     *
+     * @link https://docs.bsky.app/docs/api/com-atproto-identity-resolve-identity
+     */
+    #[Get, NSID(self::resolveIdentity)]
+    #[Output(self::resolveIdentityResponse)]
+    public function resolveIdentity(#[Format('at-identifier')] string $identifier);
 
     /**
      * Signs a PLC operation to update some value(s) in the requesting DID's document.
