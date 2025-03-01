@@ -15245,10 +15245,7 @@ return array (
               1 => 'lex:com.atproto.sync.subscribeRepos#sync',
               2 => 'lex:com.atproto.sync.subscribeRepos#identity',
               3 => 'lex:com.atproto.sync.subscribeRepos#account',
-              4 => 'lex:com.atproto.sync.subscribeRepos#handle',
-              5 => 'lex:com.atproto.sync.subscribeRepos#migrate',
-              6 => 'lex:com.atproto.sync.subscribeRepos#tombstone',
-              7 => 'lex:com.atproto.sync.subscribeRepos#info',
+              4 => 'lex:com.atproto.sync.subscribeRepos#info',
             ),
           ),
         ),
@@ -15489,105 +15486,6 @@ return array (
               4 => 'desynchronized',
               5 => 'throttled',
             ),
-          ),
-        ),
-      ),
-      'handle' => 
-      array (
-        'type' => 'object',
-        'description' => 'DEPRECATED -- Use #identity event instead',
-        'required' => 
-        array (
-          0 => 'seq',
-          1 => 'did',
-          2 => 'handle',
-          3 => 'time',
-        ),
-        'properties' => 
-        array (
-          'seq' => 
-          array (
-            'type' => 'integer',
-          ),
-          'did' => 
-          array (
-            'type' => 'string',
-            'format' => 'did',
-          ),
-          'handle' => 
-          array (
-            'type' => 'string',
-            'format' => 'handle',
-          ),
-          'time' => 
-          array (
-            'type' => 'string',
-            'format' => 'datetime',
-          ),
-        ),
-      ),
-      'migrate' => 
-      array (
-        'type' => 'object',
-        'description' => 'DEPRECATED -- Use #account event instead',
-        'required' => 
-        array (
-          0 => 'seq',
-          1 => 'did',
-          2 => 'migrateTo',
-          3 => 'time',
-        ),
-        'nullable' => 
-        array (
-          0 => 'migrateTo',
-        ),
-        'properties' => 
-        array (
-          'seq' => 
-          array (
-            'type' => 'integer',
-          ),
-          'did' => 
-          array (
-            'type' => 'string',
-            'format' => 'did',
-          ),
-          'migrateTo' => 
-          array (
-            'type' => 'string',
-          ),
-          'time' => 
-          array (
-            'type' => 'string',
-            'format' => 'datetime',
-          ),
-        ),
-      ),
-      'tombstone' => 
-      array (
-        'type' => 'object',
-        'description' => 'DEPRECATED -- Use #account event instead',
-        'required' => 
-        array (
-          0 => 'seq',
-          1 => 'did',
-          2 => 'time',
-        ),
-        'properties' => 
-        array (
-          'seq' => 
-          array (
-            'type' => 'integer',
-          ),
-          'did' => 
-          array (
-            'type' => 'string',
-            'format' => 'did',
-          ),
-          'time' => 
-          array (
-            'type' => 'string',
-            'format' => 'datetime',
           ),
         ),
       ),
