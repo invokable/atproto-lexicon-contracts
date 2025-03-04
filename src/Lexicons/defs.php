@@ -1876,11 +1876,12 @@ return array (
           'video' => 
           array (
             'type' => 'blob',
+            'description' => 'The mp4 video file. May be up to 100mb, formerly limited to 50mb.',
             'accept' => 
             array (
               0 => 'video/mp4',
             ),
-            'maxSize' => 50000000,
+            'maxSize' => 100000000,
           ),
           'captions' => 
           array (
