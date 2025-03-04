@@ -19,7 +19,10 @@ abstract class AbstractVideo
 {
     public const NSID = 'app.bsky.embed.video';
 
-    #[Blob(accept: ['video/mp4'], maxSize: 50000000)]
+    /**
+     * The mp4 video file. May be up to 100mb, formerly limited to 50mb.
+     */
+    #[Blob(accept: ['video/mp4'], maxSize: 100000000)]
     protected array $video;
 
     #[Ref('app.bsky.embed.video#caption')]
