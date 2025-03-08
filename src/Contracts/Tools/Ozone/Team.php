@@ -49,7 +49,7 @@ interface Team
      */
     #[Get, NSID(self::listMembers)]
     #[Output(self::listMembersResponse)]
-    public function listMembers(?bool $disabled = null, ?array $roles = null, ?int $limit = 50, ?string $cursor = null);
+    public function listMembers(?string $q = null, ?bool $disabled = null, ?array $roles = null, ?int $limit = 50, ?string $cursor = null);
 
     /**
      * Update a member in the ozone service. Requires admin role.
