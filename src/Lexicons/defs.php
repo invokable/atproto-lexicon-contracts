@@ -19652,6 +19652,10 @@ return array (
           'type' => 'params',
           'properties' => 
           array (
+            'q' => 
+            array (
+              'type' => 'string',
+            ),
             'disabled' => 
             array (
               'type' => 'boolean',
