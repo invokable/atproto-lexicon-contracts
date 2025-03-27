@@ -18,6 +18,7 @@ use Revolution\AtProto\Lexicon\Attributes\Ref;
 interface Convo
 {
     public const acceptConvo = 'chat.bsky.convo.acceptConvo';
+    public const addReaction = 'chat.bsky.convo.addReaction';
     public const deleteMessageForSelf = 'chat.bsky.convo.deleteMessageForSelf';
     public const getConvo = 'chat.bsky.convo.getConvo';
     public const getConvoAvailability = 'chat.bsky.convo.getConvoAvailability';
@@ -27,6 +28,7 @@ interface Convo
     public const leaveConvo = 'chat.bsky.convo.leaveConvo';
     public const listConvos = 'chat.bsky.convo.listConvos';
     public const muteConvo = 'chat.bsky.convo.muteConvo';
+    public const removeReaction = 'chat.bsky.convo.removeReaction';
     public const sendMessage = 'chat.bsky.convo.sendMessage';
     public const sendMessageBatch = 'chat.bsky.convo.sendMessageBatch';
     public const unmuteConvo = 'chat.bsky.convo.unmuteConvo';
@@ -34,6 +36,7 @@ interface Convo
     public const updateRead = 'chat.bsky.convo.updateRead';
 
     public const acceptConvoResponse = ['rev' => 'string'];
+    public const addReactionResponse = ['message' => ['id' => 'string', 'rev' => 'string', 'text' => 'string', 'facets' => 'array', 'embed' => 'array', 'reactions' => 'array', 'sender' => 'array', 'sentAt' => 'string']];
     public const deleteMessageForSelfResponse = ['id' => 'string', 'rev' => 'string', 'sender' => 'mixed', 'sentAt' => 'string'];
     public const getConvoResponse = ['convo' => ['id' => 'string', 'rev' => 'string', 'members' => 'array', 'lastMessage' => 'array', 'muted' => 'bool', 'status' => 'string', 'unreadCount' => 'int']];
     public const getConvoAvailabilityResponse = ['canChat' => 'bool', 'convo' => ['id' => 'string', 'rev' => 'string', 'members' => 'array', 'lastMessage' => 'array', 'muted' => 'bool', 'status' => 'string', 'unreadCount' => 'int']];
@@ -43,8 +46,9 @@ interface Convo
     public const leaveConvoResponse = ['convoId' => 'string', 'rev' => 'string'];
     public const listConvosResponse = ['cursor' => 'string', 'convos' => [['id' => 'string', 'rev' => 'string', 'members' => 'array', 'lastMessage' => 'array', 'muted' => 'bool', 'status' => 'string', 'unreadCount' => 'int']]];
     public const muteConvoResponse = ['convo' => ['id' => 'string', 'rev' => 'string', 'members' => 'array', 'lastMessage' => 'array', 'muted' => 'bool', 'status' => 'string', 'unreadCount' => 'int']];
-    public const sendMessageResponse = ['id' => 'string', 'rev' => 'string', 'text' => 'string', 'facets' => [['index' => 'array', 'features' => 'array']], 'embed' => 'array', 'sender' => 'mixed', 'sentAt' => 'string'];
-    public const sendMessageBatchResponse = ['items' => [['id' => 'string', 'rev' => 'string', 'text' => 'string', 'facets' => 'array', 'embed' => 'array', 'sender' => 'array', 'sentAt' => 'string']]];
+    public const removeReactionResponse = ['message' => ['id' => 'string', 'rev' => 'string', 'text' => 'string', 'facets' => 'array', 'embed' => 'array', 'reactions' => 'array', 'sender' => 'array', 'sentAt' => 'string']];
+    public const sendMessageResponse = ['id' => 'string', 'rev' => 'string', 'text' => 'string', 'facets' => [['index' => 'array', 'features' => 'array']], 'embed' => 'array', 'reactions' => [[]], 'sender' => 'mixed', 'sentAt' => 'string'];
+    public const sendMessageBatchResponse = ['items' => [['id' => 'string', 'rev' => 'string', 'text' => 'string', 'facets' => 'array', 'embed' => 'array', 'reactions' => 'array', 'sender' => 'array', 'sentAt' => 'string']]];
     public const unmuteConvoResponse = ['convo' => ['id' => 'string', 'rev' => 'string', 'members' => 'array', 'lastMessage' => 'array', 'muted' => 'bool', 'status' => 'string', 'unreadCount' => 'int']];
     public const updateAllReadResponse = ['updatedCount' => 'int'];
     public const updateReadResponse = ['convo' => ['id' => 'string', 'rev' => 'string', 'members' => 'array', 'lastMessage' => 'array', 'muted' => 'bool', 'status' => 'string', 'unreadCount' => 'int']];
@@ -57,6 +61,15 @@ interface Convo
     #[Post, NSID(self::acceptConvo)]
     #[Output(self::acceptConvoResponse)]
     public function acceptConvo(string $convoId);
+
+    /**
+     * Adds an emoji reaction to a message. Requires authentication. It is idempotent, so multiple calls from the same user with the same emoji result in a single reaction.
+     *
+     * @link https://docs.bsky.app/docs/api/chat-bsky-convo-add-reaction
+     */
+    #[Post, NSID(self::addReaction)]
+    #[Output(self::addReactionResponse)]
+    public function addReaction(string $convoId, string $messageId, string $value);
 
     /**
      * chat.bsky.convo.deleteMessageForSelf.
@@ -138,6 +151,15 @@ interface Convo
     #[Post, NSID(self::muteConvo)]
     #[Output(self::muteConvoResponse)]
     public function muteConvo(string $convoId);
+
+    /**
+     * Removes an emoji reaction from a message. Requires authentication. It is idempotent, so multiple calls from the same user with the same emoji result in that reaction not being present, even if it already wasn't.
+     *
+     * @link https://docs.bsky.app/docs/api/chat-bsky-convo-remove-reaction
+     */
+    #[Post, NSID(self::removeReaction)]
+    #[Output(self::removeReactionResponse)]
+    public function removeReaction(string $convoId, string $messageId, string $value);
 
     /**
      * chat.bsky.convo.sendMessage.

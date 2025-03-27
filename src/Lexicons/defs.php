@@ -8375,6 +8375,90 @@ return array (
       ),
     ),
   ),
+  'chat.bsky.convo.addReaction' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'chat.bsky.convo.addReaction',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'procedure',
+        'description' => 'Adds an emoji reaction to a message. Requires authentication. It is idempotent, so multiple calls from the same user with the same emoji result in a single reaction.',
+        'input' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'convoId',
+              1 => 'messageId',
+              2 => 'value',
+            ),
+            'properties' => 
+            array (
+              'convoId' => 
+              array (
+                'type' => 'string',
+              ),
+              'messageId' => 
+              array (
+                'type' => 'string',
+              ),
+              'value' => 
+              array (
+                'type' => 'string',
+                'minLength' => 1,
+                'maxLength' => 32,
+                'minGraphemes' => 1,
+                'maxGraphemes' => 1,
+              ),
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'message',
+            ),
+            'properties' => 
+            array (
+              'message' => 
+              array (
+                'type' => 'ref',
+                'ref' => 'lex:chat.bsky.convo.defs#messageView',
+              ),
+            ),
+          ),
+        ),
+        'errors' => 
+        array (
+          0 => 
+          array (
+            'name' => 'ReactionMessageDeleted',
+            'description' => 'Indicates that the message has been deleted and reactions can no longer be added/removed.',
+          ),
+          1 => 
+          array (
+            'name' => 'ReactionLimitReached',
+            'description' => 'Indicates that the message has the maximum number of reactions allowed for a single user, and the requested reaction wasn\'t yet present. If it was already present, the request will not fail since it is idempotent.',
+          ),
+          2 => 
+          array (
+            'name' => 'ReactionInvalidValue',
+            'description' => 'Indicates the value for the reaction is not acceptable. In general, this means it is not an emoji.',
+          ),
+        ),
+      ),
+    ),
+  ),
   'chat.bsky.convo.defs' => 
   array (
     'lexicon' => 1,
@@ -8487,6 +8571,15 @@ return array (
               0 => 'lex:app.bsky.embed.record#view',
             ),
           ),
+          'reactions' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:chat.bsky.convo.defs#reactionView',
+            ),
+          ),
           'sender' => 
           array (
             'type' => 'ref',
@@ -8547,6 +8640,71 @@ return array (
           ),
         ),
       ),
+      'reactionView' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'value',
+          1 => 'sender',
+          2 => 'createdAt',
+        ),
+        'properties' => 
+        array (
+          'value' => 
+          array (
+            'type' => 'string',
+          ),
+          'sender' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:chat.bsky.convo.defs#reactionViewSender',
+          ),
+          'createdAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+        ),
+      ),
+      'reactionViewSender' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'did',
+        ),
+        'properties' => 
+        array (
+          'did' => 
+          array (
+            'type' => 'string',
+            'format' => 'did',
+          ),
+        ),
+      ),
+      'messageAndReactionView' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'message',
+          1 => 'reaction',
+        ),
+        'properties' => 
+        array (
+          'message' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:chat.bsky.convo.defs#messageView',
+          ),
+          'reaction' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:chat.bsky.convo.defs#reactionView',
+          ),
+        ),
+      ),
       'convoView' => 
       array (
         'type' => 'object',
@@ -8584,6 +8742,7 @@ return array (
             array (
               0 => 'lex:chat.bsky.convo.defs#messageView',
               1 => 'lex:chat.bsky.convo.defs#deletedMessageView',
+              2 => 'lex:chat.bsky.convo.defs#messageAndReactionView',
             ),
           ),
           'muted' => 
@@ -8792,6 +8951,78 @@ return array (
               0 => 'lex:chat.bsky.convo.defs#messageView',
               1 => 'lex:chat.bsky.convo.defs#deletedMessageView',
             ),
+          ),
+        ),
+      ),
+      'logAddReaction' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'rev',
+          1 => 'convoId',
+          2 => 'message',
+          3 => 'reaction',
+        ),
+        'properties' => 
+        array (
+          'rev' => 
+          array (
+            'type' => 'string',
+          ),
+          'convoId' => 
+          array (
+            'type' => 'string',
+          ),
+          'message' => 
+          array (
+            'type' => 'union',
+            'refs' => 
+            array (
+              0 => 'lex:chat.bsky.convo.defs#messageView',
+              1 => 'lex:chat.bsky.convo.defs#deletedMessageView',
+            ),
+          ),
+          'reaction' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:chat.bsky.convo.defs#reactionView',
+          ),
+        ),
+      ),
+      'logRemoveReaction' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'rev',
+          1 => 'convoId',
+          2 => 'message',
+          3 => 'reaction',
+        ),
+        'properties' => 
+        array (
+          'rev' => 
+          array (
+            'type' => 'string',
+          ),
+          'convoId' => 
+          array (
+            'type' => 'string',
+          ),
+          'message' => 
+          array (
+            'type' => 'union',
+            'refs' => 
+            array (
+              0 => 'lex:chat.bsky.convo.defs#messageView',
+              1 => 'lex:chat.bsky.convo.defs#deletedMessageView',
+            ),
+          ),
+          'reaction' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:chat.bsky.convo.defs#reactionView',
           ),
         ),
       ),
@@ -9052,8 +9283,13 @@ return array (
                     0 => 'lex:chat.bsky.convo.defs#logBeginConvo',
                     1 => 'lex:chat.bsky.convo.defs#logAcceptConvo',
                     2 => 'lex:chat.bsky.convo.defs#logLeaveConvo',
-                    3 => 'lex:chat.bsky.convo.defs#logCreateMessage',
-                    4 => 'lex:chat.bsky.convo.defs#logDeleteMessage',
+                    3 => 'lex:chat.bsky.convo.defs#logMuteConvo',
+                    4 => 'lex:chat.bsky.convo.defs#logUnmuteConvo',
+                    5 => 'lex:chat.bsky.convo.defs#logCreateMessage',
+                    6 => 'lex:chat.bsky.convo.defs#logDeleteMessage',
+                    7 => 'lex:chat.bsky.convo.defs#logReadMessage',
+                    8 => 'lex:chat.bsky.convo.defs#logAddReaction',
+                    9 => 'lex:chat.bsky.convo.defs#logRemoveReaction',
                   ),
                 ),
               ),
@@ -9309,6 +9545,85 @@ return array (
                 'ref' => 'lex:chat.bsky.convo.defs#convoView',
               ),
             ),
+          ),
+        ),
+      ),
+    ),
+  ),
+  'chat.bsky.convo.removeReaction' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'chat.bsky.convo.removeReaction',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'procedure',
+        'description' => 'Removes an emoji reaction from a message. Requires authentication. It is idempotent, so multiple calls from the same user with the same emoji result in that reaction not being present, even if it already wasn\'t.',
+        'input' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'convoId',
+              1 => 'messageId',
+              2 => 'value',
+            ),
+            'properties' => 
+            array (
+              'convoId' => 
+              array (
+                'type' => 'string',
+              ),
+              'messageId' => 
+              array (
+                'type' => 'string',
+              ),
+              'value' => 
+              array (
+                'type' => 'string',
+                'minLength' => 1,
+                'maxLength' => 32,
+                'minGraphemes' => 1,
+                'maxGraphemes' => 1,
+              ),
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'message',
+            ),
+            'properties' => 
+            array (
+              'message' => 
+              array (
+                'type' => 'ref',
+                'ref' => 'lex:chat.bsky.convo.defs#messageView',
+              ),
+            ),
+          ),
+        ),
+        'errors' => 
+        array (
+          0 => 
+          array (
+            'name' => 'ReactionMessageDeleted',
+            'description' => 'Indicates that the message has been deleted and reactions can no longer be added/removed.',
+          ),
+          1 => 
+          array (
+            'name' => 'ReactionInvalidValue',
+            'description' => 'Indicates the value for the reaction is not acceptable. In general, this means it is not an emoji.',
           ),
         ),
       ),
