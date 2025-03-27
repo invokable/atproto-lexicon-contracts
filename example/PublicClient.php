@@ -108,13 +108,13 @@ class PublicClient implements Actor, Feed
     }
 
     #[Get, NSID(self::searchActors)]
-    public function searchActors(?string $term = null, ?string $q = null, ?int $limit = 25, ?string $cursor = null)
+    public function searchActors(?string $q = null, ?int $limit = 25, ?string $cursor = null)
     {
         // TODO: Implement searchActors() method.
     }
 
     #[Get, NSID(self::searchActorsTypeahead)]
-    public function searchActorsTypeahead(?string $term = null, ?string $q = null, ?int $limit = 10)
+    public function searchActorsTypeahead(?string $q = null, ?int $limit = 10)
     {
         // TODO: Implement searchActorsTypeahead() method.
     }
