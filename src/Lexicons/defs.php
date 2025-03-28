@@ -8575,6 +8575,7 @@ return array (
           'reactions' => 
           array (
             'type' => 'array',
+            'description' => 'Reactions to this message, in ascending order of creation time.',
             'items' => 
             array (
               'type' => 'ref',
@@ -8648,7 +8649,6 @@ return array (
         array (
           0 => 'value',
           1 => 'sender',
-          2 => 'createdAt',
         ),
         'properties' => 
         array (
@@ -8660,11 +8660,6 @@ return array (
           array (
             'type' => 'ref',
             'ref' => 'lex:chat.bsky.convo.defs#reactionViewSender',
-          ),
-          'createdAt' => 
-          array (
-            'type' => 'string',
-            'format' => 'datetime',
           ),
         ),
       ),
@@ -16643,6 +16638,50 @@ return array (
           ),
         ),
       ),
+      'subjectView' => 
+      array (
+        'description' => 'Detailed view of a subject. For record subjects, the author\'s repo and profile will be returned.',
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'type',
+          1 => 'subject',
+        ),
+        'properties' => 
+        array (
+          'type' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:com.atproto.moderation.defs#subjectType',
+          ),
+          'subject' => 
+          array (
+            'type' => 'string',
+          ),
+          'status' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:tools.ozone.moderation.defs#subjectStatusView',
+          ),
+          'repo' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:tools.ozone.moderation.defs#repoViewDetail',
+          ),
+          'profile' => 
+          array (
+            'type' => 'union',
+            'refs' => 
+            array (
+            ),
+          ),
+          'record' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:tools.ozone.moderation.defs#recordViewDetail',
+          ),
+        ),
+      ),
       'accountStats' => 
       array (
         'description' => 'Statistics about a particular account subject',
@@ -18181,6 +18220,64 @@ return array (
                     0 => 'lex:tools.ozone.moderation.defs#repoViewDetail',
                     1 => 'lex:tools.ozone.moderation.defs#repoViewNotFound',
                   ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
+  'tools.ozone.moderation.getSubjects' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'tools.ozone.moderation.getSubjects',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'description' => 'Get details about subjects.',
+        'parameters' => 
+        array (
+          'type' => 'params',
+          'required' => 
+          array (
+            0 => 'subjects',
+          ),
+          'properties' => 
+          array (
+            'subjects' => 
+            array (
+              'type' => 'array',
+              'maxLength' => 100,
+              'minLength' => 1,
+              'items' => 
+              array (
+                'type' => 'string',
+              ),
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'subjects',
+            ),
+            'properties' => 
+            array (
+              'subjects' => 
+              array (
+                'type' => 'array',
+                'items' => 
+                array (
+                  'type' => 'ref',
+                  'ref' => 'lex:tools.ozone.moderation.defs#subjectView',
                 ),
               ),
             ),
