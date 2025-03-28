@@ -25,6 +25,7 @@ interface Moderation
     public const getRepo = 'tools.ozone.moderation.getRepo';
     public const getReporterStats = 'tools.ozone.moderation.getReporterStats';
     public const getRepos = 'tools.ozone.moderation.getRepos';
+    public const getSubjects = 'tools.ozone.moderation.getSubjects';
     public const queryEvents = 'tools.ozone.moderation.queryEvents';
     public const queryStatuses = 'tools.ozone.moderation.queryStatuses';
     public const searchRepos = 'tools.ozone.moderation.searchRepos';
@@ -36,6 +37,7 @@ interface Moderation
     public const getRepoResponse = ['did' => 'string', 'handle' => 'string', 'email' => 'string', 'relatedRecords' => 'array', 'indexedAt' => 'string', 'moderation' => 'mixed', 'labels' => [['ver' => 'int', 'src' => 'string', 'uri' => 'string', 'cid' => 'string', 'val' => 'string', 'neg' => 'bool', 'cts' => 'string', 'exp' => 'string', 'sig' => 'mixed']], 'invitedBy' => ['code' => 'string', 'available' => 'int', 'disabled' => 'bool', 'forAccount' => 'string', 'createdBy' => 'string', 'createdAt' => 'string', 'uses' => 'array'], 'invites' => [['code' => 'string', 'available' => 'int', 'disabled' => 'bool', 'forAccount' => 'string', 'createdBy' => 'string', 'createdAt' => 'string', 'uses' => 'array']], 'invitesDisabled' => 'bool', 'inviteNote' => 'string', 'emailConfirmedAt' => 'string', 'deactivatedAt' => 'string', 'threatSignatures' => [['property' => 'string', 'value' => 'string']]];
     public const getReporterStatsResponse = ['stats' => [['did' => 'string', 'accountReportCount' => 'int', 'recordReportCount' => 'int', 'reportedAccountCount' => 'int', 'reportedRecordCount' => 'int', 'takendownAccountCount' => 'int', 'takendownRecordCount' => 'int', 'labeledAccountCount' => 'int', 'labeledRecordCount' => 'int']]];
     public const getReposResponse = ['repos' => 'array'];
+    public const getSubjectsResponse = ['subjects' => [['type' => 'array', 'subject' => 'string', 'status' => 'array', 'repo' => 'array', 'profile' => 'array', 'record' => 'array']]];
     public const queryEventsResponse = ['cursor' => 'string', 'events' => [['id' => 'int', 'event' => 'array', 'subject' => 'array', 'subjectBlobCids' => 'array', 'createdBy' => 'string', 'createdAt' => 'string', 'creatorHandle' => 'string', 'subjectHandle' => 'string']]];
     public const queryStatusesResponse = ['cursor' => 'string', 'subjectStatuses' => [['id' => 'int', 'subject' => 'array', 'hosting' => 'array', 'subjectBlobCids' => 'array', 'subjectRepoHandle' => 'string', 'updatedAt' => 'string', 'createdAt' => 'string', 'reviewState' => 'array', 'comment' => 'string', 'priorityScore' => 'int', 'muteUntil' => 'string', 'muteReportingUntil' => 'string', 'lastReviewedBy' => 'string', 'lastReviewedAt' => 'string', 'lastReportedAt' => 'string', 'lastAppealedAt' => 'string', 'takendown' => 'bool', 'appealed' => 'bool', 'suspendUntil' => 'string', 'tags' => 'array', 'accountStats' => 'array', 'recordsStats' => 'array']]];
     public const searchReposResponse = ['cursor' => 'string', 'repos' => [['did' => 'string', 'handle' => 'string', 'email' => 'string', 'relatedRecords' => 'array', 'indexedAt' => 'string', 'moderation' => 'array', 'invitedBy' => 'array', 'invitesDisabled' => 'bool', 'inviteNote' => 'string', 'deactivatedAt' => 'string', 'threatSignatures' => 'array']]];
@@ -102,6 +104,15 @@ interface Moderation
     #[Get, NSID(self::getRepos)]
     #[Output(self::getReposResponse)]
     public function getRepos(#[Format('did')] array $dids);
+
+    /**
+     * Get details about subjects.
+     *
+     * @link https://docs.bsky.app/docs/api/tools-ozone-moderation-get-subjects
+     */
+    #[Get, NSID(self::getSubjects)]
+    #[Output(self::getSubjectsResponse)]
+    public function getSubjects(array $subjects);
 
     /**
      * List moderation events related to a subject.
