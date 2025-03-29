@@ -39,20 +39,20 @@ interface Convo
     public const acceptConvoResponse = ['rev' => 'string'];
     public const addReactionResponse = ['message' => ['id' => 'string', 'rev' => 'string', 'text' => 'string', 'facets' => 'array', 'embed' => 'array', 'reactions' => 'array', 'sender' => 'array', 'sentAt' => 'string']];
     public const deleteMessageForSelfResponse = ['id' => 'string', 'rev' => 'string', 'sender' => 'mixed', 'sentAt' => 'string'];
-    public const getConvoResponse = ['convo' => ['id' => 'string', 'rev' => 'string', 'members' => 'array', 'lastMessage' => 'array', 'muted' => 'bool', 'status' => 'string', 'unreadCount' => 'int']];
-    public const getConvoAvailabilityResponse = ['canChat' => 'bool', 'convo' => ['id' => 'string', 'rev' => 'string', 'members' => 'array', 'lastMessage' => 'array', 'muted' => 'bool', 'status' => 'string', 'unreadCount' => 'int']];
-    public const getConvoForMembersResponse = ['convo' => ['id' => 'string', 'rev' => 'string', 'members' => 'array', 'lastMessage' => 'array', 'muted' => 'bool', 'status' => 'string', 'unreadCount' => 'int']];
+    public const getConvoResponse = ['convo' => ['id' => 'string', 'rev' => 'string', 'members' => 'array', 'lastMessage' => 'array', 'lastReaction' => 'array', 'muted' => 'bool', 'status' => 'string', 'unreadCount' => 'int']];
+    public const getConvoAvailabilityResponse = ['canChat' => 'bool', 'convo' => ['id' => 'string', 'rev' => 'string', 'members' => 'array', 'lastMessage' => 'array', 'lastReaction' => 'array', 'muted' => 'bool', 'status' => 'string', 'unreadCount' => 'int']];
+    public const getConvoForMembersResponse = ['convo' => ['id' => 'string', 'rev' => 'string', 'members' => 'array', 'lastMessage' => 'array', 'lastReaction' => 'array', 'muted' => 'bool', 'status' => 'string', 'unreadCount' => 'int']];
     public const getLogResponse = ['cursor' => 'string', 'logs' => 'array'];
     public const getMessagesResponse = ['cursor' => 'string', 'messages' => 'array'];
     public const leaveConvoResponse = ['convoId' => 'string', 'rev' => 'string'];
-    public const listConvosResponse = ['cursor' => 'string', 'convos' => [['id' => 'string', 'rev' => 'string', 'members' => 'array', 'lastMessage' => 'array', 'muted' => 'bool', 'status' => 'string', 'unreadCount' => 'int']]];
-    public const muteConvoResponse = ['convo' => ['id' => 'string', 'rev' => 'string', 'members' => 'array', 'lastMessage' => 'array', 'muted' => 'bool', 'status' => 'string', 'unreadCount' => 'int']];
+    public const listConvosResponse = ['cursor' => 'string', 'convos' => [['id' => 'string', 'rev' => 'string', 'members' => 'array', 'lastMessage' => 'array', 'lastReaction' => 'array', 'muted' => 'bool', 'status' => 'string', 'unreadCount' => 'int']]];
+    public const muteConvoResponse = ['convo' => ['id' => 'string', 'rev' => 'string', 'members' => 'array', 'lastMessage' => 'array', 'lastReaction' => 'array', 'muted' => 'bool', 'status' => 'string', 'unreadCount' => 'int']];
     public const removeReactionResponse = ['message' => ['id' => 'string', 'rev' => 'string', 'text' => 'string', 'facets' => 'array', 'embed' => 'array', 'reactions' => 'array', 'sender' => 'array', 'sentAt' => 'string']];
     public const sendMessageResponse = ['id' => 'string', 'rev' => 'string', 'text' => 'string', 'facets' => [['index' => 'array', 'features' => 'array']], 'embed' => 'array', 'reactions' => [[]], 'sender' => 'mixed', 'sentAt' => 'string'];
     public const sendMessageBatchResponse = ['items' => [['id' => 'string', 'rev' => 'string', 'text' => 'string', 'facets' => 'array', 'embed' => 'array', 'reactions' => 'array', 'sender' => 'array', 'sentAt' => 'string']]];
-    public const unmuteConvoResponse = ['convo' => ['id' => 'string', 'rev' => 'string', 'members' => 'array', 'lastMessage' => 'array', 'muted' => 'bool', 'status' => 'string', 'unreadCount' => 'int']];
+    public const unmuteConvoResponse = ['convo' => ['id' => 'string', 'rev' => 'string', 'members' => 'array', 'lastMessage' => 'array', 'lastReaction' => 'array', 'muted' => 'bool', 'status' => 'string', 'unreadCount' => 'int']];
     public const updateAllReadResponse = ['updatedCount' => 'int'];
-    public const updateReadResponse = ['convo' => ['id' => 'string', 'rev' => 'string', 'members' => 'array', 'lastMessage' => 'array', 'muted' => 'bool', 'status' => 'string', 'unreadCount' => 'int']];
+    public const updateReadResponse = ['convo' => ['id' => 'string', 'rev' => 'string', 'members' => 'array', 'lastMessage' => 'array', 'lastReaction' => 'array', 'muted' => 'bool', 'status' => 'string', 'unreadCount' => 'int']];
 
     /**
      * chat.bsky.convo.acceptConvo.
