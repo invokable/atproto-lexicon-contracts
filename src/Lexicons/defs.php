@@ -8649,6 +8649,7 @@ return array (
         array (
           0 => 'value',
           1 => 'sender',
+          2 => 'createdAt',
         ),
         'properties' => 
         array (
@@ -8660,6 +8661,11 @@ return array (
           array (
             'type' => 'ref',
             'ref' => 'lex:chat.bsky.convo.defs#reactionViewSender',
+          ),
+          'createdAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
           ),
         ),
       ),
@@ -8738,7 +8744,14 @@ return array (
             array (
               0 => 'lex:chat.bsky.convo.defs#messageView',
               1 => 'lex:chat.bsky.convo.defs#deletedMessageView',
-              2 => 'lex:chat.bsky.convo.defs#messageAndReactionView',
+            ),
+          ),
+          'lastReaction' => 
+          array (
+            'type' => 'union',
+            'refs' => 
+            array (
+              0 => 'lex:chat.bsky.convo.defs#messageAndReactionView',
             ),
           ),
           'muted' => 
