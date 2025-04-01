@@ -10930,6 +10930,46 @@ return array (
       ),
     ),
   ),
+  'com.atproto.admin.updateAccountSigningKey' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'com.atproto.admin.updateAccountSigningKey',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'procedure',
+        'description' => 'Administrative action to update an account\'s signing key in their Did document.',
+        'input' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'did',
+              1 => 'signingKey',
+            ),
+            'properties' => 
+            array (
+              'did' => 
+              array (
+                'type' => 'string',
+                'format' => 'did',
+              ),
+              'signingKey' => 
+              array (
+                'type' => 'string',
+                'format' => 'did',
+                'description' => 'Did-key formatted public key',
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
   'com.atproto.admin.updateSubjectStatus' => 
   array (
     'lexicon' => 1,
