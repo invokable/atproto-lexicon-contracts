@@ -32,6 +32,7 @@ interface Admin
     public const updateAccountEmail = 'com.atproto.admin.updateAccountEmail';
     public const updateAccountHandle = 'com.atproto.admin.updateAccountHandle';
     public const updateAccountPassword = 'com.atproto.admin.updateAccountPassword';
+    public const updateAccountSigningKey = 'com.atproto.admin.updateAccountSigningKey';
     public const updateSubjectStatus = 'com.atproto.admin.updateSubjectStatus';
 
     public const getAccountInfoResponse = ['did' => 'string', 'handle' => 'string', 'email' => 'string', 'relatedRecords' => 'array', 'indexedAt' => 'string', 'invitedBy' => ['code' => 'string', 'available' => 'int', 'disabled' => 'bool', 'forAccount' => 'string', 'createdBy' => 'string', 'createdAt' => 'string', 'uses' => 'array'], 'invites' => [['code' => 'string', 'available' => 'int', 'disabled' => 'bool', 'forAccount' => 'string', 'createdBy' => 'string', 'createdAt' => 'string', 'uses' => 'array']], 'invitesDisabled' => 'bool', 'emailConfirmedAt' => 'string', 'inviteNote' => 'string', 'deactivatedAt' => 'string', 'threatSignatures' => [[]]];
@@ -151,6 +152,14 @@ interface Admin
      */
     #[Post, NSID(self::updateAccountPassword)]
     public function updateAccountPassword(#[Format('did')] string $did, #[\SensitiveParameter] string $password);
+
+    /**
+     * Administrative action to update an account's signing key in their Did document.
+     *
+     * @link https://docs.bsky.app/docs/api/com-atproto-admin-update-account-signing-key
+     */
+    #[Post, NSID(self::updateAccountSigningKey)]
+    public function updateAccountSigningKey(#[Format('did')] string $did, #[Format('did')] string $signingKey);
 
     /**
      * Update the service-specific admin status of a subject (account, record, or blob).
