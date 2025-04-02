@@ -18,18 +18,26 @@ interface Unspecced
 {
     public const getConfig = 'app.bsky.unspecced.getConfig';
     public const getPopularFeedGenerators = 'app.bsky.unspecced.getPopularFeedGenerators';
+    public const getSuggestedStarterPacks = 'app.bsky.unspecced.getSuggestedStarterPacks';
+    public const getSuggestedStarterPacksSkeleton = 'app.bsky.unspecced.getSuggestedStarterPacksSkeleton';
     public const getSuggestionsSkeleton = 'app.bsky.unspecced.getSuggestionsSkeleton';
     public const getTaggedSuggestions = 'app.bsky.unspecced.getTaggedSuggestions';
     public const getTrendingTopics = 'app.bsky.unspecced.getTrendingTopics';
+    public const getTrends = 'app.bsky.unspecced.getTrends';
+    public const getTrendsSkeleton = 'app.bsky.unspecced.getTrendsSkeleton';
     public const searchActorsSkeleton = 'app.bsky.unspecced.searchActorsSkeleton';
     public const searchPostsSkeleton = 'app.bsky.unspecced.searchPostsSkeleton';
     public const searchStarterPacksSkeleton = 'app.bsky.unspecced.searchStarterPacksSkeleton';
 
     public const getConfigResponse = ['checkEmailConfirmed' => 'bool'];
     public const getPopularFeedGeneratorsResponse = ['cursor' => 'string', 'feeds' => [['uri' => 'string', 'cid' => 'string', 'did' => 'string', 'creator' => 'array', 'displayName' => 'string', 'description' => 'string', 'descriptionFacets' => 'array', 'avatar' => 'string', 'likeCount' => 'int', 'acceptsInteractions' => 'bool', 'labels' => 'array', 'viewer' => 'array', 'contentMode' => 'string', 'indexedAt' => 'string']]];
+    public const getSuggestedStarterPacksResponse = ['starterPacks' => [['uri' => 'string', 'cid' => 'string', 'record' => 'mixed', 'creator' => 'array', 'list' => 'array', 'listItemsSample' => 'array', 'feeds' => 'array', 'joinedWeekCount' => 'int', 'joinedAllTimeCount' => 'int', 'labels' => 'array', 'indexedAt' => 'string']]];
+    public const getSuggestedStarterPacksSkeletonResponse = ['starterPacks' => 'array'];
     public const getSuggestionsSkeletonResponse = ['cursor' => 'string', 'actors' => [['did' => 'string']], 'relativeToDid' => 'string', 'recId' => 'int'];
     public const getTaggedSuggestionsResponse = ['suggestions' => [['tag' => 'string', 'subjectType' => 'string', 'subject' => 'string']]];
     public const getTrendingTopicsResponse = ['topics' => [['topic' => 'string', 'displayName' => 'string', 'description' => 'string', 'link' => 'string']], 'suggested' => [['topic' => 'string', 'displayName' => 'string', 'description' => 'string', 'link' => 'string']]];
+    public const getTrendsResponse = ['trends' => [['topic' => 'string', 'displayName' => 'string', 'link' => 'string', 'startedAt' => 'string', 'postCount' => 'int', 'status' => 'string', 'category' => 'string', 'actors' => 'array']]];
+    public const getTrendsSkeletonResponse = ['trends' => [['topic' => 'string', 'displayName' => 'string', 'link' => 'string', 'startedAt' => 'string', 'postCount' => 'int', 'status' => 'string', 'category' => 'string', 'dids' => 'array']]];
     public const searchActorsSkeletonResponse = ['cursor' => 'string', 'hitsTotal' => 'int', 'actors' => [['did' => 'string']]];
     public const searchPostsSkeletonResponse = ['cursor' => 'string', 'hitsTotal' => 'int', 'posts' => [['uri' => 'string']]];
     public const searchStarterPacksSkeletonResponse = ['cursor' => 'string', 'hitsTotal' => 'int', 'starterPacks' => [['uri' => 'string']]];
@@ -51,6 +59,24 @@ interface Unspecced
     #[Get, NSID(self::getPopularFeedGenerators)]
     #[Output(self::getPopularFeedGeneratorsResponse)]
     public function getPopularFeedGenerators(?int $limit = 50, ?string $cursor = null, ?string $query = null);
+
+    /**
+     * Get a list of suggested starterpacks.
+     *
+     * @link https://docs.bsky.app/docs/api/app-bsky-unspecced-get-suggested-starter-packs
+     */
+    #[Get, NSID(self::getSuggestedStarterPacks)]
+    #[Output(self::getSuggestedStarterPacksResponse)]
+    public function getSuggestedStarterPacks(?int $limit = 10);
+
+    /**
+     * Get a skeleton of suggested starterpacks. Intended to be called and hydrated by app.bsky.unspecced.getSuggestedStarterpacks.
+     *
+     * @link https://docs.bsky.app/docs/api/app-bsky-unspecced-get-suggested-starter-packs-skeleton
+     */
+    #[Get, NSID(self::getSuggestedStarterPacksSkeleton)]
+    #[Output(self::getSuggestedStarterPacksSkeletonResponse)]
+    public function getSuggestedStarterPacksSkeleton(#[Format('did')] ?string $viewer = null, ?int $limit = 10);
 
     /**
      * Get a skeleton of suggested actors. Intended to be called and then hydrated through app.bsky.actor.getSuggestions.
@@ -78,6 +104,24 @@ interface Unspecced
     #[Get, NSID(self::getTrendingTopics)]
     #[Output(self::getTrendingTopicsResponse)]
     public function getTrendingTopics(#[Format('did')] ?string $viewer = null, ?int $limit = 10);
+
+    /**
+     * Get the current trends on the network.
+     *
+     * @link https://docs.bsky.app/docs/api/app-bsky-unspecced-get-trends
+     */
+    #[Get, NSID(self::getTrends)]
+    #[Output(self::getTrendsResponse)]
+    public function getTrends(?int $limit = 10);
+
+    /**
+     * Get the skeleton of trends on the network. Intended to be called and then hydrated through app.bsky.unspecced.getTrends.
+     *
+     * @link https://docs.bsky.app/docs/api/app-bsky-unspecced-get-trends-skeleton
+     */
+    #[Get, NSID(self::getTrendsSkeleton)]
+    #[Output(self::getTrendsSkeletonResponse)]
+    public function getTrendsSkeleton(#[Format('did')] ?string $viewer = null, ?int $limit = 10);
 
     /**
      * Backend Actors (profile) search, returns only skeleton.
