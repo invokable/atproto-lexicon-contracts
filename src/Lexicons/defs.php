@@ -7351,6 +7351,122 @@ return array (
           ),
         ),
       ),
+      'skeletonTrend' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'topic',
+          1 => 'displayName',
+          2 => 'link',
+          3 => 'startedAt',
+          4 => 'postCount',
+          5 => 'dids',
+        ),
+        'properties' => 
+        array (
+          'topic' => 
+          array (
+            'type' => 'string',
+          ),
+          'displayName' => 
+          array (
+            'type' => 'string',
+          ),
+          'link' => 
+          array (
+            'type' => 'string',
+          ),
+          'startedAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+          'postCount' => 
+          array (
+            'type' => 'integer',
+          ),
+          'status' => 
+          array (
+            'type' => 'string',
+            'knownValues' => 
+            array (
+              0 => 'hot',
+            ),
+          ),
+          'category' => 
+          array (
+            'type' => 'string',
+          ),
+          'dids' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'string',
+              'format' => 'did',
+            ),
+          ),
+        ),
+      ),
+      'trendView' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'topic',
+          1 => 'displayName',
+          2 => 'link',
+          3 => 'startedAt',
+          4 => 'postCount',
+          5 => 'actors',
+        ),
+        'properties' => 
+        array (
+          'topic' => 
+          array (
+            'type' => 'string',
+          ),
+          'displayName' => 
+          array (
+            'type' => 'string',
+          ),
+          'link' => 
+          array (
+            'type' => 'string',
+          ),
+          'startedAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+          'postCount' => 
+          array (
+            'type' => 'integer',
+          ),
+          'status' => 
+          array (
+            'type' => 'string',
+            'knownValues' => 
+            array (
+              0 => 'hot',
+            ),
+          ),
+          'category' => 
+          array (
+            'type' => 'string',
+          ),
+          'actors' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:app.bsky.actor.defs#profileViewBasic',
+            ),
+          ),
+        ),
+      ),
     ),
   ),
   'app.bsky.unspecced.getConfig' => 
@@ -7439,6 +7555,114 @@ return array (
                 array (
                   'type' => 'ref',
                   'ref' => 'lex:app.bsky.feed.defs#generatorView',
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
+  'app.bsky.unspecced.getSuggestedStarterPacks' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.unspecced.getSuggestedStarterPacks',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'description' => 'Get a list of suggested starterpacks',
+        'parameters' => 
+        array (
+          'type' => 'params',
+          'properties' => 
+          array (
+            'limit' => 
+            array (
+              'type' => 'integer',
+              'minimum' => 1,
+              'maximum' => 25,
+              'default' => 10,
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'starterPacks',
+            ),
+            'properties' => 
+            array (
+              'starterPacks' => 
+              array (
+                'type' => 'array',
+                'items' => 
+                array (
+                  'type' => 'ref',
+                  'ref' => 'lex:app.bsky.graph.defs#starterPackView',
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
+  'app.bsky.unspecced.getSuggestedStarterPacksSkeleton' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.unspecced.getSuggestedStarterPacksSkeleton',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'description' => 'Get a skeleton of suggested starterpacks. Intended to be called and hydrated by app.bsky.unspecced.getSuggestedStarterpacks',
+        'parameters' => 
+        array (
+          'type' => 'params',
+          'properties' => 
+          array (
+            'viewer' => 
+            array (
+              'type' => 'string',
+              'format' => 'did',
+              'description' => 'DID of the account making the request (not included for public/unauthenticated queries).',
+            ),
+            'limit' => 
+            array (
+              'type' => 'integer',
+              'minimum' => 1,
+              'maximum' => 25,
+              'default' => 10,
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'starterPacks',
+            ),
+            'properties' => 
+            array (
+              'starterPacks' => 
+              array (
+                'type' => 'array',
+                'items' => 
+                array (
+                  'type' => 'string',
+                  'format' => 'at-uri',
                 ),
               ),
             ),
@@ -7663,6 +7887,114 @@ return array (
                 array (
                   'type' => 'ref',
                   'ref' => 'lex:app.bsky.unspecced.defs#trendingTopic',
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
+  'app.bsky.unspecced.getTrends' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.unspecced.getTrends',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'description' => 'Get the current trends on the network',
+        'parameters' => 
+        array (
+          'type' => 'params',
+          'properties' => 
+          array (
+            'limit' => 
+            array (
+              'type' => 'integer',
+              'minimum' => 1,
+              'maximum' => 25,
+              'default' => 10,
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'trends',
+            ),
+            'properties' => 
+            array (
+              'trends' => 
+              array (
+                'type' => 'array',
+                'items' => 
+                array (
+                  'type' => 'ref',
+                  'ref' => 'lex:app.bsky.unspecced.defs#trendView',
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
+  'app.bsky.unspecced.getTrendsSkeleton' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.unspecced.getTrendsSkeleton',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'description' => 'Get the skeleton of trends on the network. Intended to be called and then hydrated through app.bsky.unspecced.getTrends',
+        'parameters' => 
+        array (
+          'type' => 'params',
+          'properties' => 
+          array (
+            'viewer' => 
+            array (
+              'type' => 'string',
+              'format' => 'did',
+              'description' => 'DID of the account making the request (not included for public/unauthenticated queries).',
+            ),
+            'limit' => 
+            array (
+              'type' => 'integer',
+              'minimum' => 1,
+              'maximum' => 25,
+              'default' => 10,
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'trends',
+            ),
+            'properties' => 
+            array (
+              'trends' => 
+              array (
+                'type' => 'array',
+                'items' => 
+                array (
+                  'type' => 'ref',
+                  'ref' => 'lex:app.bsky.unspecced.defs#skeletonTrend',
                 ),
               ),
             ),
