@@ -7563,6 +7563,114 @@ return array (
       ),
     ),
   ),
+  'app.bsky.unspecced.getSuggestedFeeds' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.unspecced.getSuggestedFeeds',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'description' => 'Get a list of suggested feeds',
+        'parameters' => 
+        array (
+          'type' => 'params',
+          'properties' => 
+          array (
+            'limit' => 
+            array (
+              'type' => 'integer',
+              'minimum' => 1,
+              'maximum' => 25,
+              'default' => 10,
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'feeds',
+            ),
+            'properties' => 
+            array (
+              'feeds' => 
+              array (
+                'type' => 'array',
+                'items' => 
+                array (
+                  'type' => 'ref',
+                  'ref' => 'lex:app.bsky.feed.defs#generatorView',
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
+  'app.bsky.unspecced.getSuggestedFeedsSkeleton' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.unspecced.getSuggestedFeedsSkeleton',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'description' => 'Get a skeleton of suggested feeds. Intended to be called and hydrated by app.bsky.unspecced.getSuggestedFeeds',
+        'parameters' => 
+        array (
+          'type' => 'params',
+          'properties' => 
+          array (
+            'viewer' => 
+            array (
+              'type' => 'string',
+              'format' => 'did',
+              'description' => 'DID of the account making the request (not included for public/unauthenticated queries).',
+            ),
+            'limit' => 
+            array (
+              'type' => 'integer',
+              'minimum' => 1,
+              'maximum' => 25,
+              'default' => 10,
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'feeds',
+            ),
+            'properties' => 
+            array (
+              'feeds' => 
+              array (
+                'type' => 'array',
+                'items' => 
+                array (
+                  'type' => 'string',
+                  'format' => 'at-uri',
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
   'app.bsky.unspecced.getSuggestedStarterPacks' => 
   array (
     'lexicon' => 1,
