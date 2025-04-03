@@ -18,6 +18,8 @@ interface Unspecced
 {
     public const getConfig = 'app.bsky.unspecced.getConfig';
     public const getPopularFeedGenerators = 'app.bsky.unspecced.getPopularFeedGenerators';
+    public const getSuggestedFeeds = 'app.bsky.unspecced.getSuggestedFeeds';
+    public const getSuggestedFeedsSkeleton = 'app.bsky.unspecced.getSuggestedFeedsSkeleton';
     public const getSuggestedStarterPacks = 'app.bsky.unspecced.getSuggestedStarterPacks';
     public const getSuggestedStarterPacksSkeleton = 'app.bsky.unspecced.getSuggestedStarterPacksSkeleton';
     public const getSuggestionsSkeleton = 'app.bsky.unspecced.getSuggestionsSkeleton';
@@ -31,6 +33,8 @@ interface Unspecced
 
     public const getConfigResponse = ['checkEmailConfirmed' => 'bool'];
     public const getPopularFeedGeneratorsResponse = ['cursor' => 'string', 'feeds' => [['uri' => 'string', 'cid' => 'string', 'did' => 'string', 'creator' => 'array', 'displayName' => 'string', 'description' => 'string', 'descriptionFacets' => 'array', 'avatar' => 'string', 'likeCount' => 'int', 'acceptsInteractions' => 'bool', 'labels' => 'array', 'viewer' => 'array', 'contentMode' => 'string', 'indexedAt' => 'string']]];
+    public const getSuggestedFeedsResponse = ['feeds' => [['uri' => 'string', 'cid' => 'string', 'did' => 'string', 'creator' => 'array', 'displayName' => 'string', 'description' => 'string', 'descriptionFacets' => 'array', 'avatar' => 'string', 'likeCount' => 'int', 'acceptsInteractions' => 'bool', 'labels' => 'array', 'viewer' => 'array', 'contentMode' => 'string', 'indexedAt' => 'string']]];
+    public const getSuggestedFeedsSkeletonResponse = ['feeds' => 'array'];
     public const getSuggestedStarterPacksResponse = ['starterPacks' => [['uri' => 'string', 'cid' => 'string', 'record' => 'mixed', 'creator' => 'array', 'list' => 'array', 'listItemsSample' => 'array', 'feeds' => 'array', 'joinedWeekCount' => 'int', 'joinedAllTimeCount' => 'int', 'labels' => 'array', 'indexedAt' => 'string']]];
     public const getSuggestedStarterPacksSkeletonResponse = ['starterPacks' => 'array'];
     public const getSuggestionsSkeletonResponse = ['cursor' => 'string', 'actors' => [['did' => 'string']], 'relativeToDid' => 'string', 'recId' => 'int'];
@@ -59,6 +63,24 @@ interface Unspecced
     #[Get, NSID(self::getPopularFeedGenerators)]
     #[Output(self::getPopularFeedGeneratorsResponse)]
     public function getPopularFeedGenerators(?int $limit = 50, ?string $cursor = null, ?string $query = null);
+
+    /**
+     * Get a list of suggested feeds.
+     *
+     * @link https://docs.bsky.app/docs/api/app-bsky-unspecced-get-suggested-feeds
+     */
+    #[Get, NSID(self::getSuggestedFeeds)]
+    #[Output(self::getSuggestedFeedsResponse)]
+    public function getSuggestedFeeds(?int $limit = 10);
+
+    /**
+     * Get a skeleton of suggested feeds. Intended to be called and hydrated by app.bsky.unspecced.getSuggestedFeeds.
+     *
+     * @link https://docs.bsky.app/docs/api/app-bsky-unspecced-get-suggested-feeds-skeleton
+     */
+    #[Get, NSID(self::getSuggestedFeedsSkeleton)]
+    #[Output(self::getSuggestedFeedsSkeletonResponse)]
+    public function getSuggestedFeedsSkeleton(#[Format('did')] ?string $viewer = null, ?int $limit = 10);
 
     /**
      * Get a list of suggested starterpacks.
