@@ -22,6 +22,8 @@ interface Unspecced
     public const getSuggestedFeedsSkeleton = 'app.bsky.unspecced.getSuggestedFeedsSkeleton';
     public const getSuggestedStarterPacks = 'app.bsky.unspecced.getSuggestedStarterPacks';
     public const getSuggestedStarterPacksSkeleton = 'app.bsky.unspecced.getSuggestedStarterPacksSkeleton';
+    public const getSuggestedUsers = 'app.bsky.unspecced.getSuggestedUsers';
+    public const getSuggestedUsersSkeleton = 'app.bsky.unspecced.getSuggestedUsersSkeleton';
     public const getSuggestionsSkeleton = 'app.bsky.unspecced.getSuggestionsSkeleton';
     public const getTaggedSuggestions = 'app.bsky.unspecced.getTaggedSuggestions';
     public const getTrendingTopics = 'app.bsky.unspecced.getTrendingTopics';
@@ -37,6 +39,8 @@ interface Unspecced
     public const getSuggestedFeedsSkeletonResponse = ['feeds' => 'array'];
     public const getSuggestedStarterPacksResponse = ['starterPacks' => [['uri' => 'string', 'cid' => 'string', 'record' => 'mixed', 'creator' => 'array', 'list' => 'array', 'listItemsSample' => 'array', 'feeds' => 'array', 'joinedWeekCount' => 'int', 'joinedAllTimeCount' => 'int', 'labels' => 'array', 'indexedAt' => 'string']]];
     public const getSuggestedStarterPacksSkeletonResponse = ['starterPacks' => 'array'];
+    public const getSuggestedUsersResponse = ['actors' => [['did' => 'string', 'handle' => 'string', 'displayName' => 'string', 'description' => 'string', 'avatar' => 'string', 'associated' => 'array', 'indexedAt' => 'string', 'createdAt' => 'string', 'viewer' => 'array', 'labels' => 'array']]];
+    public const getSuggestedUsersSkeletonResponse = ['dids' => 'array'];
     public const getSuggestionsSkeletonResponse = ['cursor' => 'string', 'actors' => [['did' => 'string']], 'relativeToDid' => 'string', 'recId' => 'int'];
     public const getTaggedSuggestionsResponse = ['suggestions' => [['tag' => 'string', 'subjectType' => 'string', 'subject' => 'string']]];
     public const getTrendingTopicsResponse = ['topics' => [['topic' => 'string', 'displayName' => 'string', 'description' => 'string', 'link' => 'string']], 'suggested' => [['topic' => 'string', 'displayName' => 'string', 'description' => 'string', 'link' => 'string']]];
@@ -99,6 +103,24 @@ interface Unspecced
     #[Get, NSID(self::getSuggestedStarterPacksSkeleton)]
     #[Output(self::getSuggestedStarterPacksSkeletonResponse)]
     public function getSuggestedStarterPacksSkeleton(#[Format('did')] ?string $viewer = null, ?int $limit = 10);
+
+    /**
+     * Get a list of suggested users.
+     *
+     * @link https://docs.bsky.app/docs/api/app-bsky-unspecced-get-suggested-users
+     */
+    #[Get, NSID(self::getSuggestedUsers)]
+    #[Output(self::getSuggestedUsersResponse)]
+    public function getSuggestedUsers(?string $category = null, ?int $limit = 25);
+
+    /**
+     * Get a skeleton of suggested users. Intended to be called and hydrated by app.bsky.unspecced.getSuggestedUsers.
+     *
+     * @link https://docs.bsky.app/docs/api/app-bsky-unspecced-get-suggested-users-skeleton
+     */
+    #[Get, NSID(self::getSuggestedUsersSkeleton)]
+    #[Output(self::getSuggestedUsersSkeletonResponse)]
+    public function getSuggestedUsersSkeleton(#[Format('did')] ?string $viewer = null, ?string $category = null, ?int $limit = 25);
 
     /**
      * Get a skeleton of suggested actors. Intended to be called and then hydrated through app.bsky.actor.getSuggestions.

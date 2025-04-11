@@ -7779,6 +7779,124 @@ return array (
       ),
     ),
   ),
+  'app.bsky.unspecced.getSuggestedUsers' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.unspecced.getSuggestedUsers',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'description' => 'Get a list of suggested users',
+        'parameters' => 
+        array (
+          'type' => 'params',
+          'properties' => 
+          array (
+            'category' => 
+            array (
+              'type' => 'string',
+              'description' => 'Category of users to get suggestions for.',
+            ),
+            'limit' => 
+            array (
+              'type' => 'integer',
+              'minimum' => 1,
+              'maximum' => 50,
+              'default' => 25,
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'actors',
+            ),
+            'properties' => 
+            array (
+              'actors' => 
+              array (
+                'type' => 'array',
+                'items' => 
+                array (
+                  'type' => 'ref',
+                  'ref' => 'lex:app.bsky.actor.defs#profileView',
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
+  'app.bsky.unspecced.getSuggestedUsersSkeleton' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.unspecced.getSuggestedUsersSkeleton',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'description' => 'Get a skeleton of suggested users. Intended to be called and hydrated by app.bsky.unspecced.getSuggestedUsers',
+        'parameters' => 
+        array (
+          'type' => 'params',
+          'properties' => 
+          array (
+            'viewer' => 
+            array (
+              'type' => 'string',
+              'format' => 'did',
+              'description' => 'DID of the account making the request (not included for public/unauthenticated queries).',
+            ),
+            'category' => 
+            array (
+              'type' => 'string',
+              'description' => 'Category of users to get suggestions for.',
+            ),
+            'limit' => 
+            array (
+              'type' => 'integer',
+              'minimum' => 1,
+              'maximum' => 50,
+              'default' => 25,
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'dids',
+            ),
+            'properties' => 
+            array (
+              'dids' => 
+              array (
+                'type' => 'array',
+                'items' => 
+                array (
+                  'type' => 'string',
+                  'format' => 'did',
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
   'app.bsky.unspecced.getSuggestionsSkeleton' => 
   array (
     'lexicon' => 1,
@@ -15158,6 +15276,26 @@ return array (
       ),
     ),
   ),
+  'com.atproto.sync.defs' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'com.atproto.sync.defs',
+    'defs' => 
+    array (
+      'hostStatus' => 
+      array (
+        'type' => 'string',
+        'knownValues' => 
+        array (
+          0 => 'active',
+          1 => 'idle',
+          2 => 'offline',
+          3 => 'throttled',
+          4 => 'banned',
+        ),
+      ),
+    ),
+  ),
   'com.atproto.sync.getBlob' => 
   array (
     'lexicon' => 1,
@@ -15375,6 +15513,76 @@ return array (
           0 => 
           array (
             'name' => 'HeadNotFound',
+          ),
+        ),
+      ),
+    ),
+  ),
+  'com.atproto.sync.getHostStatus' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'com.atproto.sync.getHostStatus',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'description' => 'Returns information about a specified upstream host, as consumed by the server. Implemented by relays.',
+        'parameters' => 
+        array (
+          'type' => 'params',
+          'required' => 
+          array (
+            0 => 'hostname',
+          ),
+          'properties' => 
+          array (
+            'hostname' => 
+            array (
+              'type' => 'string',
+              'description' => 'Hostname of the host (eg, PDS or relay) being queried.',
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'hostname',
+            ),
+            'properties' => 
+            array (
+              'hostname' => 
+              array (
+                'type' => 'string',
+              ),
+              'seq' => 
+              array (
+                'type' => 'integer',
+                'description' => 'Recent repo stream event sequence number. May be delayed from actual stream processing (eg, persisted cursor not in-memory cursor).',
+              ),
+              'accountCount' => 
+              array (
+                'type' => 'integer',
+                'description' => 'Number of accounts on the server which are associated with the upstream host. Note that the upstream may actually have more accounts.',
+              ),
+              'status' => 
+              array (
+                'type' => 'ref',
+                'ref' => 'lex:com.atproto.sync.defs#hostStatus',
+              ),
+            ),
+          ),
+        ),
+        'errors' => 
+        array (
+          0 => 
+          array (
+            'name' => 'HostNotFound',
           ),
         ),
       ),
@@ -15760,6 +15968,96 @@ return array (
       ),
     ),
   ),
+  'com.atproto.sync.listHosts' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'com.atproto.sync.listHosts',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'description' => 'Enumerates upstream hosts (eg, PDS or relay instances) that this service consumes from. Implemented by relays.',
+        'parameters' => 
+        array (
+          'type' => 'params',
+          'properties' => 
+          array (
+            'limit' => 
+            array (
+              'type' => 'integer',
+              'minimum' => 1,
+              'maximum' => 1000,
+              'default' => 200,
+            ),
+            'cursor' => 
+            array (
+              'type' => 'string',
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'hosts',
+            ),
+            'properties' => 
+            array (
+              'cursor' => 
+              array (
+                'type' => 'string',
+              ),
+              'hosts' => 
+              array (
+                'type' => 'array',
+                'items' => 
+                array (
+                  'type' => 'ref',
+                  'ref' => 'lex:com.atproto.sync.listHosts#host',
+                ),
+                'description' => 'Sort order is not formally specified. Recommended order is by time host was first seen by the server, with oldest first.',
+              ),
+            ),
+          ),
+        ),
+      ),
+      'host' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'hostname',
+        ),
+        'properties' => 
+        array (
+          'hostname' => 
+          array (
+            'type' => 'string',
+            'description' => 'hostname of server; not a URL (no scheme)',
+          ),
+          'seq' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Recent repo stream event sequence number. May be delayed from actual stream processing (eg, persisted cursor not in-memory cursor).',
+          ),
+          'accountCount' => 
+          array (
+            'type' => 'integer',
+          ),
+          'status' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:com.atproto.sync.defs#hostStatus',
+          ),
+        ),
+      ),
+    ),
+  ),
   'com.atproto.sync.listRepos' => 
   array (
     'lexicon' => 1,
@@ -16012,6 +16310,13 @@ return array (
                 'description' => 'Hostname of the current service (eg, PDS) that is requesting to be crawled.',
               ),
             ),
+          ),
+        ),
+        'errors' => 
+        array (
+          0 => 
+          array (
+            'name' => 'HostBanned',
           ),
         ),
       ),
