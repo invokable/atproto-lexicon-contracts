@@ -20,20 +20,24 @@ interface Sync
     public const getBlocks = 'com.atproto.sync.getBlocks';
     public const getCheckout = 'com.atproto.sync.getCheckout';
     public const getHead = 'com.atproto.sync.getHead';
+    public const getHostStatus = 'com.atproto.sync.getHostStatus';
     public const getLatestCommit = 'com.atproto.sync.getLatestCommit';
     public const getRecord = 'com.atproto.sync.getRecord';
     public const getRepo = 'com.atproto.sync.getRepo';
     public const getRepoStatus = 'com.atproto.sync.getRepoStatus';
     public const listBlobs = 'com.atproto.sync.listBlobs';
+    public const listHosts = 'com.atproto.sync.listHosts';
     public const listRepos = 'com.atproto.sync.listRepos';
     public const listReposByCollection = 'com.atproto.sync.listReposByCollection';
     public const notifyOfUpdate = 'com.atproto.sync.notifyOfUpdate';
     public const requestCrawl = 'com.atproto.sync.requestCrawl';
 
     public const getHeadResponse = ['root' => 'string'];
+    public const getHostStatusResponse = ['hostname' => 'string', 'seq' => 'int', 'accountCount' => 'int', 'status' => 'string'];
     public const getLatestCommitResponse = ['cid' => 'string', 'rev' => 'string'];
     public const getRepoStatusResponse = ['did' => 'string', 'active' => 'bool', 'status' => 'string', 'rev' => 'string'];
     public const listBlobsResponse = ['cursor' => 'string', 'cids' => 'array'];
+    public const listHostsResponse = ['cursor' => 'string', 'hosts' => [['hostname' => 'string', 'seq' => 'int', 'accountCount' => 'int', 'status' => 'array']]];
     public const listReposResponse = ['cursor' => 'string', 'repos' => [['did' => 'string', 'head' => 'string', 'rev' => 'string', 'active' => 'bool', 'status' => 'string']]];
     public const listReposByCollectionResponse = ['cursor' => 'string', 'repos' => [['did' => 'string']]];
 
@@ -71,6 +75,15 @@ interface Sync
     #[Get, NSID(self::getHead)]
     #[Output(self::getHeadResponse)]
     public function getHead(#[Format('did')] string $did);
+
+    /**
+     * Returns information about a specified upstream host, as consumed by the server. Implemented by relays.
+     *
+     * @link https://docs.bsky.app/docs/api/com-atproto-sync-get-host-status
+     */
+    #[Get, NSID(self::getHostStatus)]
+    #[Output(self::getHostStatusResponse)]
+    public function getHostStatus(string $hostname);
 
     /**
      * Get the current commit CID & revision of the specified repo. Does not require auth.
@@ -114,6 +127,15 @@ interface Sync
     #[Get, NSID(self::listBlobs)]
     #[Output(self::listBlobsResponse)]
     public function listBlobs(#[Format('did')] string $did, #[Format('tid')] ?string $since = null, ?int $limit = 500, ?string $cursor = null);
+
+    /**
+     * Enumerates upstream hosts (eg, PDS or relay instances) that this service consumes from. Implemented by relays.
+     *
+     * @link https://docs.bsky.app/docs/api/com-atproto-sync-list-hosts
+     */
+    #[Get, NSID(self::listHosts)]
+    #[Output(self::listHostsResponse)]
+    public function listHosts(?int $limit = 200, ?string $cursor = null);
 
     /**
      * Enumerates all the DID, rev, and commit CID for all repos hosted by this service. Does not require auth; implemented by PDS and Relay.
