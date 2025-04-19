@@ -39,7 +39,7 @@ interface Unspecced
     public const getSuggestedFeedsSkeletonResponse = ['feeds' => 'array'];
     public const getSuggestedStarterPacksResponse = ['starterPacks' => [['uri' => 'string', 'cid' => 'string', 'record' => 'mixed', 'creator' => 'array', 'list' => 'array', 'listItemsSample' => 'array', 'feeds' => 'array', 'joinedWeekCount' => 'int', 'joinedAllTimeCount' => 'int', 'labels' => 'array', 'indexedAt' => 'string']]];
     public const getSuggestedStarterPacksSkeletonResponse = ['starterPacks' => 'array'];
-    public const getSuggestedUsersResponse = ['actors' => [['did' => 'string', 'handle' => 'string', 'displayName' => 'string', 'description' => 'string', 'avatar' => 'string', 'associated' => 'array', 'indexedAt' => 'string', 'createdAt' => 'string', 'viewer' => 'array', 'labels' => 'array']]];
+    public const getSuggestedUsersResponse = ['actors' => [['did' => 'string', 'handle' => 'string', 'displayName' => 'string', 'description' => 'string', 'avatar' => 'string', 'associated' => 'array', 'indexedAt' => 'string', 'createdAt' => 'string', 'viewer' => 'array', 'labels' => 'array', 'verification' => 'array']]];
     public const getSuggestedUsersSkeletonResponse = ['dids' => 'array'];
     public const getSuggestionsSkeletonResponse = ['cursor' => 'string', 'actors' => [['did' => 'string']], 'relativeToDid' => 'string', 'recId' => 'int'];
     public const getTaggedSuggestionsResponse = ['suggestions' => [['tag' => 'string', 'subjectType' => 'string', 'subject' => 'string']]];

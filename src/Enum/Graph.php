@@ -39,4 +39,9 @@ enum Graph: string
      * Record defining a starter pack of actors and feeds for new users.
      */
     case Starterpack = 'app.bsky.graph.starterpack';
+
+    /**
+     * Record declaring a verification relationship between two accounts. Verifications are only considered valid by an app if issued by an account the app considers trusted.
+     */
+    case Verification = 'app.bsky.graph.verification';
 }
