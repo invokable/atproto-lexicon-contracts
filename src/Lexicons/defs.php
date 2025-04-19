@@ -66,6 +66,11 @@ return array (
             'type' => 'string',
             'format' => 'datetime',
           ),
+          'verification' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.actor.defs#verificationState',
+          ),
         ),
       ),
       'profileView' => 
@@ -133,6 +138,11 @@ return array (
               'type' => 'ref',
               'ref' => 'lex:com.atproto.label.defs#label',
             ),
+          ),
+          'verification' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.actor.defs#verificationState',
           ),
         ),
       ),
@@ -228,6 +238,11 @@ return array (
           array (
             'type' => 'ref',
             'ref' => 'lex:com.atproto.repo.strongRef',
+          ),
+          'verification' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.actor.defs#verificationState',
           ),
         ),
       ),
@@ -354,6 +369,90 @@ return array (
           ),
         ),
       ),
+      'verificationState' => 
+      array (
+        'type' => 'object',
+        'description' => 'Represents the verification information about the user this object is attached to.',
+        'required' => 
+        array (
+          0 => 'verifications',
+          1 => 'verifiedStatus',
+          2 => 'trustedVerifierStatus',
+        ),
+        'properties' => 
+        array (
+          'verifications' => 
+          array (
+            'type' => 'array',
+            'description' => 'All verifications issued by trusted verifiers on behalf of this user. Verifications by untrusted verifiers are not included.',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:app.bsky.actor.defs#verificationView',
+            ),
+          ),
+          'verifiedStatus' => 
+          array (
+            'type' => 'string',
+            'description' => 'The user\'s status as a verified account.',
+            'knownValues' => 
+            array (
+              0 => 'valid',
+              1 => 'invalid',
+              2 => 'none',
+            ),
+          ),
+          'trustedVerifierStatus' => 
+          array (
+            'type' => 'string',
+            'description' => 'The user\'s status as a trusted verifier.',
+            'knownValues' => 
+            array (
+              0 => 'valid',
+              1 => 'invalid',
+              2 => 'none',
+            ),
+          ),
+        ),
+      ),
+      'verificationView' => 
+      array (
+        'type' => 'object',
+        'description' => 'An individual verification for an associated subject.',
+        'required' => 
+        array (
+          0 => 'issuer',
+          1 => 'uri',
+          2 => 'isValid',
+          3 => 'createdAt',
+        ),
+        'properties' => 
+        array (
+          'issuer' => 
+          array (
+            'type' => 'string',
+            'description' => 'The user who issued this verification.',
+            'format' => 'did',
+          ),
+          'uri' => 
+          array (
+            'type' => 'string',
+            'description' => 'The AT-URI of the verification record.',
+            'format' => 'at-uri',
+          ),
+          'isValid' => 
+          array (
+            'type' => 'boolean',
+            'description' => 'True if the verification passes validation, otherwise false.',
+          ),
+          'createdAt' => 
+          array (
+            'type' => 'string',
+            'description' => 'Timestamp when the verification was created.',
+            'format' => 'datetime',
+          ),
+        ),
+      ),
       'preferences' => 
       array (
         'type' => 'array',
@@ -375,6 +474,7 @@ return array (
             10 => 'lex:app.bsky.actor.defs#bskyAppStatePref',
             11 => 'lex:app.bsky.actor.defs#labelersPref',
             12 => 'lex:app.bsky.actor.defs#postInteractionSettingsPref',
+            13 => 'lex:app.bsky.actor.defs#verificationPrefs',
           ),
         ),
       ),
@@ -845,6 +945,23 @@ return array (
             'type' => 'string',
             'format' => 'datetime',
             'description' => 'The date and time at which the NUX will expire and should be considered completed.',
+          ),
+        ),
+      ),
+      'verificationPrefs' => 
+      array (
+        'type' => 'object',
+        'description' => 'Preferences for how verified accounts appear in the app.',
+        'required' => 
+        array (
+        ),
+        'properties' => 
+        array (
+          'hideBadges' => 
+          array (
+            'description' => 'Hide the blue check badges for verified accounts and trusted verifiers.',
+            'type' => 'boolean',
+            'default' => false,
           ),
         ),
       ),
@@ -6493,6 +6610,57 @@ return array (
       ),
     ),
   ),
+  'app.bsky.graph.verification' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.graph.verification',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'record',
+        'description' => 'Record declaring a verification relationship between two accounts. Verifications are only considered valid by an app if issued by an account the app considers trusted.',
+        'key' => 'tid',
+        'record' => 
+        array (
+          'type' => 'object',
+          'required' => 
+          array (
+            0 => 'subject',
+            1 => 'handle',
+            2 => 'displayName',
+            3 => 'createdAt',
+          ),
+          'properties' => 
+          array (
+            'subject' => 
+            array (
+              'description' => 'DID of the subject the verification applies to.',
+              'type' => 'string',
+              'format' => 'did',
+            ),
+            'handle' => 
+            array (
+              'description' => 'Handle of the subject the verification applies to at the moment of verifying, which might not be the same at the time of viewing. The verification is only valid if the current handle matches the one at the time of verifying.',
+              'type' => 'string',
+              'format' => 'handle',
+            ),
+            'displayName' => 
+            array (
+              'description' => 'Display name of the subject the verification applies to at the moment of verifying, which might not be the same at the time of viewing. The verification is only valid if the current displayName matches the one at the time of verifying.',
+              'type' => 'string',
+            ),
+            'createdAt' => 
+            array (
+              'description' => 'Date of when the verification was created.',
+              'type' => 'string',
+              'format' => 'datetime',
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
   'app.bsky.labeler.defs' => 
   array (
     'lexicon' => 1,
@@ -6826,6 +6994,21 @@ return array (
       ),
     ),
   ),
+  'app.bsky.notification.defs' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.notification.defs',
+    'defs' => 
+    array (
+      'recordDeleted' => 
+      array (
+        'type' => 'object',
+        'properties' => 
+        array (
+        ),
+      ),
+    ),
+  ),
   'app.bsky.notification.getUnreadCount' => 
   array (
     'lexicon' => 1,
@@ -6992,7 +7175,7 @@ return array (
           'reason' => 
           array (
             'type' => 'string',
-            'description' => 'Expected values are \'like\', \'repost\', \'follow\', \'mention\', \'reply\', \'quote\', and \'starterpack-joined\'.',
+            'description' => 'Expected values are \'like\', \'repost\', \'follow\', \'mention\', \'reply\', \'quote\', \'starterpack-joined\', \'verified\', and \'unverified\'.',
             'knownValues' => 
             array (
               0 => 'like',
@@ -7002,6 +7185,8 @@ return array (
               4 => 'reply',
               5 => 'quote',
               6 => 'starterpack-joined',
+              7 => 'verified',
+              8 => 'unverified',
             ),
           ),
           'reasonSubject' => 
@@ -8842,7 +9027,12 @@ return array (
           'chatDisabled' => 
           array (
             'type' => 'boolean',
-            'description' => 'Set to true when the actor cannot actively participate in converations',
+            'description' => 'Set to true when the actor cannot actively participate in conversations',
+          ),
+          'verification' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.actor.defs#verificationState',
           ),
         ),
       ),
@@ -8970,7 +9160,7 @@ return array (
               array (
                 'type' => 'string',
                 'minLength' => 1,
-                'maxLength' => 32,
+                'maxLength' => 64,
                 'minGraphemes' => 1,
                 'maxGraphemes' => 1,
               ),
@@ -10153,7 +10343,7 @@ return array (
               array (
                 'type' => 'string',
                 'minLength' => 1,
-                'maxLength' => 32,
+                'maxLength' => 64,
                 'minGraphemes' => 1,
                 'maxGraphemes' => 1,
               ),
