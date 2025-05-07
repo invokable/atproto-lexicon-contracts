@@ -48,5 +48,5 @@ interface Setting
      */
     #[Post, NSID(self::upsertOption)]
     #[Output(self::upsertOptionResponse)]
-    public function upsertOption(#[Format('nsid')] string $key, #[KnownValues(['instance', 'personal'])] string $scope, mixed $value, ?string $description = null, #[KnownValues(['tools.ozone.team.defs#roleModerator', 'tools.ozone.team.defs#roleTriage', 'tools.ozone.team.defs#roleAdmin'])] ?string $managerRole = null);
+    public function upsertOption(#[Format('nsid')] string $key, #[KnownValues(['instance', 'personal'])] string $scope, mixed $value, ?string $description = null, #[KnownValues(['tools.ozone.team.defs#roleModerator', 'tools.ozone.team.defs#roleTriage', 'tools.ozone.team.defs#roleVerifier', 'tools.ozone.team.defs#roleAdmin'])] ?string $managerRole = null);
 }

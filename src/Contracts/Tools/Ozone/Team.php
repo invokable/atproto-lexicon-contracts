@@ -22,9 +22,9 @@ interface Team
     public const listMembers = 'tools.ozone.team.listMembers';
     public const updateMember = 'tools.ozone.team.updateMember';
 
-    public const addMemberResponse = ['did' => 'string', 'disabled' => 'bool', 'profile' => ['did' => 'string', 'handle' => 'string', 'displayName' => 'string', 'description' => 'string', 'avatar' => 'string', 'banner' => 'string', 'followersCount' => 'int', 'followsCount' => 'int', 'postsCount' => 'int', 'associated' => 'array', 'joinedViaStarterPack' => 'array', 'indexedAt' => 'string', 'createdAt' => 'string', 'viewer' => 'array', 'labels' => 'array', 'pinnedPost' => 'array', 'verification' => 'array'], 'createdAt' => 'string', 'updatedAt' => 'string', 'lastUpdatedBy' => 'string', 'role' => 'string'];
+    public const addMemberResponse = ['did' => 'string', 'disabled' => 'bool', 'profile' => ['did' => 'string', 'handle' => 'string', 'displayName' => 'string', 'description' => 'string', 'avatar' => 'string', 'banner' => 'string', 'followersCount' => 'int', 'followsCount' => 'int', 'postsCount' => 'int', 'associated' => 'array', 'joinedViaStarterPack' => 'array', 'indexedAt' => 'string', 'createdAt' => 'string', 'viewer' => 'array', 'labels' => 'array', 'pinnedPost' => 'array', 'verification' => 'array', 'status' => 'array'], 'createdAt' => 'string', 'updatedAt' => 'string', 'lastUpdatedBy' => 'string', 'role' => 'string'];
     public const listMembersResponse = ['cursor' => 'string', 'members' => [['did' => 'string', 'disabled' => 'bool', 'profile' => 'array', 'createdAt' => 'string', 'updatedAt' => 'string', 'lastUpdatedBy' => 'string', 'role' => 'string']]];
-    public const updateMemberResponse = ['did' => 'string', 'disabled' => 'bool', 'profile' => ['did' => 'string', 'handle' => 'string', 'displayName' => 'string', 'description' => 'string', 'avatar' => 'string', 'banner' => 'string', 'followersCount' => 'int', 'followsCount' => 'int', 'postsCount' => 'int', 'associated' => 'array', 'joinedViaStarterPack' => 'array', 'indexedAt' => 'string', 'createdAt' => 'string', 'viewer' => 'array', 'labels' => 'array', 'pinnedPost' => 'array', 'verification' => 'array'], 'createdAt' => 'string', 'updatedAt' => 'string', 'lastUpdatedBy' => 'string', 'role' => 'string'];
+    public const updateMemberResponse = ['did' => 'string', 'disabled' => 'bool', 'profile' => ['did' => 'string', 'handle' => 'string', 'displayName' => 'string', 'description' => 'string', 'avatar' => 'string', 'banner' => 'string', 'followersCount' => 'int', 'followsCount' => 'int', 'postsCount' => 'int', 'associated' => 'array', 'joinedViaStarterPack' => 'array', 'indexedAt' => 'string', 'createdAt' => 'string', 'viewer' => 'array', 'labels' => 'array', 'pinnedPost' => 'array', 'verification' => 'array', 'status' => 'array'], 'createdAt' => 'string', 'updatedAt' => 'string', 'lastUpdatedBy' => 'string', 'role' => 'string'];
 
     /**
      * Add a member to the ozone team. Requires admin role.
@@ -33,7 +33,7 @@ interface Team
      */
     #[Post, NSID(self::addMember)]
     #[Output(self::addMemberResponse)]
-    public function addMember(#[Format('did')] string $did, #[KnownValues(['tools.ozone.team.defs#roleAdmin', 'tools.ozone.team.defs#roleModerator', 'tools.ozone.team.defs#roleTriage'])] string $role);
+    public function addMember(#[Format('did')] string $did, #[KnownValues(['tools.ozone.team.defs#roleAdmin', 'tools.ozone.team.defs#roleModerator', 'tools.ozone.team.defs#roleVerifier', 'tools.ozone.team.defs#roleTriage'])] string $role);
 
     /**
      * Delete a member from ozone team. Requires admin role.
@@ -59,5 +59,5 @@ interface Team
      */
     #[Post, NSID(self::updateMember)]
     #[Output(self::updateMemberResponse)]
-    public function updateMember(#[Format('did')] string $did, ?bool $disabled = null, #[KnownValues(['tools.ozone.team.defs#roleAdmin', 'tools.ozone.team.defs#roleModerator', 'tools.ozone.team.defs#roleTriage'])] ?string $role = null);
+    public function updateMember(#[Format('did')] string $did, ?bool $disabled = null, #[KnownValues(['tools.ozone.team.defs#roleAdmin', 'tools.ozone.team.defs#roleModerator', 'tools.ozone.team.defs#roleVerifier', 'tools.ozone.team.defs#roleTriage'])] ?string $role = null);
 }

@@ -71,6 +71,11 @@ return array (
             'type' => 'ref',
             'ref' => 'lex:app.bsky.actor.defs#verificationState',
           ),
+          'status' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.actor.defs#statusView',
+          ),
         ),
       ),
       'profileView' => 
@@ -143,6 +148,11 @@ return array (
           array (
             'type' => 'ref',
             'ref' => 'lex:app.bsky.actor.defs#verificationState',
+          ),
+          'status' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.actor.defs#statusView',
           ),
         ),
       ),
@@ -243,6 +253,11 @@ return array (
           array (
             'type' => 'ref',
             'ref' => 'lex:app.bsky.actor.defs#verificationState',
+          ),
+          'status' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.actor.defs#statusView',
           ),
         ),
       ),
@@ -1007,6 +1022,51 @@ return array (
           ),
         ),
       ),
+      'statusView' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'status',
+          1 => 'record',
+        ),
+        'properties' => 
+        array (
+          'status' => 
+          array (
+            'type' => 'string',
+            'description' => 'The status for the account.',
+            'knownValues' => 
+            array (
+              0 => 'app.bsky.actor.status#live',
+            ),
+          ),
+          'record' => 
+          array (
+            'type' => 'unknown',
+          ),
+          'embed' => 
+          array (
+            'type' => 'union',
+            'description' => 'An optional embed associated with the status.',
+            'refs' => 
+            array (
+              0 => 'lex:app.bsky.embed.external#view',
+            ),
+          ),
+          'expiresAt' => 
+          array (
+            'type' => 'string',
+            'description' => 'The date when this status will expire. The application might choose to no longer return the status after expiration.',
+            'format' => 'datetime',
+          ),
+          'isActive' => 
+          array (
+            'type' => 'boolean',
+            'description' => 'True if the status is not expired, false if it is expired. Only present if expiration was set.',
+          ),
+        ),
+      ),
     ),
   ),
   'app.bsky.actor.getPreferences' => 
@@ -1450,6 +1510,66 @@ return array (
             ),
           ),
         ),
+      ),
+    ),
+  ),
+  'app.bsky.actor.status' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.actor.status',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'record',
+        'description' => 'A declaration of a Bluesky account status.',
+        'key' => 'literal:self',
+        'record' => 
+        array (
+          'type' => 'object',
+          'required' => 
+          array (
+            0 => 'status',
+            1 => 'createdAt',
+          ),
+          'properties' => 
+          array (
+            'status' => 
+            array (
+              'type' => 'string',
+              'description' => 'The status for the account.',
+              'knownValues' => 
+              array (
+                0 => 'app.bsky.actor.status#live',
+              ),
+            ),
+            'embed' => 
+            array (
+              'type' => 'union',
+              'description' => 'An optional embed associated with the status.',
+              'refs' => 
+              array (
+                0 => 'lex:app.bsky.embed.external',
+              ),
+            ),
+            'durationMinutes' => 
+            array (
+              'type' => 'integer',
+              'description' => 'The duration of the status in minutes. Applications can choose to impose minimum and maximum limits.',
+              'minimum' => 1,
+            ),
+            'createdAt' => 
+            array (
+              'type' => 'string',
+              'format' => 'datetime',
+            ),
+          ),
+        ),
+      ),
+      'live' => 
+      array (
+        'type' => 'token',
+        'description' => 'Advertises an account as currently offering live content.',
       ),
     ),
   ),
@@ -17318,6 +17438,199 @@ return array (
       ),
     ),
   ),
+  'tools.ozone.hosting.getAccountHistory' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'tools.ozone.hosting.getAccountHistory',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'description' => 'Get account history, e.g. log of updated email addresses or other identity information.',
+        'parameters' => 
+        array (
+          'type' => 'params',
+          'required' => 
+          array (
+            0 => 'did',
+          ),
+          'properties' => 
+          array (
+            'did' => 
+            array (
+              'type' => 'string',
+              'format' => 'did',
+            ),
+            'events' => 
+            array (
+              'type' => 'array',
+              'items' => 
+              array (
+                'type' => 'string',
+                'knownValues' => 
+                array (
+                  0 => 'accountCreated',
+                  1 => 'emailUpdated',
+                  2 => 'emailConfirmed',
+                  3 => 'passwordUpdated',
+                  4 => 'handleUpdated',
+                ),
+              ),
+            ),
+            'cursor' => 
+            array (
+              'type' => 'string',
+            ),
+            'limit' => 
+            array (
+              'type' => 'integer',
+              'minimum' => 1,
+              'maximum' => 100,
+              'default' => 50,
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'events',
+            ),
+            'properties' => 
+            array (
+              'cursor' => 
+              array (
+                'type' => 'string',
+              ),
+              'events' => 
+              array (
+                'type' => 'array',
+                'items' => 
+                array (
+                  'type' => 'ref',
+                  'ref' => 'lex:tools.ozone.hosting.getAccountHistory#event',
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+      'event' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'details',
+          1 => 'createdBy',
+          2 => 'createdAt',
+        ),
+        'properties' => 
+        array (
+          'details' => 
+          array (
+            'type' => 'union',
+            'refs' => 
+            array (
+              0 => 'lex:tools.ozone.hosting.getAccountHistory#accountCreated',
+              1 => 'lex:tools.ozone.hosting.getAccountHistory#emailUpdated',
+              2 => 'lex:tools.ozone.hosting.getAccountHistory#emailConfirmed',
+              3 => 'lex:tools.ozone.hosting.getAccountHistory#passwordUpdated',
+              4 => 'lex:tools.ozone.hosting.getAccountHistory#handleUpdated',
+            ),
+          ),
+          'createdBy' => 
+          array (
+            'type' => 'string',
+          ),
+          'createdAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+        ),
+      ),
+      'accountCreated' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+        ),
+        'properties' => 
+        array (
+          'email' => 
+          array (
+            'type' => 'string',
+          ),
+          'handle' => 
+          array (
+            'type' => 'string',
+            'format' => 'handle',
+          ),
+        ),
+      ),
+      'emailUpdated' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'email',
+        ),
+        'properties' => 
+        array (
+          'email' => 
+          array (
+            'type' => 'string',
+          ),
+        ),
+      ),
+      'emailConfirmed' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'email',
+        ),
+        'properties' => 
+        array (
+          'email' => 
+          array (
+            'type' => 'string',
+          ),
+        ),
+      ),
+      'passwordUpdated' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+        ),
+        'properties' => 
+        array (
+        ),
+      ),
+      'handleUpdated' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'handle',
+        ),
+        'properties' => 
+        array (
+          'handle' => 
+          array (
+            'type' => 'string',
+            'format' => 'handle',
+          ),
+        ),
+      ),
+    ),
+  ),
   'tools.ozone.moderation.defs' => 
   array (
     'lexicon' => 1,
@@ -19847,6 +20160,12 @@ return array (
                 'type' => 'ref',
                 'ref' => 'lex:tools.ozone.server.getConfig#viewerConfig',
               ),
+              'verifierDid' => 
+              array (
+                'type' => 'string',
+                'format' => 'did',
+                'description' => 'The did of the verifier used for verification.',
+              ),
             ),
           ),
         ),
@@ -19876,6 +20195,7 @@ return array (
               0 => 'tools.ozone.team.defs#roleAdmin',
               1 => 'tools.ozone.team.defs#roleModerator',
               2 => 'tools.ozone.team.defs#roleTriage',
+              3 => 'tools.ozone.team.defs#roleVerifier',
             ),
           ),
         ),
@@ -20356,6 +20676,7 @@ return array (
               0 => 'tools.ozone.team.defs#roleModerator',
               1 => 'tools.ozone.team.defs#roleTriage',
               2 => 'tools.ozone.team.defs#roleAdmin',
+              3 => 'tools.ozone.team.defs#roleVerifier',
             ),
           ),
           'scope' => 
@@ -20580,7 +20901,8 @@ return array (
                 array (
                   0 => 'tools.ozone.team.defs#roleModerator',
                   1 => 'tools.ozone.team.defs#roleTriage',
-                  2 => 'tools.ozone.team.defs#roleAdmin',
+                  2 => 'tools.ozone.team.defs#roleVerifier',
+                  3 => 'tools.ozone.team.defs#roleAdmin',
                 ),
               ),
             ),
@@ -20893,7 +21215,8 @@ return array (
                 array (
                   0 => 'tools.ozone.team.defs#roleAdmin',
                   1 => 'tools.ozone.team.defs#roleModerator',
-                  2 => 'tools.ozone.team.defs#roleTriage',
+                  2 => 'tools.ozone.team.defs#roleVerifier',
+                  3 => 'tools.ozone.team.defs#roleTriage',
                 ),
               ),
             ),
@@ -20971,6 +21294,7 @@ return array (
               0 => 'lex:tools.ozone.team.defs#roleAdmin',
               1 => 'lex:tools.ozone.team.defs#roleModerator',
               2 => 'lex:tools.ozone.team.defs#roleTriage',
+              3 => 'lex:tools.ozone.team.defs#roleVerifier',
             ),
           ),
         ),
@@ -20989,6 +21313,11 @@ return array (
       array (
         'type' => 'token',
         'description' => 'Triage role. Mostly intended for monitoring and escalating issues.',
+      ),
+      'roleVerifier' => 
+      array (
+        'type' => 'token',
+        'description' => 'Verifier role. Only allowed to issue verifications.',
       ),
     ),
   ),
@@ -21151,7 +21480,8 @@ return array (
                 array (
                   0 => 'tools.ozone.team.defs#roleAdmin',
                   1 => 'tools.ozone.team.defs#roleModerator',
-                  2 => 'tools.ozone.team.defs#roleTriage',
+                  2 => 'tools.ozone.team.defs#roleVerifier',
+                  3 => 'tools.ozone.team.defs#roleTriage',
                 ),
               ),
             ),
@@ -21172,6 +21502,464 @@ return array (
           array (
             'name' => 'MemberNotFound',
             'description' => 'The member being updated does not exist in the team',
+          ),
+        ),
+      ),
+    ),
+  ),
+  'tools.ozone.verification.defs' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'tools.ozone.verification.defs',
+    'defs' => 
+    array (
+      'verificationView' => 
+      array (
+        'type' => 'object',
+        'description' => 'Verification data for the associated subject.',
+        'required' => 
+        array (
+          0 => 'issuer',
+          1 => 'uri',
+          2 => 'subject',
+          3 => 'handle',
+          4 => 'displayName',
+          5 => 'createdAt',
+        ),
+        'properties' => 
+        array (
+          'issuer' => 
+          array (
+            'type' => 'string',
+            'description' => 'The user who issued this verification.',
+            'format' => 'did',
+          ),
+          'uri' => 
+          array (
+            'type' => 'string',
+            'description' => 'The AT-URI of the verification record.',
+            'format' => 'at-uri',
+          ),
+          'subject' => 
+          array (
+            'type' => 'string',
+            'format' => 'did',
+            'description' => 'The subject of the verification.',
+          ),
+          'handle' => 
+          array (
+            'type' => 'string',
+            'description' => 'Handle of the subject the verification applies to at the moment of verifying, which might not be the same at the time of viewing. The verification is only valid if the current handle matches the one at the time of verifying.',
+            'format' => 'handle',
+          ),
+          'displayName' => 
+          array (
+            'type' => 'string',
+            'description' => 'Display name of the subject the verification applies to at the moment of verifying, which might not be the same at the time of viewing. The verification is only valid if the current displayName matches the one at the time of verifying.',
+          ),
+          'createdAt' => 
+          array (
+            'type' => 'string',
+            'description' => 'Timestamp when the verification was created.',
+            'format' => 'datetime',
+          ),
+          'revokeReason' => 
+          array (
+            'type' => 'string',
+            'description' => 'Describes the reason for revocation, also indicating that the verification is no longer valid.',
+          ),
+          'revokedAt' => 
+          array (
+            'type' => 'string',
+            'description' => 'Timestamp when the verification was revoked.',
+            'format' => 'datetime',
+          ),
+          'revokedBy' => 
+          array (
+            'type' => 'string',
+            'description' => 'The user who revoked this verification.',
+            'format' => 'did',
+          ),
+          'subjectProfile' => 
+          array (
+            'type' => 'union',
+            'refs' => 
+            array (
+            ),
+          ),
+          'issuerProfile' => 
+          array (
+            'type' => 'union',
+            'refs' => 
+            array (
+            ),
+          ),
+          'subjectRepo' => 
+          array (
+            'type' => 'union',
+            'refs' => 
+            array (
+              0 => 'lex:tools.ozone.moderation.defs#repoViewDetail',
+              1 => 'lex:tools.ozone.moderation.defs#repoViewNotFound',
+            ),
+          ),
+          'issuerRepo' => 
+          array (
+            'type' => 'union',
+            'refs' => 
+            array (
+              0 => 'lex:tools.ozone.moderation.defs#repoViewDetail',
+              1 => 'lex:tools.ozone.moderation.defs#repoViewNotFound',
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
+  'tools.ozone.verification.grantVerifications' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'tools.ozone.verification.grantVerifications',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'procedure',
+        'description' => 'Grant verifications to multiple subjects. Allows batch processing of up to 100 verifications at once.',
+        'input' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'verifications',
+            ),
+            'properties' => 
+            array (
+              'verifications' => 
+              array (
+                'type' => 'array',
+                'description' => 'Array of verification requests to process',
+                'maxLength' => 100,
+                'items' => 
+                array (
+                  'type' => 'ref',
+                  'ref' => 'lex:tools.ozone.verification.grantVerifications#verificationInput',
+                ),
+              ),
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'verifications',
+              1 => 'failedVerifications',
+            ),
+            'properties' => 
+            array (
+              'verifications' => 
+              array (
+                'type' => 'array',
+                'items' => 
+                array (
+                  'type' => 'ref',
+                  'ref' => 'lex:tools.ozone.verification.defs#verificationView',
+                ),
+              ),
+              'failedVerifications' => 
+              array (
+                'type' => 'array',
+                'items' => 
+                array (
+                  'type' => 'ref',
+                  'ref' => 'lex:tools.ozone.verification.grantVerifications#grantError',
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+      'verificationInput' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'subject',
+          1 => 'handle',
+          2 => 'displayName',
+        ),
+        'properties' => 
+        array (
+          'subject' => 
+          array (
+            'type' => 'string',
+            'description' => 'The did of the subject being verified',
+            'format' => 'did',
+          ),
+          'handle' => 
+          array (
+            'type' => 'string',
+            'description' => 'Handle of the subject the verification applies to at the moment of verifying.',
+            'format' => 'handle',
+          ),
+          'displayName' => 
+          array (
+            'type' => 'string',
+            'description' => 'Display name of the subject the verification applies to at the moment of verifying.',
+          ),
+          'createdAt' => 
+          array (
+            'type' => 'string',
+            'description' => 'Timestamp for verification record. Defaults to current time when not specified.',
+          ),
+        ),
+      ),
+      'grantError' => 
+      array (
+        'type' => 'object',
+        'description' => 'Error object for failed verifications.',
+        'required' => 
+        array (
+          0 => 'error',
+          1 => 'subject',
+        ),
+        'properties' => 
+        array (
+          'error' => 
+          array (
+            'type' => 'string',
+            'description' => 'Error message describing the reason for failure.',
+          ),
+          'subject' => 
+          array (
+            'type' => 'string',
+            'description' => 'The did of the subject being verified',
+            'format' => 'did',
+          ),
+        ),
+      ),
+    ),
+  ),
+  'tools.ozone.verification.listVerifications' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'tools.ozone.verification.listVerifications',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'description' => 'List verifications',
+        'parameters' => 
+        array (
+          'type' => 'params',
+          'properties' => 
+          array (
+            'cursor' => 
+            array (
+              'type' => 'string',
+              'description' => 'Pagination cursor',
+            ),
+            'limit' => 
+            array (
+              'type' => 'integer',
+              'description' => 'Maximum number of results to return',
+              'minimum' => 1,
+              'maximum' => 100,
+              'default' => 50,
+            ),
+            'createdAfter' => 
+            array (
+              'type' => 'string',
+              'format' => 'datetime',
+              'description' => 'Filter to verifications created after this timestamp',
+            ),
+            'createdBefore' => 
+            array (
+              'type' => 'string',
+              'format' => 'datetime',
+              'description' => 'Filter to verifications created before this timestamp',
+            ),
+            'issuers' => 
+            array (
+              'type' => 'array',
+              'maxLength' => 100,
+              'description' => 'Filter to verifications from specific issuers',
+              'items' => 
+              array (
+                'type' => 'string',
+                'format' => 'did',
+              ),
+            ),
+            'subjects' => 
+            array (
+              'type' => 'array',
+              'description' => 'Filter to specific verified DIDs',
+              'maxLength' => 100,
+              'items' => 
+              array (
+                'type' => 'string',
+                'format' => 'did',
+              ),
+            ),
+            'sortDirection' => 
+            array (
+              'type' => 'string',
+              'description' => 'Sort direction for creation date',
+              'enum' => 
+              array (
+                0 => 'asc',
+                1 => 'desc',
+              ),
+              'default' => 'desc',
+            ),
+            'isRevoked' => 
+            array (
+              'type' => 'boolean',
+              'description' => 'Filter to verifications that are revoked or not. By default, includes both.',
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'verifications',
+            ),
+            'properties' => 
+            array (
+              'cursor' => 
+              array (
+                'type' => 'string',
+              ),
+              'verifications' => 
+              array (
+                'type' => 'array',
+                'items' => 
+                array (
+                  'type' => 'ref',
+                  'ref' => 'lex:tools.ozone.verification.defs#verificationView',
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
+  'tools.ozone.verification.revokeVerifications' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'tools.ozone.verification.revokeVerifications',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'procedure',
+        'description' => 'Revoke previously granted verifications in batches of up to 100.',
+        'input' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'uris',
+            ),
+            'properties' => 
+            array (
+              'uris' => 
+              array (
+                'type' => 'array',
+                'description' => 'Array of verification record uris to revoke',
+                'maxLength' => 100,
+                'items' => 
+                array (
+                  'type' => 'string',
+                  'description' => 'The AT-URI of the verification record to revoke.',
+                  'format' => 'at-uri',
+                ),
+              ),
+              'revokeReason' => 
+              array (
+                'type' => 'string',
+                'description' => 'Reason for revoking the verification. This is optional and can be omitted if not needed.',
+                'maxLength' => 1000,
+              ),
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'revokedVerifications',
+              1 => 'failedRevocations',
+            ),
+            'properties' => 
+            array (
+              'revokedVerifications' => 
+              array (
+                'type' => 'array',
+                'description' => 'List of verification uris successfully revoked',
+                'items' => 
+                array (
+                  'type' => 'string',
+                  'format' => 'at-uri',
+                ),
+              ),
+              'failedRevocations' => 
+              array (
+                'type' => 'array',
+                'description' => 'List of verification uris that couldn\'t be revoked, including failure reasons',
+                'items' => 
+                array (
+                  'type' => 'ref',
+                  'ref' => 'lex:tools.ozone.verification.revokeVerifications#revokeError',
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+      'revokeError' => 
+      array (
+        'type' => 'object',
+        'description' => 'Error object for failed revocations',
+        'required' => 
+        array (
+          0 => 'uri',
+          1 => 'error',
+        ),
+        'properties' => 
+        array (
+          'uri' => 
+          array (
+            'type' => 'string',
+            'description' => 'The AT-URI of the verification record that failed to revoke.',
+            'format' => 'at-uri',
+          ),
+          'error' => 
+          array (
+            'type' => 'string',
+            'description' => 'Description of the error that occurred during revocation.',
           ),
         ),
       ),
