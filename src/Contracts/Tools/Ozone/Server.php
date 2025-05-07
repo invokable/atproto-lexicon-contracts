@@ -16,7 +16,7 @@ interface Server
 {
     public const getConfig = 'tools.ozone.server.getConfig';
 
-    public const getConfigResponse = ['appview' => ['url' => 'string'], 'pds' => ['url' => 'string'], 'blobDivert' => ['url' => 'string'], 'chat' => ['url' => 'string'], 'viewer' => ['role' => 'string']];
+    public const getConfigResponse = ['appview' => ['url' => 'string'], 'pds' => ['url' => 'string'], 'blobDivert' => ['url' => 'string'], 'chat' => ['url' => 'string'], 'viewer' => ['role' => 'string'], 'verifierDid' => 'string'];
 
     /**
      * Get details about ozone's server configuration.
