@@ -33,7 +33,7 @@ interface Unspecced
     public const searchPostsSkeleton = 'app.bsky.unspecced.searchPostsSkeleton';
     public const searchStarterPacksSkeleton = 'app.bsky.unspecced.searchStarterPacksSkeleton';
 
-    public const getConfigResponse = ['checkEmailConfirmed' => 'bool'];
+    public const getConfigResponse = ['checkEmailConfirmed' => 'bool', 'liveNow' => [['did' => 'string', 'domains' => 'array']]];
     public const getPopularFeedGeneratorsResponse = ['cursor' => 'string', 'feeds' => [['uri' => 'string', 'cid' => 'string', 'did' => 'string', 'creator' => 'array', 'displayName' => 'string', 'description' => 'string', 'descriptionFacets' => 'array', 'avatar' => 'string', 'likeCount' => 'int', 'acceptsInteractions' => 'bool', 'labels' => 'array', 'viewer' => 'array', 'contentMode' => 'string', 'indexedAt' => 'string']]];
     public const getSuggestedFeedsResponse = ['feeds' => [['uri' => 'string', 'cid' => 'string', 'did' => 'string', 'creator' => 'array', 'displayName' => 'string', 'description' => 'string', 'descriptionFacets' => 'array', 'avatar' => 'string', 'likeCount' => 'int', 'acceptsInteractions' => 'bool', 'labels' => 'array', 'viewer' => 'array', 'contentMode' => 'string', 'indexedAt' => 'string']]];
     public const getSuggestedFeedsSkeletonResponse = ['feeds' => 'array'];
