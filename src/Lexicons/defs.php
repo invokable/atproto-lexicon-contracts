@@ -2384,6 +2384,12 @@ return array (
             'description' => 'Context provided by feed generator that may be passed back alongside interactions.',
             'maxLength' => 2000,
           ),
+          'reqId' => 
+          array (
+            'type' => 'string',
+            'description' => 'Unique identifier per request that may be passed back alongside interactions.',
+            'maxLength' => 100,
+          ),
         ),
       ),
       'replyRef' => 
@@ -2796,6 +2802,12 @@ return array (
             'type' => 'string',
             'description' => 'Context on a feed item that was originally supplied by the feed generator on getFeedSkeleton.',
             'maxLength' => 2000,
+          ),
+          'reqId' => 
+          array (
+            'type' => 'string',
+            'description' => 'Unique identifier per request that may be passed back alongside interactions.',
+            'maxLength' => 100,
           ),
         ),
       ),
@@ -3542,6 +3554,12 @@ return array (
                   'type' => 'ref',
                   'ref' => 'lex:app.bsky.feed.defs#skeletonFeedPost',
                 ),
+              ),
+              'reqId' => 
+              array (
+                'type' => 'string',
+                'description' => 'Unique identifier per request that may be passed back alongside interactions.',
+                'maxLength' => 100,
               ),
             ),
           ),
@@ -7799,6 +7817,40 @@ return array (
               array (
                 'type' => 'boolean',
               ),
+              'liveNow' => 
+              array (
+                'type' => 'array',
+                'items' => 
+                array (
+                  'type' => 'ref',
+                  'ref' => 'lex:app.bsky.unspecced.getConfig#liveNowConfig',
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+      'liveNowConfig' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'did',
+          1 => 'domains',
+        ),
+        'properties' => 
+        array (
+          'did' => 
+          array (
+            'type' => 'string',
+            'format' => 'did',
+          ),
+          'domains' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'string',
             ),
           ),
         ),
