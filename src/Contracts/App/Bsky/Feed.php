@@ -200,7 +200,7 @@ interface Feed
     public function getTimeline(?string $algorithm = null, ?int $limit = 50, ?string $cursor = null);
 
     /**
-     * Find posts matching search criteria, returning views of those posts.
+     * Find posts matching search criteria, returning views of those posts. Note that this API endpoint may require authentication (eg, not public) for some service providers and implementations.
      *
      * @link https://docs.bsky.app/docs/api/app-bsky-feed-search-posts
      */
