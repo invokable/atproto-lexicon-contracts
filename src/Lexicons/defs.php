@@ -4533,7 +4533,7 @@ return array (
       'main' => 
       array (
         'type' => 'query',
-        'description' => 'Find posts matching search criteria, returning views of those posts.',
+        'description' => 'Find posts matching search criteria, returning views of those posts. Note that this API endpoint may require authentication (eg, not public) for some service providers and implementations.',
         'parameters' => 
         array (
           'type' => 'params',
