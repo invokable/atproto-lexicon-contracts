@@ -2445,6 +2445,16 @@ return array (
             'type' => 'ref',
             'ref' => 'lex:app.bsky.actor.defs#profileViewBasic',
           ),
+          'uri' => 
+          array (
+            'type' => 'string',
+            'format' => 'at-uri',
+          ),
+          'cid' => 
+          array (
+            'type' => 'string',
+            'format' => 'cid',
+          ),
           'indexedAt' => 
           array (
             'type' => 'string',
@@ -4232,6 +4242,11 @@ return array (
               'type' => 'string',
               'format' => 'datetime',
             ),
+            'via' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:com.atproto.repo.strongRef',
+            ),
           ),
         ),
       ),
@@ -4518,6 +4533,11 @@ return array (
             array (
               'type' => 'string',
               'format' => 'datetime',
+            ),
+            'via' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:com.atproto.repo.strongRef',
             ),
           ),
         ),
@@ -7313,7 +7333,7 @@ return array (
           'reason' => 
           array (
             'type' => 'string',
-            'description' => 'Expected values are \'like\', \'repost\', \'follow\', \'mention\', \'reply\', \'quote\', \'starterpack-joined\', \'verified\', and \'unverified\'.',
+            'description' => 'The reason why this notification was delivered - e.g. your post was liked, or you received a new follower.',
             'knownValues' => 
             array (
               0 => 'like',
@@ -7325,6 +7345,8 @@ return array (
               6 => 'starterpack-joined',
               7 => 'verified',
               8 => 'unverified',
+              9 => 'like-via-repost',
+              10 => 'repost-via-repost',
             ),
           ),
           'reasonSubject' => 

@@ -25,4 +25,7 @@ abstract class AbstractRepost
 
     #[Format('datetime')]
     protected string $createdAt;
+
+    #[Ref('com.atproto.repo.strongRef')]
+    protected ?array $via = null;
 }
