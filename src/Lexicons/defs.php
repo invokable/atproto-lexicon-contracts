@@ -7165,6 +7165,209 @@ return array (
         array (
         ),
       ),
+      'chatPreference' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'filter',
+          1 => 'push',
+        ),
+        'properties' => 
+        array (
+          'filter' => 
+          array (
+            'type' => 'string',
+            'knownValues' => 
+            array (
+              0 => 'all',
+              1 => 'accepted',
+            ),
+          ),
+          'push' => 
+          array (
+            'type' => 'boolean',
+          ),
+        ),
+      ),
+      'filterablePreference' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'filter',
+          1 => 'list',
+          2 => 'push',
+        ),
+        'properties' => 
+        array (
+          'filter' => 
+          array (
+            'type' => 'string',
+            'knownValues' => 
+            array (
+              0 => 'all',
+              1 => 'follows',
+            ),
+          ),
+          'list' => 
+          array (
+            'type' => 'boolean',
+          ),
+          'push' => 
+          array (
+            'type' => 'boolean',
+          ),
+        ),
+      ),
+      'preference' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'list',
+          1 => 'push',
+        ),
+        'properties' => 
+        array (
+          'list' => 
+          array (
+            'type' => 'boolean',
+          ),
+          'push' => 
+          array (
+            'type' => 'boolean',
+          ),
+        ),
+      ),
+      'preferences' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'chat',
+          1 => 'follow',
+          2 => 'like',
+          3 => 'likeViaRepost',
+          4 => 'mention',
+          5 => 'quote',
+          6 => 'reply',
+          7 => 'repost',
+          8 => 'repostViaRepost',
+          9 => 'starterpackJoined',
+          10 => 'subscribedPost',
+          11 => 'unverified',
+          12 => 'verified',
+        ),
+        'properties' => 
+        array (
+          'chat' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.notification.defs#chatPreference',
+          ),
+          'follow' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.notification.defs#filterablePreference',
+          ),
+          'like' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.notification.defs#filterablePreference',
+          ),
+          'likeViaRepost' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.notification.defs#filterablePreference',
+          ),
+          'mention' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.notification.defs#filterablePreference',
+          ),
+          'quote' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.notification.defs#filterablePreference',
+          ),
+          'reply' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.notification.defs#filterablePreference',
+          ),
+          'repost' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.notification.defs#filterablePreference',
+          ),
+          'repostViaRepost' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.notification.defs#filterablePreference',
+          ),
+          'starterpackJoined' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.notification.defs#preference',
+          ),
+          'subscribedPost' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.notification.defs#preference',
+          ),
+          'unverified' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.notification.defs#preference',
+          ),
+          'verified' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.notification.defs#preference',
+          ),
+        ),
+      ),
+    ),
+  ),
+  'app.bsky.notification.getPreferences' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.notification.getPreferences',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'description' => 'Get notification-related preferences for an account. Requires auth.',
+        'parameters' => 
+        array (
+          'type' => 'params',
+          'properties' => 
+          array (
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'preferences',
+            ),
+            'properties' => 
+            array (
+              'preferences' => 
+              array (
+                'type' => 'ref',
+                'ref' => 'lex:app.bsky.notification.defs#preferences',
+              ),
+            ),
+          ),
+        ),
+      ),
     ),
   ),
   'app.bsky.notification.getUnreadCount' => 
@@ -7405,6 +7608,115 @@ return array (
               'priority' => 
               array (
                 'type' => 'boolean',
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
+  'app.bsky.notification.putPreferencesV2' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.notification.putPreferencesV2',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'procedure',
+        'description' => 'Set notification-related preferences for an account. Requires auth.',
+        'input' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'properties' => 
+            array (
+              'chat' => 
+              array (
+                'type' => 'ref',
+                'ref' => 'lex:app.bsky.notification.defs#chatPreference',
+              ),
+              'follow' => 
+              array (
+                'type' => 'ref',
+                'ref' => 'lex:app.bsky.notification.defs#filterablePreference',
+              ),
+              'like' => 
+              array (
+                'type' => 'ref',
+                'ref' => 'lex:app.bsky.notification.defs#filterablePreference',
+              ),
+              'likeViaRepost' => 
+              array (
+                'type' => 'ref',
+                'ref' => 'lex:app.bsky.notification.defs#filterablePreference',
+              ),
+              'mention' => 
+              array (
+                'type' => 'ref',
+                'ref' => 'lex:app.bsky.notification.defs#filterablePreference',
+              ),
+              'quote' => 
+              array (
+                'type' => 'ref',
+                'ref' => 'lex:app.bsky.notification.defs#filterablePreference',
+              ),
+              'reply' => 
+              array (
+                'type' => 'ref',
+                'ref' => 'lex:app.bsky.notification.defs#filterablePreference',
+              ),
+              'repost' => 
+              array (
+                'type' => 'ref',
+                'ref' => 'lex:app.bsky.notification.defs#filterablePreference',
+              ),
+              'repostViaRepost' => 
+              array (
+                'type' => 'ref',
+                'ref' => 'lex:app.bsky.notification.defs#filterablePreference',
+              ),
+              'starterpackJoined' => 
+              array (
+                'type' => 'ref',
+                'ref' => 'lex:app.bsky.notification.defs#preference',
+              ),
+              'subscribedPost' => 
+              array (
+                'type' => 'ref',
+                'ref' => 'lex:app.bsky.notification.defs#preference',
+              ),
+              'unverified' => 
+              array (
+                'type' => 'ref',
+                'ref' => 'lex:app.bsky.notification.defs#preference',
+              ),
+              'verified' => 
+              array (
+                'type' => 'ref',
+                'ref' => 'lex:app.bsky.notification.defs#preference',
+              ),
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'preferences',
+            ),
+            'properties' => 
+            array (
+              'preferences' => 
+              array (
+                'type' => 'ref',
+                'ref' => 'lex:app.bsky.notification.defs#preferences',
               ),
             ),
           ),
@@ -7812,6 +8124,82 @@ return array (
           ),
         ),
       ),
+      'threadItemPost' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'post',
+          1 => 'moreParents',
+          2 => 'moreReplies',
+          3 => 'opThread',
+          4 => 'hiddenByThreadgate',
+          5 => 'mutedByViewer',
+        ),
+        'properties' => 
+        array (
+          'post' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.feed.defs#postView',
+          ),
+          'moreParents' => 
+          array (
+            'type' => 'boolean',
+            'description' => 'This post has more parents that were not present in the response. This is just a boolean, without the number of parents.',
+          ),
+          'moreReplies' => 
+          array (
+            'type' => 'integer',
+            'description' => 'This post has more replies that were not present in the response. This is a numeric value, which is best-effort and might not be accurate.',
+          ),
+          'opThread' => 
+          array (
+            'type' => 'boolean',
+            'description' => 'This post is part of a contiguous thread by the OP from the thread root. Many different OP threads can happen in the same thread.',
+          ),
+          'hiddenByThreadgate' => 
+          array (
+            'type' => 'boolean',
+            'description' => 'The threadgate created by the author indicates this post as a reply to be hidden for everyone consuming the thread.',
+          ),
+          'mutedByViewer' => 
+          array (
+            'type' => 'boolean',
+            'description' => 'This is by an account muted by the viewer requesting it.',
+          ),
+        ),
+      ),
+      'threadItemNoUnauthenticated' => 
+      array (
+        'type' => 'object',
+        'properties' => 
+        array (
+        ),
+      ),
+      'threadItemNotFound' => 
+      array (
+        'type' => 'object',
+        'properties' => 
+        array (
+        ),
+      ),
+      'threadItemBlocked' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'author',
+        ),
+        'properties' => 
+        array (
+          'author' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.feed.defs#blockedAuthor',
+          ),
+        ),
+      ),
     ),
   ),
   'app.bsky.unspecced.getConfig' => 
@@ -7936,6 +8324,238 @@ return array (
                   'ref' => 'lex:app.bsky.feed.defs#generatorView',
                 ),
               ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
+  'app.bsky.unspecced.getPostThreadOtherV2' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.unspecced.getPostThreadOtherV2',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'description' => '(NOTE: this endpoint is under development and WILL change without notice. Don\'t use it until it is moved out of `unspecced` or your application WILL break) Get additional posts under a thread e.g. replies hidden by threadgate. Based on an anchor post at any depth of the tree, returns top-level replies below that anchor. It does not include ancestors nor the anchor itself. This should be called after exhausting `app.bsky.unspecced.getPostThreadV2`. Does not require auth, but additional metadata and filtering will be applied for authed requests.',
+        'parameters' => 
+        array (
+          'type' => 'params',
+          'required' => 
+          array (
+            0 => 'anchor',
+          ),
+          'properties' => 
+          array (
+            'anchor' => 
+            array (
+              'type' => 'string',
+              'format' => 'at-uri',
+              'description' => 'Reference (AT-URI) to post record. This is the anchor post.',
+            ),
+            'prioritizeFollowedUsers' => 
+            array (
+              'type' => 'boolean',
+              'description' => 'Whether to prioritize posts from followed users. It only has effect when the user is authenticated.',
+              'default' => false,
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'thread',
+            ),
+            'properties' => 
+            array (
+              'thread' => 
+              array (
+                'type' => 'array',
+                'description' => 'A flat list of other thread items. The depth of each item is indicated by the depth property inside the item.',
+                'items' => 
+                array (
+                  'type' => 'ref',
+                  'ref' => 'lex:app.bsky.unspecced.getPostThreadOtherV2#threadItem',
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+      'threadItem' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'uri',
+          1 => 'depth',
+          2 => 'value',
+        ),
+        'properties' => 
+        array (
+          'uri' => 
+          array (
+            'type' => 'string',
+            'format' => 'at-uri',
+          ),
+          'depth' => 
+          array (
+            'type' => 'integer',
+            'description' => 'The nesting level of this item in the thread. Depth 0 means the anchor item. Items above have negative depths, items below have positive depths.',
+          ),
+          'value' => 
+          array (
+            'type' => 'union',
+            'refs' => 
+            array (
+              0 => 'lex:app.bsky.unspecced.defs#threadItemPost',
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
+  'app.bsky.unspecced.getPostThreadV2' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.unspecced.getPostThreadV2',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'description' => '(NOTE: this endpoint is under development and WILL change without notice. Don\'t use it until it is moved out of `unspecced` or your application WILL break) Get posts in a thread. It is based in an anchor post at any depth of the tree, and returns posts above it (recursively resolving the parent, without further branching to their replies) and below it (recursive replies, with branching to their replies). Does not require auth, but additional metadata and filtering will be applied for authed requests.',
+        'parameters' => 
+        array (
+          'type' => 'params',
+          'required' => 
+          array (
+            0 => 'anchor',
+          ),
+          'properties' => 
+          array (
+            'anchor' => 
+            array (
+              'type' => 'string',
+              'format' => 'at-uri',
+              'description' => 'Reference (AT-URI) to post record. This is the anchor post, and the thread will be built around it. It can be any post in the tree, not necessarily a root post.',
+            ),
+            'above' => 
+            array (
+              'type' => 'boolean',
+              'description' => 'Whether to include parents above the anchor.',
+              'default' => true,
+            ),
+            'below' => 
+            array (
+              'type' => 'integer',
+              'description' => 'How many levels of replies to include below the anchor.',
+              'default' => 6,
+              'minimum' => 0,
+              'maximum' => 20,
+            ),
+            'branchingFactor' => 
+            array (
+              'type' => 'integer',
+              'description' => 'Maximum of replies to include at each level of the thread, except for the direct replies to the anchor, which are (NOTE: currently, during unspecced phase) all returned (NOTE: later they might be paginated).',
+              'default' => 10,
+              'minimum' => 0,
+              'maximum' => 100,
+            ),
+            'prioritizeFollowedUsers' => 
+            array (
+              'type' => 'boolean',
+              'description' => 'Whether to prioritize posts from followed users. It only has effect when the user is authenticated.',
+              'default' => false,
+            ),
+            'sort' => 
+            array (
+              'type' => 'string',
+              'description' => 'Sorting for the thread replies.',
+              'knownValues' => 
+              array (
+                0 => 'newest',
+                1 => 'oldest',
+                2 => 'top',
+              ),
+              'default' => 'oldest',
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'thread',
+              1 => 'hasOtherReplies',
+            ),
+            'properties' => 
+            array (
+              'thread' => 
+              array (
+                'type' => 'array',
+                'description' => 'A flat list of thread items. The depth of each item is indicated by the depth property inside the item.',
+                'items' => 
+                array (
+                  'type' => 'ref',
+                  'ref' => 'lex:app.bsky.unspecced.getPostThreadV2#threadItem',
+                ),
+              ),
+              'threadgate' => 
+              array (
+                'type' => 'ref',
+                'ref' => 'lex:app.bsky.feed.defs#threadgateView',
+              ),
+              'hasOtherReplies' => 
+              array (
+                'type' => 'boolean',
+                'description' => 'Whether this thread has additional replies. If true, a call can be made to the `getPostThreadOtherV2` endpoint to retrieve them.',
+              ),
+            ),
+          ),
+        ),
+      ),
+      'threadItem' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'uri',
+          1 => 'depth',
+          2 => 'value',
+        ),
+        'properties' => 
+        array (
+          'uri' => 
+          array (
+            'type' => 'string',
+            'format' => 'at-uri',
+          ),
+          'depth' => 
+          array (
+            'type' => 'integer',
+            'description' => 'The nesting level of this item in the thread. Depth 0 means the anchor item. Items above have negative depths, items below have positive depths.',
+          ),
+          'value' => 
+          array (
+            'type' => 'union',
+            'refs' => 
+            array (
+              0 => 'lex:app.bsky.unspecced.defs#threadItemPost',
+              1 => 'lex:app.bsky.unspecced.defs#threadItemNoUnauthenticated',
+              2 => 'lex:app.bsky.unspecced.defs#threadItemNotFound',
+              3 => 'lex:app.bsky.unspecced.defs#threadItemBlocked',
             ),
           ),
         ),
@@ -17893,6 +18513,7 @@ return array (
             array (
               0 => 'lex:com.atproto.admin.defs#repoRef',
               1 => 'lex:com.atproto.repo.strongRef',
+              2 => 'lex:chat.bsky.convo.defs#messageRef',
             ),
           ),
           'hosting' => 
@@ -21792,6 +22413,7 @@ return array (
           'createdAt' => 
           array (
             'type' => 'string',
+            'format' => 'datetime',
             'description' => 'Timestamp for verification record. Defaults to current time when not specified.',
           ),
         ),
