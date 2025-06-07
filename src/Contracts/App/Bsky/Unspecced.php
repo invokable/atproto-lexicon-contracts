@@ -18,6 +18,8 @@ interface Unspecced
 {
     public const getConfig = 'app.bsky.unspecced.getConfig';
     public const getPopularFeedGenerators = 'app.bsky.unspecced.getPopularFeedGenerators';
+    public const getPostThreadOtherV2 = 'app.bsky.unspecced.getPostThreadOtherV2';
+    public const getPostThreadV2 = 'app.bsky.unspecced.getPostThreadV2';
     public const getSuggestedFeeds = 'app.bsky.unspecced.getSuggestedFeeds';
     public const getSuggestedFeedsSkeleton = 'app.bsky.unspecced.getSuggestedFeedsSkeleton';
     public const getSuggestedStarterPacks = 'app.bsky.unspecced.getSuggestedStarterPacks';
@@ -35,6 +37,8 @@ interface Unspecced
 
     public const getConfigResponse = ['checkEmailConfirmed' => 'bool', 'liveNow' => [['did' => 'string', 'domains' => 'array']]];
     public const getPopularFeedGeneratorsResponse = ['cursor' => 'string', 'feeds' => [['uri' => 'string', 'cid' => 'string', 'did' => 'string', 'creator' => 'array', 'displayName' => 'string', 'description' => 'string', 'descriptionFacets' => 'array', 'avatar' => 'string', 'likeCount' => 'int', 'acceptsInteractions' => 'bool', 'labels' => 'array', 'viewer' => 'array', 'contentMode' => 'string', 'indexedAt' => 'string']]];
+    public const getPostThreadOtherV2Response = ['thread' => [['uri' => 'string', 'depth' => 'int', 'value' => 'array']]];
+    public const getPostThreadV2Response = ['thread' => [['uri' => 'string', 'depth' => 'int', 'value' => 'array']], 'threadgate' => ['uri' => 'string', 'cid' => 'string', 'record' => 'mixed', 'lists' => 'array'], 'hasOtherReplies' => 'bool'];
     public const getSuggestedFeedsResponse = ['feeds' => [['uri' => 'string', 'cid' => 'string', 'did' => 'string', 'creator' => 'array', 'displayName' => 'string', 'description' => 'string', 'descriptionFacets' => 'array', 'avatar' => 'string', 'likeCount' => 'int', 'acceptsInteractions' => 'bool', 'labels' => 'array', 'viewer' => 'array', 'contentMode' => 'string', 'indexedAt' => 'string']]];
     public const getSuggestedFeedsSkeletonResponse = ['feeds' => 'array'];
     public const getSuggestedStarterPacksResponse = ['starterPacks' => [['uri' => 'string', 'cid' => 'string', 'record' => 'mixed', 'creator' => 'array', 'list' => 'array', 'listItemsSample' => 'array', 'feeds' => 'array', 'joinedWeekCount' => 'int', 'joinedAllTimeCount' => 'int', 'labels' => 'array', 'indexedAt' => 'string']]];
@@ -67,6 +71,24 @@ interface Unspecced
     #[Get, NSID(self::getPopularFeedGenerators)]
     #[Output(self::getPopularFeedGeneratorsResponse)]
     public function getPopularFeedGenerators(?int $limit = 50, ?string $cursor = null, ?string $query = null);
+
+    /**
+     * (NOTE: this endpoint is under development and WILL change without notice. Don't use it until it is moved out of `unspecced` or your application WILL break) Get additional posts under a thread e.g. replies hidden by threadgate. Based on an anchor post at any depth of the tree, returns top-level replies below that anchor. It does not include ancestors nor the anchor itself. This should be called after exhausting `app.bsky.unspecced.getPostThreadV2`. Does not require auth, but additional metadata and filtering will be applied for authed requests.
+     *
+     * @link https://docs.bsky.app/docs/api/app-bsky-unspecced-get-post-thread-other-v2
+     */
+    #[Get, NSID(self::getPostThreadOtherV2)]
+    #[Output(self::getPostThreadOtherV2Response)]
+    public function getPostThreadOtherV2(#[Format('at-uri')] string $anchor, ?bool $prioritizeFollowedUsers = null);
+
+    /**
+     * (NOTE: this endpoint is under development and WILL change without notice. Don't use it until it is moved out of `unspecced` or your application WILL break) Get posts in a thread. It is based in an anchor post at any depth of the tree, and returns posts above it (recursively resolving the parent, without further branching to their replies) and below it (recursive replies, with branching to their replies). Does not require auth, but additional metadata and filtering will be applied for authed requests.
+     *
+     * @link https://docs.bsky.app/docs/api/app-bsky-unspecced-get-post-thread-v2
+     */
+    #[Get, NSID(self::getPostThreadV2)]
+    #[Output(self::getPostThreadV2Response)]
+    public function getPostThreadV2(#[Format('at-uri')] string $anchor, ?bool $above = null, ?int $below = 6, ?int $branchingFactor = 10, ?bool $prioritizeFollowedUsers = null, #[KnownValues(['newest', 'oldest', 'top'])] ?string $sort = 'oldest');
 
     /**
      * Get a list of suggested feeds.
