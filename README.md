@@ -34,7 +34,7 @@ php ./example/example.php
 ```
 
 ## Implementation
-- Laravel https://github.com/kawax/laravel-bluesky
+- Laravel https://github.com/invokable/laravel-bluesky
 
 ## LICENCE
 MIT
