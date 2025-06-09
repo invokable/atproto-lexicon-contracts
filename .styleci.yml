@@ -1,6 +1,0 @@
-preset: laravel
-disabled:
-  - no_unused_imports
-finder:
-  not-path:
-    - "src/Lexicons/defs.php"
