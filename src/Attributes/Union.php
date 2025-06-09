@@ -7,7 +7,5 @@ use Attribute;
 #[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_PARAMETER)]
 class Union
 {
-    public function __construct(public array $refs)
-    {
-    }
+    public function __construct(public array $refs) {}
 }

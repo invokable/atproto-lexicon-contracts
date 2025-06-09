@@ -45,8 +45,6 @@ class LexiconEnumCommand extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return int
      */
     public function handle(): int
     {
@@ -81,7 +79,7 @@ class LexiconEnumCommand extends Command
                 }
             })
             ->filter(fn ($json) => is_array($json))
-            //->dump()
+            // ->dump()
             ->implode(function (array $json, string $name) {
                 $description = Arr::get($json, 'defs.main.description', Arr::get($json, 'description'));
                 $id = Arr::get($json, 'id');
@@ -110,7 +108,7 @@ class LexiconEnumCommand extends Command
 
         $enum = collect($facets)
             ->mapWithKeys(fn (string $facet) => [Str::of($facet)->remove('#')->toString() => $id.$facet])
-            //->dump()
+            // ->dump()
             ->implode(function (string $file, string $name) use ($json) {
                 $description = Arr::get($json, 'defs.'.$name.'.description');
                 $name = Str::studly($name);
@@ -197,7 +195,7 @@ class LexiconEnumCommand extends Command
 
         $enum = collect($rules)
             ->mapWithKeys(fn (string $rule) => [Str::of($rule)->remove('#')->toString() => $id.$rule])
-            //->dump()
+            // ->dump()
             ->implode(function (string $rule, string $name) use ($json) {
                 $description = Arr::get($json, 'defs.'.$name.'.description');
                 $name = Str::studly($name);
@@ -225,7 +223,7 @@ class LexiconEnumCommand extends Command
 
         $enum = collect($purposes)
             ->mapWithKeys(fn (string $purpose) => [Str::of($purpose)->after('#')->toString() => $purpose])
-            //->dump()
+            // ->dump()
             ->implode(function (string $purpose, string $name) use ($json) {
                 $description = Arr::get($json, 'defs.'.$name.'.description');
                 $name = Str::studly($name);

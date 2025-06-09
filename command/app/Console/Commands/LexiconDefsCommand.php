@@ -44,8 +44,6 @@ class LexiconDefsCommand extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return int
      */
     public function handle(): int
     {
@@ -123,7 +121,7 @@ class LexiconDefsCommand extends Command
     protected function toLexUri(string $uri, ?string $baseUri = null): string
     {
         if (Str::substrCount($uri, '#') > 2) {
-            throw new InvalidArgumentException();
+            throw new InvalidArgumentException;
         }
 
         if (Str::startsWith($uri, 'lex:')) {
@@ -132,7 +130,7 @@ class LexiconDefsCommand extends Command
 
         if (Str::startsWith($uri, '#')) {
             if (empty($baseUri)) {
-                throw new InvalidArgumentException();
+                throw new InvalidArgumentException;
             }
 
             return $baseUri.$uri;

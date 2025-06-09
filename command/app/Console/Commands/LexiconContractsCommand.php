@@ -50,8 +50,6 @@ class LexiconContractsCommand extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return int
      */
     public function handle(): int
     {
@@ -85,7 +83,7 @@ class LexiconContractsCommand extends Command
                 }
             })
             ->filter(fn ($json) => is_array($json))
-            //->dump()
+            // ->dump()
             ->mapToGroups(function (array $json, string $id) {
                 // [app, bsky, actor, getProfile]
                 $path = Str::of($id)->explode('.');
@@ -116,7 +114,7 @@ class LexiconContractsCommand extends Command
                 $type = match (Arr::get($json, 'defs.main.type')) {
                     'query' => 'get',
                     'procedure' => 'post',
-                    default => throw new RuntimeException(),
+                    default => throw new RuntimeException,
                 };
 
                 $output = Arr::get($json, 'defs.main.output.schema');
@@ -147,7 +145,7 @@ class LexiconContractsCommand extends Command
                     ]),
                 ];
             })
-            //->dump()
+            // ->dump()
             ->each(function (Collection $contracts, string $class) {
                 $this->save($contracts, $class);
             });
@@ -338,7 +336,7 @@ class LexiconContractsCommand extends Command
                                 'integer' => 'int',
                                 'boolean' => 'bool',
                                 'string' => 'string',
-                                //'unknown' => 'mixed',
+                                // 'unknown' => 'mixed',
                                 'array', 'object', 'union', 'ref', 'blob' => 'array',
                                 default => 'mixed',
                             };
@@ -368,7 +366,7 @@ class LexiconContractsCommand extends Command
                                 'integer' => 'int',
                                 'boolean' => 'bool',
                                 'string' => 'string',
-                                //'unknown' => 'mixed',
+                                // 'unknown' => 'mixed',
                                 'array', 'object', 'union', 'ref' => 'array',
                                 default => 'mixed',
                             };
@@ -383,7 +381,7 @@ class LexiconContractsCommand extends Command
                     'integer' => 'int',
                     'boolean' => 'bool',
                     'string' => 'string',
-                    //'unknown' => 'mixed',
+                    // 'unknown' => 'mixed',
                     'array', 'object', 'union', 'ref', 'blob' => 'array',
                     default => 'mixed',
                 };

@@ -49,8 +49,6 @@ class LexiconRecordCommand extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return int
      */
     public function handle(): int
     {
@@ -84,7 +82,7 @@ class LexiconRecordCommand extends Command
                 }
             })
             ->filter(fn ($json) => is_array($json))
-            //->dump()
+            // ->dump()
             ->each(function (array $json, string $id) {
                 $property = $this->getProperties($json, $id);
                 $this->save(json: $json, id: $id, property: Str::rtrim($property));
@@ -97,7 +95,7 @@ class LexiconRecordCommand extends Command
         $properties = Arr::get($json, 'defs.main.record.properties');
 
         return collect($properties)
-            //->dump()
+            // ->dump()
             ->map(function (array $property, string $name) use ($required, $id) {
                 $type = Arr::get($property, 'type');
                 $format = Arr::get($property, 'format', Arr::get($property, 'items.format'));
@@ -186,7 +184,7 @@ class LexiconRecordCommand extends Command
             ->reject(function ($property) {
                 return filled($property['deprecated']);
             })
-            //->dump()
+            // ->dump()
             ->implode(function ($property, $name) {
                 $type = Arr::get($property, 'type');
                 $format = Arr::get($property, 'format');

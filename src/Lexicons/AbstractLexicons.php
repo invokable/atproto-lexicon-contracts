@@ -40,7 +40,7 @@ abstract class AbstractLexicons
         $def = $this->getDef($id);
 
         if (empty($def)) {
-            throw new InvalidArgumentException();
+            throw new InvalidArgumentException;
         }
 
         return $def;

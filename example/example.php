@@ -3,7 +3,7 @@
 require_once __DIR__.'/../vendor/autoload.php';
 require_once __DIR__.'/PublicClient.php';
 
-$client = new PublicClient();
+$client = new PublicClient;
 
 $posts = $client->searchPosts(q: '#bluesky', tag: ['bluesky'], limit: 5);
 var_dump($posts);
