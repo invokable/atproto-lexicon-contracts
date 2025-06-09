@@ -14,7 +14,8 @@
   },
   "require-dev": {
     "guzzlehttp/guzzle": "^7.9",
-    "jetbrains/phpstorm-attributes": "^1.2"
+    "jetbrains/phpstorm-attributes": "^1.2",
+    "laravel/pint": "^1.22"
   },
   "autoload": {
     "psr-4": {
