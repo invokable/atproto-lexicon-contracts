@@ -1,5 +1,7 @@
 # AtProto Lexicon Contracts
 
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/invokable/atproto-lexicon-contracts)
+
 Auto generated pure PHP interface and enum that you can use to create your own client.
 
 ## Requirements
