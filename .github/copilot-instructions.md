@@ -17,22 +17,65 @@ This project is a **PHP code generation system** for the **AT Protocol** (Authen
 
 The project follows a **generate-don't-write** philosophy where all client code is automatically generated from authoritative JSON schema definitions, ensuring consistency and reducing manual maintenance.
 
+## Onboarding Guidance for New Contributors
+
+**Initial Setup:**
+1. Clone the repository: `git clone https://github.com/invokable/atproto-lexicon-contracts.git`
+2. Initialize submodules: `git submodule update --init --recursive`
+3. Install Laravel dependencies: `cd command && composer install`
+4. Verify commands are available: `cd command && php artisan list | grep lexicon`
+
+**Code Generation Process:**
+1. Update schemas: `git submodule update --remote` 
+2. Generate contracts: `cd command && php artisan bluesky:lexicon-contracts`
+3. Generate enums: `cd command && php artisan bluesky:lexicon-enum`
+4. Generate records: `cd command && php artisan bluesky:lexicon-record` 
+5. Generate definitions: `cd command && php artisan bluesky:lexicon-defs`
+6. Generate unions: `cd command && php artisan bluesky:lexicon-union`
+7. Or run all at once: `cd command && composer run lexicon`
+
+**Understanding Generated Code:**
+- All code in `src/` is auto-generated - never edit manually
+- Templates in `command/app/Console/Commands/stubs/` control output format
+- JSON schemas in `atproto/lexicons/` are the source of truth
+- Each NSID (e.g., `app.bsky.feed.post`) becomes a PHP class or interface
+
+**Development Workflow:**
+- Make changes only to generation commands or templates
+- Test generation with: `cd command && composer run lexicon`
+- Verify output structure matches expected patterns
+- Use `git diff` to review generated changes before committing
+
 ## Project Organization
 
 ### Core Directory Structure
 
 ```
 ├── src/                          # Generated PHP code (output)
+│   ├── Attributes/               # PHP attribute classes for schema validation
 │   ├── Contracts/                # Service interface contracts
 │   ├── Record/                   # Abstract data record classes  
 │   ├── Union/                    # Union type classes
 │   ├── Enum/                     # Enumeration classes
-│   └── Lexicons/defs.php         # Consolidated definitions
+│   ├── Types/                    # Base type classes (AbstractBlob, AbstractUnion)
+│   └── Lexicons/                 # Consolidated definitions and abstractions
+│       ├── defs.php              # All lexicon definitions array
+│       └── AbstractLexicons.php  # Base lexicon handling
 ├── command/                      # Laravel-based generation commands
 │   ├── app/Console/Commands/     # Code generation commands
-│   └── stubs/                    # Template files for generation
+│   │   ├── stubs/                # Template files for generation
+│   │   ├── LexiconContractsCommand.php
+│   │   ├── LexiconRecordCommand.php
+│   │   ├── LexiconUnionCommand.php
+│   │   ├── LexiconEnumCommand.php
+│   │   └── LexiconDefsCommand.php
+│   └── composer.json             # Laravel app dependencies and scripts
 ├── atproto/lexicons/             # Input JSON schemas (git submodule)
-├── example/                      # Usage examples
+│   ├── app/                      # Bluesky app schemas
+│   ├── chat/                     # Chat/messaging schemas  
+│   ├── com/                      # Core AT Protocol schemas
+│   └── tools/                    # Moderation and admin tool schemas
+├── example/                      # Usage examples and client implementations
 └── .github/workflows/            # CI/CD automation
 ```
 
@@ -46,21 +89,29 @@ The project follows a **generate-don't-write** philosophy where all client code 
     - `LexiconDefsCommand` - Consolidates all definitions
 
 2. **Generated Contracts** (`src/Contracts/`)
-    - `App/Bsky/` - Bluesky social features (Actor, Feed, Graph, Notification)
-    - `Com/Atproto/` - Core protocol services (Admin, Server, Sync, Repo)
-    - `Tools/Ozone/` - Moderation and administrative tools
-    - `Chat/Bsky/` - Real-time messaging functionality
+    - `App/Bsky/` - Bluesky social features (Actor, Feed, Graph, Notification, Video, Labeler, Unspecced)
+    - `Com/Atproto/` - Core protocol services (Admin, Identity, Label, Moderation, Repo, Server, Sync, Temp)
+    - `Tools/Ozone/` - Moderation and administrative tools (Communication, Hosting, Moderation, Server, Set, Setting, Signature, Team, Verification)
+    - `Chat/Bsky/` - Real-time messaging functionality (Actor, Convo, Moderation)
 
 3. **Data Models** (`src/Record/`)
     - Post records, profile records, relationship records
-    - Social graph structures (follows, blocks, lists)
+    - Social graph structures (follows, blocks, lists, starter packs)
     - Content control records (threadgates, postgates)
+    - Embed types (images, video, external links, quote posts)
 
-4. **Template System** (`command/app/Console/Commands/stubs/`)
+4. **Type System** (`src/`)
+    - `Attributes/` - PHP attributes for schema validation (Format, Union, Ref, Required, etc.)
+    - `Types/` - Base type abstractions (AbstractBlob, AbstractUnion)
+    - `Enum/` - Generated enumeration classes
+    - `Union/` - Generated union type classes
+
+5. **Template System** (`command/app/Console/Commands/stubs/`)
     - `lexicon-interface.stub` - Service interface template
     - `lexicon-record.stub` - Record class template
     - `lexicon-union.stub` - Union type template
     - `lexicon-enum.stub` - Enumeration template
+    - `lexicon-defs.stub` - Definitions consolidation template
 
 ### Key Workflows
 
@@ -69,18 +120,28 @@ The project follows a **generate-don't-write** philosophy where all client code 
 # Update lexicon schemas
 git submodule update --remote
 
-# Generate all PHP code
-composer run lexicon
+# Install Laravel dependencies (required for generation)
+cd command && composer install
 
-# Individual generation commands
-php artisan bluesky:lexicon-contracts
-php artisan bluesky:lexicon-record
-php artisan bluesky:lexicon-union
-php artisan bluesky:lexicon-enum
-php artisan bluesky:lexicon-defs
+# Generate all PHP code (from command directory)
+cd command && composer run lexicon
+
+# Individual generation commands (from command directory)
+cd command && php artisan bluesky:lexicon-contracts
+cd command && php artisan bluesky:lexicon-enum  
+cd command && php artisan bluesky:lexicon-record
+cd command && php artisan bluesky:lexicon-defs
+cd command && php artisan bluesky:lexicon-union
+
+# Or run from project root using relative paths
+php command/artisan bluesky:lexicon-contracts
 ```
 
-**CI/CD:** Automated versioning triggers on merged PRs that modify `src/` directory, using semantic versioning with patch-level increments.
+**CI/CD Workflows:**
+- **Automated Updates** (`lexicon.yml`) - Daily cron job and pushes to main that update lexicon schemas and create PRs
+- **Code Generation** - Runs all generation commands in sequence: contracts → enum → record → defs → union  
+- **Versioning** (`version.yml`) - Semantic versioning with patch-level increments when PRs modify `src/**` paths
+- **Linting** (`lint.yml`) - Code style validation using Laravel Pint
 
 ## Glossary of Codebase-Specific Terms
 
@@ -94,7 +155,7 @@ php artisan bluesky:lexicon-defs
 - *Format:* `at://did:plc:example/app.bsky.feed.post/recordkey`
 
 **Blob** - Binary large object for media content (images, videos, documents).
-- *Location:* `Revolution\AtProto\Lexicon\Attributes\Blob`
+- *Location:* `src/Attributes/Blob.php`, `src/Types/AbstractBlob.php`
 
 **CID** - Content Identifier, cryptographic hash for content addressing.
 - *Usage:* Used with AT-URIs for immutable content references
@@ -116,6 +177,9 @@ php artisan bluesky:lexicon-defs
 
 **Hydration** - Process of converting minimal data (skeletons) into full objects.
 - *Usage:* `getPosts()` hydrates post URIs into complete post views
+
+**Labeler** - Service that provides content labels for moderation and filtering.
+- *Location:* `src/Contracts/App/Bsky/Labeler.php`
 
 **Lexicon** - AT Protocol's schema definition language for APIs and data structures.
 - *Location:* Source JSONs in `atproto/lexicons/`, processed by generation commands
@@ -155,7 +219,11 @@ php artisan bluesky:lexicon-defs
 - *Location:* `src/Record/App/Bsky/Feed/AbstractThreadgate.php`
 
 **Union** - Type that can be one of several specified alternatives.
-- *Location:* `src/Union/` directory, `#[Union]` attributes
+- *Location:* `src/Union/` directory, `src/Attributes/Union.php`, `src/Types/AbstractUnion.php`
+- *Usage:* `#[Union]` attributes on properties and parameters
+
+**Video** - Video content handling within AT Protocol posts and embeds.
+- *Location:* `src/Contracts/App/Bsky/Video.php`, `app.bsky.embed.video` records
 
 **xRPC** - AT Protocol's RPC framework for service communication.
 - *Usage:* Base URI `https://public.api.bsky.app/xrpc/` in client examples
