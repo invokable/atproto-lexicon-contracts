@@ -287,6 +287,11 @@ return array (
             'type' => 'ref',
             'ref' => 'lex:app.bsky.actor.defs#profileAssociatedChat',
           ),
+          'activitySubscription' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.actor.defs#profileAssociatedActivitySubscription',
+          ),
         ),
       ),
       'profileAssociatedChat' => 
@@ -306,6 +311,27 @@ return array (
               0 => 'all',
               1 => 'none',
               2 => 'following',
+            ),
+          ),
+        ),
+      ),
+      'profileAssociatedActivitySubscription' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'allowSubscriptions',
+        ),
+        'properties' => 
+        array (
+          'allowSubscriptions' => 
+          array (
+            'type' => 'string',
+            'knownValues' => 
+            array (
+              0 => 'followers',
+              1 => 'mutuals',
+              2 => 'none',
             ),
           ),
         ),
@@ -353,6 +379,11 @@ return array (
           array (
             'type' => 'ref',
             'ref' => 'lex:app.bsky.actor.defs#knownFollowers',
+          ),
+          'activitySubscription' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.notification.defs#activitySubscription',
           ),
         ),
       ),
@@ -7152,6 +7183,42 @@ return array (
       ),
     ),
   ),
+  'app.bsky.notification.declaration' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.notification.declaration',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'record',
+        'description' => 'A declaration of the user\'s choices related to notifications that can be produced by them.',
+        'key' => 'literal:self',
+        'record' => 
+        array (
+          'type' => 'object',
+          'required' => 
+          array (
+            0 => 'allowSubscriptions',
+          ),
+          'properties' => 
+          array (
+            'allowSubscriptions' => 
+            array (
+              'type' => 'string',
+              'description' => 'A declaration of the user\'s preference for allowing activity subscriptions from other users. Absence of a record implies \'followers\'.',
+              'knownValues' => 
+              array (
+                0 => 'followers',
+                1 => 'mutuals',
+                2 => 'none',
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
   'app.bsky.notification.defs' => 
   array (
     'lexicon' => 1,
@@ -7328,6 +7395,49 @@ return array (
           ),
         ),
       ),
+      'activitySubscription' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'post',
+          1 => 'reply',
+        ),
+        'properties' => 
+        array (
+          'post' => 
+          array (
+            'type' => 'boolean',
+          ),
+          'reply' => 
+          array (
+            'type' => 'boolean',
+          ),
+        ),
+      ),
+      'subjectActivitySubscription' => 
+      array (
+        'description' => 'Object used to store activity subscription data in stash.',
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'subject',
+          1 => 'activitySubscription',
+        ),
+        'properties' => 
+        array (
+          'subject' => 
+          array (
+            'type' => 'string',
+            'format' => 'did',
+          ),
+          'activitySubscription' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.notification.defs#activitySubscription',
+          ),
+        ),
+      ),
     ),
   ),
   'app.bsky.notification.getPreferences' => 
@@ -7411,6 +7521,65 @@ return array (
               'count' => 
               array (
                 'type' => 'integer',
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
+  'app.bsky.notification.listActivitySubscriptions' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.notification.listActivitySubscriptions',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'description' => 'Enumerate all accounts to which the requesting account is subscribed to receive notifications for. Requires auth.',
+        'parameters' => 
+        array (
+          'type' => 'params',
+          'properties' => 
+          array (
+            'limit' => 
+            array (
+              'type' => 'integer',
+              'minimum' => 1,
+              'maximum' => 100,
+              'default' => 50,
+            ),
+            'cursor' => 
+            array (
+              'type' => 'string',
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'subscriptions',
+            ),
+            'properties' => 
+            array (
+              'cursor' => 
+              array (
+                'type' => 'string',
+              ),
+              'subscriptions' => 
+              array (
+                'type' => 'array',
+                'items' => 
+                array (
+                  'type' => 'ref',
+                  'ref' => 'lex:app.bsky.actor.defs#profileView',
+                ),
               ),
             ),
           ),
@@ -7577,6 +7746,70 @@ return array (
             array (
               'type' => 'ref',
               'ref' => 'lex:com.atproto.label.defs#label',
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
+  'app.bsky.notification.putActivitySubscription' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.notification.putActivitySubscription',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'procedure',
+        'description' => 'Puts an activity subscription entry. The key should be omitted for creation and provided for updates. Requires auth.',
+        'input' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'subject',
+              1 => 'activitySubscription',
+            ),
+            'properties' => 
+            array (
+              'subject' => 
+              array (
+                'type' => 'string',
+                'format' => 'did',
+              ),
+              'activitySubscription' => 
+              array (
+                'type' => 'ref',
+                'ref' => 'lex:app.bsky.notification.defs#activitySubscription',
+              ),
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'subject',
+            ),
+            'properties' => 
+            array (
+              'subject' => 
+              array (
+                'type' => 'string',
+                'format' => 'did',
+              ),
+              'activitySubscription' => 
+              array (
+                'type' => 'ref',
+                'ref' => 'lex:app.bsky.notification.defs#activitySubscription',
+              ),
             ),
           ),
         ),
