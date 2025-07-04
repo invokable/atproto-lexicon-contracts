@@ -28,5 +28,5 @@ interface Moderation
      */
     #[Post, NSID(self::createReport)]
     #[Output(self::createReportResponse)]
-    public function createReport(#[Ref('com.atproto.moderation.defs#reasonType')] string $reasonType, #[Union(['com.atproto.admin.defs#repoRef', 'com.atproto.repo.strongRef'])] array $subject, ?string $reason = null);
+    public function createReport(#[Ref('com.atproto.moderation.defs#reasonType')] string $reasonType, #[Union(['com.atproto.admin.defs#repoRef', 'com.atproto.repo.strongRef'])] array $subject, ?string $reason = null, #[Ref('com.atproto.moderation.createReport#modTool')] ?array $modTool = null);
 }
