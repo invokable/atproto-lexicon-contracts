@@ -139,7 +139,7 @@ class LexiconContractsCommand extends Command
                         ])
                             ->when(filled($deprecated), fn (Collection $collection) => $collection->push($deprecated))
                             ->push('    #['.Str::studly($type).', NSID(self::'.$name.')]')
-                            ->when(filled($output), fn (Collection $collection) => $collection->push('    #[Output(self::'.$name.'Response)]'))
+                            //->when(filled($output), fn (Collection $collection) => $collection->push('    #[Output(self::'.$name.'Response)]'))
                             ->push("    public function $name($params);")
                             ->implode(PHP_EOL),
                     ]),
@@ -431,7 +431,7 @@ class LexiconContractsCommand extends Command
             ->replace('{namespace}', $namespace)
             ->replace('{name}', $name)
             ->replace('{const}', $const)
-            ->replace('{output}', $output)
+            //->replace('{output}', $output)
             ->replace('{method}', $method)
             ->replace(PHP_EOL.PHP_EOL.PHP_EOL, PHP_EOL)
             ->toString();

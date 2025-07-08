@@ -11,7 +11,6 @@ namespace Revolution\AtProto\Lexicon\Contracts\Com\Atproto;
 use Revolution\AtProto\Lexicon\Attributes\Format;
 use Revolution\AtProto\Lexicon\Attributes\Get;
 use Revolution\AtProto\Lexicon\Attributes\NSID;
-use Revolution\AtProto\Lexicon\Attributes\Output;
 use Revolution\AtProto\Lexicon\Attributes\Post;
 
 interface Server
@@ -42,21 +41,6 @@ interface Server
     public const revokeAppPassword = 'com.atproto.server.revokeAppPassword';
     public const updateEmail = 'com.atproto.server.updateEmail';
 
-    public const checkAccountStatusResponse = ['activated' => 'bool', 'validDid' => 'bool', 'repoCommit' => 'string', 'repoRev' => 'string', 'repoBlocks' => 'int', 'indexedRecords' => 'int', 'privateStateValues' => 'int', 'expectedBlobs' => 'int', 'importedBlobs' => 'int'];
-    public const createAccountResponse = ['accessJwt' => 'string', 'refreshJwt' => 'string', 'handle' => 'string', 'did' => 'string', 'didDoc' => 'mixed'];
-    public const createAppPasswordResponse = ['name' => 'string', 'password' => 'string', 'createdAt' => 'string', 'privileged' => 'bool'];
-    public const createInviteCodeResponse = ['code' => 'string'];
-    public const createInviteCodesResponse = ['codes' => [['account' => 'string', 'codes' => 'array']]];
-    public const createSessionResponse = ['accessJwt' => 'string', 'refreshJwt' => 'string', 'handle' => 'string', 'did' => 'string', 'didDoc' => 'mixed', 'email' => 'string', 'emailConfirmed' => 'bool', 'emailAuthFactor' => 'bool', 'active' => 'bool', 'status' => 'string'];
-    public const describeServerResponse = ['inviteCodeRequired' => 'bool', 'phoneVerificationRequired' => 'bool', 'availableUserDomains' => 'array', 'links' => ['privacyPolicy' => 'string', 'termsOfService' => 'string'], 'contact' => ['email' => 'string'], 'did' => 'string'];
-    public const getAccountInviteCodesResponse = ['codes' => [['code' => 'string', 'available' => 'int', 'disabled' => 'bool', 'forAccount' => 'string', 'createdBy' => 'string', 'createdAt' => 'string', 'uses' => 'array']]];
-    public const getServiceAuthResponse = ['token' => 'string'];
-    public const getSessionResponse = ['handle' => 'string', 'did' => 'string', 'email' => 'string', 'emailConfirmed' => 'bool', 'emailAuthFactor' => 'bool', 'didDoc' => 'mixed', 'active' => 'bool', 'status' => 'string'];
-    public const listAppPasswordsResponse = ['passwords' => [['name' => 'string', 'createdAt' => 'string', 'privileged' => 'bool']]];
-    public const refreshSessionResponse = ['accessJwt' => 'string', 'refreshJwt' => 'string', 'handle' => 'string', 'did' => 'string', 'didDoc' => 'mixed', 'active' => 'bool', 'status' => 'string'];
-    public const requestEmailUpdateResponse = ['tokenRequired' => 'bool'];
-    public const reserveSigningKeyResponse = ['signingKey' => 'string'];
-
     /**
      * Activates a currently deactivated account. Used to finalize account migration after the account's repo is imported and identity is setup.
      *
@@ -71,7 +55,6 @@ interface Server
      * @link https://docs.bsky.app/docs/api/com-atproto-server-check-account-status
      */
     #[Get, NSID(self::checkAccountStatus)]
-    #[Output(self::checkAccountStatusResponse)]
     public function checkAccountStatus();
 
     /**
@@ -88,7 +71,6 @@ interface Server
      * @link https://docs.bsky.app/docs/api/com-atproto-server-create-account
      */
     #[Post, NSID(self::createAccount)]
-    #[Output(self::createAccountResponse)]
     public function createAccount(#[Format('handle')] string $handle, ?string $email = null, #[Format('did')] ?string $did = null, ?string $inviteCode = null, ?string $verificationCode = null, ?string $verificationPhone = null, #[\SensitiveParameter] ?string $password = null, ?string $recoveryKey = null, mixed $plcOp = null);
 
     /**
@@ -97,7 +79,6 @@ interface Server
      * @link https://docs.bsky.app/docs/api/com-atproto-server-create-app-password
      */
     #[Post, NSID(self::createAppPassword)]
-    #[Output(self::createAppPasswordResponse)]
     public function createAppPassword(string $name, ?bool $privileged = null);
 
     /**
@@ -106,7 +87,6 @@ interface Server
      * @link https://docs.bsky.app/docs/api/com-atproto-server-create-invite-code
      */
     #[Post, NSID(self::createInviteCode)]
-    #[Output(self::createInviteCodeResponse)]
     public function createInviteCode(int $useCount, #[Format('did')] ?string $forAccount = null);
 
     /**
@@ -115,7 +95,6 @@ interface Server
      * @link https://docs.bsky.app/docs/api/com-atproto-server-create-invite-codes
      */
     #[Post, NSID(self::createInviteCodes)]
-    #[Output(self::createInviteCodesResponse)]
     public function createInviteCodes(int $codeCount, int $useCount, #[Format('did')] ?array $forAccounts = null);
 
     /**
@@ -124,7 +103,6 @@ interface Server
      * @link https://docs.bsky.app/docs/api/com-atproto-server-create-session
      */
     #[Post, NSID(self::createSession)]
-    #[Output(self::createSessionResponse)]
     public function createSession(string $identifier, #[\SensitiveParameter] string $password, ?string $authFactorToken = null, ?bool $allowTakendown = null);
 
     /**
@@ -157,7 +135,6 @@ interface Server
      * @link https://docs.bsky.app/docs/api/com-atproto-server-describe-server
      */
     #[Get, NSID(self::describeServer)]
-    #[Output(self::describeServerResponse)]
     public function describeServer();
 
     /**
@@ -166,7 +143,6 @@ interface Server
      * @link https://docs.bsky.app/docs/api/com-atproto-server-get-account-invite-codes
      */
     #[Get, NSID(self::getAccountInviteCodes)]
-    #[Output(self::getAccountInviteCodesResponse)]
     public function getAccountInviteCodes(?bool $includeUsed = null, ?bool $createAvailable = null);
 
     /**
@@ -175,7 +151,6 @@ interface Server
      * @link https://docs.bsky.app/docs/api/com-atproto-server-get-service-auth
      */
     #[Get, NSID(self::getServiceAuth)]
-    #[Output(self::getServiceAuthResponse)]
     public function getServiceAuth(#[Format('did')] string $aud, ?int $exp = null, #[Format('nsid')] ?string $lxm = null);
 
     /**
@@ -184,7 +159,6 @@ interface Server
      * @link https://docs.bsky.app/docs/api/com-atproto-server-get-session
      */
     #[Get, NSID(self::getSession)]
-    #[Output(self::getSessionResponse)]
     public function getSession();
 
     /**
@@ -193,7 +167,6 @@ interface Server
      * @link https://docs.bsky.app/docs/api/com-atproto-server-list-app-passwords
      */
     #[Get, NSID(self::listAppPasswords)]
-    #[Output(self::listAppPasswordsResponse)]
     public function listAppPasswords();
 
     /**
@@ -202,7 +175,6 @@ interface Server
      * @link https://docs.bsky.app/docs/api/com-atproto-server-refresh-session
      */
     #[Post, NSID(self::refreshSession)]
-    #[Output(self::refreshSessionResponse)]
     public function refreshSession();
 
     /**
@@ -227,7 +199,6 @@ interface Server
      * @link https://docs.bsky.app/docs/api/com-atproto-server-request-email-update
      */
     #[Post, NSID(self::requestEmailUpdate)]
-    #[Output(self::requestEmailUpdateResponse)]
     public function requestEmailUpdate();
 
     /**
@@ -244,7 +215,6 @@ interface Server
      * @link https://docs.bsky.app/docs/api/com-atproto-server-reserve-signing-key
      */
     #[Post, NSID(self::reserveSigningKey)]
-    #[Output(self::reserveSigningKeyResponse)]
     public function reserveSigningKey(#[Format('did')] ?string $did = null);
 
     /**

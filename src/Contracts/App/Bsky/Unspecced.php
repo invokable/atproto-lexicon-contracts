@@ -12,7 +12,6 @@ use Revolution\AtProto\Lexicon\Attributes\Format;
 use Revolution\AtProto\Lexicon\Attributes\Get;
 use Revolution\AtProto\Lexicon\Attributes\KnownValues;
 use Revolution\AtProto\Lexicon\Attributes\NSID;
-use Revolution\AtProto\Lexicon\Attributes\Output;
 
 interface Unspecced
 {
@@ -35,32 +34,12 @@ interface Unspecced
     public const searchPostsSkeleton = 'app.bsky.unspecced.searchPostsSkeleton';
     public const searchStarterPacksSkeleton = 'app.bsky.unspecced.searchStarterPacksSkeleton';
 
-    public const getConfigResponse = ['checkEmailConfirmed' => 'bool', 'liveNow' => [['did' => 'string', 'domains' => 'array']]];
-    public const getPopularFeedGeneratorsResponse = ['cursor' => 'string', 'feeds' => [['uri' => 'string', 'cid' => 'string', 'did' => 'string', 'creator' => 'array', 'displayName' => 'string', 'description' => 'string', 'descriptionFacets' => 'array', 'avatar' => 'string', 'likeCount' => 'int', 'acceptsInteractions' => 'bool', 'labels' => 'array', 'viewer' => 'array', 'contentMode' => 'string', 'indexedAt' => 'string']]];
-    public const getPostThreadOtherV2Response = ['thread' => [['uri' => 'string', 'depth' => 'int', 'value' => 'array']]];
-    public const getPostThreadV2Response = ['thread' => [['uri' => 'string', 'depth' => 'int', 'value' => 'array']], 'threadgate' => ['uri' => 'string', 'cid' => 'string', 'record' => 'mixed', 'lists' => 'array'], 'hasOtherReplies' => 'bool'];
-    public const getSuggestedFeedsResponse = ['feeds' => [['uri' => 'string', 'cid' => 'string', 'did' => 'string', 'creator' => 'array', 'displayName' => 'string', 'description' => 'string', 'descriptionFacets' => 'array', 'avatar' => 'string', 'likeCount' => 'int', 'acceptsInteractions' => 'bool', 'labels' => 'array', 'viewer' => 'array', 'contentMode' => 'string', 'indexedAt' => 'string']]];
-    public const getSuggestedFeedsSkeletonResponse = ['feeds' => 'array'];
-    public const getSuggestedStarterPacksResponse = ['starterPacks' => [['uri' => 'string', 'cid' => 'string', 'record' => 'mixed', 'creator' => 'array', 'list' => 'array', 'listItemsSample' => 'array', 'feeds' => 'array', 'joinedWeekCount' => 'int', 'joinedAllTimeCount' => 'int', 'labels' => 'array', 'indexedAt' => 'string']]];
-    public const getSuggestedStarterPacksSkeletonResponse = ['starterPacks' => 'array'];
-    public const getSuggestedUsersResponse = ['actors' => [['did' => 'string', 'handle' => 'string', 'displayName' => 'string', 'description' => 'string', 'avatar' => 'string', 'associated' => 'array', 'indexedAt' => 'string', 'createdAt' => 'string', 'viewer' => 'array', 'labels' => 'array', 'verification' => 'array', 'status' => 'array']]];
-    public const getSuggestedUsersSkeletonResponse = ['dids' => 'array'];
-    public const getSuggestionsSkeletonResponse = ['cursor' => 'string', 'actors' => [['did' => 'string']], 'relativeToDid' => 'string', 'recId' => 'int'];
-    public const getTaggedSuggestionsResponse = ['suggestions' => [['tag' => 'string', 'subjectType' => 'string', 'subject' => 'string']]];
-    public const getTrendingTopicsResponse = ['topics' => [['topic' => 'string', 'displayName' => 'string', 'description' => 'string', 'link' => 'string']], 'suggested' => [['topic' => 'string', 'displayName' => 'string', 'description' => 'string', 'link' => 'string']]];
-    public const getTrendsResponse = ['trends' => [['topic' => 'string', 'displayName' => 'string', 'link' => 'string', 'startedAt' => 'string', 'postCount' => 'int', 'status' => 'string', 'category' => 'string', 'actors' => 'array']]];
-    public const getTrendsSkeletonResponse = ['trends' => [['topic' => 'string', 'displayName' => 'string', 'link' => 'string', 'startedAt' => 'string', 'postCount' => 'int', 'status' => 'string', 'category' => 'string', 'dids' => 'array']]];
-    public const searchActorsSkeletonResponse = ['cursor' => 'string', 'hitsTotal' => 'int', 'actors' => [['did' => 'string']]];
-    public const searchPostsSkeletonResponse = ['cursor' => 'string', 'hitsTotal' => 'int', 'posts' => [['uri' => 'string']]];
-    public const searchStarterPacksSkeletonResponse = ['cursor' => 'string', 'hitsTotal' => 'int', 'starterPacks' => [['uri' => 'string']]];
-
     /**
      * Get miscellaneous runtime configuration.
      *
      * @link https://docs.bsky.app/docs/api/app-bsky-unspecced-get-config
      */
     #[Get, NSID(self::getConfig)]
-    #[Output(self::getConfigResponse)]
     public function getConfig();
 
     /**
@@ -69,7 +48,6 @@ interface Unspecced
      * @link https://docs.bsky.app/docs/api/app-bsky-unspecced-get-popular-feed-generators
      */
     #[Get, NSID(self::getPopularFeedGenerators)]
-    #[Output(self::getPopularFeedGeneratorsResponse)]
     public function getPopularFeedGenerators(?int $limit = 50, ?string $cursor = null, ?string $query = null);
 
     /**
@@ -78,7 +56,6 @@ interface Unspecced
      * @link https://docs.bsky.app/docs/api/app-bsky-unspecced-get-post-thread-other-v2
      */
     #[Get, NSID(self::getPostThreadOtherV2)]
-    #[Output(self::getPostThreadOtherV2Response)]
     public function getPostThreadOtherV2(#[Format('at-uri')] string $anchor, ?bool $prioritizeFollowedUsers = null);
 
     /**
@@ -87,7 +64,6 @@ interface Unspecced
      * @link https://docs.bsky.app/docs/api/app-bsky-unspecced-get-post-thread-v2
      */
     #[Get, NSID(self::getPostThreadV2)]
-    #[Output(self::getPostThreadV2Response)]
     public function getPostThreadV2(#[Format('at-uri')] string $anchor, ?bool $above = null, ?int $below = 6, ?int $branchingFactor = 10, ?bool $prioritizeFollowedUsers = null, #[KnownValues(['newest', 'oldest', 'top'])] ?string $sort = 'oldest');
 
     /**
@@ -96,7 +72,6 @@ interface Unspecced
      * @link https://docs.bsky.app/docs/api/app-bsky-unspecced-get-suggested-feeds
      */
     #[Get, NSID(self::getSuggestedFeeds)]
-    #[Output(self::getSuggestedFeedsResponse)]
     public function getSuggestedFeeds(?int $limit = 10);
 
     /**
@@ -105,7 +80,6 @@ interface Unspecced
      * @link https://docs.bsky.app/docs/api/app-bsky-unspecced-get-suggested-feeds-skeleton
      */
     #[Get, NSID(self::getSuggestedFeedsSkeleton)]
-    #[Output(self::getSuggestedFeedsSkeletonResponse)]
     public function getSuggestedFeedsSkeleton(#[Format('did')] ?string $viewer = null, ?int $limit = 10);
 
     /**
@@ -114,7 +88,6 @@ interface Unspecced
      * @link https://docs.bsky.app/docs/api/app-bsky-unspecced-get-suggested-starter-packs
      */
     #[Get, NSID(self::getSuggestedStarterPacks)]
-    #[Output(self::getSuggestedStarterPacksResponse)]
     public function getSuggestedStarterPacks(?int $limit = 10);
 
     /**
@@ -123,7 +96,6 @@ interface Unspecced
      * @link https://docs.bsky.app/docs/api/app-bsky-unspecced-get-suggested-starter-packs-skeleton
      */
     #[Get, NSID(self::getSuggestedStarterPacksSkeleton)]
-    #[Output(self::getSuggestedStarterPacksSkeletonResponse)]
     public function getSuggestedStarterPacksSkeleton(#[Format('did')] ?string $viewer = null, ?int $limit = 10);
 
     /**
@@ -132,7 +104,6 @@ interface Unspecced
      * @link https://docs.bsky.app/docs/api/app-bsky-unspecced-get-suggested-users
      */
     #[Get, NSID(self::getSuggestedUsers)]
-    #[Output(self::getSuggestedUsersResponse)]
     public function getSuggestedUsers(?string $category = null, ?int $limit = 25);
 
     /**
@@ -141,7 +112,6 @@ interface Unspecced
      * @link https://docs.bsky.app/docs/api/app-bsky-unspecced-get-suggested-users-skeleton
      */
     #[Get, NSID(self::getSuggestedUsersSkeleton)]
-    #[Output(self::getSuggestedUsersSkeletonResponse)]
     public function getSuggestedUsersSkeleton(#[Format('did')] ?string $viewer = null, ?string $category = null, ?int $limit = 25);
 
     /**
@@ -150,7 +120,6 @@ interface Unspecced
      * @link https://docs.bsky.app/docs/api/app-bsky-unspecced-get-suggestions-skeleton
      */
     #[Get, NSID(self::getSuggestionsSkeleton)]
-    #[Output(self::getSuggestionsSkeletonResponse)]
     public function getSuggestionsSkeleton(#[Format('did')] ?string $viewer = null, ?int $limit = 50, ?string $cursor = null, #[Format('did')] ?string $relativeToDid = null);
 
     /**
@@ -159,7 +128,6 @@ interface Unspecced
      * @link https://docs.bsky.app/docs/api/app-bsky-unspecced-get-tagged-suggestions
      */
     #[Get, NSID(self::getTaggedSuggestions)]
-    #[Output(self::getTaggedSuggestionsResponse)]
     public function getTaggedSuggestions();
 
     /**
@@ -168,7 +136,6 @@ interface Unspecced
      * @link https://docs.bsky.app/docs/api/app-bsky-unspecced-get-trending-topics
      */
     #[Get, NSID(self::getTrendingTopics)]
-    #[Output(self::getTrendingTopicsResponse)]
     public function getTrendingTopics(#[Format('did')] ?string $viewer = null, ?int $limit = 10);
 
     /**
@@ -177,7 +144,6 @@ interface Unspecced
      * @link https://docs.bsky.app/docs/api/app-bsky-unspecced-get-trends
      */
     #[Get, NSID(self::getTrends)]
-    #[Output(self::getTrendsResponse)]
     public function getTrends(?int $limit = 10);
 
     /**
@@ -186,7 +152,6 @@ interface Unspecced
      * @link https://docs.bsky.app/docs/api/app-bsky-unspecced-get-trends-skeleton
      */
     #[Get, NSID(self::getTrendsSkeleton)]
-    #[Output(self::getTrendsSkeletonResponse)]
     public function getTrendsSkeleton(#[Format('did')] ?string $viewer = null, ?int $limit = 10);
 
     /**
@@ -195,7 +160,6 @@ interface Unspecced
      * @link https://docs.bsky.app/docs/api/app-bsky-unspecced-search-actors-skeleton
      */
     #[Get, NSID(self::searchActorsSkeleton)]
-    #[Output(self::searchActorsSkeletonResponse)]
     public function searchActorsSkeleton(string $q, #[Format('did')] ?string $viewer = null, ?bool $typeahead = null, ?int $limit = 25, ?string $cursor = null);
 
     /**
@@ -204,7 +168,6 @@ interface Unspecced
      * @link https://docs.bsky.app/docs/api/app-bsky-unspecced-search-posts-skeleton
      */
     #[Get, NSID(self::searchPostsSkeleton)]
-    #[Output(self::searchPostsSkeletonResponse)]
     public function searchPostsSkeleton(string $q, #[KnownValues(['top', 'latest'])] ?string $sort = 'latest', ?string $since = null, ?string $until = null, #[Format('at-identifier')] ?string $mentions = null, #[Format('at-identifier')] ?string $author = null, #[Format('language')] ?string $lang = null, ?string $domain = null, #[Format('uri')] ?string $url = null, ?array $tag = null, #[Format('did')] ?string $viewer = null, ?int $limit = 25, ?string $cursor = null);
 
     /**
@@ -213,6 +176,5 @@ interface Unspecced
      * @link https://docs.bsky.app/docs/api/app-bsky-unspecced-search-starter-packs-skeleton
      */
     #[Get, NSID(self::searchStarterPacksSkeleton)]
-    #[Output(self::searchStarterPacksSkeletonResponse)]
     public function searchStarterPacksSkeleton(string $q, #[Format('did')] ?string $viewer = null, ?int $limit = 25, ?string $cursor = null);
 }

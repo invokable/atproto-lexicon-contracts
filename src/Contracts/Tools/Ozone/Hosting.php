@@ -11,13 +11,10 @@ namespace Revolution\AtProto\Lexicon\Contracts\Tools\Ozone;
 use Revolution\AtProto\Lexicon\Attributes\Format;
 use Revolution\AtProto\Lexicon\Attributes\Get;
 use Revolution\AtProto\Lexicon\Attributes\NSID;
-use Revolution\AtProto\Lexicon\Attributes\Output;
 
 interface Hosting
 {
     public const getAccountHistory = 'tools.ozone.hosting.getAccountHistory';
-
-    public const getAccountHistoryResponse = ['cursor' => 'string', 'events' => [['details' => 'array', 'createdBy' => 'string', 'createdAt' => 'string']]];
 
     /**
      * Get account history, e.g. log of updated email addresses or other identity information.
@@ -25,6 +22,5 @@ interface Hosting
      * @link https://docs.bsky.app/docs/api/tools-ozone-hosting-get-account-history
      */
     #[Get, NSID(self::getAccountHistory)]
-    #[Output(self::getAccountHistoryResponse)]
     public function getAccountHistory(#[Format('did')] string $did, ?array $events = null, ?string $cursor = null, ?int $limit = 50);
 }

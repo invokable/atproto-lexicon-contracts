@@ -12,7 +12,6 @@ use Revolution\AtProto\Lexicon\Attributes\Format;
 use Revolution\AtProto\Lexicon\Attributes\Get;
 use Revolution\AtProto\Lexicon\Attributes\KnownValues;
 use Revolution\AtProto\Lexicon\Attributes\NSID;
-use Revolution\AtProto\Lexicon\Attributes\Output;
 use Revolution\AtProto\Lexicon\Attributes\Post;
 use Revolution\AtProto\Lexicon\Attributes\Ref;
 use Revolution\AtProto\Lexicon\Attributes\Union;
@@ -34,14 +33,6 @@ interface Admin
     public const updateAccountPassword = 'com.atproto.admin.updateAccountPassword';
     public const updateAccountSigningKey = 'com.atproto.admin.updateAccountSigningKey';
     public const updateSubjectStatus = 'com.atproto.admin.updateSubjectStatus';
-
-    public const getAccountInfoResponse = ['did' => 'string', 'handle' => 'string', 'email' => 'string', 'relatedRecords' => 'array', 'indexedAt' => 'string', 'invitedBy' => ['code' => 'string', 'available' => 'int', 'disabled' => 'bool', 'forAccount' => 'string', 'createdBy' => 'string', 'createdAt' => 'string', 'uses' => 'array'], 'invites' => [['code' => 'string', 'available' => 'int', 'disabled' => 'bool', 'forAccount' => 'string', 'createdBy' => 'string', 'createdAt' => 'string', 'uses' => 'array']], 'invitesDisabled' => 'bool', 'emailConfirmedAt' => 'string', 'inviteNote' => 'string', 'deactivatedAt' => 'string', 'threatSignatures' => [[]]];
-    public const getAccountInfosResponse = ['infos' => [['did' => 'string', 'handle' => 'string', 'email' => 'string', 'relatedRecords' => 'array', 'indexedAt' => 'string', 'invitedBy' => 'array', 'invites' => 'array', 'invitesDisabled' => 'bool', 'emailConfirmedAt' => 'string', 'inviteNote' => 'string', 'deactivatedAt' => 'string', 'threatSignatures' => 'array']]];
-    public const getInviteCodesResponse = ['cursor' => 'string', 'codes' => [['code' => 'string', 'available' => 'int', 'disabled' => 'bool', 'forAccount' => 'string', 'createdBy' => 'string', 'createdAt' => 'string', 'uses' => 'array']]];
-    public const getSubjectStatusResponse = ['subject' => 'array', 'takedown' => ['applied' => 'bool', 'ref' => 'string'], 'deactivated' => ['applied' => 'bool', 'ref' => 'string']];
-    public const searchAccountsResponse = ['cursor' => 'string', 'accounts' => [['did' => 'string', 'handle' => 'string', 'email' => 'string', 'relatedRecords' => 'array', 'indexedAt' => 'string', 'invitedBy' => 'array', 'invites' => 'array', 'invitesDisabled' => 'bool', 'emailConfirmedAt' => 'string', 'inviteNote' => 'string', 'deactivatedAt' => 'string', 'threatSignatures' => 'array']]];
-    public const sendEmailResponse = ['sent' => 'bool'];
-    public const updateSubjectStatusResponse = ['subject' => 'array', 'takedown' => ['applied' => 'bool', 'ref' => 'string']];
 
     /**
      * Delete a user account as an administrator.
@@ -81,7 +72,6 @@ interface Admin
      * @link https://docs.bsky.app/docs/api/com-atproto-admin-get-account-info
      */
     #[Get, NSID(self::getAccountInfo)]
-    #[Output(self::getAccountInfoResponse)]
     public function getAccountInfo(#[Format('did')] string $did);
 
     /**
@@ -90,7 +80,6 @@ interface Admin
      * @link https://docs.bsky.app/docs/api/com-atproto-admin-get-account-infos
      */
     #[Get, NSID(self::getAccountInfos)]
-    #[Output(self::getAccountInfosResponse)]
     public function getAccountInfos(#[Format('did')] array $dids);
 
     /**
@@ -99,7 +88,6 @@ interface Admin
      * @link https://docs.bsky.app/docs/api/com-atproto-admin-get-invite-codes
      */
     #[Get, NSID(self::getInviteCodes)]
-    #[Output(self::getInviteCodesResponse)]
     public function getInviteCodes(#[KnownValues(['recent', 'usage'])] ?string $sort = 'recent', ?int $limit = 100, ?string $cursor = null);
 
     /**
@@ -108,7 +96,6 @@ interface Admin
      * @link https://docs.bsky.app/docs/api/com-atproto-admin-get-subject-status
      */
     #[Get, NSID(self::getSubjectStatus)]
-    #[Output(self::getSubjectStatusResponse)]
     public function getSubjectStatus(#[Format('did')] ?string $did = null, #[Format('at-uri')] ?string $uri = null, #[Format('cid')] ?string $blob = null);
 
     /**
@@ -117,7 +104,6 @@ interface Admin
      * @link https://docs.bsky.app/docs/api/com-atproto-admin-search-accounts
      */
     #[Get, NSID(self::searchAccounts)]
-    #[Output(self::searchAccountsResponse)]
     public function searchAccounts(?string $email = null, ?string $cursor = null, ?int $limit = 50);
 
     /**
@@ -126,7 +112,6 @@ interface Admin
      * @link https://docs.bsky.app/docs/api/com-atproto-admin-send-email
      */
     #[Post, NSID(self::sendEmail)]
-    #[Output(self::sendEmailResponse)]
     public function sendEmail(#[Format('did')] string $recipientDid, string $content, #[Format('did')] string $senderDid, ?string $subject = null, ?string $comment = null);
 
     /**
@@ -167,6 +152,5 @@ interface Admin
      * @link https://docs.bsky.app/docs/api/com-atproto-admin-update-subject-status
      */
     #[Post, NSID(self::updateSubjectStatus)]
-    #[Output(self::updateSubjectStatusResponse)]
     public function updateSubjectStatus(#[Union(['com.atproto.admin.defs#repoRef', 'com.atproto.repo.strongRef', 'com.atproto.admin.defs#repoBlobRef'])] array $subject, #[Ref('com.atproto.admin.defs#statusAttr')] ?array $takedown = null, #[Ref('com.atproto.admin.defs#statusAttr')] ?array $deactivated = null);
 }

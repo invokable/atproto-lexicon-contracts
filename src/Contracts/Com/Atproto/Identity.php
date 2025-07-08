@@ -11,7 +11,6 @@ namespace Revolution\AtProto\Lexicon\Contracts\Com\Atproto;
 use Revolution\AtProto\Lexicon\Attributes\Format;
 use Revolution\AtProto\Lexicon\Attributes\Get;
 use Revolution\AtProto\Lexicon\Attributes\NSID;
-use Revolution\AtProto\Lexicon\Attributes\Output;
 use Revolution\AtProto\Lexicon\Attributes\Post;
 
 interface Identity
@@ -26,20 +25,12 @@ interface Identity
     public const submitPlcOperation = 'com.atproto.identity.submitPlcOperation';
     public const updateHandle = 'com.atproto.identity.updateHandle';
 
-    public const getRecommendedDidCredentialsResponse = ['rotationKeys' => 'array', 'alsoKnownAs' => 'array', 'verificationMethods' => 'mixed', 'services' => 'mixed'];
-    public const refreshIdentityResponse = ['did' => 'string', 'handle' => 'string', 'didDoc' => 'mixed'];
-    public const resolveDidResponse = ['didDoc' => 'mixed'];
-    public const resolveHandleResponse = ['did' => 'string'];
-    public const resolveIdentityResponse = ['did' => 'string', 'handle' => 'string', 'didDoc' => 'mixed'];
-    public const signPlcOperationResponse = ['operation' => 'mixed'];
-
     /**
      * Describe the credentials that should be included in the DID doc of an account that is migrating to this service.
      *
      * @link https://docs.bsky.app/docs/api/com-atproto-identity-get-recommended-did-credentials
      */
     #[Get, NSID(self::getRecommendedDidCredentials)]
-    #[Output(self::getRecommendedDidCredentialsResponse)]
     public function getRecommendedDidCredentials();
 
     /**
@@ -48,7 +39,6 @@ interface Identity
      * @link https://docs.bsky.app/docs/api/com-atproto-identity-refresh-identity
      */
     #[Post, NSID(self::refreshIdentity)]
-    #[Output(self::refreshIdentityResponse)]
     public function refreshIdentity(#[Format('at-identifier')] string $identifier);
 
     /**
@@ -65,7 +55,6 @@ interface Identity
      * @link https://docs.bsky.app/docs/api/com-atproto-identity-resolve-did
      */
     #[Get, NSID(self::resolveDid)]
-    #[Output(self::resolveDidResponse)]
     public function resolveDid(#[Format('did')] string $did);
 
     /**
@@ -74,7 +63,6 @@ interface Identity
      * @link https://docs.bsky.app/docs/api/com-atproto-identity-resolve-handle
      */
     #[Get, NSID(self::resolveHandle)]
-    #[Output(self::resolveHandleResponse)]
     public function resolveHandle(#[Format('handle')] string $handle);
 
     /**
@@ -83,7 +71,6 @@ interface Identity
      * @link https://docs.bsky.app/docs/api/com-atproto-identity-resolve-identity
      */
     #[Get, NSID(self::resolveIdentity)]
-    #[Output(self::resolveIdentityResponse)]
     public function resolveIdentity(#[Format('at-identifier')] string $identifier);
 
     /**
@@ -92,7 +79,6 @@ interface Identity
      * @link https://docs.bsky.app/docs/api/com-atproto-identity-sign-plc-operation
      */
     #[Post, NSID(self::signPlcOperation)]
-    #[Output(self::signPlcOperationResponse)]
     public function signPlcOperation(?string $token = null, ?array $rotationKeys = null, ?array $alsoKnownAs = null, mixed $verificationMethods = null, mixed $services = null);
 
     /**

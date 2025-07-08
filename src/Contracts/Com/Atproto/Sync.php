@@ -11,7 +11,6 @@ namespace Revolution\AtProto\Lexicon\Contracts\Com\Atproto;
 use Revolution\AtProto\Lexicon\Attributes\Format;
 use Revolution\AtProto\Lexicon\Attributes\Get;
 use Revolution\AtProto\Lexicon\Attributes\NSID;
-use Revolution\AtProto\Lexicon\Attributes\Output;
 use Revolution\AtProto\Lexicon\Attributes\Post;
 
 interface Sync
@@ -31,15 +30,6 @@ interface Sync
     public const listReposByCollection = 'com.atproto.sync.listReposByCollection';
     public const notifyOfUpdate = 'com.atproto.sync.notifyOfUpdate';
     public const requestCrawl = 'com.atproto.sync.requestCrawl';
-
-    public const getHeadResponse = ['root' => 'string'];
-    public const getHostStatusResponse = ['hostname' => 'string', 'seq' => 'int', 'accountCount' => 'int', 'status' => 'string'];
-    public const getLatestCommitResponse = ['cid' => 'string', 'rev' => 'string'];
-    public const getRepoStatusResponse = ['did' => 'string', 'active' => 'bool', 'status' => 'string', 'rev' => 'string'];
-    public const listBlobsResponse = ['cursor' => 'string', 'cids' => 'array'];
-    public const listHostsResponse = ['cursor' => 'string', 'hosts' => [['hostname' => 'string', 'seq' => 'int', 'accountCount' => 'int', 'status' => 'array']]];
-    public const listReposResponse = ['cursor' => 'string', 'repos' => [['did' => 'string', 'head' => 'string', 'rev' => 'string', 'active' => 'bool', 'status' => 'string']]];
-    public const listReposByCollectionResponse = ['cursor' => 'string', 'repos' => [['did' => 'string']]];
 
     /**
      * Get a blob associated with a given account. Returns the full blob as originally uploaded. Does not require auth; implemented by PDS.
@@ -73,7 +63,6 @@ interface Sync
      */
     #[\Deprecated]
     #[Get, NSID(self::getHead)]
-    #[Output(self::getHeadResponse)]
     public function getHead(#[Format('did')] string $did);
 
     /**
@@ -82,7 +71,6 @@ interface Sync
      * @link https://docs.bsky.app/docs/api/com-atproto-sync-get-host-status
      */
     #[Get, NSID(self::getHostStatus)]
-    #[Output(self::getHostStatusResponse)]
     public function getHostStatus(string $hostname);
 
     /**
@@ -91,7 +79,6 @@ interface Sync
      * @link https://docs.bsky.app/docs/api/com-atproto-sync-get-latest-commit
      */
     #[Get, NSID(self::getLatestCommit)]
-    #[Output(self::getLatestCommitResponse)]
     public function getLatestCommit(#[Format('did')] string $did);
 
     /**
@@ -116,7 +103,6 @@ interface Sync
      * @link https://docs.bsky.app/docs/api/com-atproto-sync-get-repo-status
      */
     #[Get, NSID(self::getRepoStatus)]
-    #[Output(self::getRepoStatusResponse)]
     public function getRepoStatus(#[Format('did')] string $did);
 
     /**
@@ -125,7 +111,6 @@ interface Sync
      * @link https://docs.bsky.app/docs/api/com-atproto-sync-list-blobs
      */
     #[Get, NSID(self::listBlobs)]
-    #[Output(self::listBlobsResponse)]
     public function listBlobs(#[Format('did')] string $did, #[Format('tid')] ?string $since = null, ?int $limit = 500, ?string $cursor = null);
 
     /**
@@ -134,7 +119,6 @@ interface Sync
      * @link https://docs.bsky.app/docs/api/com-atproto-sync-list-hosts
      */
     #[Get, NSID(self::listHosts)]
-    #[Output(self::listHostsResponse)]
     public function listHosts(?int $limit = 200, ?string $cursor = null);
 
     /**
@@ -143,7 +127,6 @@ interface Sync
      * @link https://docs.bsky.app/docs/api/com-atproto-sync-list-repos
      */
     #[Get, NSID(self::listRepos)]
-    #[Output(self::listReposResponse)]
     public function listRepos(?int $limit = 500, ?string $cursor = null);
 
     /**
@@ -152,7 +135,6 @@ interface Sync
      * @link https://docs.bsky.app/docs/api/com-atproto-sync-list-repos-by-collection
      */
     #[Get, NSID(self::listReposByCollection)]
-    #[Output(self::listReposByCollectionResponse)]
     public function listReposByCollection(#[Format('nsid')] string $collection, ?int $limit = 500, ?string $cursor = null);
 
     /**

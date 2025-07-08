@@ -12,7 +12,6 @@ use Revolution\AtProto\Lexicon\Attributes\Format;
 use Revolution\AtProto\Lexicon\Attributes\Get;
 use Revolution\AtProto\Lexicon\Attributes\KnownValues;
 use Revolution\AtProto\Lexicon\Attributes\NSID;
-use Revolution\AtProto\Lexicon\Attributes\Output;
 use Revolution\AtProto\Lexicon\Attributes\Post;
 use Revolution\AtProto\Lexicon\Attributes\Ref;
 
@@ -36,31 +35,12 @@ interface Convo
     public const updateAllRead = 'chat.bsky.convo.updateAllRead';
     public const updateRead = 'chat.bsky.convo.updateRead';
 
-    public const acceptConvoResponse = ['rev' => 'string'];
-    public const addReactionResponse = ['message' => ['id' => 'string', 'rev' => 'string', 'text' => 'string', 'facets' => 'array', 'embed' => 'array', 'reactions' => 'array', 'sender' => 'array', 'sentAt' => 'string']];
-    public const deleteMessageForSelfResponse = ['id' => 'string', 'rev' => 'string', 'sender' => 'mixed', 'sentAt' => 'string'];
-    public const getConvoResponse = ['convo' => ['id' => 'string', 'rev' => 'string', 'members' => 'array', 'lastMessage' => 'array', 'lastReaction' => 'array', 'muted' => 'bool', 'status' => 'string', 'unreadCount' => 'int']];
-    public const getConvoAvailabilityResponse = ['canChat' => 'bool', 'convo' => ['id' => 'string', 'rev' => 'string', 'members' => 'array', 'lastMessage' => 'array', 'lastReaction' => 'array', 'muted' => 'bool', 'status' => 'string', 'unreadCount' => 'int']];
-    public const getConvoForMembersResponse = ['convo' => ['id' => 'string', 'rev' => 'string', 'members' => 'array', 'lastMessage' => 'array', 'lastReaction' => 'array', 'muted' => 'bool', 'status' => 'string', 'unreadCount' => 'int']];
-    public const getLogResponse = ['cursor' => 'string', 'logs' => 'array'];
-    public const getMessagesResponse = ['cursor' => 'string', 'messages' => 'array'];
-    public const leaveConvoResponse = ['convoId' => 'string', 'rev' => 'string'];
-    public const listConvosResponse = ['cursor' => 'string', 'convos' => [['id' => 'string', 'rev' => 'string', 'members' => 'array', 'lastMessage' => 'array', 'lastReaction' => 'array', 'muted' => 'bool', 'status' => 'string', 'unreadCount' => 'int']]];
-    public const muteConvoResponse = ['convo' => ['id' => 'string', 'rev' => 'string', 'members' => 'array', 'lastMessage' => 'array', 'lastReaction' => 'array', 'muted' => 'bool', 'status' => 'string', 'unreadCount' => 'int']];
-    public const removeReactionResponse = ['message' => ['id' => 'string', 'rev' => 'string', 'text' => 'string', 'facets' => 'array', 'embed' => 'array', 'reactions' => 'array', 'sender' => 'array', 'sentAt' => 'string']];
-    public const sendMessageResponse = ['id' => 'string', 'rev' => 'string', 'text' => 'string', 'facets' => [['index' => 'array', 'features' => 'array']], 'embed' => 'array', 'reactions' => [[]], 'sender' => 'mixed', 'sentAt' => 'string'];
-    public const sendMessageBatchResponse = ['items' => [['id' => 'string', 'rev' => 'string', 'text' => 'string', 'facets' => 'array', 'embed' => 'array', 'reactions' => 'array', 'sender' => 'array', 'sentAt' => 'string']]];
-    public const unmuteConvoResponse = ['convo' => ['id' => 'string', 'rev' => 'string', 'members' => 'array', 'lastMessage' => 'array', 'lastReaction' => 'array', 'muted' => 'bool', 'status' => 'string', 'unreadCount' => 'int']];
-    public const updateAllReadResponse = ['updatedCount' => 'int'];
-    public const updateReadResponse = ['convo' => ['id' => 'string', 'rev' => 'string', 'members' => 'array', 'lastMessage' => 'array', 'lastReaction' => 'array', 'muted' => 'bool', 'status' => 'string', 'unreadCount' => 'int']];
-
     /**
      * chat.bsky.convo.acceptConvo.
      *
      * @link https://docs.bsky.app/docs/api/chat-bsky-convo-accept-convo
      */
     #[Post, NSID(self::acceptConvo)]
-    #[Output(self::acceptConvoResponse)]
     public function acceptConvo(string $convoId);
 
     /**
@@ -69,7 +49,6 @@ interface Convo
      * @link https://docs.bsky.app/docs/api/chat-bsky-convo-add-reaction
      */
     #[Post, NSID(self::addReaction)]
-    #[Output(self::addReactionResponse)]
     public function addReaction(string $convoId, string $messageId, string $value);
 
     /**
@@ -78,7 +57,6 @@ interface Convo
      * @link https://docs.bsky.app/docs/api/chat-bsky-convo-delete-message-for-self
      */
     #[Post, NSID(self::deleteMessageForSelf)]
-    #[Output(self::deleteMessageForSelfResponse)]
     public function deleteMessageForSelf(string $convoId, string $messageId);
 
     /**
@@ -87,7 +65,6 @@ interface Convo
      * @link https://docs.bsky.app/docs/api/chat-bsky-convo-get-convo
      */
     #[Get, NSID(self::getConvo)]
-    #[Output(self::getConvoResponse)]
     public function getConvo(string $convoId);
 
     /**
@@ -96,7 +73,6 @@ interface Convo
      * @link https://docs.bsky.app/docs/api/chat-bsky-convo-get-convo-availability
      */
     #[Get, NSID(self::getConvoAvailability)]
-    #[Output(self::getConvoAvailabilityResponse)]
     public function getConvoAvailability(#[Format('did')] array $members);
 
     /**
@@ -105,7 +81,6 @@ interface Convo
      * @link https://docs.bsky.app/docs/api/chat-bsky-convo-get-convo-for-members
      */
     #[Get, NSID(self::getConvoForMembers)]
-    #[Output(self::getConvoForMembersResponse)]
     public function getConvoForMembers(#[Format('did')] array $members);
 
     /**
@@ -114,7 +89,6 @@ interface Convo
      * @link https://docs.bsky.app/docs/api/chat-bsky-convo-get-log
      */
     #[Get, NSID(self::getLog)]
-    #[Output(self::getLogResponse)]
     public function getLog(?string $cursor = null);
 
     /**
@@ -123,7 +97,6 @@ interface Convo
      * @link https://docs.bsky.app/docs/api/chat-bsky-convo-get-messages
      */
     #[Get, NSID(self::getMessages)]
-    #[Output(self::getMessagesResponse)]
     public function getMessages(string $convoId, ?int $limit = 50, ?string $cursor = null);
 
     /**
@@ -132,7 +105,6 @@ interface Convo
      * @link https://docs.bsky.app/docs/api/chat-bsky-convo-leave-convo
      */
     #[Post, NSID(self::leaveConvo)]
-    #[Output(self::leaveConvoResponse)]
     public function leaveConvo(string $convoId);
 
     /**
@@ -141,7 +113,6 @@ interface Convo
      * @link https://docs.bsky.app/docs/api/chat-bsky-convo-list-convos
      */
     #[Get, NSID(self::listConvos)]
-    #[Output(self::listConvosResponse)]
     public function listConvos(?int $limit = 50, ?string $cursor = null, #[KnownValues(['unread'])] ?string $readState = null, #[KnownValues(['request', 'accepted'])] ?string $status = null);
 
     /**
@@ -150,7 +121,6 @@ interface Convo
      * @link https://docs.bsky.app/docs/api/chat-bsky-convo-mute-convo
      */
     #[Post, NSID(self::muteConvo)]
-    #[Output(self::muteConvoResponse)]
     public function muteConvo(string $convoId);
 
     /**
@@ -159,7 +129,6 @@ interface Convo
      * @link https://docs.bsky.app/docs/api/chat-bsky-convo-remove-reaction
      */
     #[Post, NSID(self::removeReaction)]
-    #[Output(self::removeReactionResponse)]
     public function removeReaction(string $convoId, string $messageId, string $value);
 
     /**
@@ -168,7 +137,6 @@ interface Convo
      * @link https://docs.bsky.app/docs/api/chat-bsky-convo-send-message
      */
     #[Post, NSID(self::sendMessage)]
-    #[Output(self::sendMessageResponse)]
     public function sendMessage(string $convoId, #[Ref('chat.bsky.convo.defs#messageInput')] array $message);
 
     /**
@@ -177,7 +145,6 @@ interface Convo
      * @link https://docs.bsky.app/docs/api/chat-bsky-convo-send-message-batch
      */
     #[Post, NSID(self::sendMessageBatch)]
-    #[Output(self::sendMessageBatchResponse)]
     public function sendMessageBatch(#[Ref('chat.bsky.convo.sendMessageBatch#batchItem')] array $items);
 
     /**
@@ -186,7 +153,6 @@ interface Convo
      * @link https://docs.bsky.app/docs/api/chat-bsky-convo-unmute-convo
      */
     #[Post, NSID(self::unmuteConvo)]
-    #[Output(self::unmuteConvoResponse)]
     public function unmuteConvo(string $convoId);
 
     /**
@@ -195,7 +161,6 @@ interface Convo
      * @link https://docs.bsky.app/docs/api/chat-bsky-convo-update-all-read
      */
     #[Post, NSID(self::updateAllRead)]
-    #[Output(self::updateAllReadResponse)]
     public function updateAllRead(#[KnownValues(['request', 'accepted'])] ?string $status = null);
 
     /**
@@ -204,6 +169,5 @@ interface Convo
      * @link https://docs.bsky.app/docs/api/chat-bsky-convo-update-read
      */
     #[Post, NSID(self::updateRead)]
-    #[Output(self::updateReadResponse)]
     public function updateRead(string $convoId, ?string $messageId = null);
 }
