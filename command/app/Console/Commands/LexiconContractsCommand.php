@@ -134,9 +134,11 @@ class LexiconContractsCommand extends Command
                             '    /**',
                             '     * '.$description,
                             '     *',
-                            '     * @link '.$docs_url,
-                            '     */',
                         ])
+                            ->when(filled($output), fn (Collection $collection) => $collection->push('     * @return '.$output))
+                            ->when(filled($output), fn (Collection $collection) => $collection->push('     *'))
+                            ->push('     * @link '.$docs_url)
+                            ->push('     */')
                             ->when(filled($deprecated), fn (Collection $collection) => $collection->push($deprecated))
                             ->push('    #['.Str::studly($type).', NSID(self::'.$name.')]')
                             //->when(filled($output), fn (Collection $collection) => $collection->push('    #[Output(self::'.$name.'Response)]'))
@@ -308,7 +310,7 @@ class LexiconContractsCommand extends Command
             $properties = data_get($this->jsons->get($ref_id), 'defs.'.$ref_item.'.properties');
         }
 
-        return collect($properties)
+        $typeInfo = collect($properties)
             ->map(function ($property) use ($id) {
                 $type = Arr::get($property, 'type');
 
@@ -341,9 +343,9 @@ class LexiconContractsCommand extends Command
                                 default => 'mixed',
                             };
                         })->implode(function ($type, $name) {
-                            return sprintf("'%s' => '%s'", $name, $type);
+                            return sprintf('%s: %s', $name, $type);
                         }, ', ');
-                        $ref_properties = "[$ref_properties]";
+                        $ref_properties = "array{{$ref_properties}}";
                     }
                 }
 
@@ -371,9 +373,9 @@ class LexiconContractsCommand extends Command
                                 default => 'mixed',
                             };
                         })->implode(function ($type, $name) {
-                            return sprintf("'%s' => '%s'", $name, $type);
+                            return sprintf('%s: %s', $name, $type);
                         }, ', ');
-                        $ref_properties = "[[$ref_properties]]";
+                        $ref_properties = "array{{$ref_properties}}[]";
                     }
                 }
 
@@ -392,10 +394,12 @@ class LexiconContractsCommand extends Command
                 $type = Arr::get($property, 'type');
                 $ref_properties = Arr::get($property, 'ref_properties');
 
-                $type = $ref_properties ?? "'$type'";
+                $type = $ref_properties ?? $type;
 
-                return sprintf("'%s' => %s", $name, $type);
+                return sprintf('%s: %s', $name, $type);
             }, ', ');
+
+        return empty($typeInfo) ? '' : "array{{$typeInfo}}";
     }
 
     protected function save(Collection $contracts, string $class): void
