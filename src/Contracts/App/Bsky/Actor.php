@@ -27,6 +27,8 @@ interface Actor
     /**
      * Get private preferences attached to the current account. Expected use is synchronization between multiple devices, and import/export during account migration. Requires auth.
      *
+     * @return array{preferences: array}
+     *
      * @link https://docs.bsky.app/docs/api/app-bsky-actor-get-preferences
      */
     #[Get, NSID(self::getPreferences)]
