@@ -141,7 +141,6 @@ class LexiconContractsCommand extends Command
                             ->push('     */')
                             ->when(filled($deprecated), fn (Collection $collection) => $collection->push($deprecated))
                             ->push('    #['.Str::studly($type).', NSID(self::'.$name.')]')
-                            //->when(filled($output), fn (Collection $collection) => $collection->push('    #[Output(self::'.$name.'Response)]'))
                             ->push("    public function $name($params);")
                             ->implode(PHP_EOL),
                     ]),
@@ -421,21 +420,12 @@ class LexiconContractsCommand extends Command
                 return sprintf("    public const %s = '%s';", $const['name'], $const['id']);
             }, PHP_EOL);
 
-        $output = $contracts->pluck('output')
-            ->reject(function (array $const) {
-                return empty($const['output']);
-            })
-            ->implode(function (array $const) {
-                return sprintf('    public const %sResponse = [%s];', $const['name'], $const['output']);
-            }, PHP_EOL);
-
         $tmp = File::get(realpath(__DIR__.'/stubs/lexicon-interface.stub'));
 
         $tmp = Str::of($tmp)
             ->replace('{namespace}', $namespace)
             ->replace('{name}', $name)
             ->replace('{const}', $const)
-            //->replace('{output}', $output)
             ->replace('{method}', $method)
             ->replace(PHP_EOL.PHP_EOL.PHP_EOL, PHP_EOL)
             ->toString();
@@ -471,10 +461,6 @@ class LexiconContractsCommand extends Command
             ->whenContains('#[KnownValues',
                 fn (Stringable $string) => $string,
                 fn (Stringable $string) => $string->remove('use Revolution\AtProto\Lexicon\Attributes\KnownValues;'.PHP_EOL),
-            )
-            ->whenContains('#[Output',
-                fn (Stringable $string) => $string,
-                fn (Stringable $string) => $string->remove('use Revolution\AtProto\Lexicon\Attributes\Output;'.PHP_EOL),
             )
             ->toString();
     }
