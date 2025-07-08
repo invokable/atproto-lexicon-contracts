@@ -11,7 +11,6 @@ namespace Revolution\AtProto\Lexicon\Contracts\App\Bsky;
 use Revolution\AtProto\Lexicon\Attributes\Format;
 use Revolution\AtProto\Lexicon\Attributes\Get;
 use Revolution\AtProto\Lexicon\Attributes\NSID;
-use Revolution\AtProto\Lexicon\Attributes\Output;
 use Revolution\AtProto\Lexicon\Attributes\Post;
 
 interface Graph
@@ -38,146 +37,144 @@ interface Graph
     public const unmuteActorList = 'app.bsky.graph.unmuteActorList';
     public const unmuteThread = 'app.bsky.graph.unmuteThread';
 
-    public const getActorStarterPacksResponse = ['cursor' => 'string', 'starterPacks' => [['uri' => 'string', 'cid' => 'string', 'record' => 'mixed', 'creator' => 'array', 'listItemCount' => 'int', 'joinedWeekCount' => 'int', 'joinedAllTimeCount' => 'int', 'labels' => 'array', 'indexedAt' => 'string']]];
-    public const getBlocksResponse = ['cursor' => 'string', 'blocks' => [['did' => 'string', 'handle' => 'string', 'displayName' => 'string', 'description' => 'string', 'avatar' => 'string', 'associated' => 'array', 'indexedAt' => 'string', 'createdAt' => 'string', 'viewer' => 'array', 'labels' => 'array', 'verification' => 'array', 'status' => 'array']]];
-    public const getFollowersResponse = ['subject' => ['did' => 'string', 'handle' => 'string', 'displayName' => 'string', 'description' => 'string', 'avatar' => 'string', 'associated' => 'array', 'indexedAt' => 'string', 'createdAt' => 'string', 'viewer' => 'array', 'labels' => 'array', 'verification' => 'array', 'status' => 'array'], 'cursor' => 'string', 'followers' => [['did' => 'string', 'handle' => 'string', 'displayName' => 'string', 'description' => 'string', 'avatar' => 'string', 'associated' => 'array', 'indexedAt' => 'string', 'createdAt' => 'string', 'viewer' => 'array', 'labels' => 'array', 'verification' => 'array', 'status' => 'array']]];
-    public const getFollowsResponse = ['subject' => ['did' => 'string', 'handle' => 'string', 'displayName' => 'string', 'description' => 'string', 'avatar' => 'string', 'associated' => 'array', 'indexedAt' => 'string', 'createdAt' => 'string', 'viewer' => 'array', 'labels' => 'array', 'verification' => 'array', 'status' => 'array'], 'cursor' => 'string', 'follows' => [['did' => 'string', 'handle' => 'string', 'displayName' => 'string', 'description' => 'string', 'avatar' => 'string', 'associated' => 'array', 'indexedAt' => 'string', 'createdAt' => 'string', 'viewer' => 'array', 'labels' => 'array', 'verification' => 'array', 'status' => 'array']]];
-    public const getKnownFollowersResponse = ['subject' => ['did' => 'string', 'handle' => 'string', 'displayName' => 'string', 'description' => 'string', 'avatar' => 'string', 'associated' => 'array', 'indexedAt' => 'string', 'createdAt' => 'string', 'viewer' => 'array', 'labels' => 'array', 'verification' => 'array', 'status' => 'array'], 'cursor' => 'string', 'followers' => [['did' => 'string', 'handle' => 'string', 'displayName' => 'string', 'description' => 'string', 'avatar' => 'string', 'associated' => 'array', 'indexedAt' => 'string', 'createdAt' => 'string', 'viewer' => 'array', 'labels' => 'array', 'verification' => 'array', 'status' => 'array']]];
-    public const getListResponse = ['cursor' => 'string', 'list' => ['uri' => 'string', 'cid' => 'string', 'creator' => 'array', 'name' => 'string', 'purpose' => 'array', 'description' => 'string', 'descriptionFacets' => 'array', 'avatar' => 'string', 'listItemCount' => 'int', 'labels' => 'array', 'viewer' => 'array', 'indexedAt' => 'string'], 'items' => [['uri' => 'string', 'subject' => 'array']]];
-    public const getListBlocksResponse = ['cursor' => 'string', 'lists' => [['uri' => 'string', 'cid' => 'string', 'creator' => 'array', 'name' => 'string', 'purpose' => 'array', 'description' => 'string', 'descriptionFacets' => 'array', 'avatar' => 'string', 'listItemCount' => 'int', 'labels' => 'array', 'viewer' => 'array', 'indexedAt' => 'string']]];
-    public const getListMutesResponse = ['cursor' => 'string', 'lists' => [['uri' => 'string', 'cid' => 'string', 'creator' => 'array', 'name' => 'string', 'purpose' => 'array', 'description' => 'string', 'descriptionFacets' => 'array', 'avatar' => 'string', 'listItemCount' => 'int', 'labels' => 'array', 'viewer' => 'array', 'indexedAt' => 'string']]];
-    public const getListsResponse = ['cursor' => 'string', 'lists' => [['uri' => 'string', 'cid' => 'string', 'creator' => 'array', 'name' => 'string', 'purpose' => 'array', 'description' => 'string', 'descriptionFacets' => 'array', 'avatar' => 'string', 'listItemCount' => 'int', 'labels' => 'array', 'viewer' => 'array', 'indexedAt' => 'string']]];
-    public const getMutesResponse = ['cursor' => 'string', 'mutes' => [['did' => 'string', 'handle' => 'string', 'displayName' => 'string', 'description' => 'string', 'avatar' => 'string', 'associated' => 'array', 'indexedAt' => 'string', 'createdAt' => 'string', 'viewer' => 'array', 'labels' => 'array', 'verification' => 'array', 'status' => 'array']]];
-    public const getRelationshipsResponse = ['actor' => 'string', 'relationships' => 'array'];
-    public const getStarterPackResponse = ['starterPack' => ['uri' => 'string', 'cid' => 'string', 'record' => 'mixed', 'creator' => 'array', 'list' => 'array', 'listItemsSample' => 'array', 'feeds' => 'array', 'joinedWeekCount' => 'int', 'joinedAllTimeCount' => 'int', 'labels' => 'array', 'indexedAt' => 'string']];
-    public const getStarterPacksResponse = ['starterPacks' => [['uri' => 'string', 'cid' => 'string', 'record' => 'mixed', 'creator' => 'array', 'listItemCount' => 'int', 'joinedWeekCount' => 'int', 'joinedAllTimeCount' => 'int', 'labels' => 'array', 'indexedAt' => 'string']]];
-    public const getSuggestedFollowsByActorResponse = ['suggestions' => [['did' => 'string', 'handle' => 'string', 'displayName' => 'string', 'description' => 'string', 'avatar' => 'string', 'associated' => 'array', 'indexedAt' => 'string', 'createdAt' => 'string', 'viewer' => 'array', 'labels' => 'array', 'verification' => 'array', 'status' => 'array']], 'isFallback' => 'bool', 'recId' => 'int'];
-    public const searchStarterPacksResponse = ['cursor' => 'string', 'starterPacks' => [['uri' => 'string', 'cid' => 'string', 'record' => 'mixed', 'creator' => 'array', 'listItemCount' => 'int', 'joinedWeekCount' => 'int', 'joinedAllTimeCount' => 'int', 'labels' => 'array', 'indexedAt' => 'string']]];
-
     /**
      * Get a list of starter packs created by the actor.
+     *
+     * @return array{cursor: string, starterPacks: array{uri: string, cid: string, record: mixed, creator: array, listItemCount: int, joinedWeekCount: int, joinedAllTimeCount: int, labels: array, indexedAt: string}[]}
      *
      * @link https://docs.bsky.app/docs/api/app-bsky-graph-get-actor-starter-packs
      */
     #[Get, NSID(self::getActorStarterPacks)]
-    #[Output(self::getActorStarterPacksResponse)]
     public function getActorStarterPacks(#[Format('at-identifier')] string $actor, ?int $limit = 50, ?string $cursor = null);
 
     /**
      * Enumerates which accounts the requesting account is currently blocking. Requires auth.
      *
+     * @return array{cursor: string, blocks: array{did: string, handle: string, displayName: string, description: string, avatar: string, associated: array, indexedAt: string, createdAt: string, viewer: array, labels: array, verification: array, status: array}[]}
+     *
      * @link https://docs.bsky.app/docs/api/app-bsky-graph-get-blocks
      */
     #[Get, NSID(self::getBlocks)]
-    #[Output(self::getBlocksResponse)]
     public function getBlocks(?int $limit = 50, ?string $cursor = null);
 
     /**
      * Enumerates accounts which follow a specified account (actor).
      *
+     * @return array{subject: array{did: string, handle: string, displayName: string, description: string, avatar: string, associated: array, indexedAt: string, createdAt: string, viewer: array, labels: array, verification: array, status: array}, cursor: string, followers: array{did: string, handle: string, displayName: string, description: string, avatar: string, associated: array, indexedAt: string, createdAt: string, viewer: array, labels: array, verification: array, status: array}[]}
+     *
      * @link https://docs.bsky.app/docs/api/app-bsky-graph-get-followers
      */
     #[Get, NSID(self::getFollowers)]
-    #[Output(self::getFollowersResponse)]
     public function getFollowers(#[Format('at-identifier')] string $actor, ?int $limit = 50, ?string $cursor = null);
 
     /**
      * Enumerates accounts which a specified account (actor) follows.
      *
+     * @return array{subject: array{did: string, handle: string, displayName: string, description: string, avatar: string, associated: array, indexedAt: string, createdAt: string, viewer: array, labels: array, verification: array, status: array}, cursor: string, follows: array{did: string, handle: string, displayName: string, description: string, avatar: string, associated: array, indexedAt: string, createdAt: string, viewer: array, labels: array, verification: array, status: array}[]}
+     *
      * @link https://docs.bsky.app/docs/api/app-bsky-graph-get-follows
      */
     #[Get, NSID(self::getFollows)]
-    #[Output(self::getFollowsResponse)]
     public function getFollows(#[Format('at-identifier')] string $actor, ?int $limit = 50, ?string $cursor = null);
 
     /**
      * Enumerates accounts which follow a specified account (actor) and are followed by the viewer.
      *
+     * @return array{subject: array{did: string, handle: string, displayName: string, description: string, avatar: string, associated: array, indexedAt: string, createdAt: string, viewer: array, labels: array, verification: array, status: array}, cursor: string, followers: array{did: string, handle: string, displayName: string, description: string, avatar: string, associated: array, indexedAt: string, createdAt: string, viewer: array, labels: array, verification: array, status: array}[]}
+     *
      * @link https://docs.bsky.app/docs/api/app-bsky-graph-get-known-followers
      */
     #[Get, NSID(self::getKnownFollowers)]
-    #[Output(self::getKnownFollowersResponse)]
     public function getKnownFollowers(#[Format('at-identifier')] string $actor, ?int $limit = 50, ?string $cursor = null);
 
     /**
      * Gets a 'view' (with additional context) of a specified list.
      *
+     * @return array{cursor: string, list: array{uri: string, cid: string, creator: array, name: string, purpose: array, description: string, descriptionFacets: array, avatar: string, listItemCount: int, labels: array, viewer: array, indexedAt: string}, items: array{uri: string, subject: array}[]}
+     *
      * @link https://docs.bsky.app/docs/api/app-bsky-graph-get-list
      */
     #[Get, NSID(self::getList)]
-    #[Output(self::getListResponse)]
     public function getList(#[Format('at-uri')] string $list, ?int $limit = 50, ?string $cursor = null);
 
     /**
      * Get mod lists that the requesting account (actor) is blocking. Requires auth.
      *
+     * @return array{cursor: string, lists: array{uri: string, cid: string, creator: array, name: string, purpose: array, description: string, descriptionFacets: array, avatar: string, listItemCount: int, labels: array, viewer: array, indexedAt: string}[]}
+     *
      * @link https://docs.bsky.app/docs/api/app-bsky-graph-get-list-blocks
      */
     #[Get, NSID(self::getListBlocks)]
-    #[Output(self::getListBlocksResponse)]
     public function getListBlocks(?int $limit = 50, ?string $cursor = null);
 
     /**
      * Enumerates mod lists that the requesting account (actor) currently has muted. Requires auth.
      *
+     * @return array{cursor: string, lists: array{uri: string, cid: string, creator: array, name: string, purpose: array, description: string, descriptionFacets: array, avatar: string, listItemCount: int, labels: array, viewer: array, indexedAt: string}[]}
+     *
      * @link https://docs.bsky.app/docs/api/app-bsky-graph-get-list-mutes
      */
     #[Get, NSID(self::getListMutes)]
-    #[Output(self::getListMutesResponse)]
     public function getListMutes(?int $limit = 50, ?string $cursor = null);
 
     /**
      * Enumerates the lists created by a specified account (actor).
      *
+     * @return array{cursor: string, lists: array{uri: string, cid: string, creator: array, name: string, purpose: array, description: string, descriptionFacets: array, avatar: string, listItemCount: int, labels: array, viewer: array, indexedAt: string}[]}
+     *
      * @link https://docs.bsky.app/docs/api/app-bsky-graph-get-lists
      */
     #[Get, NSID(self::getLists)]
-    #[Output(self::getListsResponse)]
     public function getLists(#[Format('at-identifier')] string $actor, ?int $limit = 50, ?string $cursor = null);
 
     /**
      * Enumerates accounts that the requesting account (actor) currently has muted. Requires auth.
      *
+     * @return array{cursor: string, mutes: array{did: string, handle: string, displayName: string, description: string, avatar: string, associated: array, indexedAt: string, createdAt: string, viewer: array, labels: array, verification: array, status: array}[]}
+     *
      * @link https://docs.bsky.app/docs/api/app-bsky-graph-get-mutes
      */
     #[Get, NSID(self::getMutes)]
-    #[Output(self::getMutesResponse)]
     public function getMutes(?int $limit = 50, ?string $cursor = null);
 
     /**
      * Enumerates public relationships between one account, and a list of other accounts. Does not require auth.
      *
+     * @return array{actor: string, relationships: array}
+     *
      * @link https://docs.bsky.app/docs/api/app-bsky-graph-get-relationships
      */
     #[Get, NSID(self::getRelationships)]
-    #[Output(self::getRelationshipsResponse)]
     public function getRelationships(#[Format('at-identifier')] string $actor, #[Format('at-identifier')] ?array $others = null);
 
     /**
      * Gets a view of a starter pack.
      *
+     * @return array{starterPack: array{uri: string, cid: string, record: mixed, creator: array, list: array, listItemsSample: array, feeds: array, joinedWeekCount: int, joinedAllTimeCount: int, labels: array, indexedAt: string}}
+     *
      * @link https://docs.bsky.app/docs/api/app-bsky-graph-get-starter-pack
      */
     #[Get, NSID(self::getStarterPack)]
-    #[Output(self::getStarterPackResponse)]
     public function getStarterPack(#[Format('at-uri')] string $starterPack);
 
     /**
      * Get views for a list of starter packs.
      *
+     * @return array{starterPacks: array{uri: string, cid: string, record: mixed, creator: array, listItemCount: int, joinedWeekCount: int, joinedAllTimeCount: int, labels: array, indexedAt: string}[]}
+     *
      * @link https://docs.bsky.app/docs/api/app-bsky-graph-get-starter-packs
      */
     #[Get, NSID(self::getStarterPacks)]
-    #[Output(self::getStarterPacksResponse)]
     public function getStarterPacks(#[Format('at-uri')] array $uris);
 
     /**
      * Enumerates follows similar to a given account (actor). Expected use is to recommend additional accounts immediately after following one account.
      *
+     * @return array{suggestions: array{did: string, handle: string, displayName: string, description: string, avatar: string, associated: array, indexedAt: string, createdAt: string, viewer: array, labels: array, verification: array, status: array}[], isFallback: bool, recId: int}
+     *
      * @link https://docs.bsky.app/docs/api/app-bsky-graph-get-suggested-follows-by-actor
      */
     #[Get, NSID(self::getSuggestedFollowsByActor)]
-    #[Output(self::getSuggestedFollowsByActorResponse)]
     public function getSuggestedFollowsByActor(#[Format('at-identifier')] string $actor);
 
     /**
@@ -207,10 +204,11 @@ interface Graph
     /**
      * Find starter packs matching search criteria. Does not require auth.
      *
+     * @return array{cursor: string, starterPacks: array{uri: string, cid: string, record: mixed, creator: array, listItemCount: int, joinedWeekCount: int, joinedAllTimeCount: int, labels: array, indexedAt: string}[]}
+     *
      * @link https://docs.bsky.app/docs/api/app-bsky-graph-search-starter-packs
      */
     #[Get, NSID(self::searchStarterPacks)]
-    #[Output(self::searchStarterPacksResponse)]
     public function searchStarterPacks(string $q, ?int $limit = 25, ?string $cursor = null);
 
     /**

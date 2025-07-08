@@ -134,12 +134,13 @@ class LexiconContractsCommand extends Command
                             '    /**',
                             '     * '.$description,
                             '     *',
-                            '     * @link '.$docs_url,
-                            '     */',
                         ])
+                            ->when(filled($output), fn (Collection $collection) => $collection->push('     * @return '.$output))
+                            ->when(filled($output), fn (Collection $collection) => $collection->push('     *'))
+                            ->push('     * @link '.$docs_url)
+                            ->push('     */')
                             ->when(filled($deprecated), fn (Collection $collection) => $collection->push($deprecated))
                             ->push('    #['.Str::studly($type).', NSID(self::'.$name.')]')
-                            ->when(filled($output), fn (Collection $collection) => $collection->push('    #[Output(self::'.$name.'Response)]'))
                             ->push("    public function $name($params);")
                             ->implode(PHP_EOL),
                     ]),
@@ -308,7 +309,7 @@ class LexiconContractsCommand extends Command
             $properties = data_get($this->jsons->get($ref_id), 'defs.'.$ref_item.'.properties');
         }
 
-        return collect($properties)
+        $typeInfo = collect($properties)
             ->map(function ($property) use ($id) {
                 $type = Arr::get($property, 'type');
 
@@ -341,9 +342,9 @@ class LexiconContractsCommand extends Command
                                 default => 'mixed',
                             };
                         })->implode(function ($type, $name) {
-                            return sprintf("'%s' => '%s'", $name, $type);
+                            return sprintf('%s: %s', $name, $type);
                         }, ', ');
-                        $ref_properties = "[$ref_properties]";
+                        $ref_properties = "array{{$ref_properties}}";
                     }
                 }
 
@@ -371,9 +372,9 @@ class LexiconContractsCommand extends Command
                                 default => 'mixed',
                             };
                         })->implode(function ($type, $name) {
-                            return sprintf("'%s' => '%s'", $name, $type);
+                            return sprintf('%s: %s', $name, $type);
                         }, ', ');
-                        $ref_properties = "[[$ref_properties]]";
+                        $ref_properties = "array{{$ref_properties}}[]";
                     }
                 }
 
@@ -392,10 +393,12 @@ class LexiconContractsCommand extends Command
                 $type = Arr::get($property, 'type');
                 $ref_properties = Arr::get($property, 'ref_properties');
 
-                $type = $ref_properties ?? "'$type'";
+                $type = $ref_properties ?? $type;
 
-                return sprintf("'%s' => %s", $name, $type);
+                return sprintf('%s: %s', $name, $type);
             }, ', ');
+
+        return empty($typeInfo) ? '' : "array{{$typeInfo}}";
     }
 
     protected function save(Collection $contracts, string $class): void
@@ -417,21 +420,12 @@ class LexiconContractsCommand extends Command
                 return sprintf("    public const %s = '%s';", $const['name'], $const['id']);
             }, PHP_EOL);
 
-        $output = $contracts->pluck('output')
-            ->reject(function (array $const) {
-                return empty($const['output']);
-            })
-            ->implode(function (array $const) {
-                return sprintf('    public const %sResponse = [%s];', $const['name'], $const['output']);
-            }, PHP_EOL);
-
         $tmp = File::get(realpath(__DIR__.'/stubs/lexicon-interface.stub'));
 
         $tmp = Str::of($tmp)
             ->replace('{namespace}', $namespace)
             ->replace('{name}', $name)
             ->replace('{const}', $const)
-            ->replace('{output}', $output)
             ->replace('{method}', $method)
             ->replace(PHP_EOL.PHP_EOL.PHP_EOL, PHP_EOL)
             ->toString();
@@ -467,10 +461,6 @@ class LexiconContractsCommand extends Command
             ->whenContains('#[KnownValues',
                 fn (Stringable $string) => $string,
                 fn (Stringable $string) => $string->remove('use Revolution\AtProto\Lexicon\Attributes\KnownValues;'.PHP_EOL),
-            )
-            ->whenContains('#[Output',
-                fn (Stringable $string) => $string,
-                fn (Stringable $string) => $string->remove('use Revolution\AtProto\Lexicon\Attributes\Output;'.PHP_EOL),
             )
             ->toString();
     }

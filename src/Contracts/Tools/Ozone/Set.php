@@ -10,7 +10,6 @@ namespace Revolution\AtProto\Lexicon\Contracts\Tools\Ozone;
 
 use Revolution\AtProto\Lexicon\Attributes\Get;
 use Revolution\AtProto\Lexicon\Attributes\NSID;
-use Revolution\AtProto\Lexicon\Attributes\Output;
 use Revolution\AtProto\Lexicon\Attributes\Post;
 
 interface Set
@@ -21,10 +20,6 @@ interface Set
     public const getValues = 'tools.ozone.set.getValues';
     public const querySets = 'tools.ozone.set.querySets';
     public const upsertSet = 'tools.ozone.set.upsertSet';
-
-    public const getValuesResponse = ['set' => ['name' => 'string', 'description' => 'string', 'setSize' => 'int', 'createdAt' => 'string', 'updatedAt' => 'string'], 'values' => 'array', 'cursor' => 'string'];
-    public const querySetsResponse = ['sets' => [['name' => 'string', 'description' => 'string', 'setSize' => 'int', 'createdAt' => 'string', 'updatedAt' => 'string']], 'cursor' => 'string'];
-    public const upsertSetResponse = ['name' => 'string', 'description' => 'string', 'setSize' => 'int', 'createdAt' => 'string', 'updatedAt' => 'string'];
 
     /**
      * Add values to a specific set. Attempting to add values to a set that does not exist will result in an error.
@@ -53,27 +48,30 @@ interface Set
     /**
      * Get a specific set and its values.
      *
+     * @return array{set: array{name: string, description: string, setSize: int, createdAt: string, updatedAt: string}, values: array, cursor: string}
+     *
      * @link https://docs.bsky.app/docs/api/tools-ozone-set-get-values
      */
     #[Get, NSID(self::getValues)]
-    #[Output(self::getValuesResponse)]
     public function getValues(string $name, ?int $limit = 100, ?string $cursor = null);
 
     /**
      * Query available sets.
      *
+     * @return array{sets: array{name: string, description: string, setSize: int, createdAt: string, updatedAt: string}[], cursor: string}
+     *
      * @link https://docs.bsky.app/docs/api/tools-ozone-set-query-sets
      */
     #[Get, NSID(self::querySets)]
-    #[Output(self::querySetsResponse)]
     public function querySets(?int $limit = 50, ?string $cursor = null, ?string $namePrefix = null, ?string $sortBy = 'name', ?string $sortDirection = 'asc');
 
     /**
      * Create or update set metadata.
      *
+     * @return array{name: string, description: string, setSize: int, createdAt: string, updatedAt: string}
+     *
      * @link https://docs.bsky.app/docs/api/tools-ozone-set-upsert-set
      */
     #[Post, NSID(self::upsertSet)]
-    #[Output(self::upsertSetResponse)]
     public function upsertSet();
 }

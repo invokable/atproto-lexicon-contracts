@@ -5,6 +5,7 @@ require_once __DIR__.'/PublicClient.php';
 
 $client = new PublicClient;
 
+// Due to temporary restrictions, authentication is required.
 $posts = $client->searchPosts(q: '#bluesky', tag: ['bluesky'], limit: 5);
 var_dump($posts);
 
