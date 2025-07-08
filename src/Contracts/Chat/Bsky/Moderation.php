@@ -22,6 +22,8 @@ interface Moderation
     /**
      * chat.bsky.moderation.getActorMetadata.
      *
+     * @return array{day: array{messagesSent: int, messagesReceived: int, convos: int, convosStarted: int}, month: array{messagesSent: int, messagesReceived: int, convos: int, convosStarted: int}, all: array{messagesSent: int, messagesReceived: int, convos: int, convosStarted: int}}
+     *
      * @link https://docs.bsky.app/docs/api/chat-bsky-moderation-get-actor-metadata
      */
     #[Get, NSID(self::getActorMetadata)]
@@ -29,6 +31,8 @@ interface Moderation
 
     /**
      * chat.bsky.moderation.getMessageContext.
+     *
+     * @return array{messages: array}
      *
      * @link https://docs.bsky.app/docs/api/chat-bsky-moderation-get-message-context
      */

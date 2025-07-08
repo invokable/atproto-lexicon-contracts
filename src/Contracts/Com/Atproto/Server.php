@@ -52,6 +52,8 @@ interface Server
     /**
      * Returns the status of an account, especially as pertaining to import or recovery. Can be called many times over the course of an account migration. Requires auth and can only be called pertaining to oneself.
      *
+     * @return array{activated: bool, validDid: bool, repoCommit: string, repoRev: string, repoBlocks: int, indexedRecords: int, privateStateValues: int, expectedBlobs: int, importedBlobs: int}
+     *
      * @link https://docs.bsky.app/docs/api/com-atproto-server-check-account-status
      */
     #[Get, NSID(self::checkAccountStatus)]
@@ -68,6 +70,8 @@ interface Server
     /**
      * Create an account. Implemented by PDS.
      *
+     * @return array{accessJwt: string, refreshJwt: string, handle: string, did: string, didDoc: mixed}
+     *
      * @link https://docs.bsky.app/docs/api/com-atproto-server-create-account
      */
     #[Post, NSID(self::createAccount)]
@@ -75,6 +79,8 @@ interface Server
 
     /**
      * Create an App Password.
+     *
+     * @return array{name: string, password: string, createdAt: string, privileged: bool}
      *
      * @link https://docs.bsky.app/docs/api/com-atproto-server-create-app-password
      */
@@ -84,6 +90,8 @@ interface Server
     /**
      * Create an invite code.
      *
+     * @return array{code: string}
+     *
      * @link https://docs.bsky.app/docs/api/com-atproto-server-create-invite-code
      */
     #[Post, NSID(self::createInviteCode)]
@@ -92,6 +100,8 @@ interface Server
     /**
      * Create invite codes.
      *
+     * @return array{codes: array{account: string, codes: array}[]}
+     *
      * @link https://docs.bsky.app/docs/api/com-atproto-server-create-invite-codes
      */
     #[Post, NSID(self::createInviteCodes)]
@@ -99,6 +109,8 @@ interface Server
 
     /**
      * Create an authentication session.
+     *
+     * @return array{accessJwt: string, refreshJwt: string, handle: string, did: string, didDoc: mixed, email: string, emailConfirmed: bool, emailAuthFactor: bool, active: bool, status: string}
      *
      * @link https://docs.bsky.app/docs/api/com-atproto-server-create-session
      */
@@ -132,6 +144,8 @@ interface Server
     /**
      * Describes the server's account creation requirements and capabilities. Implemented by PDS.
      *
+     * @return array{inviteCodeRequired: bool, phoneVerificationRequired: bool, availableUserDomains: array, links: array{privacyPolicy: string, termsOfService: string}, contact: array{email: string}, did: string}
+     *
      * @link https://docs.bsky.app/docs/api/com-atproto-server-describe-server
      */
     #[Get, NSID(self::describeServer)]
@@ -139,6 +153,8 @@ interface Server
 
     /**
      * Get all invite codes for the current account. Requires auth.
+     *
+     * @return array{codes: array{code: string, available: int, disabled: bool, forAccount: string, createdBy: string, createdAt: string, uses: array}[]}
      *
      * @link https://docs.bsky.app/docs/api/com-atproto-server-get-account-invite-codes
      */
@@ -148,6 +164,8 @@ interface Server
     /**
      * Get a signed token on behalf of the requesting DID for the requested service.
      *
+     * @return array{token: string}
+     *
      * @link https://docs.bsky.app/docs/api/com-atproto-server-get-service-auth
      */
     #[Get, NSID(self::getServiceAuth)]
@@ -155,6 +173,8 @@ interface Server
 
     /**
      * Get information about the current auth session. Requires auth.
+     *
+     * @return array{handle: string, did: string, email: string, emailConfirmed: bool, emailAuthFactor: bool, didDoc: mixed, active: bool, status: string}
      *
      * @link https://docs.bsky.app/docs/api/com-atproto-server-get-session
      */
@@ -164,6 +184,8 @@ interface Server
     /**
      * List all App Passwords.
      *
+     * @return array{passwords: array{name: string, createdAt: string, privileged: bool}[]}
+     *
      * @link https://docs.bsky.app/docs/api/com-atproto-server-list-app-passwords
      */
     #[Get, NSID(self::listAppPasswords)]
@@ -171,6 +193,8 @@ interface Server
 
     /**
      * Refresh an authentication session. Requires auth using the 'refreshJwt' (not the 'accessJwt').
+     *
+     * @return array{accessJwt: string, refreshJwt: string, handle: string, did: string, didDoc: mixed, active: bool, status: string}
      *
      * @link https://docs.bsky.app/docs/api/com-atproto-server-refresh-session
      */
@@ -196,6 +220,8 @@ interface Server
     /**
      * Request a token in order to update email.
      *
+     * @return array{tokenRequired: bool}
+     *
      * @link https://docs.bsky.app/docs/api/com-atproto-server-request-email-update
      */
     #[Post, NSID(self::requestEmailUpdate)]
@@ -211,6 +237,8 @@ interface Server
 
     /**
      * Reserve a repo signing key, for use with account creation. Necessary so that a DID PLC update operation can be constructed during an account migraiton. Public and does not require auth; implemented by PDS. NOTE: this endpoint may change when full account migration is implemented.
+     *
+     * @return array{signingKey: string}
      *
      * @link https://docs.bsky.app/docs/api/com-atproto-server-reserve-signing-key
      */

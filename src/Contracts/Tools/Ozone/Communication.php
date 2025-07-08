@@ -23,6 +23,8 @@ interface Communication
     /**
      * Administrative action to create a new, re-usable communication (email for now) template.
      *
+     * @return array{id: string, name: string, subject: string, contentMarkdown: string, disabled: bool, lang: string, lastUpdatedBy: string, createdAt: string, updatedAt: string}
+     *
      * @link https://docs.bsky.app/docs/api/tools-ozone-communication-create-template
      */
     #[Post, NSID(self::createTemplate)]
@@ -39,6 +41,8 @@ interface Communication
     /**
      * Get list of all communication templates.
      *
+     * @return array{communicationTemplates: array{id: string, name: string, subject: string, contentMarkdown: string, disabled: bool, lang: string, lastUpdatedBy: string, createdAt: string, updatedAt: string}[]}
+     *
      * @link https://docs.bsky.app/docs/api/tools-ozone-communication-list-templates
      */
     #[Get, NSID(self::listTemplates)]
@@ -46,6 +50,8 @@ interface Communication
 
     /**
      * Administrative action to update an existing communication template. Allows passing partial fields to patch specific fields only.
+     *
+     * @return array{id: string, name: string, subject: string, contentMarkdown: string, disabled: bool, lang: string, lastUpdatedBy: string, createdAt: string, updatedAt: string}
      *
      * @link https://docs.bsky.app/docs/api/tools-ozone-communication-update-template
      */

@@ -30,6 +30,8 @@ interface Notification
     /**
      * Get notification-related preferences for an account. Requires auth.
      *
+     * @return array{preferences: array{chat: array, follow: array, like: array, likeViaRepost: array, mention: array, quote: array, reply: array, repost: array, repostViaRepost: array, starterpackJoined: array, subscribedPost: array, unverified: array, verified: array}}
+     *
      * @link https://docs.bsky.app/docs/api/app-bsky-notification-get-preferences
      */
     #[Get, NSID(self::getPreferences)]
@@ -37,6 +39,8 @@ interface Notification
 
     /**
      * Count the number of unread notifications for the requesting account. Requires auth.
+     *
+     * @return array{count: int}
      *
      * @link https://docs.bsky.app/docs/api/app-bsky-notification-get-unread-count
      */
@@ -46,6 +50,8 @@ interface Notification
     /**
      * Enumerate all accounts to which the requesting account is subscribed to receive notifications for. Requires auth.
      *
+     * @return array{cursor: string, subscriptions: array{did: string, handle: string, displayName: string, description: string, avatar: string, associated: array, indexedAt: string, createdAt: string, viewer: array, labels: array, verification: array, status: array}[]}
+     *
      * @link https://docs.bsky.app/docs/api/app-bsky-notification-list-activity-subscriptions
      */
     #[Get, NSID(self::listActivitySubscriptions)]
@@ -54,6 +60,8 @@ interface Notification
     /**
      * Enumerate notifications for the requesting account. Requires auth.
      *
+     * @return array{cursor: string, notifications: array{uri: string, cid: string, author: array, reason: string, reasonSubject: string, record: mixed, isRead: bool, indexedAt: string, labels: array}[], priority: bool, seenAt: string}
+     *
      * @link https://docs.bsky.app/docs/api/app-bsky-notification-list-notifications
      */
     #[Get, NSID(self::listNotifications)]
@@ -61,6 +69,8 @@ interface Notification
 
     /**
      * Puts an activity subscription entry. The key should be omitted for creation and provided for updates. Requires auth.
+     *
+     * @return array{subject: string, activitySubscription: array{post: bool, reply: bool}}
      *
      * @link https://docs.bsky.app/docs/api/app-bsky-notification-put-activity-subscription
      */
@@ -77,6 +87,8 @@ interface Notification
 
     /**
      * Set notification-related preferences for an account. Requires auth.
+     *
+     * @return array{preferences: array{chat: array, follow: array, like: array, likeViaRepost: array, mention: array, quote: array, reply: array, repost: array, repostViaRepost: array, starterpackJoined: array, subscribedPost: array, unverified: array, verified: array}}
      *
      * @link https://docs.bsky.app/docs/api/app-bsky-notification-put-preferences-v2
      */

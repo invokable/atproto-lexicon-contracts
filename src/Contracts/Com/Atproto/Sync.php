@@ -59,6 +59,8 @@ interface Sync
     /**
      * DEPRECATED - please use com.atproto.sync.getLatestCommit instead.
      *
+     * @return array{root: string}
+     *
      * @link https://docs.bsky.app/docs/api/com-atproto-sync-get-head
      */
     #[\Deprecated]
@@ -68,6 +70,8 @@ interface Sync
     /**
      * Returns information about a specified upstream host, as consumed by the server. Implemented by relays.
      *
+     * @return array{hostname: string, seq: int, accountCount: int, status: string}
+     *
      * @link https://docs.bsky.app/docs/api/com-atproto-sync-get-host-status
      */
     #[Get, NSID(self::getHostStatus)]
@@ -75,6 +79,8 @@ interface Sync
 
     /**
      * Get the current commit CID & revision of the specified repo. Does not require auth.
+     *
+     * @return array{cid: string, rev: string}
      *
      * @link https://docs.bsky.app/docs/api/com-atproto-sync-get-latest-commit
      */
@@ -100,6 +106,8 @@ interface Sync
     /**
      * Get the hosting status for a repository, on this server. Expected to be implemented by PDS and Relay.
      *
+     * @return array{did: string, active: bool, status: string, rev: string}
+     *
      * @link https://docs.bsky.app/docs/api/com-atproto-sync-get-repo-status
      */
     #[Get, NSID(self::getRepoStatus)]
@@ -107,6 +115,8 @@ interface Sync
 
     /**
      * List blob CIDs for an account, since some repo revision. Does not require auth; implemented by PDS.
+     *
+     * @return array{cursor: string, cids: array}
      *
      * @link https://docs.bsky.app/docs/api/com-atproto-sync-list-blobs
      */
@@ -116,6 +126,8 @@ interface Sync
     /**
      * Enumerates upstream hosts (eg, PDS or relay instances) that this service consumes from. Implemented by relays.
      *
+     * @return array{cursor: string, hosts: array{hostname: string, seq: int, accountCount: int, status: array}[]}
+     *
      * @link https://docs.bsky.app/docs/api/com-atproto-sync-list-hosts
      */
     #[Get, NSID(self::listHosts)]
@@ -124,6 +136,8 @@ interface Sync
     /**
      * Enumerates all the DID, rev, and commit CID for all repos hosted by this service. Does not require auth; implemented by PDS and Relay.
      *
+     * @return array{cursor: string, repos: array{did: string, head: string, rev: string, active: bool, status: string}[]}
+     *
      * @link https://docs.bsky.app/docs/api/com-atproto-sync-list-repos
      */
     #[Get, NSID(self::listRepos)]
@@ -131,6 +145,8 @@ interface Sync
 
     /**
      * Enumerates all the DIDs which have records with the given collection NSID.
+     *
+     * @return array{cursor: string, repos: array{did: string}[]}
      *
      * @link https://docs.bsky.app/docs/api/com-atproto-sync-list-repos-by-collection
      */

@@ -30,6 +30,8 @@ interface Temp
     /**
      * Check accounts location in signup queue.
      *
+     * @return array{activated: bool, placeInQueue: int, estimatedTimeMs: int}
+     *
      * @link https://docs.bsky.app/docs/api/com-atproto-temp-check-signup-queue
      */
     #[Get, NSID(self::checkSignupQueue)]
@@ -37,6 +39,8 @@ interface Temp
 
     /**
      * DEPRECATED: use queryLabels or subscribeLabels instead -- Fetch all labels from a labeler created after a certain date.
+     *
+     * @return array{labels: array{ver: int, src: string, uri: string, cid: string, val: string, neg: bool, cts: string, exp: string, sig: mixed}[]}
      *
      * @link https://docs.bsky.app/docs/api/com-atproto-temp-fetch-labels
      */

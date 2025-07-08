@@ -19,6 +19,8 @@ interface Label
     /**
      * Find labels relevant to the provided AT-URI patterns. Public endpoint for moderation services, though may return different or additional results with auth.
      *
+     * @return array{cursor: string, labels: array{ver: int, src: string, uri: string, cid: string, val: string, neg: bool, cts: string, exp: string, sig: mixed}[]}
+     *
      * @link https://docs.bsky.app/docs/api/com-atproto-label-query-labels
      */
     #[Get, NSID(self::queryLabels)]

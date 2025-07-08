@@ -23,6 +23,8 @@ interface Verification
     /**
      * Grant verifications to multiple subjects. Allows batch processing of up to 100 verifications at once.
      *
+     * @return array{verifications: array{issuer: string, uri: string, subject: string, handle: string, displayName: string, createdAt: string, revokeReason: string, revokedAt: string, revokedBy: string, subjectProfile: array, issuerProfile: array, subjectRepo: array, issuerRepo: array}[], failedVerifications: array{error: string, subject: string}[]}
+     *
      * @link https://docs.bsky.app/docs/api/tools-ozone-verification-grant-verifications
      */
     #[Post, NSID(self::grantVerifications)]
@@ -31,6 +33,8 @@ interface Verification
     /**
      * List verifications.
      *
+     * @return array{cursor: string, verifications: array{issuer: string, uri: string, subject: string, handle: string, displayName: string, createdAt: string, revokeReason: string, revokedAt: string, revokedBy: string, subjectProfile: array, issuerProfile: array, subjectRepo: array, issuerRepo: array}[]}
+     *
      * @link https://docs.bsky.app/docs/api/tools-ozone-verification-list-verifications
      */
     #[Get, NSID(self::listVerifications)]
@@ -38,6 +42,8 @@ interface Verification
 
     /**
      * Revoke previously granted verifications in batches of up to 100.
+     *
+     * @return array{revokedVerifications: array, failedRevocations: array{uri: string, error: string}[]}
      *
      * @link https://docs.bsky.app/docs/api/tools-ozone-verification-revoke-verifications
      */

@@ -21,6 +21,8 @@ interface Signature
     /**
      * Find all correlated threat signatures between 2 or more accounts.
      *
+     * @return array{details: array{property: string, value: string}[]}
+     *
      * @link https://docs.bsky.app/docs/api/tools-ozone-signature-find-correlation
      */
     #[Get, NSID(self::findCorrelation)]
@@ -29,6 +31,8 @@ interface Signature
     /**
      * Get accounts that share some matching threat signatures with the root account.
      *
+     * @return array{cursor: string, accounts: array{account: array, similarities: array}[]}
+     *
      * @link https://docs.bsky.app/docs/api/tools-ozone-signature-find-related-accounts
      */
     #[Get, NSID(self::findRelatedAccounts)]
@@ -36,6 +40,8 @@ interface Signature
 
     /**
      * Search for accounts that match one or more threat signature values.
+     *
+     * @return array{cursor: string, accounts: array{did: string, handle: string, email: string, relatedRecords: array, indexedAt: string, invitedBy: array, invites: array, invitesDisabled: bool, emailConfirmedAt: string, inviteNote: string, deactivatedAt: string, threatSignatures: array}[]}
      *
      * @link https://docs.bsky.app/docs/api/tools-ozone-signature-search-accounts
      */

@@ -32,6 +32,8 @@ interface Moderation
     /**
      * Take a moderation action on an actor.
      *
+     * @return array{id: int, event: array, subject: array, subjectBlobCids: array, createdBy: string, createdAt: string, creatorHandle: string, subjectHandle: string}
+     *
      * @link https://docs.bsky.app/docs/api/tools-ozone-moderation-emit-event
      */
     #[Post, NSID(self::emitEvent)]
@@ -39,6 +41,8 @@ interface Moderation
 
     /**
      * Get details about a moderation event.
+     *
+     * @return array{id: int, event: array, subject: array, subjectBlobs: array{}[], createdBy: string, createdAt: string}
      *
      * @link https://docs.bsky.app/docs/api/tools-ozone-moderation-get-event
      */
@@ -48,6 +52,8 @@ interface Moderation
     /**
      * Get details about a record.
      *
+     * @return array{uri: string, cid: string, value: mixed, blobs: array{}[], labels: array{ver: int, src: string, uri: string, cid: string, val: string, neg: bool, cts: string, exp: string, sig: mixed}[], indexedAt: string, moderation: mixed, repo: mixed}
+     *
      * @link https://docs.bsky.app/docs/api/tools-ozone-moderation-get-record
      */
     #[Get, NSID(self::getRecord)]
@@ -55,6 +61,8 @@ interface Moderation
 
     /**
      * Get details about some records.
+     *
+     * @return array{records: array}
      *
      * @link https://docs.bsky.app/docs/api/tools-ozone-moderation-get-records
      */
@@ -64,6 +72,8 @@ interface Moderation
     /**
      * Get details about a repository.
      *
+     * @return array{did: string, handle: string, email: string, relatedRecords: array, indexedAt: string, moderation: mixed, labels: array{ver: int, src: string, uri: string, cid: string, val: string, neg: bool, cts: string, exp: string, sig: mixed}[], invitedBy: array{code: string, available: int, disabled: bool, forAccount: string, createdBy: string, createdAt: string, uses: array}, invites: array{code: string, available: int, disabled: bool, forAccount: string, createdBy: string, createdAt: string, uses: array}[], invitesDisabled: bool, inviteNote: string, emailConfirmedAt: string, deactivatedAt: string, threatSignatures: array{property: string, value: string}[]}
+     *
      * @link https://docs.bsky.app/docs/api/tools-ozone-moderation-get-repo
      */
     #[Get, NSID(self::getRepo)]
@@ -71,6 +81,8 @@ interface Moderation
 
     /**
      * Get reporter stats for a list of users.
+     *
+     * @return array{stats: array{did: string, accountReportCount: int, recordReportCount: int, reportedAccountCount: int, reportedRecordCount: int, takendownAccountCount: int, takendownRecordCount: int, labeledAccountCount: int, labeledRecordCount: int}[]}
      *
      * @link https://docs.bsky.app/docs/api/tools-ozone-moderation-get-reporter-stats
      */
@@ -80,6 +92,8 @@ interface Moderation
     /**
      * Get details about some repositories.
      *
+     * @return array{repos: array}
+     *
      * @link https://docs.bsky.app/docs/api/tools-ozone-moderation-get-repos
      */
     #[Get, NSID(self::getRepos)]
@@ -87,6 +101,8 @@ interface Moderation
 
     /**
      * Get details about subjects.
+     *
+     * @return array{subjects: array{type: array, subject: string, status: array, repo: array, profile: array, record: array}[]}
      *
      * @link https://docs.bsky.app/docs/api/tools-ozone-moderation-get-subjects
      */
@@ -96,6 +112,8 @@ interface Moderation
     /**
      * List moderation events related to a subject.
      *
+     * @return array{cursor: string, events: array{id: int, event: array, subject: array, subjectBlobCids: array, createdBy: string, createdAt: string, creatorHandle: string, subjectHandle: string}[]}
+     *
      * @link https://docs.bsky.app/docs/api/tools-ozone-moderation-query-events
      */
     #[Get, NSID(self::queryEvents)]
@@ -104,6 +122,8 @@ interface Moderation
     /**
      * View moderation statuses of subjects (record or repo).
      *
+     * @return array{cursor: string, subjectStatuses: array{id: int, subject: array, hosting: array, subjectBlobCids: array, subjectRepoHandle: string, updatedAt: string, createdAt: string, reviewState: array, comment: string, priorityScore: int, muteUntil: string, muteReportingUntil: string, lastReviewedBy: string, lastReviewedAt: string, lastReportedAt: string, lastAppealedAt: string, takendown: bool, appealed: bool, suspendUntil: string, tags: array, accountStats: array, recordsStats: array}[]}
+     *
      * @link https://docs.bsky.app/docs/api/tools-ozone-moderation-query-statuses
      */
     #[Get, NSID(self::queryStatuses)]
@@ -111,6 +131,8 @@ interface Moderation
 
     /**
      * Find repositories based on a search term.
+     *
+     * @return array{cursor: string, repos: array{did: string, handle: string, email: string, relatedRecords: array, indexedAt: string, moderation: array, invitedBy: array, invitesDisabled: bool, inviteNote: string, deactivatedAt: string, threatSignatures: array}[]}
      *
      * @link https://docs.bsky.app/docs/api/tools-ozone-moderation-search-repos
      */

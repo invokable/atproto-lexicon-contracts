@@ -40,6 +40,8 @@ interface Graph
     /**
      * Get a list of starter packs created by the actor.
      *
+     * @return array{cursor: string, starterPacks: array{uri: string, cid: string, record: mixed, creator: array, listItemCount: int, joinedWeekCount: int, joinedAllTimeCount: int, labels: array, indexedAt: string}[]}
+     *
      * @link https://docs.bsky.app/docs/api/app-bsky-graph-get-actor-starter-packs
      */
     #[Get, NSID(self::getActorStarterPacks)]
@@ -47,6 +49,8 @@ interface Graph
 
     /**
      * Enumerates which accounts the requesting account is currently blocking. Requires auth.
+     *
+     * @return array{cursor: string, blocks: array{did: string, handle: string, displayName: string, description: string, avatar: string, associated: array, indexedAt: string, createdAt: string, viewer: array, labels: array, verification: array, status: array}[]}
      *
      * @link https://docs.bsky.app/docs/api/app-bsky-graph-get-blocks
      */
@@ -56,6 +60,8 @@ interface Graph
     /**
      * Enumerates accounts which follow a specified account (actor).
      *
+     * @return array{subject: array{did: string, handle: string, displayName: string, description: string, avatar: string, associated: array, indexedAt: string, createdAt: string, viewer: array, labels: array, verification: array, status: array}, cursor: string, followers: array{did: string, handle: string, displayName: string, description: string, avatar: string, associated: array, indexedAt: string, createdAt: string, viewer: array, labels: array, verification: array, status: array}[]}
+     *
      * @link https://docs.bsky.app/docs/api/app-bsky-graph-get-followers
      */
     #[Get, NSID(self::getFollowers)]
@@ -63,6 +69,8 @@ interface Graph
 
     /**
      * Enumerates accounts which a specified account (actor) follows.
+     *
+     * @return array{subject: array{did: string, handle: string, displayName: string, description: string, avatar: string, associated: array, indexedAt: string, createdAt: string, viewer: array, labels: array, verification: array, status: array}, cursor: string, follows: array{did: string, handle: string, displayName: string, description: string, avatar: string, associated: array, indexedAt: string, createdAt: string, viewer: array, labels: array, verification: array, status: array}[]}
      *
      * @link https://docs.bsky.app/docs/api/app-bsky-graph-get-follows
      */
@@ -72,6 +80,8 @@ interface Graph
     /**
      * Enumerates accounts which follow a specified account (actor) and are followed by the viewer.
      *
+     * @return array{subject: array{did: string, handle: string, displayName: string, description: string, avatar: string, associated: array, indexedAt: string, createdAt: string, viewer: array, labels: array, verification: array, status: array}, cursor: string, followers: array{did: string, handle: string, displayName: string, description: string, avatar: string, associated: array, indexedAt: string, createdAt: string, viewer: array, labels: array, verification: array, status: array}[]}
+     *
      * @link https://docs.bsky.app/docs/api/app-bsky-graph-get-known-followers
      */
     #[Get, NSID(self::getKnownFollowers)]
@@ -79,6 +89,8 @@ interface Graph
 
     /**
      * Gets a 'view' (with additional context) of a specified list.
+     *
+     * @return array{cursor: string, list: array{uri: string, cid: string, creator: array, name: string, purpose: array, description: string, descriptionFacets: array, avatar: string, listItemCount: int, labels: array, viewer: array, indexedAt: string}, items: array{uri: string, subject: array}[]}
      *
      * @link https://docs.bsky.app/docs/api/app-bsky-graph-get-list
      */
@@ -88,6 +100,8 @@ interface Graph
     /**
      * Get mod lists that the requesting account (actor) is blocking. Requires auth.
      *
+     * @return array{cursor: string, lists: array{uri: string, cid: string, creator: array, name: string, purpose: array, description: string, descriptionFacets: array, avatar: string, listItemCount: int, labels: array, viewer: array, indexedAt: string}[]}
+     *
      * @link https://docs.bsky.app/docs/api/app-bsky-graph-get-list-blocks
      */
     #[Get, NSID(self::getListBlocks)]
@@ -95,6 +109,8 @@ interface Graph
 
     /**
      * Enumerates mod lists that the requesting account (actor) currently has muted. Requires auth.
+     *
+     * @return array{cursor: string, lists: array{uri: string, cid: string, creator: array, name: string, purpose: array, description: string, descriptionFacets: array, avatar: string, listItemCount: int, labels: array, viewer: array, indexedAt: string}[]}
      *
      * @link https://docs.bsky.app/docs/api/app-bsky-graph-get-list-mutes
      */
@@ -104,6 +120,8 @@ interface Graph
     /**
      * Enumerates the lists created by a specified account (actor).
      *
+     * @return array{cursor: string, lists: array{uri: string, cid: string, creator: array, name: string, purpose: array, description: string, descriptionFacets: array, avatar: string, listItemCount: int, labels: array, viewer: array, indexedAt: string}[]}
+     *
      * @link https://docs.bsky.app/docs/api/app-bsky-graph-get-lists
      */
     #[Get, NSID(self::getLists)]
@@ -111,6 +129,8 @@ interface Graph
 
     /**
      * Enumerates accounts that the requesting account (actor) currently has muted. Requires auth.
+     *
+     * @return array{cursor: string, mutes: array{did: string, handle: string, displayName: string, description: string, avatar: string, associated: array, indexedAt: string, createdAt: string, viewer: array, labels: array, verification: array, status: array}[]}
      *
      * @link https://docs.bsky.app/docs/api/app-bsky-graph-get-mutes
      */
@@ -120,6 +140,8 @@ interface Graph
     /**
      * Enumerates public relationships between one account, and a list of other accounts. Does not require auth.
      *
+     * @return array{actor: string, relationships: array}
+     *
      * @link https://docs.bsky.app/docs/api/app-bsky-graph-get-relationships
      */
     #[Get, NSID(self::getRelationships)]
@@ -127,6 +149,8 @@ interface Graph
 
     /**
      * Gets a view of a starter pack.
+     *
+     * @return array{starterPack: array{uri: string, cid: string, record: mixed, creator: array, list: array, listItemsSample: array, feeds: array, joinedWeekCount: int, joinedAllTimeCount: int, labels: array, indexedAt: string}}
      *
      * @link https://docs.bsky.app/docs/api/app-bsky-graph-get-starter-pack
      */
@@ -136,6 +160,8 @@ interface Graph
     /**
      * Get views for a list of starter packs.
      *
+     * @return array{starterPacks: array{uri: string, cid: string, record: mixed, creator: array, listItemCount: int, joinedWeekCount: int, joinedAllTimeCount: int, labels: array, indexedAt: string}[]}
+     *
      * @link https://docs.bsky.app/docs/api/app-bsky-graph-get-starter-packs
      */
     #[Get, NSID(self::getStarterPacks)]
@@ -143,6 +169,8 @@ interface Graph
 
     /**
      * Enumerates follows similar to a given account (actor). Expected use is to recommend additional accounts immediately after following one account.
+     *
+     * @return array{suggestions: array{did: string, handle: string, displayName: string, description: string, avatar: string, associated: array, indexedAt: string, createdAt: string, viewer: array, labels: array, verification: array, status: array}[], isFallback: bool, recId: int}
      *
      * @link https://docs.bsky.app/docs/api/app-bsky-graph-get-suggested-follows-by-actor
      */
@@ -175,6 +203,8 @@ interface Graph
 
     /**
      * Find starter packs matching search criteria. Does not require auth.
+     *
+     * @return array{cursor: string, starterPacks: array{uri: string, cid: string, record: mixed, creator: array, listItemCount: int, joinedWeekCount: int, joinedAllTimeCount: int, labels: array, indexedAt: string}[]}
      *
      * @link https://docs.bsky.app/docs/api/app-bsky-graph-search-starter-packs
      */

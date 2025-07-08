@@ -30,6 +30,8 @@ interface Repo
     /**
      * Apply a batch transaction of repository creates, updates, and deletes. Requires auth, implemented by PDS.
      *
+     * @return array{commit: array{cid: string, rev: string}, results: array}
+     *
      * @link https://docs.bsky.app/docs/api/com-atproto-repo-apply-writes
      */
     #[Post, NSID(self::applyWrites)]
@@ -37,6 +39,8 @@ interface Repo
 
     /**
      * Create a single new repository record. Requires auth, implemented by PDS.
+     *
+     * @return array{uri: string, cid: string, commit: array{cid: string, rev: string}, validationStatus: string}
      *
      * @link https://docs.bsky.app/docs/api/com-atproto-repo-create-record
      */
@@ -46,6 +50,8 @@ interface Repo
     /**
      * Delete a repository record, or ensure it doesn't exist. Requires auth, implemented by PDS.
      *
+     * @return array{commit: array{cid: string, rev: string}}
+     *
      * @link https://docs.bsky.app/docs/api/com-atproto-repo-delete-record
      */
     #[Post, NSID(self::deleteRecord)]
@@ -54,6 +60,8 @@ interface Repo
     /**
      * Get information about an account and repository, including the list of collections. Does not require auth.
      *
+     * @return array{handle: string, did: string, didDoc: mixed, collections: array, handleIsCorrect: bool}
+     *
      * @link https://docs.bsky.app/docs/api/com-atproto-repo-describe-repo
      */
     #[Get, NSID(self::describeRepo)]
@@ -61,6 +69,8 @@ interface Repo
 
     /**
      * Get a single record from a repository. Does not require auth.
+     *
+     * @return array{uri: string, cid: string, value: mixed}
      *
      * @link https://docs.bsky.app/docs/api/com-atproto-repo-get-record
      */
@@ -78,6 +88,8 @@ interface Repo
     /**
      * Returns a list of missing blobs for the requesting account. Intended to be used in the account migration flow.
      *
+     * @return array{cursor: string, blobs: array{cid: string, recordUri: string}[]}
+     *
      * @link https://docs.bsky.app/docs/api/com-atproto-repo-list-missing-blobs
      */
     #[Get, NSID(self::listMissingBlobs)]
@@ -85,6 +97,8 @@ interface Repo
 
     /**
      * List a range of records in a repository, matching a specific collection. Does not require auth.
+     *
+     * @return array{cursor: string, records: array{uri: string, cid: string, value: mixed}[]}
      *
      * @link https://docs.bsky.app/docs/api/com-atproto-repo-list-records
      */
@@ -94,6 +108,8 @@ interface Repo
     /**
      * Write a repository record, creating or updating it as needed. Requires auth, implemented by PDS.
      *
+     * @return array{uri: string, cid: string, commit: array{cid: string, rev: string}, validationStatus: string}
+     *
      * @link https://docs.bsky.app/docs/api/com-atproto-repo-put-record
      */
     #[Post, NSID(self::putRecord)]
@@ -101,6 +117,8 @@ interface Repo
 
     /**
      * Upload a new blob, to be referenced from a repository record. The blob will be deleted if it is not referenced within a time window (eg, minutes). Blob restrictions (mimetype, size, etc) are enforced when the reference is created. Requires auth, implemented by PDS.
+     *
+     * @return array{blob: array}
      *
      * @link https://docs.bsky.app/docs/api/com-atproto-repo-upload-blob
      */

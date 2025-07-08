@@ -38,6 +38,8 @@ interface Convo
     /**
      * chat.bsky.convo.acceptConvo.
      *
+     * @return array{rev: string}
+     *
      * @link https://docs.bsky.app/docs/api/chat-bsky-convo-accept-convo
      */
     #[Post, NSID(self::acceptConvo)]
@@ -45,6 +47,8 @@ interface Convo
 
     /**
      * Adds an emoji reaction to a message. Requires authentication. It is idempotent, so multiple calls from the same user with the same emoji result in a single reaction.
+     *
+     * @return array{message: array{id: string, rev: string, text: string, facets: array, embed: array, reactions: array, sender: array, sentAt: string}}
      *
      * @link https://docs.bsky.app/docs/api/chat-bsky-convo-add-reaction
      */
@@ -54,6 +58,8 @@ interface Convo
     /**
      * chat.bsky.convo.deleteMessageForSelf.
      *
+     * @return array{id: string, rev: string, sender: mixed, sentAt: string}
+     *
      * @link https://docs.bsky.app/docs/api/chat-bsky-convo-delete-message-for-self
      */
     #[Post, NSID(self::deleteMessageForSelf)]
@@ -61,6 +67,8 @@ interface Convo
 
     /**
      * chat.bsky.convo.getConvo.
+     *
+     * @return array{convo: array{id: string, rev: string, members: array, lastMessage: array, lastReaction: array, muted: bool, status: string, unreadCount: int}}
      *
      * @link https://docs.bsky.app/docs/api/chat-bsky-convo-get-convo
      */
@@ -70,6 +78,8 @@ interface Convo
     /**
      * Get whether the requester and the other members can chat. If an existing convo is found for these members, it is returned.
      *
+     * @return array{canChat: bool, convo: array{id: string, rev: string, members: array, lastMessage: array, lastReaction: array, muted: bool, status: string, unreadCount: int}}
+     *
      * @link https://docs.bsky.app/docs/api/chat-bsky-convo-get-convo-availability
      */
     #[Get, NSID(self::getConvoAvailability)]
@@ -77,6 +87,8 @@ interface Convo
 
     /**
      * chat.bsky.convo.getConvoForMembers.
+     *
+     * @return array{convo: array{id: string, rev: string, members: array, lastMessage: array, lastReaction: array, muted: bool, status: string, unreadCount: int}}
      *
      * @link https://docs.bsky.app/docs/api/chat-bsky-convo-get-convo-for-members
      */
@@ -86,6 +98,8 @@ interface Convo
     /**
      * chat.bsky.convo.getLog.
      *
+     * @return array{cursor: string, logs: array}
+     *
      * @link https://docs.bsky.app/docs/api/chat-bsky-convo-get-log
      */
     #[Get, NSID(self::getLog)]
@@ -93,6 +107,8 @@ interface Convo
 
     /**
      * chat.bsky.convo.getMessages.
+     *
+     * @return array{cursor: string, messages: array}
      *
      * @link https://docs.bsky.app/docs/api/chat-bsky-convo-get-messages
      */
@@ -102,6 +118,8 @@ interface Convo
     /**
      * chat.bsky.convo.leaveConvo.
      *
+     * @return array{convoId: string, rev: string}
+     *
      * @link https://docs.bsky.app/docs/api/chat-bsky-convo-leave-convo
      */
     #[Post, NSID(self::leaveConvo)]
@@ -109,6 +127,8 @@ interface Convo
 
     /**
      * chat.bsky.convo.listConvos.
+     *
+     * @return array{cursor: string, convos: array{id: string, rev: string, members: array, lastMessage: array, lastReaction: array, muted: bool, status: string, unreadCount: int}[]}
      *
      * @link https://docs.bsky.app/docs/api/chat-bsky-convo-list-convos
      */
@@ -118,6 +138,8 @@ interface Convo
     /**
      * chat.bsky.convo.muteConvo.
      *
+     * @return array{convo: array{id: string, rev: string, members: array, lastMessage: array, lastReaction: array, muted: bool, status: string, unreadCount: int}}
+     *
      * @link https://docs.bsky.app/docs/api/chat-bsky-convo-mute-convo
      */
     #[Post, NSID(self::muteConvo)]
@@ -125,6 +147,8 @@ interface Convo
 
     /**
      * Removes an emoji reaction from a message. Requires authentication. It is idempotent, so multiple calls from the same user with the same emoji result in that reaction not being present, even if it already wasn't.
+     *
+     * @return array{message: array{id: string, rev: string, text: string, facets: array, embed: array, reactions: array, sender: array, sentAt: string}}
      *
      * @link https://docs.bsky.app/docs/api/chat-bsky-convo-remove-reaction
      */
@@ -134,6 +158,8 @@ interface Convo
     /**
      * chat.bsky.convo.sendMessage.
      *
+     * @return array{id: string, rev: string, text: string, facets: array{index: array, features: array}[], embed: array, reactions: array{}[], sender: mixed, sentAt: string}
+     *
      * @link https://docs.bsky.app/docs/api/chat-bsky-convo-send-message
      */
     #[Post, NSID(self::sendMessage)]
@@ -141,6 +167,8 @@ interface Convo
 
     /**
      * chat.bsky.convo.sendMessageBatch.
+     *
+     * @return array{items: array{id: string, rev: string, text: string, facets: array, embed: array, reactions: array, sender: array, sentAt: string}[]}
      *
      * @link https://docs.bsky.app/docs/api/chat-bsky-convo-send-message-batch
      */
@@ -150,6 +178,8 @@ interface Convo
     /**
      * chat.bsky.convo.unmuteConvo.
      *
+     * @return array{convo: array{id: string, rev: string, members: array, lastMessage: array, lastReaction: array, muted: bool, status: string, unreadCount: int}}
+     *
      * @link https://docs.bsky.app/docs/api/chat-bsky-convo-unmute-convo
      */
     #[Post, NSID(self::unmuteConvo)]
@@ -158,6 +188,8 @@ interface Convo
     /**
      * chat.bsky.convo.updateAllRead.
      *
+     * @return array{updatedCount: int}
+     *
      * @link https://docs.bsky.app/docs/api/chat-bsky-convo-update-all-read
      */
     #[Post, NSID(self::updateAllRead)]
@@ -165,6 +197,8 @@ interface Convo
 
     /**
      * chat.bsky.convo.updateRead.
+     *
+     * @return array{convo: array{id: string, rev: string, members: array, lastMessage: array, lastReaction: array, muted: bool, status: string, unreadCount: int}}
      *
      * @link https://docs.bsky.app/docs/api/chat-bsky-convo-update-read
      */

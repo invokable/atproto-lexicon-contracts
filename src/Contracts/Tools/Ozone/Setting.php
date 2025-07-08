@@ -23,6 +23,8 @@ interface Setting
     /**
      * List settings with optional filtering.
      *
+     * @return array{cursor: string, options: array{key: string, did: string, value: mixed, description: string, createdAt: string, updatedAt: string, managerRole: string, scope: string, createdBy: string, lastUpdatedBy: string}[]}
+     *
      * @link https://docs.bsky.app/docs/api/tools-ozone-setting-list-options
      */
     #[Get, NSID(self::listOptions)]
@@ -38,6 +40,8 @@ interface Setting
 
     /**
      * Create or update setting option.
+     *
+     * @return array{option: array{key: string, did: string, value: mixed, description: string, createdAt: string, updatedAt: string, managerRole: string, scope: string, createdBy: string, lastUpdatedBy: string}}
      *
      * @link https://docs.bsky.app/docs/api/tools-ozone-setting-upsert-option
      */

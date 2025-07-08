@@ -69,6 +69,8 @@ interface Admin
     /**
      * Get details about an account.
      *
+     * @return array{did: string, handle: string, email: string, relatedRecords: array, indexedAt: string, invitedBy: array{code: string, available: int, disabled: bool, forAccount: string, createdBy: string, createdAt: string, uses: array}, invites: array{code: string, available: int, disabled: bool, forAccount: string, createdBy: string, createdAt: string, uses: array}[], invitesDisabled: bool, emailConfirmedAt: string, inviteNote: string, deactivatedAt: string, threatSignatures: array{}[]}
+     *
      * @link https://docs.bsky.app/docs/api/com-atproto-admin-get-account-info
      */
     #[Get, NSID(self::getAccountInfo)]
@@ -76,6 +78,8 @@ interface Admin
 
     /**
      * Get details about some accounts.
+     *
+     * @return array{infos: array{did: string, handle: string, email: string, relatedRecords: array, indexedAt: string, invitedBy: array, invites: array, invitesDisabled: bool, emailConfirmedAt: string, inviteNote: string, deactivatedAt: string, threatSignatures: array}[]}
      *
      * @link https://docs.bsky.app/docs/api/com-atproto-admin-get-account-infos
      */
@@ -85,6 +89,8 @@ interface Admin
     /**
      * Get an admin view of invite codes.
      *
+     * @return array{cursor: string, codes: array{code: string, available: int, disabled: bool, forAccount: string, createdBy: string, createdAt: string, uses: array}[]}
+     *
      * @link https://docs.bsky.app/docs/api/com-atproto-admin-get-invite-codes
      */
     #[Get, NSID(self::getInviteCodes)]
@@ -92,6 +98,8 @@ interface Admin
 
     /**
      * Get the service-specific admin status of a subject (account, record, or blob).
+     *
+     * @return array{subject: array, takedown: array{applied: bool, ref: string}, deactivated: array{applied: bool, ref: string}}
      *
      * @link https://docs.bsky.app/docs/api/com-atproto-admin-get-subject-status
      */
@@ -101,6 +109,8 @@ interface Admin
     /**
      * Get list of accounts that matches your search query.
      *
+     * @return array{cursor: string, accounts: array{did: string, handle: string, email: string, relatedRecords: array, indexedAt: string, invitedBy: array, invites: array, invitesDisabled: bool, emailConfirmedAt: string, inviteNote: string, deactivatedAt: string, threatSignatures: array}[]}
+     *
      * @link https://docs.bsky.app/docs/api/com-atproto-admin-search-accounts
      */
     #[Get, NSID(self::searchAccounts)]
@@ -108,6 +118,8 @@ interface Admin
 
     /**
      * Send email to a user's account email address.
+     *
+     * @return array{sent: bool}
      *
      * @link https://docs.bsky.app/docs/api/com-atproto-admin-send-email
      */
@@ -148,6 +160,8 @@ interface Admin
 
     /**
      * Update the service-specific admin status of a subject (account, record, or blob).
+     *
+     * @return array{subject: array, takedown: array{applied: bool, ref: string}}
      *
      * @link https://docs.bsky.app/docs/api/com-atproto-admin-update-subject-status
      */

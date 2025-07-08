@@ -21,6 +21,8 @@ interface Video
     /**
      * Get status details for a video processing job.
      *
+     * @return array{jobStatus: array{jobId: string, did: string, state: string, progress: int, blob: array, error: string, message: string}}
+     *
      * @link https://docs.bsky.app/docs/api/app-bsky-video-get-job-status
      */
     #[Get, NSID(self::getJobStatus)]
@@ -29,6 +31,8 @@ interface Video
     /**
      * Get video upload limits for the authenticated user.
      *
+     * @return array{canUpload: bool, remainingDailyVideos: int, remainingDailyBytes: int, message: string, error: string}
+     *
      * @link https://docs.bsky.app/docs/api/app-bsky-video-get-upload-limits
      */
     #[Get, NSID(self::getUploadLimits)]
@@ -36,6 +40,8 @@ interface Video
 
     /**
      * Upload a video to be processed then stored on the PDS.
+     *
+     * @return array{jobStatus: array{jobId: string, did: string, state: string, progress: int, blob: array, error: string, message: string}}
      *
      * @link https://docs.bsky.app/docs/api/app-bsky-video-upload-video
      */

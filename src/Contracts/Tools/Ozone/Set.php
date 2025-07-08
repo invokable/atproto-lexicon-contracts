@@ -48,6 +48,8 @@ interface Set
     /**
      * Get a specific set and its values.
      *
+     * @return array{set: array{name: string, description: string, setSize: int, createdAt: string, updatedAt: string}, values: array, cursor: string}
+     *
      * @link https://docs.bsky.app/docs/api/tools-ozone-set-get-values
      */
     #[Get, NSID(self::getValues)]
@@ -56,6 +58,8 @@ interface Set
     /**
      * Query available sets.
      *
+     * @return array{sets: array{name: string, description: string, setSize: int, createdAt: string, updatedAt: string}[], cursor: string}
+     *
      * @link https://docs.bsky.app/docs/api/tools-ozone-set-query-sets
      */
     #[Get, NSID(self::querySets)]
@@ -63,6 +67,8 @@ interface Set
 
     /**
      * Create or update set metadata.
+     *
+     * @return array{name: string, description: string, setSize: int, createdAt: string, updatedAt: string}
      *
      * @link https://docs.bsky.app/docs/api/tools-ozone-set-upsert-set
      */

@@ -18,6 +18,8 @@ interface Server
     /**
      * Get details about ozone's server configuration.
      *
+     * @return array{appview: array{url: string}, pds: array{url: string}, blobDivert: array{url: string}, chat: array{url: string}, viewer: array{role: string}, verifierDid: string}
+     *
      * @link https://docs.bsky.app/docs/api/tools-ozone-server-get-config
      */
     #[Get, NSID(self::getConfig)]

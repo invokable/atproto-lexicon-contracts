@@ -28,6 +28,8 @@ interface Identity
     /**
      * Describe the credentials that should be included in the DID doc of an account that is migrating to this service.
      *
+     * @return array{rotationKeys: array, alsoKnownAs: array, verificationMethods: mixed, services: mixed}
+     *
      * @link https://docs.bsky.app/docs/api/com-atproto-identity-get-recommended-did-credentials
      */
     #[Get, NSID(self::getRecommendedDidCredentials)]
@@ -35,6 +37,8 @@ interface Identity
 
     /**
      * Request that the server re-resolve an identity (DID and handle). The server may ignore this request, or require authentication, depending on the role, implementation, and policy of the server.
+     *
+     * @return array{did: string, handle: string, didDoc: mixed}
      *
      * @link https://docs.bsky.app/docs/api/com-atproto-identity-refresh-identity
      */
@@ -52,6 +56,8 @@ interface Identity
     /**
      * Resolves DID to DID document. Does not bi-directionally verify handle.
      *
+     * @return array{didDoc: mixed}
+     *
      * @link https://docs.bsky.app/docs/api/com-atproto-identity-resolve-did
      */
     #[Get, NSID(self::resolveDid)]
@@ -59,6 +65,8 @@ interface Identity
 
     /**
      * Resolves an atproto handle (hostname) to a DID. Does not necessarily bi-directionally verify against the the DID document.
+     *
+     * @return array{did: string}
      *
      * @link https://docs.bsky.app/docs/api/com-atproto-identity-resolve-handle
      */
@@ -68,6 +76,8 @@ interface Identity
     /**
      * Resolves an identity (DID or Handle) to a full identity (DID document and verified handle).
      *
+     * @return array{did: string, handle: string, didDoc: mixed}
+     *
      * @link https://docs.bsky.app/docs/api/com-atproto-identity-resolve-identity
      */
     #[Get, NSID(self::resolveIdentity)]
@@ -75,6 +85,8 @@ interface Identity
 
     /**
      * Signs a PLC operation to update some value(s) in the requesting DID's document.
+     *
+     * @return array{operation: mixed}
      *
      * @link https://docs.bsky.app/docs/api/com-atproto-identity-sign-plc-operation
      */

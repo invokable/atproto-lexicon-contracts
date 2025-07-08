@@ -19,6 +19,8 @@ interface Labeler
     /**
      * Get information about a list of labeler services.
      *
+     * @return array{views: array}
+     *
      * @link https://docs.bsky.app/docs/api/app-bsky-labeler-get-services
      */
     #[Get, NSID(self::getServices)]

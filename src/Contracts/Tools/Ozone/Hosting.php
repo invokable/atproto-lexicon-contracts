@@ -19,6 +19,8 @@ interface Hosting
     /**
      * Get account history, e.g. log of updated email addresses or other identity information.
      *
+     * @return array{cursor: string, events: array{details: array, createdBy: string, createdAt: string}[]}
+     *
      * @link https://docs.bsky.app/docs/api/tools-ozone-hosting-get-account-history
      */
     #[Get, NSID(self::getAccountHistory)]
