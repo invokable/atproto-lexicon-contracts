@@ -101,7 +101,7 @@ interface Notification
      * @link https://docs.bsky.app/docs/api/app-bsky-notification-register-push
      */
     #[Post, NSID(self::registerPush)]
-    public function registerPush(#[Format('did')] string $serviceDid, string $token, #[KnownValues(['ios', 'android', 'web'])] string $platform, string $appId);
+    public function registerPush(#[Format('did')] string $serviceDid, string $token, #[KnownValues(['ios', 'android', 'web'])] string $platform, string $appId, ?bool $ageRestricted = null);
 
     /**
      * Notify server that the requesting account has seen notifications. Requires auth.
