@@ -25,6 +25,7 @@ interface Notification
     public const putPreferences = 'app.bsky.notification.putPreferences';
     public const putPreferencesV2 = 'app.bsky.notification.putPreferencesV2';
     public const registerPush = 'app.bsky.notification.registerPush';
+    public const unregisterPush = 'app.bsky.notification.unregisterPush';
     public const updateSeen = 'app.bsky.notification.updateSeen';
 
     /**
@@ -101,7 +102,15 @@ interface Notification
      * @link https://docs.bsky.app/docs/api/app-bsky-notification-register-push
      */
     #[Post, NSID(self::registerPush)]
-    public function registerPush(#[Format('did')] string $serviceDid, string $token, #[KnownValues(['ios', 'android', 'web'])] string $platform, string $appId);
+    public function registerPush(#[Format('did')] string $serviceDid, string $token, #[KnownValues(['ios', 'android', 'web'])] string $platform, string $appId, ?bool $ageRestricted = null);
+
+    /**
+     * The inverse of registerPush - inform a specified service that push notifications should no longer be sent to the given token for the requesting account. Requires auth.
+     *
+     * @link https://docs.bsky.app/docs/api/app-bsky-notification-unregister-push
+     */
+    #[Post, NSID(self::unregisterPush)]
+    public function unregisterPush(#[Format('did')] string $serviceDid, string $token, #[KnownValues(['ios', 'android', 'web'])] string $platform, string $appId);
 
     /**
      * Notify server that the requesting account has seen notifications. Requires auth.

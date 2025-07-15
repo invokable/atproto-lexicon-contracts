@@ -8008,6 +8008,65 @@ return array (
               array (
                 'type' => 'string',
               ),
+              'ageRestricted' => 
+              array (
+                'type' => 'boolean',
+                'description' => 'Set to true when the actor is age restricted',
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
+  'app.bsky.notification.unregisterPush' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.notification.unregisterPush',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'procedure',
+        'description' => 'The inverse of registerPush - inform a specified service that push notifications should no longer be sent to the given token for the requesting account. Requires auth.',
+        'input' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'serviceDid',
+              1 => 'token',
+              2 => 'platform',
+              3 => 'appId',
+            ),
+            'properties' => 
+            array (
+              'serviceDid' => 
+              array (
+                'type' => 'string',
+                'format' => 'did',
+              ),
+              'token' => 
+              array (
+                'type' => 'string',
+              ),
+              'platform' => 
+              array (
+                'type' => 'string',
+                'knownValues' => 
+                array (
+                  0 => 'ios',
+                  1 => 'android',
+                  2 => 'web',
+                ),
+              ),
+              'appId' => 
+              array (
+                'type' => 'string',
+              ),
             ),
           ),
         ),
@@ -8433,6 +8492,119 @@ return array (
           array (
             'type' => 'ref',
             'ref' => 'lex:app.bsky.feed.defs#blockedAuthor',
+          ),
+        ),
+      ),
+      'ageAssuranceState' => 
+      array (
+        'type' => 'object',
+        'description' => 'The computed state of the age assurance process, returned to the user in question on certain authenticated requests.',
+        'required' => 
+        array (
+          0 => 'status',
+        ),
+        'properties' => 
+        array (
+          'lastInitiatedAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+            'description' => 'The timestamp when this state was last updated.',
+          ),
+          'status' => 
+          array (
+            'type' => 'string',
+            'description' => 'The status of the age assurance process.',
+            'knownValues' => 
+            array (
+              0 => 'unknown',
+              1 => 'pending',
+              2 => 'assured',
+              3 => 'blocked',
+            ),
+          ),
+        ),
+      ),
+      'ageAssuranceEvent' => 
+      array (
+        'type' => 'object',
+        'description' => 'Object used to store age assurance data in stash.',
+        'required' => 
+        array (
+          0 => 'createdAt',
+          1 => 'status',
+          2 => 'attemptId',
+        ),
+        'properties' => 
+        array (
+          'createdAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+            'description' => 'The date and time of this write operation.',
+          ),
+          'status' => 
+          array (
+            'type' => 'string',
+            'description' => 'The status of the age assurance process.',
+            'knownValues' => 
+            array (
+              0 => 'unknown',
+              1 => 'pending',
+              2 => 'assured',
+            ),
+          ),
+          'attemptId' => 
+          array (
+            'type' => 'string',
+            'description' => 'The unique identifier for this instance of the age assurance flow, in UUID format.',
+          ),
+          'email' => 
+          array (
+            'type' => 'string',
+            'description' => 'The email used for AA.',
+          ),
+          'initIp' => 
+          array (
+            'type' => 'string',
+            'description' => 'The IP address used when initiating the AA flow.',
+          ),
+          'initUa' => 
+          array (
+            'type' => 'string',
+            'description' => 'The user agent used when initiating the AA flow.',
+          ),
+          'completeIp' => 
+          array (
+            'type' => 'string',
+            'description' => 'The IP address used when completing the AA flow.',
+          ),
+          'completeUa' => 
+          array (
+            'type' => 'string',
+            'description' => 'The user agent used when completing the AA flow.',
+          ),
+        ),
+      ),
+    ),
+  ),
+  'app.bsky.unspecced.getAgeAssuranceState' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.unspecced.getAgeAssuranceState',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'description' => 'Returns the current state of the age assurance process for an account. This is used to check if the user has completed age assurance or if further action is required.',
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.unspecced.defs#ageAssuranceState',
           ),
         ),
       ),
@@ -9459,6 +9631,60 @@ return array (
                 ),
               ),
             ),
+          ),
+        ),
+      ),
+    ),
+  ),
+  'app.bsky.unspecced.initAgeAssurance' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.unspecced.initAgeAssurance',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'procedure',
+        'description' => 'Initiate age assurance for an account. This is a one-time action that will start the process of verifying the user\'s age.',
+        'input' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'email',
+              1 => 'language',
+              2 => 'countryCode',
+            ),
+            'properties' => 
+            array (
+              'email' => 
+              array (
+                'type' => 'string',
+                'description' => 'The user\'s email address to receive assurance instructions.',
+              ),
+              'language' => 
+              array (
+                'type' => 'string',
+                'description' => 'The user\'s preferred language for communication during the assurance process.',
+              ),
+              'countryCode' => 
+              array (
+                'type' => 'string',
+                'description' => 'An ISO 3166-1 alpha-2 code of the user\'s location.',
+              ),
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.unspecced.defs#ageAssuranceState',
           ),
         ),
       ),
@@ -18636,6 +18862,8 @@ return array (
               16 => 'lex:tools.ozone.moderation.defs#identityEvent',
               17 => 'lex:tools.ozone.moderation.defs#recordEvent',
               18 => 'lex:tools.ozone.moderation.defs#modEventPriorityScore',
+              19 => 'lex:tools.ozone.moderation.defs#ageAssuranceEvent',
+              20 => 'lex:tools.ozone.moderation.defs#ageAssuranceOverrideEvent',
             ),
           ),
           'subject' => 
@@ -18723,6 +18951,8 @@ return array (
               16 => 'lex:tools.ozone.moderation.defs#identityEvent',
               17 => 'lex:tools.ozone.moderation.defs#recordEvent',
               18 => 'lex:tools.ozone.moderation.defs#modEventPriorityScore',
+              19 => 'lex:tools.ozone.moderation.defs#ageAssuranceEvent',
+              20 => 'lex:tools.ozone.moderation.defs#ageAssuranceOverrideEvent',
             ),
           ),
           'subject' => 
@@ -18904,6 +19134,29 @@ return array (
             'description' => 'Statistics related to the record subjects authored by the subject\'s account',
             'type' => 'ref',
             'ref' => 'lex:tools.ozone.moderation.defs#recordsStats',
+          ),
+          'ageAssuranceState' => 
+          array (
+            'type' => 'string',
+            'description' => 'Current age assurance state of the subject.',
+            'knownValues' => 
+            array (
+              0 => 'pending',
+              1 => 'assured',
+              2 => 'unknown',
+              3 => 'reset',
+              4 => 'blocked',
+            ),
+          ),
+          'ageAssuranceUpdatedBy' => 
+          array (
+            'type' => 'string',
+            'description' => 'Whether or not the last successful update to age assurance was made by the user or admin.',
+            'knownValues' => 
+            array (
+              0 => 'admin',
+              1 => 'user',
+            ),
           ),
         ),
       ),
@@ -19221,6 +19474,91 @@ return array (
             'type' => 'integer',
             'minimum' => 0,
             'maximum' => 100,
+          ),
+        ),
+      ),
+      'ageAssuranceEvent' => 
+      array (
+        'type' => 'object',
+        'description' => 'Age assurance info coming directly from users. Only works on DID subjects.',
+        'required' => 
+        array (
+          0 => 'createdAt',
+          1 => 'status',
+          2 => 'attemptId',
+        ),
+        'properties' => 
+        array (
+          'createdAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+            'description' => 'The date and time of this write operation.',
+          ),
+          'status' => 
+          array (
+            'type' => 'string',
+            'description' => 'The status of the age assurance process.',
+            'knownValues' => 
+            array (
+              0 => 'unknown',
+              1 => 'pending',
+              2 => 'assured',
+            ),
+          ),
+          'attemptId' => 
+          array (
+            'type' => 'string',
+            'description' => 'The unique identifier for this instance of the age assurance flow, in UUID format.',
+          ),
+          'initIp' => 
+          array (
+            'type' => 'string',
+            'description' => 'The IP address used when initiating the AA flow.',
+          ),
+          'initUa' => 
+          array (
+            'type' => 'string',
+            'description' => 'The user agent used when initiating the AA flow.',
+          ),
+          'completeIp' => 
+          array (
+            'type' => 'string',
+            'description' => 'The IP address used when completing the AA flow.',
+          ),
+          'completeUa' => 
+          array (
+            'type' => 'string',
+            'description' => 'The user agent used when completing the AA flow.',
+          ),
+        ),
+      ),
+      'ageAssuranceOverrideEvent' => 
+      array (
+        'type' => 'object',
+        'description' => 'Age assurance status override by moderators. Only works on DID subjects.',
+        'required' => 
+        array (
+          0 => 'comment',
+          1 => 'status',
+        ),
+        'properties' => 
+        array (
+          'status' => 
+          array (
+            'type' => 'string',
+            'description' => 'The status to be set for the user decided by a moderator, overriding whatever value the user had previously. Use reset to default to original state.',
+            'knownValues' => 
+            array (
+              0 => 'assured',
+              1 => 'reset',
+              2 => 'blocked',
+            ),
+          ),
+          'comment' => 
+          array (
+            'type' => 'string',
+            'description' => 'Comment describing the reason for the override.',
           ),
         ),
       ),
@@ -20158,6 +20496,8 @@ return array (
                   16 => 'lex:tools.ozone.moderation.defs#identityEvent',
                   17 => 'lex:tools.ozone.moderation.defs#recordEvent',
                   18 => 'lex:tools.ozone.moderation.defs#modEventPriorityScore',
+                  19 => 'lex:tools.ozone.moderation.defs#ageAssuranceEvent',
+                  20 => 'lex:tools.ozone.moderation.defs#ageAssuranceOverrideEvent',
                 ),
               ),
               'subject' => 
@@ -20745,6 +21085,19 @@ return array (
               ),
               'description' => 'If specified, only events where the modTool name matches any of the given values are returned',
             ),
+            'ageAssuranceState' => 
+            array (
+              'type' => 'string',
+              'description' => 'If specified, only events where the age assurance state matches the given value are returned',
+              'knownValues' => 
+              array (
+                0 => 'pending',
+                1 => 'assured',
+                2 => 'unknown',
+                3 => 'reset',
+                4 => 'blocked',
+              ),
+            ),
             'cursor' => 
             array (
               'type' => 'string',
@@ -21019,6 +21372,19 @@ return array (
               'maximum' => 100,
               'type' => 'integer',
               'description' => 'If specified, only subjects that have priority score value above the given value will be returned.',
+            ),
+            'ageAssuranceState' => 
+            array (
+              'type' => 'string',
+              'description' => 'If specified, only subjects with the given age assurance state will be returned.',
+              'knownValues' => 
+              array (
+                0 => 'pending',
+                1 => 'assured',
+                2 => 'unknown',
+                3 => 'reset',
+                4 => 'blocked',
+              ),
             ),
           ),
         ),
