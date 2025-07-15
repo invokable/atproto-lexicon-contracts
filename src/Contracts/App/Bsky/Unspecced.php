@@ -12,9 +12,11 @@ use Revolution\AtProto\Lexicon\Attributes\Format;
 use Revolution\AtProto\Lexicon\Attributes\Get;
 use Revolution\AtProto\Lexicon\Attributes\KnownValues;
 use Revolution\AtProto\Lexicon\Attributes\NSID;
+use Revolution\AtProto\Lexicon\Attributes\Post;
 
 interface Unspecced
 {
+    public const getAgeAssuranceState = 'app.bsky.unspecced.getAgeAssuranceState';
     public const getConfig = 'app.bsky.unspecced.getConfig';
     public const getPopularFeedGenerators = 'app.bsky.unspecced.getPopularFeedGenerators';
     public const getPostThreadOtherV2 = 'app.bsky.unspecced.getPostThreadOtherV2';
@@ -30,9 +32,20 @@ interface Unspecced
     public const getTrendingTopics = 'app.bsky.unspecced.getTrendingTopics';
     public const getTrends = 'app.bsky.unspecced.getTrends';
     public const getTrendsSkeleton = 'app.bsky.unspecced.getTrendsSkeleton';
+    public const initAgeAssurance = 'app.bsky.unspecced.initAgeAssurance';
     public const searchActorsSkeleton = 'app.bsky.unspecced.searchActorsSkeleton';
     public const searchPostsSkeleton = 'app.bsky.unspecced.searchPostsSkeleton';
     public const searchStarterPacksSkeleton = 'app.bsky.unspecced.searchStarterPacksSkeleton';
+
+    /**
+     * Returns the current state of the age assurance process for an account. This is used to check if the user has completed age assurance or if further action is required.
+     *
+     * @return array{lastInitiatedAt: string, status: string}
+     *
+     * @link https://docs.bsky.app/docs/api/app-bsky-unspecced-get-age-assurance-state
+     */
+    #[Get, NSID(self::getAgeAssuranceState)]
+    public function getAgeAssuranceState();
 
     /**
      * Get miscellaneous runtime configuration.
@@ -183,6 +196,16 @@ interface Unspecced
      */
     #[Get, NSID(self::getTrendsSkeleton)]
     public function getTrendsSkeleton(#[Format('did')] ?string $viewer = null, ?int $limit = 10);
+
+    /**
+     * Initiate age assurance for an account. This is a one-time action that will start the process of verifying the user's age.
+     *
+     * @return array{lastInitiatedAt: string, status: string}
+     *
+     * @link https://docs.bsky.app/docs/api/app-bsky-unspecced-init-age-assurance
+     */
+    #[Post, NSID(self::initAgeAssurance)]
+    public function initAgeAssurance(string $email, string $language, string $countryCode);
 
     /**
      * Backend Actors (profile) search, returns only skeleton.
