@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Revolution\AtProto\Lexicon\Contracts\Com\Atproto;
 
+use Revolution\AtProto\Lexicon\Attributes\Format;
 use Revolution\AtProto\Lexicon\Attributes\Get;
 use Revolution\AtProto\Lexicon\Attributes\NSID;
 use Revolution\AtProto\Lexicon\Attributes\Post;
@@ -15,6 +16,7 @@ use Revolution\AtProto\Lexicon\Attributes\Post;
 interface Temp
 {
     public const addReservedHandle = 'com.atproto.temp.addReservedHandle';
+    public const checkHandleAvailability = 'com.atproto.temp.checkHandleAvailability';
     public const checkSignupQueue = 'com.atproto.temp.checkSignupQueue';
     public const fetchLabels = 'com.atproto.temp.fetchLabels';
     public const requestPhoneVerification = 'com.atproto.temp.requestPhoneVerification';
@@ -26,6 +28,16 @@ interface Temp
      */
     #[Post, NSID(self::addReservedHandle)]
     public function addReservedHandle(string $handle);
+
+    /**
+     * Checks whether the provided handle is available. If the handle is not available, available suggestions will be returned. Optional inputs will be used to generate suggestions.
+     *
+     * @return array{handle: string, result: array}
+     *
+     * @link https://docs.bsky.app/docs/api/com-atproto-temp-check-handle-availability
+     */
+    #[Get, NSID(self::checkHandleAvailability)]
+    public function checkHandleAvailability(#[Format('handle')] string $handle, ?string $email = null, #[Format('datetime')] ?string $birthDate = null);
 
     /**
      * Check accounts location in signup queue.

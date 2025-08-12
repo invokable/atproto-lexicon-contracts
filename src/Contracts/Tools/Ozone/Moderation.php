@@ -19,6 +19,7 @@ use Revolution\AtProto\Lexicon\Attributes\Union;
 interface Moderation
 {
     public const emitEvent = 'tools.ozone.moderation.emitEvent';
+    public const getAccountTimeline = 'tools.ozone.moderation.getAccountTimeline';
     public const getEvent = 'tools.ozone.moderation.getEvent';
     public const getRecord = 'tools.ozone.moderation.getRecord';
     public const getRecords = 'tools.ozone.moderation.getRecords';
@@ -38,7 +39,17 @@ interface Moderation
      * @link https://docs.bsky.app/docs/api/tools-ozone-moderation-emit-event
      */
     #[Post, NSID(self::emitEvent)]
-    public function emitEvent(#[Union(['tools.ozone.moderation.defs#modEventTakedown', 'tools.ozone.moderation.defs#modEventAcknowledge', 'tools.ozone.moderation.defs#modEventEscalate', 'tools.ozone.moderation.defs#modEventComment', 'tools.ozone.moderation.defs#modEventLabel', 'tools.ozone.moderation.defs#modEventReport', 'tools.ozone.moderation.defs#modEventMute', 'tools.ozone.moderation.defs#modEventUnmute', 'tools.ozone.moderation.defs#modEventMuteReporter', 'tools.ozone.moderation.defs#modEventUnmuteReporter', 'tools.ozone.moderation.defs#modEventReverseTakedown', 'tools.ozone.moderation.defs#modEventResolveAppeal', 'tools.ozone.moderation.defs#modEventEmail', 'tools.ozone.moderation.defs#modEventDivert', 'tools.ozone.moderation.defs#modEventTag', 'tools.ozone.moderation.defs#accountEvent', 'tools.ozone.moderation.defs#identityEvent', 'tools.ozone.moderation.defs#recordEvent', 'tools.ozone.moderation.defs#modEventPriorityScore', 'tools.ozone.moderation.defs#ageAssuranceEvent', 'tools.ozone.moderation.defs#ageAssuranceOverrideEvent'])] array $event, #[Union(['com.atproto.admin.defs#repoRef', 'com.atproto.repo.strongRef'])] array $subject, #[Format('did')] string $createdBy, #[Format('cid')] ?array $subjectBlobCids = null, #[Ref('tools.ozone.moderation.defs#modTool')] ?array $modTool = null);
+    public function emitEvent(#[Union(['tools.ozone.moderation.defs#modEventTakedown', 'tools.ozone.moderation.defs#modEventAcknowledge', 'tools.ozone.moderation.defs#modEventEscalate', 'tools.ozone.moderation.defs#modEventComment', 'tools.ozone.moderation.defs#modEventLabel', 'tools.ozone.moderation.defs#modEventReport', 'tools.ozone.moderation.defs#modEventMute', 'tools.ozone.moderation.defs#modEventUnmute', 'tools.ozone.moderation.defs#modEventMuteReporter', 'tools.ozone.moderation.defs#modEventUnmuteReporter', 'tools.ozone.moderation.defs#modEventReverseTakedown', 'tools.ozone.moderation.defs#modEventResolveAppeal', 'tools.ozone.moderation.defs#modEventEmail', 'tools.ozone.moderation.defs#modEventDivert', 'tools.ozone.moderation.defs#modEventTag', 'tools.ozone.moderation.defs#accountEvent', 'tools.ozone.moderation.defs#identityEvent', 'tools.ozone.moderation.defs#recordEvent', 'tools.ozone.moderation.defs#modEventPriorityScore', 'tools.ozone.moderation.defs#ageAssuranceEvent', 'tools.ozone.moderation.defs#ageAssuranceOverrideEvent'])] array $event, #[Union(['com.atproto.admin.defs#repoRef', 'com.atproto.repo.strongRef'])] array $subject, #[Format('did')] string $createdBy, #[Format('cid')] ?array $subjectBlobCids = null, #[Ref('tools.ozone.moderation.defs#modTool')] ?array $modTool = null, ?string $externalId = null);
+
+    /**
+     * Get timeline of all available events of an account. This includes moderation events, account history and did history.
+     *
+     * @return array{timeline: array{day: string, summary: array}[]}
+     *
+     * @link https://docs.bsky.app/docs/api/tools-ozone-moderation-get-account-timeline
+     */
+    #[Get, NSID(self::getAccountTimeline)]
+    public function getAccountTimeline(#[Format('did')] string $did);
 
     /**
      * Get details about a moderation event.
