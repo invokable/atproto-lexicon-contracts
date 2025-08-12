@@ -24,10 +24,12 @@ interface Graph
     public const getListBlocks = 'app.bsky.graph.getListBlocks';
     public const getListMutes = 'app.bsky.graph.getListMutes';
     public const getLists = 'app.bsky.graph.getLists';
+    public const getListsWithMembership = 'app.bsky.graph.getListsWithMembership';
     public const getMutes = 'app.bsky.graph.getMutes';
     public const getRelationships = 'app.bsky.graph.getRelationships';
     public const getStarterPack = 'app.bsky.graph.getStarterPack';
     public const getStarterPacks = 'app.bsky.graph.getStarterPacks';
+    public const getStarterPacksWithMembership = 'app.bsky.graph.getStarterPacksWithMembership';
     public const getSuggestedFollowsByActor = 'app.bsky.graph.getSuggestedFollowsByActor';
     public const muteActor = 'app.bsky.graph.muteActor';
     public const muteActorList = 'app.bsky.graph.muteActorList';
@@ -125,7 +127,17 @@ interface Graph
      * @link https://docs.bsky.app/docs/api/app-bsky-graph-get-lists
      */
     #[Get, NSID(self::getLists)]
-    public function getLists(#[Format('at-identifier')] string $actor, ?int $limit = 50, ?string $cursor = null);
+    public function getLists(#[Format('at-identifier')] string $actor, ?int $limit = 50, ?string $cursor = null, ?array $purposes = null);
+
+    /**
+     * Enumerates the lists created by the session user, and includes membership information about `actor` in those lists. Only supports curation and moderation lists (no reference lists, used in starter packs). Requires auth.
+     *
+     * @return array{cursor: string, listsWithMembership: array{list: array, listItem: array}[]}
+     *
+     * @link https://docs.bsky.app/docs/api/app-bsky-graph-get-lists-with-membership
+     */
+    #[Get, NSID(self::getListsWithMembership)]
+    public function getListsWithMembership(#[Format('at-identifier')] string $actor, ?int $limit = 50, ?string $cursor = null, ?array $purposes = null);
 
     /**
      * Enumerates accounts that the requesting account (actor) currently has muted. Requires auth.
@@ -166,6 +178,16 @@ interface Graph
      */
     #[Get, NSID(self::getStarterPacks)]
     public function getStarterPacks(#[Format('at-uri')] array $uris);
+
+    /**
+     * Enumerates the starter packs created by the session user, and includes membership information about `actor` in those starter packs. Requires auth.
+     *
+     * @return array{cursor: string, starterPacksWithMembership: array{starterPack: array, listItem: array}[]}
+     *
+     * @link https://docs.bsky.app/docs/api/app-bsky-graph-get-starter-packs-with-membership
+     */
+    #[Get, NSID(self::getStarterPacksWithMembership)]
+    public function getStarterPacksWithMembership(#[Format('at-identifier')] string $actor, ?int $limit = 50, ?string $cursor = null);
 
     /**
      * Enumerates follows similar to a given account (actor). Expected use is to recommend additional accounts immediately after following one account.

@@ -5943,6 +5943,20 @@ return array (
             array (
               'type' => 'string',
             ),
+            'purposes' => 
+            array (
+              'type' => 'array',
+              'description' => 'Optional filter by list purpose. If not specified, all supported types are returned.',
+              'items' => 
+              array (
+                'type' => 'string',
+                'knownValues' => 
+                array (
+                  0 => 'modlist',
+                  1 => 'curatelist',
+                ),
+              ),
+            ),
           ),
         ),
         'output' => 
@@ -5971,6 +5985,111 @@ return array (
                 ),
               ),
             ),
+          ),
+        ),
+      ),
+    ),
+  ),
+  'app.bsky.graph.getListsWithMembership' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.graph.getListsWithMembership',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'description' => 'Enumerates the lists created by the session user, and includes membership information about `actor` in those lists. Only supports curation and moderation lists (no reference lists, used in starter packs). Requires auth.',
+        'parameters' => 
+        array (
+          'type' => 'params',
+          'required' => 
+          array (
+            0 => 'actor',
+          ),
+          'properties' => 
+          array (
+            'actor' => 
+            array (
+              'type' => 'string',
+              'format' => 'at-identifier',
+              'description' => 'The account (actor) to check for membership.',
+            ),
+            'limit' => 
+            array (
+              'type' => 'integer',
+              'minimum' => 1,
+              'maximum' => 100,
+              'default' => 50,
+            ),
+            'cursor' => 
+            array (
+              'type' => 'string',
+            ),
+            'purposes' => 
+            array (
+              'type' => 'array',
+              'description' => 'Optional filter by list purpose. If not specified, all supported types are returned.',
+              'items' => 
+              array (
+                'type' => 'string',
+                'knownValues' => 
+                array (
+                  0 => 'modlist',
+                  1 => 'curatelist',
+                ),
+              ),
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'listsWithMembership',
+            ),
+            'properties' => 
+            array (
+              'cursor' => 
+              array (
+                'type' => 'string',
+              ),
+              'listsWithMembership' => 
+              array (
+                'type' => 'array',
+                'items' => 
+                array (
+                  'type' => 'ref',
+                  'ref' => 'lex:app.bsky.graph.getListsWithMembership#listWithMembership',
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+      'listWithMembership' => 
+      array (
+        'description' => 'A list and an optional list item indicating membership of a target user to that list.',
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'list',
+        ),
+        'properties' => 
+        array (
+          'list' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.graph.defs#listView',
+          ),
+          'listItem' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.graph.defs#listItemView',
           ),
         ),
       ),
@@ -6220,6 +6339,97 @@ return array (
                 ),
               ),
             ),
+          ),
+        ),
+      ),
+    ),
+  ),
+  'app.bsky.graph.getStarterPacksWithMembership' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.graph.getStarterPacksWithMembership',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'description' => 'Enumerates the starter packs created by the session user, and includes membership information about `actor` in those starter packs. Requires auth.',
+        'parameters' => 
+        array (
+          'type' => 'params',
+          'required' => 
+          array (
+            0 => 'actor',
+          ),
+          'properties' => 
+          array (
+            'actor' => 
+            array (
+              'type' => 'string',
+              'format' => 'at-identifier',
+              'description' => 'The account (actor) to check for membership.',
+            ),
+            'limit' => 
+            array (
+              'type' => 'integer',
+              'minimum' => 1,
+              'maximum' => 100,
+              'default' => 50,
+            ),
+            'cursor' => 
+            array (
+              'type' => 'string',
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'starterPacksWithMembership',
+            ),
+            'properties' => 
+            array (
+              'cursor' => 
+              array (
+                'type' => 'string',
+              ),
+              'starterPacksWithMembership' => 
+              array (
+                'type' => 'array',
+                'items' => 
+                array (
+                  'type' => 'ref',
+                  'ref' => 'lex:app.bsky.graph.getStarterPacksWithMembership#starterPackWithMembership',
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+      'starterPackWithMembership' => 
+      array (
+        'description' => 'A starter pack and an optional list item indicating membership of a target user to that starter pack.',
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'starterPack',
+        ),
+        'properties' => 
+        array (
+          'starterPack' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.graph.defs#starterPackView',
+          ),
+          'listItem' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.graph.defs#listItemView',
           ),
         ),
       ),
@@ -9685,6 +9895,21 @@ return array (
           array (
             'type' => 'ref',
             'ref' => 'lex:app.bsky.unspecced.defs#ageAssuranceState',
+          ),
+        ),
+        'errors' => 
+        array (
+          0 => 
+          array (
+            'name' => 'InvalidEmail',
+          ),
+          1 => 
+          array (
+            'name' => 'DidTooLong',
+          ),
+          2 => 
+          array (
+            'name' => 'InvalidInitiation',
           ),
         ),
       ),
@@ -18202,6 +18427,138 @@ return array (
       ),
     ),
   ),
+  'com.atproto.temp.checkHandleAvailability' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'com.atproto.temp.checkHandleAvailability',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'description' => 'Checks whether the provided handle is available. If the handle is not available, available suggestions will be returned. Optional inputs will be used to generate suggestions.',
+        'parameters' => 
+        array (
+          'type' => 'params',
+          'required' => 
+          array (
+            0 => 'handle',
+          ),
+          'properties' => 
+          array (
+            'handle' => 
+            array (
+              'type' => 'string',
+              'format' => 'handle',
+              'description' => 'Tentative handle. Will be checked for availability or used to build handle suggestions.',
+            ),
+            'email' => 
+            array (
+              'type' => 'string',
+              'description' => 'User-provided email. Might be used to build handle suggestions.',
+            ),
+            'birthDate' => 
+            array (
+              'type' => 'string',
+              'format' => 'datetime',
+              'description' => 'User-provided birth date. Might be used to build handle suggestions.',
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'handle',
+              1 => 'result',
+            ),
+            'properties' => 
+            array (
+              'handle' => 
+              array (
+                'type' => 'string',
+                'format' => 'handle',
+                'description' => 'Echo of the input handle.',
+              ),
+              'result' => 
+              array (
+                'type' => 'union',
+                'refs' => 
+                array (
+                  0 => 'lex:com.atproto.temp.checkHandleAvailability#resultAvailable',
+                  1 => 'lex:com.atproto.temp.checkHandleAvailability#resultUnavailable',
+                ),
+              ),
+            ),
+          ),
+        ),
+        'errors' => 
+        array (
+          0 => 
+          array (
+            'name' => 'InvalidEmail',
+            'description' => 'An invalid email was provided.',
+          ),
+        ),
+      ),
+      'resultAvailable' => 
+      array (
+        'type' => 'object',
+        'description' => 'Indicates the provided handle is available.',
+        'properties' => 
+        array (
+        ),
+      ),
+      'resultUnavailable' => 
+      array (
+        'type' => 'object',
+        'description' => 'Indicates the provided handle is unavailable and gives suggestions of available handles.',
+        'required' => 
+        array (
+          0 => 'suggestions',
+        ),
+        'properties' => 
+        array (
+          'suggestions' => 
+          array (
+            'type' => 'array',
+            'description' => 'List of suggested handles based on the provided inputs.',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:com.atproto.temp.checkHandleAvailability#suggestion',
+            ),
+          ),
+        ),
+      ),
+      'suggestion' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'handle',
+          1 => 'method',
+        ),
+        'properties' => 
+        array (
+          'handle' => 
+          array (
+            'type' => 'string',
+            'format' => 'handle',
+          ),
+          'method' => 
+          array (
+            'type' => 'string',
+            'description' => 'Method used to build this suggestion. Should be considered opaque to clients. Can be used for metrics.',
+          ),
+        ),
+      ),
+    ),
+  ),
   'com.atproto.temp.checkSignupQueue' => 
   array (
     'lexicon' => 1,
@@ -20446,6 +20803,21 @@ return array (
           ),
         ),
       ),
+      'timelineEventPlcCreate' => 
+      array (
+        'type' => 'token',
+        'description' => 'Moderation event timeline event for a PLC create operation',
+      ),
+      'timelineEventPlcOperation' => 
+      array (
+        'type' => 'token',
+        'description' => 'Moderation event timeline event for generic PLC operation',
+      ),
+      'timelineEventPlcTombstone' => 
+      array (
+        'type' => 'token',
+        'description' => 'Moderation event timeline event for a PLC tombstone operation',
+      ),
     ),
   ),
   'tools.ozone.moderation.emitEvent' => 
@@ -20528,6 +20900,11 @@ return array (
                 'type' => 'ref',
                 'ref' => 'lex:tools.ozone.moderation.defs#modTool',
               ),
+              'externalId' => 
+              array (
+                'type' => 'string',
+                'description' => 'An optional external ID for the event, used to deduplicate events from external systems. Fails when an event of same type with the same external ID exists for the same subject.',
+              ),
             ),
           ),
         ),
@@ -20545,6 +20922,158 @@ return array (
           0 => 
           array (
             'name' => 'SubjectHasAction',
+          ),
+          1 => 
+          array (
+            'name' => 'DuplicateExternalId',
+            'description' => 'An event with the same external ID already exists for the subject.',
+          ),
+        ),
+      ),
+    ),
+  ),
+  'tools.ozone.moderation.getAccountTimeline' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'tools.ozone.moderation.getAccountTimeline',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'description' => 'Get timeline of all available events of an account. This includes moderation events, account history and did history.',
+        'parameters' => 
+        array (
+          'type' => 'params',
+          'required' => 
+          array (
+            0 => 'did',
+          ),
+          'properties' => 
+          array (
+            'did' => 
+            array (
+              'type' => 'string',
+              'format' => 'did',
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'timeline',
+            ),
+            'properties' => 
+            array (
+              'timeline' => 
+              array (
+                'type' => 'array',
+                'items' => 
+                array (
+                  'type' => 'ref',
+                  'ref' => 'lex:tools.ozone.moderation.getAccountTimeline#timelineItem',
+                ),
+              ),
+            ),
+          ),
+        ),
+        'errors' => 
+        array (
+          0 => 
+          array (
+            'name' => 'RepoNotFound',
+          ),
+        ),
+      ),
+      'timelineItem' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'day',
+          1 => 'summary',
+        ),
+        'properties' => 
+        array (
+          'day' => 
+          array (
+            'type' => 'string',
+          ),
+          'summary' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:tools.ozone.moderation.getAccountTimeline#timelineItemSummary',
+            ),
+          ),
+        ),
+      ),
+      'timelineItemSummary' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'eventSubjectType',
+          1 => 'eventType',
+          2 => 'count',
+        ),
+        'properties' => 
+        array (
+          'eventSubjectType' => 
+          array (
+            'type' => 'string',
+            'knownValues' => 
+            array (
+              0 => 'account',
+              1 => 'record',
+              2 => 'chat',
+            ),
+          ),
+          'eventType' => 
+          array (
+            'type' => 'string',
+            'knownValues' => 
+            array (
+              0 => 'tools.ozone.moderation.defs#modEventTakedown',
+              1 => 'tools.ozone.moderation.defs#modEventReverseTakedown',
+              2 => 'tools.ozone.moderation.defs#modEventComment',
+              3 => 'tools.ozone.moderation.defs#modEventReport',
+              4 => 'tools.ozone.moderation.defs#modEventLabel',
+              5 => 'tools.ozone.moderation.defs#modEventAcknowledge',
+              6 => 'tools.ozone.moderation.defs#modEventEscalate',
+              7 => 'tools.ozone.moderation.defs#modEventMute',
+              8 => 'tools.ozone.moderation.defs#modEventUnmute',
+              9 => 'tools.ozone.moderation.defs#modEventMuteReporter',
+              10 => 'tools.ozone.moderation.defs#modEventUnmuteReporter',
+              11 => 'tools.ozone.moderation.defs#modEventEmail',
+              12 => 'tools.ozone.moderation.defs#modEventResolveAppeal',
+              13 => 'tools.ozone.moderation.defs#modEventDivert',
+              14 => 'tools.ozone.moderation.defs#modEventTag',
+              15 => 'tools.ozone.moderation.defs#accountEvent',
+              16 => 'tools.ozone.moderation.defs#identityEvent',
+              17 => 'tools.ozone.moderation.defs#recordEvent',
+              18 => 'tools.ozone.moderation.defs#modEventPriorityScore',
+              19 => 'tools.ozone.moderation.defs#ageAssuranceEvent',
+              20 => 'tools.ozone.moderation.defs#ageAssuranceOverrideEvent',
+              21 => 'tools.ozone.moderation.defs#timelineEventPlcCreate',
+              22 => 'tools.ozone.moderation.defs#timelineEventPlcOperation',
+              23 => 'tools.ozone.moderation.defs#timelineEventPlcTombstone',
+              24 => 'tools.ozone.hosting.getAccountHistory#accountCreated',
+              25 => 'tools.ozone.hosting.getAccountHistory#emailConfirmed',
+              26 => 'tools.ozone.hosting.getAccountHistory#passwordUpdated',
+              27 => 'tools.ozone.hosting.getAccountHistory#handleUpdated',
+            ),
+          ),
+          'count' => 
+          array (
+            'type' => 'integer',
           ),
         ),
       ),
