@@ -18686,6 +18686,39 @@ return array (
       ),
     ),
   ),
+  'com.atproto.temp.revokeAccountCredentials' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'com.atproto.temp.revokeAccountCredentials',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'procedure',
+        'description' => 'Revoke sessions, password, and app passwords associated with account. May be resolved by a password reset.',
+        'input' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'account',
+            ),
+            'properties' => 
+            array (
+              'account' => 
+              array (
+                'type' => 'string',
+                'format' => 'at-identifier',
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
   'tools.ozone.communication.createTemplate' => 
   array (
     'lexicon' => 1,
@@ -21613,6 +21646,11 @@ return array (
                 'type' => 'string',
               ),
               'description' => 'If specified, only events where the modTool name matches any of the given values are returned',
+            ),
+            'batchId' => 
+            array (
+              'type' => 'string',
+              'description' => 'If specified, only events where the batchId matches the given value are returned',
             ),
             'ageAssuranceState' => 
             array (
