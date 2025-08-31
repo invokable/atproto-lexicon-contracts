@@ -20,6 +20,7 @@ interface Temp
     public const checkSignupQueue = 'com.atproto.temp.checkSignupQueue';
     public const fetchLabels = 'com.atproto.temp.fetchLabels';
     public const requestPhoneVerification = 'com.atproto.temp.requestPhoneVerification';
+    public const revokeAccountCredentials = 'com.atproto.temp.revokeAccountCredentials';
 
     /**
      * Add a handle to the set of reserved handles.
@@ -67,4 +68,12 @@ interface Temp
      */
     #[Post, NSID(self::requestPhoneVerification)]
     public function requestPhoneVerification(string $phoneNumber);
+
+    /**
+     * Revoke sessions, password, and app passwords associated with account. May be resolved by a password reset.
+     *
+     * @link https://docs.bsky.app/docs/api/com-atproto-temp-revoke-account-credentials
+     */
+    #[Post, NSID(self::revokeAccountCredentials)]
+    public function revokeAccountCredentials(#[Format('at-identifier')] string $account);
 }
