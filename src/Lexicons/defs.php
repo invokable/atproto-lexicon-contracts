@@ -1606,6 +1606,212 @@ return array (
       ),
     ),
   ),
+  'app.bsky.bookmark.createBookmark' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.bookmark.createBookmark',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'procedure',
+        'description' => 'Creates a private bookmark for the specified record. Currently, only `app.bsky.feed.post` records are supported. Requires authentication.',
+        'input' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'uri',
+              1 => 'cid',
+            ),
+            'properties' => 
+            array (
+              'uri' => 
+              array (
+                'type' => 'string',
+                'format' => 'at-uri',
+              ),
+              'cid' => 
+              array (
+                'type' => 'string',
+                'format' => 'cid',
+              ),
+            ),
+          ),
+        ),
+        'errors' => 
+        array (
+          0 => 
+          array (
+            'name' => 'UnsupportedCollection',
+            'description' => 'The URI to be bookmarked is for an unsupported collection.',
+          ),
+        ),
+      ),
+    ),
+  ),
+  'app.bsky.bookmark.defs' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.bookmark.defs',
+    'defs' => 
+    array (
+      'bookmark' => 
+      array (
+        'description' => 'Object used to store bookmark data in stash.',
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'subject',
+        ),
+        'properties' => 
+        array (
+          'subject' => 
+          array (
+            'description' => 'A strong ref to the record to be bookmarked. Currently, only `app.bsky.feed.post` records are supported.',
+            'type' => 'ref',
+            'ref' => 'lex:com.atproto.repo.strongRef',
+          ),
+        ),
+      ),
+      'bookmarkView' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'subject',
+          1 => 'item',
+        ),
+        'properties' => 
+        array (
+          'subject' => 
+          array (
+            'description' => 'A strong ref to the bookmarked record.',
+            'type' => 'ref',
+            'ref' => 'lex:com.atproto.repo.strongRef',
+          ),
+          'createdAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+          'item' => 
+          array (
+            'type' => 'union',
+            'refs' => 
+            array (
+              0 => 'lex:app.bsky.feed.defs#blockedPost',
+              1 => 'lex:app.bsky.feed.defs#notFoundPost',
+              2 => 'lex:app.bsky.feed.defs#postView',
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
+  'app.bsky.bookmark.deleteBookmark' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.bookmark.deleteBookmark',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'procedure',
+        'description' => 'Deletes a private bookmark for the specified record. Currently, only `app.bsky.feed.post` records are supported. Requires authentication.',
+        'input' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'uri',
+            ),
+            'properties' => 
+            array (
+              'uri' => 
+              array (
+                'type' => 'string',
+                'format' => 'at-uri',
+              ),
+            ),
+          ),
+        ),
+        'errors' => 
+        array (
+          0 => 
+          array (
+            'name' => 'UnsupportedCollection',
+            'description' => 'The URI to be bookmarked is for an unsupported collection.',
+          ),
+        ),
+      ),
+    ),
+  ),
+  'app.bsky.bookmark.getBookmarks' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.bookmark.getBookmarks',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'description' => 'Gets views of records bookmarked by the authenticated user. Requires authentication.',
+        'parameters' => 
+        array (
+          'type' => 'params',
+          'properties' => 
+          array (
+            'limit' => 
+            array (
+              'type' => 'integer',
+              'minimum' => 1,
+              'maximum' => 100,
+              'default' => 50,
+            ),
+            'cursor' => 
+            array (
+              'type' => 'string',
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'bookmarks',
+            ),
+            'properties' => 
+            array (
+              'cursor' => 
+              array (
+                'type' => 'string',
+              ),
+              'bookmarks' => 
+              array (
+                'type' => 'array',
+                'items' => 
+                array (
+                  'type' => 'ref',
+                  'ref' => 'lex:app.bsky.bookmark.defs#bookmarkView',
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
   'app.bsky.embed.defs' => 
   array (
     'lexicon' => 1,
@@ -2294,6 +2500,10 @@ return array (
               4 => 'lex:app.bsky.embed.recordWithMedia#view',
             ),
           ),
+          'bookmarkCount' => 
+          array (
+            'type' => 'integer',
+          ),
           'replyCount' => 
           array (
             'type' => 'integer',
@@ -2351,6 +2561,10 @@ return array (
           array (
             'type' => 'string',
             'format' => 'at-uri',
+          ),
+          'bookmarked' => 
+          array (
+            'type' => 'boolean',
           ),
           'threadMuted' => 
           array (
@@ -14362,42 +14576,87 @@ return array (
           4 => 'com.atproto.moderation.defs#reasonRude',
           5 => 'com.atproto.moderation.defs#reasonOther',
           6 => 'com.atproto.moderation.defs#reasonAppeal',
+          7 => 'tools.ozone.report.defs#reasonAppeal',
+          8 => 'tools.ozone.report.defs#reasonViolenceAnimalWelfare',
+          9 => 'tools.ozone.report.defs#reasonViolenceThreats',
+          10 => 'tools.ozone.report.defs#reasonViolenceGraphicContent',
+          11 => 'tools.ozone.report.defs#reasonViolenceSelfHarm',
+          12 => 'tools.ozone.report.defs#reasonViolenceGlorification',
+          13 => 'tools.ozone.report.defs#reasonViolenceExtremistContent',
+          14 => 'tools.ozone.report.defs#reasonViolenceTrafficking',
+          15 => 'tools.ozone.report.defs#reasonViolenceOther',
+          16 => 'tools.ozone.report.defs#reasonSexualAbuseContent',
+          17 => 'tools.ozone.report.defs#reasonSexualNCII',
+          18 => 'tools.ozone.report.defs#reasonSexualSextortion',
+          19 => 'tools.ozone.report.defs#reasonSexualDeepfake',
+          20 => 'tools.ozone.report.defs#reasonSexualAnimal',
+          21 => 'tools.ozone.report.defs#reasonSexualUnlabeled',
+          22 => 'tools.ozone.report.defs#reasonSexualOther',
+          23 => 'tools.ozone.report.defs#reasonChildSafetyCSAM',
+          24 => 'tools.ozone.report.defs#reasonChildSafetyGroom',
+          25 => 'tools.ozone.report.defs#reasonChildSafetyMinorPrivacy',
+          26 => 'tools.ozone.report.defs#reasonChildSafetyEndangerment',
+          27 => 'tools.ozone.report.defs#reasonChildSafetyHarassment',
+          28 => 'tools.ozone.report.defs#reasonChildSafetyPromotion',
+          29 => 'tools.ozone.report.defs#reasonChildSafetyOther',
+          30 => 'tools.ozone.report.defs#reasonHarassmentTroll',
+          31 => 'tools.ozone.report.defs#reasonHarassmentTargeted',
+          32 => 'tools.ozone.report.defs#reasonHarassmentHateSpeech',
+          33 => 'tools.ozone.report.defs#reasonHarassmentDoxxing',
+          34 => 'tools.ozone.report.defs#reasonHarassmentOther',
+          35 => 'tools.ozone.report.defs#reasonMisleadingBot',
+          36 => 'tools.ozone.report.defs#reasonMisleadingImpersonation',
+          37 => 'tools.ozone.report.defs#reasonMisleadingSpam',
+          38 => 'tools.ozone.report.defs#reasonMisleadingScam',
+          39 => 'tools.ozone.report.defs#reasonMisleadingSyntheticContent',
+          40 => 'tools.ozone.report.defs#reasonMisleadingMisinformation',
+          41 => 'tools.ozone.report.defs#reasonMisleadingOther',
+          42 => 'tools.ozone.report.defs#reasonRuleSiteSecurity',
+          43 => 'tools.ozone.report.defs#reasonRuleStolenContent',
+          44 => 'tools.ozone.report.defs#reasonRuleProhibitedSales',
+          45 => 'tools.ozone.report.defs#reasonRuleBanEvasion',
+          46 => 'tools.ozone.report.defs#reasonRuleOther',
+          47 => 'tools.ozone.report.defs#reasonCivicElectoralProcess',
+          48 => 'tools.ozone.report.defs#reasonCivicDisclosure',
+          49 => 'tools.ozone.report.defs#reasonCivicInterference',
+          50 => 'tools.ozone.report.defs#reasonCivicMisinformation',
+          51 => 'tools.ozone.report.defs#reasonCivicImpersonation',
         ),
       ),
       'reasonSpam' => 
       array (
         'type' => 'token',
-        'description' => 'Spam: frequent unwanted promotion, replies, mentions',
+        'description' => 'Spam: frequent unwanted promotion, replies, mentions. Prefer new lexicon definition `tools.ozone.report.defs#reasonMisleadingSpam`.',
       ),
       'reasonViolation' => 
       array (
         'type' => 'token',
-        'description' => 'Direct violation of server rules, laws, terms of service',
+        'description' => 'Direct violation of server rules, laws, terms of service. Prefer new lexicon definition `tools.ozone.report.defs#reasonRuleOther`.',
       ),
       'reasonMisleading' => 
       array (
         'type' => 'token',
-        'description' => 'Misleading identity, affiliation, or content',
+        'description' => 'Misleading identity, affiliation, or content. Prefer new lexicon definition `tools.ozone.report.defs#reasonMisleadingOther`.',
       ),
       'reasonSexual' => 
       array (
         'type' => 'token',
-        'description' => 'Unwanted or mislabeled sexual content',
+        'description' => 'Unwanted or mislabeled sexual content. Prefer new lexicon definition `tools.ozone.report.defs#reasonSexualUnlabeled`.',
       ),
       'reasonRude' => 
       array (
         'type' => 'token',
-        'description' => 'Rude, harassing, explicit, or otherwise unwelcoming behavior',
+        'description' => 'Rude, harassing, explicit, or otherwise unwelcoming behavior. Prefer new lexicon definition `tools.ozone.report.defs#reasonHarassmentOther`.',
       ),
       'reasonOther' => 
       array (
         'type' => 'token',
-        'description' => 'Other: reports not falling under another report category',
+        'description' => 'Reports not falling under another report category. Prefer new lexicon definition `tools.ozone.report.defs#reasonRuleOther`.',
       ),
       'reasonAppeal' => 
       array (
         'type' => 'token',
-        'description' => 'Appeal: appeal a previously taken moderation action',
+        'description' => 'Appeal a previously taken moderation action',
       ),
       'subjectType' => 
       array (
@@ -22051,6 +22310,291 @@ return array (
             ),
           ),
         ),
+      ),
+    ),
+  ),
+  'tools.ozone.report.defs' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'tools.ozone.report.defs',
+    'defs' => 
+    array (
+      'reasonType' => 
+      array (
+        'type' => 'string',
+        'knownValues' => 
+        array (
+          0 => 'tools.ozone.report.defs#reasonAppeal',
+          1 => 'tools.ozone.report.defs#reasonViolenceAnimalWelfare',
+          2 => 'tools.ozone.report.defs#reasonViolenceThreats',
+          3 => 'tools.ozone.report.defs#reasonViolenceGraphicContent',
+          4 => 'tools.ozone.report.defs#reasonViolenceSelfHarm',
+          5 => 'tools.ozone.report.defs#reasonViolenceGlorification',
+          6 => 'tools.ozone.report.defs#reasonViolenceExtremistContent',
+          7 => 'tools.ozone.report.defs#reasonViolenceTrafficking',
+          8 => 'tools.ozone.report.defs#reasonViolenceOther',
+          9 => 'tools.ozone.report.defs#reasonSexualAbuseContent',
+          10 => 'tools.ozone.report.defs#reasonSexualNCII',
+          11 => 'tools.ozone.report.defs#reasonSexualSextortion',
+          12 => 'tools.ozone.report.defs#reasonSexualDeepfake',
+          13 => 'tools.ozone.report.defs#reasonSexualAnimal',
+          14 => 'tools.ozone.report.defs#reasonSexualUnlabeled',
+          15 => 'tools.ozone.report.defs#reasonSexualOther',
+          16 => 'tools.ozone.report.defs#reasonChildSafetyCSAM',
+          17 => 'tools.ozone.report.defs#reasonChildSafetyGroom',
+          18 => 'tools.ozone.report.defs#reasonChildSafetyMinorPrivacy',
+          19 => 'tools.ozone.report.defs#reasonChildSafetyEndangerment',
+          20 => 'tools.ozone.report.defs#reasonChildSafetyHarassment',
+          21 => 'tools.ozone.report.defs#reasonChildSafetyPromotion',
+          22 => 'tools.ozone.report.defs#reasonChildSafetyOther',
+          23 => 'tools.ozone.report.defs#reasonHarassmentTroll',
+          24 => 'tools.ozone.report.defs#reasonHarassmentTargeted',
+          25 => 'tools.ozone.report.defs#reasonHarassmentHateSpeech',
+          26 => 'tools.ozone.report.defs#reasonHarassmentDoxxing',
+          27 => 'tools.ozone.report.defs#reasonHarassmentOther',
+          28 => 'tools.ozone.report.defs#reasonMisleadingBot',
+          29 => 'tools.ozone.report.defs#reasonMisleadingImpersonation',
+          30 => 'tools.ozone.report.defs#reasonMisleadingSpam',
+          31 => 'tools.ozone.report.defs#reasonMisleadingScam',
+          32 => 'tools.ozone.report.defs#reasonMisleadingSyntheticContent',
+          33 => 'tools.ozone.report.defs#reasonMisleadingMisinformation',
+          34 => 'tools.ozone.report.defs#reasonMisleadingOther',
+          35 => 'tools.ozone.report.defs#reasonRuleSiteSecurity',
+          36 => 'tools.ozone.report.defs#reasonRuleStolenContent',
+          37 => 'tools.ozone.report.defs#reasonRuleProhibitedSales',
+          38 => 'tools.ozone.report.defs#reasonRuleBanEvasion',
+          39 => 'tools.ozone.report.defs#reasonRuleOther',
+          40 => 'tools.ozone.report.defs#reasonCivicElectoralProcess',
+          41 => 'tools.ozone.report.defs#reasonCivicDisclosure',
+          42 => 'tools.ozone.report.defs#reasonCivicInterference',
+          43 => 'tools.ozone.report.defs#reasonCivicMisinformation',
+          44 => 'tools.ozone.report.defs#reasonCivicImpersonation',
+        ),
+      ),
+      'reasonAppeal' => 
+      array (
+        'type' => 'token',
+        'description' => 'Appeal a previously taken moderation action',
+      ),
+      'reasonViolenceAnimalWelfare' => 
+      array (
+        'type' => 'token',
+        'description' => 'Animal welfare violations',
+      ),
+      'reasonViolenceThreats' => 
+      array (
+        'type' => 'token',
+        'description' => 'Threats or incitement',
+      ),
+      'reasonViolenceGraphicContent' => 
+      array (
+        'type' => 'token',
+        'description' => 'Graphic violent content',
+      ),
+      'reasonViolenceSelfHarm' => 
+      array (
+        'type' => 'token',
+        'description' => 'Self harm',
+      ),
+      'reasonViolenceGlorification' => 
+      array (
+        'type' => 'token',
+        'description' => 'Glorification of violence',
+      ),
+      'reasonViolenceExtremistContent' => 
+      array (
+        'type' => 'token',
+        'description' => 'Extremist content. These reports will be sent only be sent to the application\'s Moderation Authority.',
+      ),
+      'reasonViolenceTrafficking' => 
+      array (
+        'type' => 'token',
+        'description' => 'Human trafficking',
+      ),
+      'reasonViolenceOther' => 
+      array (
+        'type' => 'token',
+        'description' => 'Other violent content',
+      ),
+      'reasonSexualAbuseContent' => 
+      array (
+        'type' => 'token',
+        'description' => 'Adult sexual abuse content',
+      ),
+      'reasonSexualNCII' => 
+      array (
+        'type' => 'token',
+        'description' => 'Non-consensual intimate imagery',
+      ),
+      'reasonSexualSextortion' => 
+      array (
+        'type' => 'token',
+        'description' => 'Sextortion',
+      ),
+      'reasonSexualDeepfake' => 
+      array (
+        'type' => 'token',
+        'description' => 'Deepfake adult content',
+      ),
+      'reasonSexualAnimal' => 
+      array (
+        'type' => 'token',
+        'description' => 'Animal sexual abuse',
+      ),
+      'reasonSexualUnlabeled' => 
+      array (
+        'type' => 'token',
+        'description' => 'Unlabelled adult content',
+      ),
+      'reasonSexualOther' => 
+      array (
+        'type' => 'token',
+        'description' => 'Other sexual violence content',
+      ),
+      'reasonChildSafetyCSAM' => 
+      array (
+        'type' => 'token',
+        'description' => 'Child sexual abuse material (CSAM). These reports will be sent only be sent to the application\'s Moderation Authority.',
+      ),
+      'reasonChildSafetyGroom' => 
+      array (
+        'type' => 'token',
+        'description' => 'Grooming or predatory behavior. These reports will be sent only be sent to the application\'s Moderation Authority.',
+      ),
+      'reasonChildSafetyMinorPrivacy' => 
+      array (
+        'type' => 'token',
+        'description' => 'Privacy violation involving a minor',
+      ),
+      'reasonChildSafetyEndangerment' => 
+      array (
+        'type' => 'token',
+        'description' => 'Child endangerment. These reports will be sent only be sent to the application\'s Moderation Authority.',
+      ),
+      'reasonChildSafetyHarassment' => 
+      array (
+        'type' => 'token',
+        'description' => 'Harassment or bullying of minors',
+      ),
+      'reasonChildSafetyPromotion' => 
+      array (
+        'type' => 'token',
+        'description' => 'Promotion of child exploitation. These reports will be sent only be sent to the application\'s Moderation Authority.',
+      ),
+      'reasonChildSafetyOther' => 
+      array (
+        'type' => 'token',
+        'description' => 'Other child safety. These reports will be sent only be sent to the application\'s Moderation Authority.',
+      ),
+      'reasonHarassmentTroll' => 
+      array (
+        'type' => 'token',
+        'description' => 'Trolling',
+      ),
+      'reasonHarassmentTargeted' => 
+      array (
+        'type' => 'token',
+        'description' => 'Targeted harassment',
+      ),
+      'reasonHarassmentHateSpeech' => 
+      array (
+        'type' => 'token',
+        'description' => 'Hate speech',
+      ),
+      'reasonHarassmentDoxxing' => 
+      array (
+        'type' => 'token',
+        'description' => 'Doxxing',
+      ),
+      'reasonHarassmentOther' => 
+      array (
+        'type' => 'token',
+        'description' => 'Other harassing or hateful content',
+      ),
+      'reasonMisleadingBot' => 
+      array (
+        'type' => 'token',
+        'description' => 'Fake account or bot',
+      ),
+      'reasonMisleadingImpersonation' => 
+      array (
+        'type' => 'token',
+        'description' => 'Impersonation',
+      ),
+      'reasonMisleadingSpam' => 
+      array (
+        'type' => 'token',
+        'description' => 'Spam',
+      ),
+      'reasonMisleadingScam' => 
+      array (
+        'type' => 'token',
+        'description' => 'Scam',
+      ),
+      'reasonMisleadingSyntheticContent' => 
+      array (
+        'type' => 'token',
+        'description' => 'Unlabelled gen-AI or synthetic content',
+      ),
+      'reasonMisleadingMisinformation' => 
+      array (
+        'type' => 'token',
+        'description' => 'Harmful false claims',
+      ),
+      'reasonMisleadingOther' => 
+      array (
+        'type' => 'token',
+        'description' => 'Other misleading content',
+      ),
+      'reasonRuleSiteSecurity' => 
+      array (
+        'type' => 'token',
+        'description' => 'Hacking or system attacks',
+      ),
+      'reasonRuleStolenContent' => 
+      array (
+        'type' => 'token',
+        'description' => 'Stolen content',
+      ),
+      'reasonRuleProhibitedSales' => 
+      array (
+        'type' => 'token',
+        'description' => 'Promoting or selling prohibited items or services',
+      ),
+      'reasonRuleBanEvasion' => 
+      array (
+        'type' => 'token',
+        'description' => 'Banned user returning',
+      ),
+      'reasonRuleOther' => 
+      array (
+        'type' => 'token',
+        'description' => 'Other',
+      ),
+      'reasonCivicElectoralProcess' => 
+      array (
+        'type' => 'token',
+        'description' => 'Electoral process violations',
+      ),
+      'reasonCivicDisclosure' => 
+      array (
+        'type' => 'token',
+        'description' => 'Disclosure & transparency violations',
+      ),
+      'reasonCivicInterference' => 
+      array (
+        'type' => 'token',
+        'description' => 'Voter intimidation or interference',
+      ),
+      'reasonCivicMisinformation' => 
+      array (
+        'type' => 'token',
+        'description' => 'Election misinformation',
+      ),
+      'reasonCivicImpersonation' => 
+      array (
+        'type' => 'token',
+        'description' => 'Impersonation of electoral officials/entities',
       ),
     ),
   ),
