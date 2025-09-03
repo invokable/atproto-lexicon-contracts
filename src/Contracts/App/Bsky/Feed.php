@@ -149,7 +149,7 @@ interface Feed
     /**
      * Gets post views for a specified list of posts (by AT-URI). This is sometimes referred to as 'hydrating' a 'feed skeleton'.
      *
-     * @return array{posts: array{uri: string, cid: string, author: array, record: mixed, embed: array, replyCount: int, repostCount: int, likeCount: int, quoteCount: int, indexedAt: string, viewer: array, labels: array, threadgate: array}[]}
+     * @return array{posts: array{uri: string, cid: string, author: array, record: mixed, embed: array, bookmarkCount: int, replyCount: int, repostCount: int, likeCount: int, quoteCount: int, indexedAt: string, viewer: array, labels: array, threadgate: array}[]}
      *
      * @link https://docs.bsky.app/docs/api/app-bsky-feed-get-posts
      */
@@ -159,7 +159,7 @@ interface Feed
     /**
      * Get a list of quotes for a given post.
      *
-     * @return array{uri: string, cid: string, cursor: string, posts: array{uri: string, cid: string, author: array, record: mixed, embed: array, replyCount: int, repostCount: int, likeCount: int, quoteCount: int, indexedAt: string, viewer: array, labels: array, threadgate: array}[]}
+     * @return array{uri: string, cid: string, cursor: string, posts: array{uri: string, cid: string, author: array, record: mixed, embed: array, bookmarkCount: int, replyCount: int, repostCount: int, likeCount: int, quoteCount: int, indexedAt: string, viewer: array, labels: array, threadgate: array}[]}
      *
      * @link https://docs.bsky.app/docs/api/app-bsky-feed-get-quotes
      */
@@ -199,7 +199,7 @@ interface Feed
     /**
      * Find posts matching search criteria, returning views of those posts. Note that this API endpoint may require authentication (eg, not public) for some service providers and implementations.
      *
-     * @return array{cursor: string, hitsTotal: int, posts: array{uri: string, cid: string, author: array, record: mixed, embed: array, replyCount: int, repostCount: int, likeCount: int, quoteCount: int, indexedAt: string, viewer: array, labels: array, threadgate: array}[]}
+     * @return array{cursor: string, hitsTotal: int, posts: array{uri: string, cid: string, author: array, record: mixed, embed: array, bookmarkCount: int, replyCount: int, repostCount: int, likeCount: int, quoteCount: int, indexedAt: string, viewer: array, labels: array, threadgate: array}[]}
      *
      * @link https://docs.bsky.app/docs/api/app-bsky-feed-search-posts
      */
