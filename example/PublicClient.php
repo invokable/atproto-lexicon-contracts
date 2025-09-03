@@ -2,7 +2,6 @@
 
 use GuzzleHttp\Client;
 use GuzzleHttp\RequestOptions;
-use JetBrains\PhpStorm\ArrayShape;
 use Revolution\AtProto\Lexicon\Attributes\Format;
 use Revolution\AtProto\Lexicon\Attributes\Get;
 use Revolution\AtProto\Lexicon\Attributes\KnownValues;
