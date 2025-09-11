@@ -18,6 +18,7 @@ interface Temp
     public const addReservedHandle = 'com.atproto.temp.addReservedHandle';
     public const checkHandleAvailability = 'com.atproto.temp.checkHandleAvailability';
     public const checkSignupQueue = 'com.atproto.temp.checkSignupQueue';
+    public const dereferenceScope = 'com.atproto.temp.dereferenceScope';
     public const fetchLabels = 'com.atproto.temp.fetchLabels';
     public const requestPhoneVerification = 'com.atproto.temp.requestPhoneVerification';
     public const revokeAccountCredentials = 'com.atproto.temp.revokeAccountCredentials';
@@ -49,6 +50,16 @@ interface Temp
      */
     #[Get, NSID(self::checkSignupQueue)]
     public function checkSignupQueue();
+
+    /**
+     * Allows finding the oauth permission scope from a reference.
+     *
+     * @return array{scope: string}
+     *
+     * @link https://docs.bsky.app/docs/api/com-atproto-temp-dereference-scope
+     */
+    #[Get, NSID(self::dereferenceScope)]
+    public function dereferenceScope(string $scope);
 
     /**
      * DEPRECATED: use queryLabels or subscribeLabels instead -- Fetch all labels from a labeler created after a certain date.
