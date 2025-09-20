@@ -18858,6 +18858,63 @@ return array (
       ),
     ),
   ),
+  'com.atproto.temp.dereferenceScope' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'com.atproto.temp.dereferenceScope',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'description' => 'Allows finding the oauth permission scope from a reference',
+        'parameters' => 
+        array (
+          'type' => 'params',
+          'required' => 
+          array (
+            0 => 'scope',
+          ),
+          'properties' => 
+          array (
+            'scope' => 
+            array (
+              'type' => 'string',
+              'description' => 'The scope reference (starts with \'ref:\')',
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'scope',
+            ),
+            'properties' => 
+            array (
+              'scope' => 
+              array (
+                'type' => 'string',
+                'description' => 'The full oauth permission scope',
+              ),
+            ),
+          ),
+        ),
+        'errors' => 
+        array (
+          0 => 
+          array (
+            'name' => 'InvalidScopeReference',
+            'description' => 'An invalid scope reference was provided.',
+          ),
+        ),
+      ),
+    ),
+  ),
   'com.atproto.temp.fetchLabels' => 
   array (
     'lexicon' => 1,
@@ -19513,6 +19570,7 @@ return array (
               18 => 'lex:tools.ozone.moderation.defs#modEventPriorityScore',
               19 => 'lex:tools.ozone.moderation.defs#ageAssuranceEvent',
               20 => 'lex:tools.ozone.moderation.defs#ageAssuranceOverrideEvent',
+              21 => 'lex:tools.ozone.moderation.defs#revokeAccountCredentialsEvent',
             ),
           ),
           'subject' => 
@@ -19602,6 +19660,7 @@ return array (
               18 => 'lex:tools.ozone.moderation.defs#modEventPriorityScore',
               19 => 'lex:tools.ozone.moderation.defs#ageAssuranceEvent',
               20 => 'lex:tools.ozone.moderation.defs#ageAssuranceOverrideEvent',
+              21 => 'lex:tools.ozone.moderation.defs#revokeAccountCredentialsEvent',
             ),
           ),
           'subject' => 
@@ -20208,6 +20267,23 @@ return array (
           array (
             'type' => 'string',
             'description' => 'Comment describing the reason for the override.',
+          ),
+        ),
+      ),
+      'revokeAccountCredentialsEvent' => 
+      array (
+        'type' => 'object',
+        'description' => 'Account credentials revocation by moderators. Only works on DID subjects.',
+        'required' => 
+        array (
+          0 => 'comment',
+        ),
+        'properties' => 
+        array (
+          'comment' => 
+          array (
+            'type' => 'string',
+            'description' => 'Comment describing the reason for the revocation.',
           ),
         ),
       ),
@@ -21162,6 +21238,7 @@ return array (
                   18 => 'lex:tools.ozone.moderation.defs#modEventPriorityScore',
                   19 => 'lex:tools.ozone.moderation.defs#ageAssuranceEvent',
                   20 => 'lex:tools.ozone.moderation.defs#ageAssuranceOverrideEvent',
+                  21 => 'lex:tools.ozone.moderation.defs#revokeAccountCredentialsEvent',
                 ),
               ),
               'subject' => 
@@ -21352,15 +21429,16 @@ return array (
               16 => 'tools.ozone.moderation.defs#identityEvent',
               17 => 'tools.ozone.moderation.defs#recordEvent',
               18 => 'tools.ozone.moderation.defs#modEventPriorityScore',
-              19 => 'tools.ozone.moderation.defs#ageAssuranceEvent',
-              20 => 'tools.ozone.moderation.defs#ageAssuranceOverrideEvent',
-              21 => 'tools.ozone.moderation.defs#timelineEventPlcCreate',
-              22 => 'tools.ozone.moderation.defs#timelineEventPlcOperation',
-              23 => 'tools.ozone.moderation.defs#timelineEventPlcTombstone',
-              24 => 'tools.ozone.hosting.getAccountHistory#accountCreated',
-              25 => 'tools.ozone.hosting.getAccountHistory#emailConfirmed',
-              26 => 'tools.ozone.hosting.getAccountHistory#passwordUpdated',
-              27 => 'tools.ozone.hosting.getAccountHistory#handleUpdated',
+              19 => 'tools.ozone.moderation.defs#revokeAccountCredentialsEvent',
+              20 => 'tools.ozone.moderation.defs#ageAssuranceEvent',
+              21 => 'tools.ozone.moderation.defs#ageAssuranceOverrideEvent',
+              22 => 'tools.ozone.moderation.defs#timelineEventPlcCreate',
+              23 => 'tools.ozone.moderation.defs#timelineEventPlcOperation',
+              24 => 'tools.ozone.moderation.defs#timelineEventPlcTombstone',
+              25 => 'tools.ozone.hosting.getAccountHistory#accountCreated',
+              26 => 'tools.ozone.hosting.getAccountHistory#emailConfirmed',
+              27 => 'tools.ozone.hosting.getAccountHistory#passwordUpdated',
+              28 => 'tools.ozone.hosting.getAccountHistory#handleUpdated',
             ),
           ),
           'count' => 
