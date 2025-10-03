@@ -18,6 +18,8 @@ interface Unspecced
 {
     public const getAgeAssuranceState = 'app.bsky.unspecced.getAgeAssuranceState';
     public const getConfig = 'app.bsky.unspecced.getConfig';
+    public const getOnboardingSuggestedStarterPacks = 'app.bsky.unspecced.getOnboardingSuggestedStarterPacks';
+    public const getOnboardingSuggestedStarterPacksSkeleton = 'app.bsky.unspecced.getOnboardingSuggestedStarterPacksSkeleton';
     public const getPopularFeedGenerators = 'app.bsky.unspecced.getPopularFeedGenerators';
     public const getPostThreadOtherV2 = 'app.bsky.unspecced.getPostThreadOtherV2';
     public const getPostThreadV2 = 'app.bsky.unspecced.getPostThreadV2';
@@ -56,6 +58,26 @@ interface Unspecced
      */
     #[Get, NSID(self::getConfig)]
     public function getConfig();
+
+    /**
+     * Get a list of suggested starterpacks for onboarding.
+     *
+     * @return array{starterPacks: array{uri: string, cid: string, record: mixed, creator: array, list: array, listItemsSample: array, feeds: array, joinedWeekCount: int, joinedAllTimeCount: int, labels: array, indexedAt: string}[]}
+     *
+     * @link https://docs.bsky.app/docs/api/app-bsky-unspecced-get-onboarding-suggested-starter-packs
+     */
+    #[Get, NSID(self::getOnboardingSuggestedStarterPacks)]
+    public function getOnboardingSuggestedStarterPacks(?int $limit = 10);
+
+    /**
+     * Get a skeleton of suggested starterpacks for onboarding. Intended to be called and hydrated by app.bsky.unspecced.getOnboardingSuggestedStarterPacks.
+     *
+     * @return array{starterPacks: array}
+     *
+     * @link https://docs.bsky.app/docs/api/app-bsky-unspecced-get-onboarding-suggested-starter-packs-skeleton
+     */
+    #[Get, NSID(self::getOnboardingSuggestedStarterPacksSkeleton)]
+    public function getOnboardingSuggestedStarterPacksSkeleton(#[Format('did')] ?string $viewer = null, ?int $limit = 10);
 
     /**
      * An unspecced view of globally popular feed generators.
@@ -130,7 +152,7 @@ interface Unspecced
     /**
      * Get a list of suggested users.
      *
-     * @return array{actors: array{did: string, handle: string, displayName: string, description: string, avatar: string, associated: array, indexedAt: string, createdAt: string, viewer: array, labels: array, verification: array, status: array}[]}
+     * @return array{actors: array{did: string, handle: string, displayName: string, pronouns: string, description: string, avatar: string, associated: array, indexedAt: string, createdAt: string, viewer: array, labels: array, verification: array, status: array}[]}
      *
      * @link https://docs.bsky.app/docs/api/app-bsky-unspecced-get-suggested-users
      */

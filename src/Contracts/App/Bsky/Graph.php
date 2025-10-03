@@ -52,7 +52,7 @@ interface Graph
     /**
      * Enumerates which accounts the requesting account is currently blocking. Requires auth.
      *
-     * @return array{cursor: string, blocks: array{did: string, handle: string, displayName: string, description: string, avatar: string, associated: array, indexedAt: string, createdAt: string, viewer: array, labels: array, verification: array, status: array}[]}
+     * @return array{cursor: string, blocks: array{did: string, handle: string, displayName: string, pronouns: string, description: string, avatar: string, associated: array, indexedAt: string, createdAt: string, viewer: array, labels: array, verification: array, status: array}[]}
      *
      * @link https://docs.bsky.app/docs/api/app-bsky-graph-get-blocks
      */
@@ -62,7 +62,7 @@ interface Graph
     /**
      * Enumerates accounts which follow a specified account (actor).
      *
-     * @return array{subject: array{did: string, handle: string, displayName: string, description: string, avatar: string, associated: array, indexedAt: string, createdAt: string, viewer: array, labels: array, verification: array, status: array}, cursor: string, followers: array{did: string, handle: string, displayName: string, description: string, avatar: string, associated: array, indexedAt: string, createdAt: string, viewer: array, labels: array, verification: array, status: array}[]}
+     * @return array{subject: array{did: string, handle: string, displayName: string, pronouns: string, description: string, avatar: string, associated: array, indexedAt: string, createdAt: string, viewer: array, labels: array, verification: array, status: array}, cursor: string, followers: array{did: string, handle: string, displayName: string, pronouns: string, description: string, avatar: string, associated: array, indexedAt: string, createdAt: string, viewer: array, labels: array, verification: array, status: array}[]}
      *
      * @link https://docs.bsky.app/docs/api/app-bsky-graph-get-followers
      */
@@ -72,7 +72,7 @@ interface Graph
     /**
      * Enumerates accounts which a specified account (actor) follows.
      *
-     * @return array{subject: array{did: string, handle: string, displayName: string, description: string, avatar: string, associated: array, indexedAt: string, createdAt: string, viewer: array, labels: array, verification: array, status: array}, cursor: string, follows: array{did: string, handle: string, displayName: string, description: string, avatar: string, associated: array, indexedAt: string, createdAt: string, viewer: array, labels: array, verification: array, status: array}[]}
+     * @return array{subject: array{did: string, handle: string, displayName: string, pronouns: string, description: string, avatar: string, associated: array, indexedAt: string, createdAt: string, viewer: array, labels: array, verification: array, status: array}, cursor: string, follows: array{did: string, handle: string, displayName: string, pronouns: string, description: string, avatar: string, associated: array, indexedAt: string, createdAt: string, viewer: array, labels: array, verification: array, status: array}[]}
      *
      * @link https://docs.bsky.app/docs/api/app-bsky-graph-get-follows
      */
@@ -82,7 +82,7 @@ interface Graph
     /**
      * Enumerates accounts which follow a specified account (actor) and are followed by the viewer.
      *
-     * @return array{subject: array{did: string, handle: string, displayName: string, description: string, avatar: string, associated: array, indexedAt: string, createdAt: string, viewer: array, labels: array, verification: array, status: array}, cursor: string, followers: array{did: string, handle: string, displayName: string, description: string, avatar: string, associated: array, indexedAt: string, createdAt: string, viewer: array, labels: array, verification: array, status: array}[]}
+     * @return array{subject: array{did: string, handle: string, displayName: string, pronouns: string, description: string, avatar: string, associated: array, indexedAt: string, createdAt: string, viewer: array, labels: array, verification: array, status: array}, cursor: string, followers: array{did: string, handle: string, displayName: string, pronouns: string, description: string, avatar: string, associated: array, indexedAt: string, createdAt: string, viewer: array, labels: array, verification: array, status: array}[]}
      *
      * @link https://docs.bsky.app/docs/api/app-bsky-graph-get-known-followers
      */
@@ -142,7 +142,7 @@ interface Graph
     /**
      * Enumerates accounts that the requesting account (actor) currently has muted. Requires auth.
      *
-     * @return array{cursor: string, mutes: array{did: string, handle: string, displayName: string, description: string, avatar: string, associated: array, indexedAt: string, createdAt: string, viewer: array, labels: array, verification: array, status: array}[]}
+     * @return array{cursor: string, mutes: array{did: string, handle: string, displayName: string, pronouns: string, description: string, avatar: string, associated: array, indexedAt: string, createdAt: string, viewer: array, labels: array, verification: array, status: array}[]}
      *
      * @link https://docs.bsky.app/docs/api/app-bsky-graph-get-mutes
      */
@@ -192,7 +192,7 @@ interface Graph
     /**
      * Enumerates follows similar to a given account (actor). Expected use is to recommend additional accounts immediately after following one account.
      *
-     * @return array{suggestions: array{did: string, handle: string, displayName: string, description: string, avatar: string, associated: array, indexedAt: string, createdAt: string, viewer: array, labels: array, verification: array, status: array}[], isFallback: bool, recId: int}
+     * @return array{suggestions: array{did: string, handle: string, displayName: string, pronouns: string, description: string, avatar: string, associated: array, indexedAt: string, createdAt: string, viewer: array, labels: array, verification: array, status: array}[], isFallback: bool, recId: int}
      *
      * @link https://docs.bsky.app/docs/api/app-bsky-graph-get-suggested-follows-by-actor
      */
