@@ -169,7 +169,7 @@ interface Feed
     /**
      * Get a list of reposts for a given post.
      *
-     * @return array{uri: string, cid: string, cursor: string, repostedBy: array{did: string, handle: string, displayName: string, description: string, avatar: string, associated: array, indexedAt: string, createdAt: string, viewer: array, labels: array, verification: array, status: array}[]}
+     * @return array{uri: string, cid: string, cursor: string, repostedBy: array{did: string, handle: string, displayName: string, pronouns: string, description: string, avatar: string, associated: array, indexedAt: string, createdAt: string, viewer: array, labels: array, verification: array, status: array}[]}
      *
      * @link https://docs.bsky.app/docs/api/app-bsky-feed-get-reposted-by
      */

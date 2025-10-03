@@ -37,6 +37,10 @@ return array (
             'maxGraphemes' => 64,
             'maxLength' => 640,
           ),
+          'pronouns' => 
+          array (
+            'type' => 'string',
+          ),
           'avatar' => 
           array (
             'type' => 'string',
@@ -103,6 +107,10 @@ return array (
             'type' => 'string',
             'maxGraphemes' => 64,
             'maxLength' => 640,
+          ),
+          'pronouns' => 
+          array (
+            'type' => 'string',
           ),
           'description' => 
           array (
@@ -187,6 +195,15 @@ return array (
             'type' => 'string',
             'maxGraphemes' => 256,
             'maxLength' => 2560,
+          ),
+          'pronouns' => 
+          array (
+            'type' => 'string',
+          ),
+          'website' => 
+          array (
+            'type' => 'string',
+            'format' => 'uri',
           ),
           'avatar' => 
           array (
@@ -1331,6 +1348,18 @@ return array (
               'description' => 'Free-form profile description text.',
               'maxGraphemes' => 256,
               'maxLength' => 2560,
+            ),
+            'pronouns' => 
+            array (
+              'type' => 'string',
+              'description' => 'Free-form pronouns text.',
+              'maxGraphemes' => 20,
+              'maxLength' => 200,
+            ),
+            'website' => 
+            array (
+              'type' => 'string',
+              'format' => 'uri',
             ),
             'avatar' => 
             array (
@@ -9093,6 +9122,114 @@ return array (
             'items' => 
             array (
               'type' => 'string',
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
+  'app.bsky.unspecced.getOnboardingSuggestedStarterPacks' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.unspecced.getOnboardingSuggestedStarterPacks',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'description' => 'Get a list of suggested starterpacks for onboarding',
+        'parameters' => 
+        array (
+          'type' => 'params',
+          'properties' => 
+          array (
+            'limit' => 
+            array (
+              'type' => 'integer',
+              'minimum' => 1,
+              'maximum' => 25,
+              'default' => 10,
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'starterPacks',
+            ),
+            'properties' => 
+            array (
+              'starterPacks' => 
+              array (
+                'type' => 'array',
+                'items' => 
+                array (
+                  'type' => 'ref',
+                  'ref' => 'lex:app.bsky.graph.defs#starterPackView',
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
+  'app.bsky.unspecced.getOnboardingSuggestedStarterPacksSkeleton' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.unspecced.getOnboardingSuggestedStarterPacksSkeleton',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'description' => 'Get a skeleton of suggested starterpacks for onboarding. Intended to be called and hydrated by app.bsky.unspecced.getOnboardingSuggestedStarterPacks',
+        'parameters' => 
+        array (
+          'type' => 'params',
+          'properties' => 
+          array (
+            'viewer' => 
+            array (
+              'type' => 'string',
+              'format' => 'did',
+              'description' => 'DID of the account making the request (not included for public/unauthenticated queries).',
+            ),
+            'limit' => 
+            array (
+              'type' => 'integer',
+              'minimum' => 1,
+              'maximum' => 25,
+              'default' => 10,
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'starterPacks',
+            ),
+            'properties' => 
+            array (
+              'starterPacks' => 
+              array (
+                'type' => 'array',
+                'items' => 
+                array (
+                  'type' => 'string',
+                  'format' => 'at-uri',
+                ),
+              ),
             ),
           ),
         ),

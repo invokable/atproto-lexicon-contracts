@@ -30,6 +30,14 @@ abstract class AbstractProfile
     protected ?string $description = null;
 
     /**
+     * Free-form pronouns text.
+     */
+    protected ?string $pronouns = null;
+
+    #[Format('uri')]
+    protected ?string $website = null;
+
+    /**
      * Small image to be displayed next to posts from account. AKA, 'profile picture'.
      */
     #[Blob(accept: ['image/png', 'image/jpeg'], maxSize: 1000000)]
