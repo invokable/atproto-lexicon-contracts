@@ -152,7 +152,7 @@ interface Unspecced
     /**
      * Get a list of suggested users.
      *
-     * @return array{actors: array{did: string, handle: string, displayName: string, pronouns: string, description: string, avatar: string, associated: array, indexedAt: string, createdAt: string, viewer: array, labels: array, verification: array, status: array}[]}
+     * @return array{actors: array{did: string, handle: string, displayName: string, pronouns: string, description: string, avatar: string, associated: array, indexedAt: string, createdAt: string, viewer: array, labels: array, verification: array, status: array, debug: mixed}[]}
      *
      * @link https://docs.bsky.app/docs/api/app-bsky-unspecced-get-suggested-users
      */
