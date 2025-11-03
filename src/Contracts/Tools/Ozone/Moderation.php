@@ -18,6 +18,7 @@ use Revolution\AtProto\Lexicon\Attributes\Union;
 
 interface Moderation
 {
+    public const cancelScheduledActions = 'tools.ozone.moderation.cancelScheduledActions';
     public const emitEvent = 'tools.ozone.moderation.emitEvent';
     public const getAccountTimeline = 'tools.ozone.moderation.getAccountTimeline';
     public const getEvent = 'tools.ozone.moderation.getEvent';
@@ -27,9 +28,21 @@ interface Moderation
     public const getReporterStats = 'tools.ozone.moderation.getReporterStats';
     public const getRepos = 'tools.ozone.moderation.getRepos';
     public const getSubjects = 'tools.ozone.moderation.getSubjects';
+    public const listScheduledActions = 'tools.ozone.moderation.listScheduledActions';
     public const queryEvents = 'tools.ozone.moderation.queryEvents';
     public const queryStatuses = 'tools.ozone.moderation.queryStatuses';
+    public const scheduleAction = 'tools.ozone.moderation.scheduleAction';
     public const searchRepos = 'tools.ozone.moderation.searchRepos';
+
+    /**
+     * Cancel all pending scheduled moderation actions for specified subjects.
+     *
+     * @return array{succeeded: array, failed: array{did: string, error: string, errorCode: string}[]}
+     *
+     * @link https://docs.bsky.app/docs/api/tools-ozone-moderation-cancel-scheduled-actions
+     */
+    #[Post, NSID(self::cancelScheduledActions)]
+    public function cancelScheduledActions(#[Format('did')] array $subjects, ?string $comment = null);
 
     /**
      * Take a moderation action on an actor.
@@ -39,7 +52,7 @@ interface Moderation
      * @link https://docs.bsky.app/docs/api/tools-ozone-moderation-emit-event
      */
     #[Post, NSID(self::emitEvent)]
-    public function emitEvent(#[Union(['tools.ozone.moderation.defs#modEventTakedown', 'tools.ozone.moderation.defs#modEventAcknowledge', 'tools.ozone.moderation.defs#modEventEscalate', 'tools.ozone.moderation.defs#modEventComment', 'tools.ozone.moderation.defs#modEventLabel', 'tools.ozone.moderation.defs#modEventReport', 'tools.ozone.moderation.defs#modEventMute', 'tools.ozone.moderation.defs#modEventUnmute', 'tools.ozone.moderation.defs#modEventMuteReporter', 'tools.ozone.moderation.defs#modEventUnmuteReporter', 'tools.ozone.moderation.defs#modEventReverseTakedown', 'tools.ozone.moderation.defs#modEventResolveAppeal', 'tools.ozone.moderation.defs#modEventEmail', 'tools.ozone.moderation.defs#modEventDivert', 'tools.ozone.moderation.defs#modEventTag', 'tools.ozone.moderation.defs#accountEvent', 'tools.ozone.moderation.defs#identityEvent', 'tools.ozone.moderation.defs#recordEvent', 'tools.ozone.moderation.defs#modEventPriorityScore', 'tools.ozone.moderation.defs#ageAssuranceEvent', 'tools.ozone.moderation.defs#ageAssuranceOverrideEvent', 'tools.ozone.moderation.defs#revokeAccountCredentialsEvent'])] array $event, #[Union(['com.atproto.admin.defs#repoRef', 'com.atproto.repo.strongRef'])] array $subject, #[Format('did')] string $createdBy, #[Format('cid')] ?array $subjectBlobCids = null, #[Ref('tools.ozone.moderation.defs#modTool')] ?array $modTool = null, ?string $externalId = null);
+    public function emitEvent(#[Union(['tools.ozone.moderation.defs#modEventTakedown', 'tools.ozone.moderation.defs#modEventAcknowledge', 'tools.ozone.moderation.defs#modEventEscalate', 'tools.ozone.moderation.defs#modEventComment', 'tools.ozone.moderation.defs#modEventLabel', 'tools.ozone.moderation.defs#modEventReport', 'tools.ozone.moderation.defs#modEventMute', 'tools.ozone.moderation.defs#modEventUnmute', 'tools.ozone.moderation.defs#modEventMuteReporter', 'tools.ozone.moderation.defs#modEventUnmuteReporter', 'tools.ozone.moderation.defs#modEventReverseTakedown', 'tools.ozone.moderation.defs#modEventResolveAppeal', 'tools.ozone.moderation.defs#modEventEmail', 'tools.ozone.moderation.defs#modEventDivert', 'tools.ozone.moderation.defs#modEventTag', 'tools.ozone.moderation.defs#accountEvent', 'tools.ozone.moderation.defs#identityEvent', 'tools.ozone.moderation.defs#recordEvent', 'tools.ozone.moderation.defs#modEventPriorityScore', 'tools.ozone.moderation.defs#ageAssuranceEvent', 'tools.ozone.moderation.defs#ageAssuranceOverrideEvent', 'tools.ozone.moderation.defs#revokeAccountCredentialsEvent', 'tools.ozone.moderation.defs#scheduleTakedownEvent', 'tools.ozone.moderation.defs#cancelScheduledTakedownEvent'])] array $event, #[Union(['com.atproto.admin.defs#repoRef', 'com.atproto.repo.strongRef'])] array $subject, #[Format('did')] string $createdBy, #[Format('cid')] ?array $subjectBlobCids = null, #[Ref('tools.ozone.moderation.defs#modTool')] ?array $modTool = null, ?string $externalId = null);
 
     /**
      * Get timeline of all available events of an account. This includes moderation events, account history and did history.
@@ -122,6 +135,16 @@ interface Moderation
     public function getSubjects(array $subjects);
 
     /**
+     * List scheduled moderation actions with optional filtering.
+     *
+     * @return array{actions: array{id: int, action: string, eventData: mixed, did: string, executeAt: string, executeAfter: string, executeUntil: string, randomizeExecution: bool, createdBy: string, createdAt: string, updatedAt: string, status: string, lastExecutedAt: string, lastFailureReason: string, executionEventId: int}[], cursor: string}
+     *
+     * @link https://docs.bsky.app/docs/api/tools-ozone-moderation-list-scheduled-actions
+     */
+    #[Post, NSID(self::listScheduledActions)]
+    public function listScheduledActions(array $statuses, #[Format('datetime')] ?string $startsAfter = null, #[Format('datetime')] ?string $endsBefore = null, #[Format('did')] ?array $subjects = null, ?int $limit = 50, ?string $cursor = null);
+
+    /**
      * List moderation events related to a subject.
      *
      * @return array{cursor: string, events: array{id: int, event: array, subject: array, subjectBlobCids: array, createdBy: string, createdAt: string, creatorHandle: string, subjectHandle: string, modTool: array}[]}
@@ -129,17 +152,27 @@ interface Moderation
      * @link https://docs.bsky.app/docs/api/tools-ozone-moderation-query-events
      */
     #[Get, NSID(self::queryEvents)]
-    public function queryEvents(?array $types = null, #[Format('did')] ?string $createdBy = null, ?string $sortDirection = 'desc', #[Format('datetime')] ?string $createdAfter = null, #[Format('datetime')] ?string $createdBefore = null, #[Format('uri')] ?string $subject = null, #[Format('nsid')] ?array $collections = null, #[KnownValues(['account', 'record'])] ?string $subjectType = null, ?bool $includeAllUserRecords = null, ?int $limit = 50, ?bool $hasComment = null, ?string $comment = null, ?array $addedLabels = null, ?array $removedLabels = null, ?array $addedTags = null, ?array $removedTags = null, ?array $reportTypes = null, ?array $policies = null, ?array $modTool = null, ?string $batchId = null, #[KnownValues(['pending', 'assured', 'unknown', 'reset', 'blocked'])] ?string $ageAssuranceState = null, ?string $cursor = null);
+    public function queryEvents(?array $types = null, #[Format('did')] ?string $createdBy = null, ?string $sortDirection = 'desc', #[Format('datetime')] ?string $createdAfter = null, #[Format('datetime')] ?string $createdBefore = null, #[Format('uri')] ?string $subject = null, #[Format('nsid')] ?array $collections = null, #[KnownValues(['account', 'record'])] ?string $subjectType = null, ?bool $includeAllUserRecords = null, ?int $limit = 50, ?bool $hasComment = null, ?string $comment = null, ?array $addedLabels = null, ?array $removedLabels = null, ?array $addedTags = null, ?array $removedTags = null, ?array $reportTypes = null, ?array $policies = null, ?array $modTool = null, ?string $batchId = null, #[KnownValues(['pending', 'assured', 'unknown', 'reset', 'blocked'])] ?string $ageAssuranceState = null, ?bool $withStrike = null, ?string $cursor = null);
 
     /**
      * View moderation statuses of subjects (record or repo).
      *
-     * @return array{cursor: string, subjectStatuses: array{id: int, subject: array, hosting: array, subjectBlobCids: array, subjectRepoHandle: string, updatedAt: string, createdAt: string, reviewState: array, comment: string, priorityScore: int, muteUntil: string, muteReportingUntil: string, lastReviewedBy: string, lastReviewedAt: string, lastReportedAt: string, lastAppealedAt: string, takendown: bool, appealed: bool, suspendUntil: string, tags: array, accountStats: array, recordsStats: array, ageAssuranceState: string, ageAssuranceUpdatedBy: string}[]}
+     * @return array{cursor: string, subjectStatuses: array{id: int, subject: array, hosting: array, subjectBlobCids: array, subjectRepoHandle: string, updatedAt: string, createdAt: string, reviewState: array, comment: string, priorityScore: int, muteUntil: string, muteReportingUntil: string, lastReviewedBy: string, lastReviewedAt: string, lastReportedAt: string, lastAppealedAt: string, takendown: bool, appealed: bool, suspendUntil: string, tags: array, accountStats: array, recordsStats: array, accountStrike: array, ageAssuranceState: string, ageAssuranceUpdatedBy: string}[]}
      *
      * @link https://docs.bsky.app/docs/api/tools-ozone-moderation-query-statuses
      */
     #[Get, NSID(self::queryStatuses)]
-    public function queryStatuses(?int $queueCount = null, ?int $queueIndex = null, ?string $queueSeed = null, ?bool $includeAllUserRecords = null, #[Format('uri')] ?string $subject = null, ?string $comment = null, #[Format('datetime')] ?string $reportedAfter = null, #[Format('datetime')] ?string $reportedBefore = null, #[Format('datetime')] ?string $reviewedAfter = null, #[Format('datetime')] ?string $hostingDeletedAfter = null, #[Format('datetime')] ?string $hostingDeletedBefore = null, #[Format('datetime')] ?string $hostingUpdatedAfter = null, #[Format('datetime')] ?string $hostingUpdatedBefore = null, ?array $hostingStatuses = null, #[Format('datetime')] ?string $reviewedBefore = null, ?bool $includeMuted = null, ?bool $onlyMuted = null, ?string $reviewState = null, #[Format('uri')] ?array $ignoreSubjects = null, #[Format('did')] ?string $lastReviewedBy = null, ?string $sortField = 'lastReportedAt', ?string $sortDirection = 'desc', ?bool $takendown = null, ?bool $appealed = null, ?int $limit = 50, ?array $tags = null, ?array $excludeTags = null, ?string $cursor = null, #[Format('nsid')] ?array $collections = null, #[KnownValues(['account', 'record'])] ?string $subjectType = null, ?int $minAccountSuspendCount = null, ?int $minReportedRecordsCount = null, ?int $minTakendownRecordsCount = null, ?int $minPriorityScore = null, #[KnownValues(['pending', 'assured', 'unknown', 'reset', 'blocked'])] ?string $ageAssuranceState = null);
+    public function queryStatuses(?int $queueCount = null, ?int $queueIndex = null, ?string $queueSeed = null, ?bool $includeAllUserRecords = null, #[Format('uri')] ?string $subject = null, ?string $comment = null, #[Format('datetime')] ?string $reportedAfter = null, #[Format('datetime')] ?string $reportedBefore = null, #[Format('datetime')] ?string $reviewedAfter = null, #[Format('datetime')] ?string $hostingDeletedAfter = null, #[Format('datetime')] ?string $hostingDeletedBefore = null, #[Format('datetime')] ?string $hostingUpdatedAfter = null, #[Format('datetime')] ?string $hostingUpdatedBefore = null, ?array $hostingStatuses = null, #[Format('datetime')] ?string $reviewedBefore = null, ?bool $includeMuted = null, ?bool $onlyMuted = null, ?string $reviewState = null, #[Format('uri')] ?array $ignoreSubjects = null, #[Format('did')] ?string $lastReviewedBy = null, ?string $sortField = 'lastReportedAt', ?string $sortDirection = 'desc', ?bool $takendown = null, ?bool $appealed = null, ?int $limit = 50, ?array $tags = null, ?array $excludeTags = null, ?string $cursor = null, #[Format('nsid')] ?array $collections = null, #[KnownValues(['account', 'record'])] ?string $subjectType = null, ?int $minAccountSuspendCount = null, ?int $minReportedRecordsCount = null, ?int $minTakendownRecordsCount = null, ?int $minPriorityScore = null, ?int $minStrikeCount = null, #[KnownValues(['pending', 'assured', 'unknown', 'reset', 'blocked'])] ?string $ageAssuranceState = null);
+
+    /**
+     * Schedule a moderation action to be executed at a future time.
+     *
+     * @return array{succeeded: array, failed: array{subject: string, error: string, errorCode: string}[]}
+     *
+     * @link https://docs.bsky.app/docs/api/tools-ozone-moderation-schedule-action
+     */
+    #[Post, NSID(self::scheduleAction)]
+    public function scheduleAction(#[Union(['#takedown'])] array $action, #[Format('did')] array $subjects, #[Format('did')] string $createdBy, #[Ref('tools.ozone.moderation.scheduleAction#schedulingConfig')] array $scheduling, #[Ref('tools.ozone.moderation.defs#modTool')] ?array $modTool = null);
 
     /**
      * Find repositories based on a search term.

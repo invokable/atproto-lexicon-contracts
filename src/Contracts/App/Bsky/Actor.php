@@ -37,7 +37,7 @@ interface Actor
     /**
      * Get detailed profile view of an actor. Does not require auth, but contains relevant metadata with auth.
      *
-     * @return array{did: string, handle: string, displayName: string, description: string, pronouns: string, website: string, avatar: string, banner: string, followersCount: int, followsCount: int, postsCount: int, associated: mixed, joinedViaStarterPack: array{uri: string, cid: string, record: mixed, creator: array, listItemCount: int, joinedWeekCount: int, joinedAllTimeCount: int, labels: array, indexedAt: string}, indexedAt: string, createdAt: string, viewer: mixed, labels: array{ver: int, src: string, uri: string, cid: string, val: string, neg: bool, cts: string, exp: string, sig: mixed}[], pinnedPost: array{uri: string, cid: string}, verification: mixed, status: mixed}
+     * @return array{did: string, handle: string, displayName: string, description: string, pronouns: string, website: string, avatar: string, banner: string, followersCount: int, followsCount: int, postsCount: int, associated: mixed, joinedViaStarterPack: array{uri: string, cid: string, record: mixed, creator: array, listItemCount: int, joinedWeekCount: int, joinedAllTimeCount: int, labels: array, indexedAt: string}, indexedAt: string, createdAt: string, viewer: mixed, labels: array{ver: int, src: string, uri: string, cid: string, val: string, neg: bool, cts: string, exp: string, sig: mixed}[], pinnedPost: array{uri: string, cid: string}, verification: mixed, status: mixed, debug: mixed}
      *
      * @link https://docs.bsky.app/docs/api/app-bsky-actor-get-profile
      */
@@ -47,7 +47,7 @@ interface Actor
     /**
      * Get detailed profile views of multiple actors.
      *
-     * @return array{profiles: array{did: string, handle: string, displayName: string, description: string, pronouns: string, website: string, avatar: string, banner: string, followersCount: int, followsCount: int, postsCount: int, associated: array, joinedViaStarterPack: array, indexedAt: string, createdAt: string, viewer: array, labels: array, pinnedPost: array, verification: array, status: array}[]}
+     * @return array{profiles: array{did: string, handle: string, displayName: string, description: string, pronouns: string, website: string, avatar: string, banner: string, followersCount: int, followsCount: int, postsCount: int, associated: array, joinedViaStarterPack: array, indexedAt: string, createdAt: string, viewer: array, labels: array, pinnedPost: array, verification: array, status: array, debug: mixed}[]}
      *
      * @link https://docs.bsky.app/docs/api/app-bsky-actor-get-profiles
      */
@@ -57,7 +57,7 @@ interface Actor
     /**
      * Get a list of suggested actors. Expected use is discovery of accounts to follow during new account onboarding.
      *
-     * @return array{cursor: string, actors: array{did: string, handle: string, displayName: string, pronouns: string, description: string, avatar: string, associated: array, indexedAt: string, createdAt: string, viewer: array, labels: array, verification: array, status: array}[], recId: int}
+     * @return array{cursor: string, actors: array{did: string, handle: string, displayName: string, pronouns: string, description: string, avatar: string, associated: array, indexedAt: string, createdAt: string, viewer: array, labels: array, verification: array, status: array, debug: mixed}[], recId: int}
      *
      * @link https://docs.bsky.app/docs/api/app-bsky-actor-get-suggestions
      */
@@ -75,7 +75,7 @@ interface Actor
     /**
      * Find actors (profiles) matching search criteria. Does not require auth.
      *
-     * @return array{cursor: string, actors: array{did: string, handle: string, displayName: string, pronouns: string, description: string, avatar: string, associated: array, indexedAt: string, createdAt: string, viewer: array, labels: array, verification: array, status: array}[]}
+     * @return array{cursor: string, actors: array{did: string, handle: string, displayName: string, pronouns: string, description: string, avatar: string, associated: array, indexedAt: string, createdAt: string, viewer: array, labels: array, verification: array, status: array, debug: mixed}[]}
      *
      * @link https://docs.bsky.app/docs/api/app-bsky-actor-search-actors
      */
@@ -85,7 +85,7 @@ interface Actor
     /**
      * Find actor suggestions for a prefix search term. Expected use is for auto-completion during text field entry. Does not require auth.
      *
-     * @return array{actors: array{did: string, handle: string, displayName: string, pronouns: string, avatar: string, associated: array, viewer: array, labels: array, createdAt: string, verification: array, status: array}[]}
+     * @return array{actors: array{did: string, handle: string, displayName: string, pronouns: string, avatar: string, associated: array, viewer: array, labels: array, createdAt: string, verification: array, status: array, debug: mixed}[]}
      *
      * @link https://docs.bsky.app/docs/api/app-bsky-actor-search-actors-typeahead
      */

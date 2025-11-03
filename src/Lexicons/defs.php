@@ -80,6 +80,11 @@ return array (
             'type' => 'ref',
             'ref' => 'lex:app.bsky.actor.defs#statusView',
           ),
+          'debug' => 
+          array (
+            'type' => 'unknown',
+            'description' => 'Debug information for internal development',
+          ),
         ),
       ),
       'profileView' => 
@@ -161,6 +166,11 @@ return array (
           array (
             'type' => 'ref',
             'ref' => 'lex:app.bsky.actor.defs#statusView',
+          ),
+          'debug' => 
+          array (
+            'type' => 'unknown',
+            'description' => 'Debug information for internal development',
           ),
         ),
       ),
@@ -275,6 +285,11 @@ return array (
           array (
             'type' => 'ref',
             'ref' => 'lex:app.bsky.actor.defs#statusView',
+          ),
+          'debug' => 
+          array (
+            'type' => 'unknown',
+            'description' => 'Debug information for internal development',
           ),
         ),
       ),
@@ -2572,6 +2587,11 @@ return array (
           array (
             'type' => 'ref',
             'ref' => 'lex:app.bsky.feed.defs#threadgateView',
+          ),
+          'debug' => 
+          array (
+            'type' => 'unknown',
+            'description' => 'Debug information for internal development',
           ),
         ),
       ),
@@ -5062,7 +5082,7 @@ return array (
             'hiddenReplies' => 
             array (
               'type' => 'array',
-              'maxLength' => 50,
+              'maxLength' => 300,
               'items' => 
               array (
                 'type' => 'string',
@@ -5602,6 +5622,11 @@ return array (
             array (
               'type' => 'string',
               'format' => 'datetime',
+            ),
+            'via' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:com.atproto.repo.strongRef',
             ),
           ),
         ),
@@ -14534,6 +14559,79 @@ return array (
       ),
     ),
   ),
+  'com.atproto.lexicon.resolveLexicon' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'com.atproto.lexicon.resolveLexicon',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'description' => 'Resolves an atproto lexicon (NSID) to a schema.',
+        'parameters' => 
+        array (
+          'type' => 'params',
+          'properties' => 
+          array (
+            'nsid' => 
+            array (
+              'format' => 'nsid',
+              'type' => 'string',
+              'description' => 'The lexicon NSID to resolve.',
+            ),
+          ),
+          'required' => 
+          array (
+            0 => 'nsid',
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'properties' => 
+            array (
+              'cid' => 
+              array (
+                'type' => 'string',
+                'format' => 'cid',
+                'description' => 'The CID of the lexicon schema record.',
+              ),
+              'schema' => 
+              array (
+                'type' => 'ref',
+                'ref' => 'lex:com.atproto.lexicon.schema#main',
+                'description' => 'The resolved lexicon schema record.',
+              ),
+              'uri' => 
+              array (
+                'type' => 'string',
+                'format' => 'at-uri',
+                'description' => 'The AT-URI of the lexicon schema record.',
+              ),
+            ),
+            'required' => 
+            array (
+              0 => 'uri',
+              1 => 'cid',
+              2 => 'schema',
+            ),
+          ),
+        ),
+        'errors' => 
+        array (
+          0 => 
+          array (
+            'description' => 'No lexicon was resolved for the NSID.',
+            'name' => 'LexiconNotFound',
+          ),
+        ),
+      ),
+    ),
+  ),
   'com.atproto.lexicon.schema' => 
   array (
     'lexicon' => 1,
@@ -14714,50 +14812,45 @@ return array (
           5 => 'com.atproto.moderation.defs#reasonOther',
           6 => 'com.atproto.moderation.defs#reasonAppeal',
           7 => 'tools.ozone.report.defs#reasonAppeal',
-          8 => 'tools.ozone.report.defs#reasonViolenceAnimalWelfare',
-          9 => 'tools.ozone.report.defs#reasonViolenceThreats',
-          10 => 'tools.ozone.report.defs#reasonViolenceGraphicContent',
-          11 => 'tools.ozone.report.defs#reasonViolenceSelfHarm',
+          8 => 'tools.ozone.report.defs#reasonOther',
+          9 => 'tools.ozone.report.defs#reasonViolenceAnimal',
+          10 => 'tools.ozone.report.defs#reasonViolenceThreats',
+          11 => 'tools.ozone.report.defs#reasonViolenceGraphicContent',
           12 => 'tools.ozone.report.defs#reasonViolenceGlorification',
           13 => 'tools.ozone.report.defs#reasonViolenceExtremistContent',
           14 => 'tools.ozone.report.defs#reasonViolenceTrafficking',
           15 => 'tools.ozone.report.defs#reasonViolenceOther',
           16 => 'tools.ozone.report.defs#reasonSexualAbuseContent',
           17 => 'tools.ozone.report.defs#reasonSexualNCII',
-          18 => 'tools.ozone.report.defs#reasonSexualSextortion',
-          19 => 'tools.ozone.report.defs#reasonSexualDeepfake',
-          20 => 'tools.ozone.report.defs#reasonSexualAnimal',
-          21 => 'tools.ozone.report.defs#reasonSexualUnlabeled',
-          22 => 'tools.ozone.report.defs#reasonSexualOther',
-          23 => 'tools.ozone.report.defs#reasonChildSafetyCSAM',
-          24 => 'tools.ozone.report.defs#reasonChildSafetyGroom',
-          25 => 'tools.ozone.report.defs#reasonChildSafetyMinorPrivacy',
-          26 => 'tools.ozone.report.defs#reasonChildSafetyEndangerment',
-          27 => 'tools.ozone.report.defs#reasonChildSafetyHarassment',
-          28 => 'tools.ozone.report.defs#reasonChildSafetyPromotion',
-          29 => 'tools.ozone.report.defs#reasonChildSafetyOther',
-          30 => 'tools.ozone.report.defs#reasonHarassmentTroll',
-          31 => 'tools.ozone.report.defs#reasonHarassmentTargeted',
-          32 => 'tools.ozone.report.defs#reasonHarassmentHateSpeech',
-          33 => 'tools.ozone.report.defs#reasonHarassmentDoxxing',
-          34 => 'tools.ozone.report.defs#reasonHarassmentOther',
-          35 => 'tools.ozone.report.defs#reasonMisleadingBot',
-          36 => 'tools.ozone.report.defs#reasonMisleadingImpersonation',
-          37 => 'tools.ozone.report.defs#reasonMisleadingSpam',
-          38 => 'tools.ozone.report.defs#reasonMisleadingScam',
-          39 => 'tools.ozone.report.defs#reasonMisleadingSyntheticContent',
-          40 => 'tools.ozone.report.defs#reasonMisleadingMisinformation',
-          41 => 'tools.ozone.report.defs#reasonMisleadingOther',
-          42 => 'tools.ozone.report.defs#reasonRuleSiteSecurity',
-          43 => 'tools.ozone.report.defs#reasonRuleStolenContent',
-          44 => 'tools.ozone.report.defs#reasonRuleProhibitedSales',
-          45 => 'tools.ozone.report.defs#reasonRuleBanEvasion',
-          46 => 'tools.ozone.report.defs#reasonRuleOther',
-          47 => 'tools.ozone.report.defs#reasonCivicElectoralProcess',
-          48 => 'tools.ozone.report.defs#reasonCivicDisclosure',
-          49 => 'tools.ozone.report.defs#reasonCivicInterference',
-          50 => 'tools.ozone.report.defs#reasonCivicMisinformation',
-          51 => 'tools.ozone.report.defs#reasonCivicImpersonation',
+          18 => 'tools.ozone.report.defs#reasonSexualDeepfake',
+          19 => 'tools.ozone.report.defs#reasonSexualAnimal',
+          20 => 'tools.ozone.report.defs#reasonSexualUnlabeled',
+          21 => 'tools.ozone.report.defs#reasonSexualOther',
+          22 => 'tools.ozone.report.defs#reasonChildSafetyCSAM',
+          23 => 'tools.ozone.report.defs#reasonChildSafetyGroom',
+          24 => 'tools.ozone.report.defs#reasonChildSafetyPrivacy',
+          25 => 'tools.ozone.report.defs#reasonChildSafetyHarassment',
+          26 => 'tools.ozone.report.defs#reasonChildSafetyOther',
+          27 => 'tools.ozone.report.defs#reasonHarassmentTroll',
+          28 => 'tools.ozone.report.defs#reasonHarassmentTargeted',
+          29 => 'tools.ozone.report.defs#reasonHarassmentHateSpeech',
+          30 => 'tools.ozone.report.defs#reasonHarassmentDoxxing',
+          31 => 'tools.ozone.report.defs#reasonHarassmentOther',
+          32 => 'tools.ozone.report.defs#reasonMisleadingBot',
+          33 => 'tools.ozone.report.defs#reasonMisleadingImpersonation',
+          34 => 'tools.ozone.report.defs#reasonMisleadingSpam',
+          35 => 'tools.ozone.report.defs#reasonMisleadingScam',
+          36 => 'tools.ozone.report.defs#reasonMisleadingElections',
+          37 => 'tools.ozone.report.defs#reasonMisleadingOther',
+          38 => 'tools.ozone.report.defs#reasonRuleSiteSecurity',
+          39 => 'tools.ozone.report.defs#reasonRuleProhibitedSales',
+          40 => 'tools.ozone.report.defs#reasonRuleBanEvasion',
+          41 => 'tools.ozone.report.defs#reasonRuleOther',
+          42 => 'tools.ozone.report.defs#reasonSelfHarmContent',
+          43 => 'tools.ozone.report.defs#reasonSelfHarmED',
+          44 => 'tools.ozone.report.defs#reasonSelfHarmStunts',
+          45 => 'tools.ozone.report.defs#reasonSelfHarmSubstances',
+          46 => 'tools.ozone.report.defs#reasonSelfHarmOther',
         ),
       ),
       'reasonSpam' => 
@@ -14788,7 +14881,7 @@ return array (
       'reasonOther' => 
       array (
         'type' => 'token',
-        'description' => 'Reports not falling under another report category. Prefer new lexicon definition `tools.ozone.report.defs#reasonRuleOther`.',
+        'description' => 'Reports not falling under another report category. Prefer new lexicon definition `tools.ozone.report.defs#reasonOther`.',
       ),
       'reasonAppeal' => 
       array (
@@ -19657,6 +19750,116 @@ return array (
       ),
     ),
   ),
+  'tools.ozone.moderation.cancelScheduledActions' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'tools.ozone.moderation.cancelScheduledActions',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'procedure',
+        'description' => 'Cancel all pending scheduled moderation actions for specified subjects',
+        'input' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'subjects',
+            ),
+            'properties' => 
+            array (
+              'subjects' => 
+              array (
+                'type' => 'array',
+                'maxLength' => 100,
+                'items' => 
+                array (
+                  'type' => 'string',
+                  'format' => 'did',
+                ),
+                'description' => 'Array of DID subjects to cancel scheduled actions for',
+              ),
+              'comment' => 
+              array (
+                'type' => 'string',
+                'description' => 'Optional comment describing the reason for cancellation',
+              ),
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:tools.ozone.moderation.cancelScheduledActions#cancellationResults',
+          ),
+        ),
+      ),
+      'cancellationResults' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'succeeded',
+          1 => 'failed',
+        ),
+        'properties' => 
+        array (
+          'succeeded' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'string',
+              'format' => 'did',
+            ),
+            'description' => 'DIDs for which all pending scheduled actions were successfully cancelled',
+          ),
+          'failed' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:tools.ozone.moderation.cancelScheduledActions#failedCancellation',
+            ),
+            'description' => 'DIDs for which cancellation failed with error details',
+          ),
+        ),
+      ),
+      'failedCancellation' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'did',
+          1 => 'error',
+        ),
+        'properties' => 
+        array (
+          'did' => 
+          array (
+            'type' => 'string',
+            'format' => 'did',
+          ),
+          'error' => 
+          array (
+            'type' => 'string',
+          ),
+          'errorCode' => 
+          array (
+            'type' => 'string',
+          ),
+        ),
+      ),
+    ),
+  ),
   'tools.ozone.moderation.defs' => 
   array (
     'lexicon' => 1,
@@ -19708,6 +19911,8 @@ return array (
               19 => 'lex:tools.ozone.moderation.defs#ageAssuranceEvent',
               20 => 'lex:tools.ozone.moderation.defs#ageAssuranceOverrideEvent',
               21 => 'lex:tools.ozone.moderation.defs#revokeAccountCredentialsEvent',
+              22 => 'lex:tools.ozone.moderation.defs#scheduleTakedownEvent',
+              23 => 'lex:tools.ozone.moderation.defs#cancelScheduledTakedownEvent',
             ),
           ),
           'subject' => 
@@ -19798,6 +20003,8 @@ return array (
               19 => 'lex:tools.ozone.moderation.defs#ageAssuranceEvent',
               20 => 'lex:tools.ozone.moderation.defs#ageAssuranceOverrideEvent',
               21 => 'lex:tools.ozone.moderation.defs#revokeAccountCredentialsEvent',
+              22 => 'lex:tools.ozone.moderation.defs#scheduleTakedownEvent',
+              23 => 'lex:tools.ozone.moderation.defs#cancelScheduledTakedownEvent',
             ),
           ),
           'subject' => 
@@ -19980,6 +20187,12 @@ return array (
             'type' => 'ref',
             'ref' => 'lex:tools.ozone.moderation.defs#recordsStats',
           ),
+          'accountStrike' => 
+          array (
+            'description' => 'Strike information for the account (account-level only)',
+            'type' => 'ref',
+            'ref' => 'lex:tools.ozone.moderation.defs#accountStrike',
+          ),
           'ageAssuranceState' => 
           array (
             'type' => 'string',
@@ -20130,6 +20343,36 @@ return array (
           ),
         ),
       ),
+      'accountStrike' => 
+      array (
+        'description' => 'Strike information for an account',
+        'type' => 'object',
+        'properties' => 
+        array (
+          'activeStrikeCount' => 
+          array (
+            'description' => 'Current number of active strikes (excluding expired strikes)',
+            'type' => 'integer',
+          ),
+          'totalStrikeCount' => 
+          array (
+            'description' => 'Total number of strikes ever received (including expired strikes)',
+            'type' => 'integer',
+          ),
+          'firstStrikeAt' => 
+          array (
+            'description' => 'Timestamp of the first strike received',
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+          'lastStrikeAt' => 
+          array (
+            'description' => 'Timestamp of the most recent strike received',
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+        ),
+      ),
       'subjectReviewState' => 
       array (
         'type' => 'string',
@@ -20191,6 +20434,22 @@ return array (
             ),
             'description' => 'Names/Keywords of the policies that drove the decision.',
           ),
+          'severityLevel' => 
+          array (
+            'type' => 'string',
+            'description' => 'Severity level of the violation (e.g., \'sev-0\', \'sev-1\', \'sev-2\', etc.).',
+          ),
+          'strikeCount' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Number of strikes to assign to the user for this violation.',
+          ),
+          'strikeExpiresAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+            'description' => 'When the strike should expire. If not provided, the strike never expires.',
+          ),
         ),
       ),
       'modEventReverseTakedown' => 
@@ -20203,6 +20462,26 @@ return array (
           array (
             'type' => 'string',
             'description' => 'Describe reasoning behind the reversal.',
+          ),
+          'policies' => 
+          array (
+            'type' => 'array',
+            'maxLength' => 5,
+            'items' => 
+            array (
+              'type' => 'string',
+            ),
+            'description' => 'Names/Keywords of the policy infraction for which takedown is being reversed.',
+          ),
+          'severityLevel' => 
+          array (
+            'type' => 'string',
+            'description' => 'Severity level of the violation. Usually set from the last policy infraction\'s severity.',
+          ),
+          'strikeCount' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Number of strikes to subtract from the user\'s strike count. Usually set from the last policy infraction\'s severity.',
           ),
         ),
       ),
@@ -20540,6 +20819,32 @@ return array (
             'type' => 'string',
             'description' => 'Additional comment about the outgoing comm.',
           ),
+          'policies' => 
+          array (
+            'type' => 'array',
+            'maxLength' => 5,
+            'items' => 
+            array (
+              'type' => 'string',
+            ),
+            'description' => 'Names/Keywords of the policies that necessitated the email.',
+          ),
+          'severityLevel' => 
+          array (
+            'type' => 'string',
+            'description' => 'Severity level of the violation. Normally \'sev-1\' that adds strike on repeat offense',
+          ),
+          'strikeCount' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Number of strikes to assign to the user for this violation. Normally 0 as an indicator of a warning and only added as a strike on a repeat offense.',
+          ),
+          'strikeExpiresAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+            'description' => 'When the strike should expire. If not provided, the strike never expires.',
+          ),
         ),
       ),
       'modEventDivert' => 
@@ -20699,6 +21004,45 @@ return array (
           array (
             'type' => 'string',
             'format' => 'datetime',
+          ),
+        ),
+      ),
+      'scheduleTakedownEvent' => 
+      array (
+        'type' => 'object',
+        'description' => 'Logs a scheduled takedown action for an account.',
+        'properties' => 
+        array (
+          'comment' => 
+          array (
+            'type' => 'string',
+          ),
+          'executeAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+          'executeAfter' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+          'executeUntil' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+        ),
+      ),
+      'cancelScheduledTakedownEvent' => 
+      array (
+        'type' => 'object',
+        'description' => 'Logs cancellation of a scheduled takedown action for an account.',
+        'properties' => 
+        array (
+          'comment' => 
+          array (
+            'type' => 'string',
           ),
         ),
       ),
@@ -21323,6 +21667,117 @@ return array (
         'type' => 'token',
         'description' => 'Moderation event timeline event for a PLC tombstone operation',
       ),
+      'scheduledActionView' => 
+      array (
+        'type' => 'object',
+        'description' => 'View of a scheduled moderation action',
+        'required' => 
+        array (
+          0 => 'id',
+          1 => 'action',
+          2 => 'did',
+          3 => 'createdBy',
+          4 => 'createdAt',
+          5 => 'status',
+        ),
+        'properties' => 
+        array (
+          'id' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Auto-incrementing row ID',
+          ),
+          'action' => 
+          array (
+            'type' => 'string',
+            'knownValues' => 
+            array (
+              0 => 'takedown',
+            ),
+            'description' => 'Type of action to be executed',
+          ),
+          'eventData' => 
+          array (
+            'type' => 'unknown',
+            'description' => 'Serialized event object that will be propagated to the event when performed',
+          ),
+          'did' => 
+          array (
+            'type' => 'string',
+            'format' => 'did',
+            'description' => 'Subject DID for the action',
+          ),
+          'executeAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+            'description' => 'Exact time to execute the action',
+          ),
+          'executeAfter' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+            'description' => 'Earliest time to execute the action (for randomized scheduling)',
+          ),
+          'executeUntil' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+            'description' => 'Latest time to execute the action (for randomized scheduling)',
+          ),
+          'randomizeExecution' => 
+          array (
+            'type' => 'boolean',
+            'description' => 'Whether execution time should be randomized within the specified range',
+          ),
+          'createdBy' => 
+          array (
+            'type' => 'string',
+            'format' => 'did',
+            'description' => 'DID of the user who created this scheduled action',
+          ),
+          'createdAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+            'description' => 'When the scheduled action was created',
+          ),
+          'updatedAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+            'description' => 'When the scheduled action was last updated',
+          ),
+          'status' => 
+          array (
+            'type' => 'string',
+            'knownValues' => 
+            array (
+              0 => 'pending',
+              1 => 'executed',
+              2 => 'cancelled',
+              3 => 'failed',
+            ),
+            'description' => 'Current status of the scheduled action',
+          ),
+          'lastExecutedAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+            'description' => 'When the action was last attempted to be executed',
+          ),
+          'lastFailureReason' => 
+          array (
+            'type' => 'string',
+            'description' => 'Reason for the last execution failure',
+          ),
+          'executionEventId' => 
+          array (
+            'type' => 'integer',
+            'description' => 'ID of the moderation event created when action was successfully executed',
+          ),
+        ),
+      ),
     ),
   ),
   'tools.ozone.moderation.emitEvent' => 
@@ -21376,6 +21831,8 @@ return array (
                   19 => 'lex:tools.ozone.moderation.defs#ageAssuranceEvent',
                   20 => 'lex:tools.ozone.moderation.defs#ageAssuranceOverrideEvent',
                   21 => 'lex:tools.ozone.moderation.defs#revokeAccountCredentialsEvent',
+                  22 => 'lex:tools.ozone.moderation.defs#scheduleTakedownEvent',
+                  23 => 'lex:tools.ozone.moderation.defs#cancelScheduledTakedownEvent',
                 ),
               ),
               'subject' => 
@@ -21576,6 +22033,8 @@ return array (
               26 => 'tools.ozone.hosting.getAccountHistory#emailConfirmed',
               27 => 'tools.ozone.hosting.getAccountHistory#passwordUpdated',
               28 => 'tools.ozone.hosting.getAccountHistory#handleUpdated',
+              29 => 'tools.ozone.moderation.defs#scheduleTakedownEvent',
+              30 => 'tools.ozone.moderation.defs#cancelScheduledTakedownEvent',
             ),
           ),
           'count' => 
@@ -21958,6 +22417,116 @@ return array (
       ),
     ),
   ),
+  'tools.ozone.moderation.listScheduledActions' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'tools.ozone.moderation.listScheduledActions',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'procedure',
+        'description' => 'List scheduled moderation actions with optional filtering',
+        'input' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'statuses',
+            ),
+            'properties' => 
+            array (
+              'startsAfter' => 
+              array (
+                'type' => 'string',
+                'format' => 'datetime',
+                'description' => 'Filter actions scheduled to execute after this time',
+              ),
+              'endsBefore' => 
+              array (
+                'type' => 'string',
+                'format' => 'datetime',
+                'description' => 'Filter actions scheduled to execute before this time',
+              ),
+              'subjects' => 
+              array (
+                'type' => 'array',
+                'maxLength' => 100,
+                'items' => 
+                array (
+                  'type' => 'string',
+                  'format' => 'did',
+                ),
+                'description' => 'Filter actions for specific DID subjects',
+              ),
+              'statuses' => 
+              array (
+                'type' => 'array',
+                'minLength' => 1,
+                'items' => 
+                array (
+                  'type' => 'string',
+                  'knownValues' => 
+                  array (
+                    0 => 'pending',
+                    1 => 'executed',
+                    2 => 'cancelled',
+                    3 => 'failed',
+                  ),
+                ),
+                'description' => 'Filter actions by status',
+              ),
+              'limit' => 
+              array (
+                'type' => 'integer',
+                'minimum' => 1,
+                'maximum' => 100,
+                'default' => 50,
+                'description' => 'Maximum number of results to return',
+              ),
+              'cursor' => 
+              array (
+                'type' => 'string',
+                'description' => 'Cursor for pagination',
+              ),
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'actions',
+            ),
+            'properties' => 
+            array (
+              'actions' => 
+              array (
+                'type' => 'array',
+                'items' => 
+                array (
+                  'type' => 'ref',
+                  'ref' => 'lex:tools.ozone.moderation.defs#scheduledActionView',
+                ),
+              ),
+              'cursor' => 
+              array (
+                'type' => 'string',
+                'description' => 'Cursor for next page of results',
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
   'tools.ozone.moderation.queryEvents' => 
   array (
     'lexicon' => 1,
@@ -22138,6 +22707,11 @@ return array (
                 3 => 'reset',
                 4 => 'blocked',
               ),
+            ),
+            'withStrike' => 
+            array (
+              'type' => 'boolean',
+              'description' => 'If specified, only events where strikeCount value is set are returned.',
             ),
             'cursor' => 
             array (
@@ -22414,6 +22988,12 @@ return array (
               'type' => 'integer',
               'description' => 'If specified, only subjects that have priority score value above the given value will be returned.',
             ),
+            'minStrikeCount' => 
+            array (
+              'type' => 'integer',
+              'minimum' => 1,
+              'description' => 'If specified, only subjects that belong to an account that has at least this many active strikes will be returned.',
+            ),
             'ageAssuranceState' => 
             array (
               'type' => 'string',
@@ -22455,6 +23035,194 @@ return array (
                 ),
               ),
             ),
+          ),
+        ),
+      ),
+    ),
+  ),
+  'tools.ozone.moderation.scheduleAction' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'tools.ozone.moderation.scheduleAction',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'procedure',
+        'description' => 'Schedule a moderation action to be executed at a future time',
+        'input' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'action',
+              1 => 'subjects',
+              2 => 'createdBy',
+              3 => 'scheduling',
+            ),
+            'properties' => 
+            array (
+              'action' => 
+              array (
+                'type' => 'union',
+                'refs' => 
+                array (
+                  0 => 'lex:tools.ozone.moderation.scheduleAction#takedown',
+                ),
+              ),
+              'subjects' => 
+              array (
+                'type' => 'array',
+                'maxLength' => 100,
+                'items' => 
+                array (
+                  'type' => 'string',
+                  'format' => 'did',
+                ),
+                'description' => 'Array of DID subjects to schedule the action for',
+              ),
+              'createdBy' => 
+              array (
+                'type' => 'string',
+                'format' => 'did',
+              ),
+              'scheduling' => 
+              array (
+                'type' => 'ref',
+                'ref' => 'lex:tools.ozone.moderation.scheduleAction#schedulingConfig',
+              ),
+              'modTool' => 
+              array (
+                'type' => 'ref',
+                'ref' => 'lex:tools.ozone.moderation.defs#modTool',
+                'description' => 'This will be propagated to the moderation event when it is applied',
+              ),
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:tools.ozone.moderation.scheduleAction#scheduledActionResults',
+          ),
+        ),
+      ),
+      'takedown' => 
+      array (
+        'type' => 'object',
+        'description' => 'Schedule a takedown action',
+        'properties' => 
+        array (
+          'comment' => 
+          array (
+            'type' => 'string',
+          ),
+          'durationInHours' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Indicates how long the takedown should be in effect before automatically expiring.',
+          ),
+          'acknowledgeAccountSubjects' => 
+          array (
+            'type' => 'boolean',
+            'description' => 'If true, all other reports on content authored by this account will be resolved (acknowledged).',
+          ),
+          'policies' => 
+          array (
+            'type' => 'array',
+            'maxLength' => 5,
+            'items' => 
+            array (
+              'type' => 'string',
+            ),
+            'description' => 'Names/Keywords of the policies that drove the decision.',
+          ),
+        ),
+      ),
+      'schedulingConfig' => 
+      array (
+        'type' => 'object',
+        'description' => 'Configuration for when the action should be executed',
+        'properties' => 
+        array (
+          'executeAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+            'description' => 'Exact time to execute the action',
+          ),
+          'executeAfter' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+            'description' => 'Earliest time to execute the action (for randomized scheduling)',
+          ),
+          'executeUntil' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+            'description' => 'Latest time to execute the action (for randomized scheduling)',
+          ),
+        ),
+      ),
+      'scheduledActionResults' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'succeeded',
+          1 => 'failed',
+        ),
+        'properties' => 
+        array (
+          'succeeded' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'string',
+              'format' => 'did',
+            ),
+          ),
+          'failed' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:tools.ozone.moderation.scheduleAction#failedScheduling',
+            ),
+          ),
+        ),
+      ),
+      'failedScheduling' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'subject',
+          1 => 'error',
+        ),
+        'properties' => 
+        array (
+          'subject' => 
+          array (
+            'type' => 'string',
+            'format' => 'did',
+          ),
+          'error' => 
+          array (
+            'type' => 'string',
+          ),
+          'errorCode' => 
+          array (
+            'type' => 'string',
           ),
         ),
       ),
@@ -22540,50 +23308,45 @@ return array (
         'knownValues' => 
         array (
           0 => 'tools.ozone.report.defs#reasonAppeal',
-          1 => 'tools.ozone.report.defs#reasonViolenceAnimalWelfare',
-          2 => 'tools.ozone.report.defs#reasonViolenceThreats',
-          3 => 'tools.ozone.report.defs#reasonViolenceGraphicContent',
-          4 => 'tools.ozone.report.defs#reasonViolenceSelfHarm',
+          1 => 'tools.ozone.report.defs#reasonOther',
+          2 => 'tools.ozone.report.defs#reasonViolenceAnimal',
+          3 => 'tools.ozone.report.defs#reasonViolenceThreats',
+          4 => 'tools.ozone.report.defs#reasonViolenceGraphicContent',
           5 => 'tools.ozone.report.defs#reasonViolenceGlorification',
           6 => 'tools.ozone.report.defs#reasonViolenceExtremistContent',
           7 => 'tools.ozone.report.defs#reasonViolenceTrafficking',
           8 => 'tools.ozone.report.defs#reasonViolenceOther',
           9 => 'tools.ozone.report.defs#reasonSexualAbuseContent',
           10 => 'tools.ozone.report.defs#reasonSexualNCII',
-          11 => 'tools.ozone.report.defs#reasonSexualSextortion',
-          12 => 'tools.ozone.report.defs#reasonSexualDeepfake',
-          13 => 'tools.ozone.report.defs#reasonSexualAnimal',
-          14 => 'tools.ozone.report.defs#reasonSexualUnlabeled',
-          15 => 'tools.ozone.report.defs#reasonSexualOther',
-          16 => 'tools.ozone.report.defs#reasonChildSafetyCSAM',
-          17 => 'tools.ozone.report.defs#reasonChildSafetyGroom',
-          18 => 'tools.ozone.report.defs#reasonChildSafetyMinorPrivacy',
-          19 => 'tools.ozone.report.defs#reasonChildSafetyEndangerment',
-          20 => 'tools.ozone.report.defs#reasonChildSafetyHarassment',
-          21 => 'tools.ozone.report.defs#reasonChildSafetyPromotion',
-          22 => 'tools.ozone.report.defs#reasonChildSafetyOther',
-          23 => 'tools.ozone.report.defs#reasonHarassmentTroll',
-          24 => 'tools.ozone.report.defs#reasonHarassmentTargeted',
-          25 => 'tools.ozone.report.defs#reasonHarassmentHateSpeech',
-          26 => 'tools.ozone.report.defs#reasonHarassmentDoxxing',
-          27 => 'tools.ozone.report.defs#reasonHarassmentOther',
-          28 => 'tools.ozone.report.defs#reasonMisleadingBot',
-          29 => 'tools.ozone.report.defs#reasonMisleadingImpersonation',
-          30 => 'tools.ozone.report.defs#reasonMisleadingSpam',
-          31 => 'tools.ozone.report.defs#reasonMisleadingScam',
-          32 => 'tools.ozone.report.defs#reasonMisleadingSyntheticContent',
-          33 => 'tools.ozone.report.defs#reasonMisleadingMisinformation',
-          34 => 'tools.ozone.report.defs#reasonMisleadingOther',
-          35 => 'tools.ozone.report.defs#reasonRuleSiteSecurity',
-          36 => 'tools.ozone.report.defs#reasonRuleStolenContent',
-          37 => 'tools.ozone.report.defs#reasonRuleProhibitedSales',
-          38 => 'tools.ozone.report.defs#reasonRuleBanEvasion',
-          39 => 'tools.ozone.report.defs#reasonRuleOther',
-          40 => 'tools.ozone.report.defs#reasonCivicElectoralProcess',
-          41 => 'tools.ozone.report.defs#reasonCivicDisclosure',
-          42 => 'tools.ozone.report.defs#reasonCivicInterference',
-          43 => 'tools.ozone.report.defs#reasonCivicMisinformation',
-          44 => 'tools.ozone.report.defs#reasonCivicImpersonation',
+          11 => 'tools.ozone.report.defs#reasonSexualDeepfake',
+          12 => 'tools.ozone.report.defs#reasonSexualAnimal',
+          13 => 'tools.ozone.report.defs#reasonSexualUnlabeled',
+          14 => 'tools.ozone.report.defs#reasonSexualOther',
+          15 => 'tools.ozone.report.defs#reasonChildSafetyCSAM',
+          16 => 'tools.ozone.report.defs#reasonChildSafetyGroom',
+          17 => 'tools.ozone.report.defs#reasonChildSafetyPrivacy',
+          18 => 'tools.ozone.report.defs#reasonChildSafetyHarassment',
+          19 => 'tools.ozone.report.defs#reasonChildSafetyOther',
+          20 => 'tools.ozone.report.defs#reasonHarassmentTroll',
+          21 => 'tools.ozone.report.defs#reasonHarassmentTargeted',
+          22 => 'tools.ozone.report.defs#reasonHarassmentHateSpeech',
+          23 => 'tools.ozone.report.defs#reasonHarassmentDoxxing',
+          24 => 'tools.ozone.report.defs#reasonHarassmentOther',
+          25 => 'tools.ozone.report.defs#reasonMisleadingBot',
+          26 => 'tools.ozone.report.defs#reasonMisleadingImpersonation',
+          27 => 'tools.ozone.report.defs#reasonMisleadingSpam',
+          28 => 'tools.ozone.report.defs#reasonMisleadingScam',
+          29 => 'tools.ozone.report.defs#reasonMisleadingElections',
+          30 => 'tools.ozone.report.defs#reasonMisleadingOther',
+          31 => 'tools.ozone.report.defs#reasonRuleSiteSecurity',
+          32 => 'tools.ozone.report.defs#reasonRuleProhibitedSales',
+          33 => 'tools.ozone.report.defs#reasonRuleBanEvasion',
+          34 => 'tools.ozone.report.defs#reasonRuleOther',
+          35 => 'tools.ozone.report.defs#reasonSelfHarmContent',
+          36 => 'tools.ozone.report.defs#reasonSelfHarmED',
+          37 => 'tools.ozone.report.defs#reasonSelfHarmStunts',
+          38 => 'tools.ozone.report.defs#reasonSelfHarmSubstances',
+          39 => 'tools.ozone.report.defs#reasonSelfHarmOther',
         ),
       ),
       'reasonAppeal' => 
@@ -22591,7 +23354,12 @@ return array (
         'type' => 'token',
         'description' => 'Appeal a previously taken moderation action',
       ),
-      'reasonViolenceAnimalWelfare' => 
+      'reasonOther' => 
+      array (
+        'type' => 'token',
+        'description' => 'An issue not included in these options',
+      ),
+      'reasonViolenceAnimal' => 
       array (
         'type' => 'token',
         'description' => 'Animal welfare violations',
@@ -22605,11 +23373,6 @@ return array (
       array (
         'type' => 'token',
         'description' => 'Graphic violent content',
-      ),
-      'reasonViolenceSelfHarm' => 
-      array (
-        'type' => 'token',
-        'description' => 'Self harm',
       ),
       'reasonViolenceGlorification' => 
       array (
@@ -22641,11 +23404,6 @@ return array (
         'type' => 'token',
         'description' => 'Non-consensual intimate imagery',
       ),
-      'reasonSexualSextortion' => 
-      array (
-        'type' => 'token',
-        'description' => 'Sextortion',
-      ),
       'reasonSexualDeepfake' => 
       array (
         'type' => 'token',
@@ -22676,25 +23434,15 @@ return array (
         'type' => 'token',
         'description' => 'Grooming or predatory behavior. These reports will be sent only be sent to the application\'s Moderation Authority.',
       ),
-      'reasonChildSafetyMinorPrivacy' => 
+      'reasonChildSafetyPrivacy' => 
       array (
         'type' => 'token',
         'description' => 'Privacy violation involving a minor',
-      ),
-      'reasonChildSafetyEndangerment' => 
-      array (
-        'type' => 'token',
-        'description' => 'Child endangerment. These reports will be sent only be sent to the application\'s Moderation Authority.',
       ),
       'reasonChildSafetyHarassment' => 
       array (
         'type' => 'token',
         'description' => 'Harassment or bullying of minors',
-      ),
-      'reasonChildSafetyPromotion' => 
-      array (
-        'type' => 'token',
-        'description' => 'Promotion of child exploitation. These reports will be sent only be sent to the application\'s Moderation Authority.',
       ),
       'reasonChildSafetyOther' => 
       array (
@@ -22746,15 +23494,10 @@ return array (
         'type' => 'token',
         'description' => 'Scam',
       ),
-      'reasonMisleadingSyntheticContent' => 
+      'reasonMisleadingElections' => 
       array (
         'type' => 'token',
-        'description' => 'Unlabelled gen-AI or synthetic content',
-      ),
-      'reasonMisleadingMisinformation' => 
-      array (
-        'type' => 'token',
-        'description' => 'Harmful false claims',
+        'description' => 'False information about elections',
       ),
       'reasonMisleadingOther' => 
       array (
@@ -22765,11 +23508,6 @@ return array (
       array (
         'type' => 'token',
         'description' => 'Hacking or system attacks',
-      ),
-      'reasonRuleStolenContent' => 
-      array (
-        'type' => 'token',
-        'description' => 'Stolen content',
       ),
       'reasonRuleProhibitedSales' => 
       array (
@@ -22786,30 +23524,30 @@ return array (
         'type' => 'token',
         'description' => 'Other',
       ),
-      'reasonCivicElectoralProcess' => 
+      'reasonSelfHarmContent' => 
       array (
         'type' => 'token',
-        'description' => 'Electoral process violations',
+        'description' => 'Content promoting or depicting self-harm',
       ),
-      'reasonCivicDisclosure' => 
+      'reasonSelfHarmED' => 
       array (
         'type' => 'token',
-        'description' => 'Disclosure & transparency violations',
+        'description' => 'Eating disorders',
       ),
-      'reasonCivicInterference' => 
+      'reasonSelfHarmStunts' => 
       array (
         'type' => 'token',
-        'description' => 'Voter intimidation or interference',
+        'description' => 'Dangerous challenges or activities',
       ),
-      'reasonCivicMisinformation' => 
+      'reasonSelfHarmSubstances' => 
       array (
         'type' => 'token',
-        'description' => 'Election misinformation',
+        'description' => 'Dangerous substances or drug abuse',
       ),
-      'reasonCivicImpersonation' => 
+      'reasonSelfHarmOther' => 
       array (
         'type' => 'token',
-        'description' => 'Impersonation of electoral officials/entities',
+        'description' => 'Other dangerous content',
       ),
     ),
   ),

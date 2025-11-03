@@ -51,7 +51,7 @@ interface Notification
     /**
      * Enumerate all accounts to which the requesting account is subscribed to receive notifications for. Requires auth.
      *
-     * @return array{cursor: string, subscriptions: array{did: string, handle: string, displayName: string, pronouns: string, description: string, avatar: string, associated: array, indexedAt: string, createdAt: string, viewer: array, labels: array, verification: array, status: array}[]}
+     * @return array{cursor: string, subscriptions: array{did: string, handle: string, displayName: string, pronouns: string, description: string, avatar: string, associated: array, indexedAt: string, createdAt: string, viewer: array, labels: array, verification: array, status: array, debug: mixed}[]}
      *
      * @link https://docs.bsky.app/docs/api/app-bsky-notification-list-activity-subscriptions
      */
