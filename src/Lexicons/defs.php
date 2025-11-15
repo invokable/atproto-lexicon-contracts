@@ -770,11 +770,6 @@ return array (
               4 => 'hotness',
             ),
           ),
-          'prioritizeFollowedUsers' => 
-          array (
-            'type' => 'boolean',
-            'description' => 'Show followed users at the top of all replies.',
-          ),
         ),
       ),
       'interestsPref' => 
@@ -9349,12 +9344,6 @@ return array (
               'format' => 'at-uri',
               'description' => 'Reference (AT-URI) to post record. This is the anchor post.',
             ),
-            'prioritizeFollowedUsers' => 
-            array (
-              'type' => 'boolean',
-              'description' => 'Whether to prioritize posts from followed users. It only has effect when the user is authenticated.',
-              'default' => false,
-            ),
           ),
         ),
         'output' => 
@@ -9462,12 +9451,6 @@ return array (
               'default' => 10,
               'minimum' => 0,
               'maximum' => 100,
-            ),
-            'prioritizeFollowedUsers' => 
-            array (
-              'type' => 'boolean',
-              'description' => 'Whether to prioritize posts from followed users. It only has effect when the user is authenticated.',
-              'default' => false,
             ),
             'sort' => 
             array (
