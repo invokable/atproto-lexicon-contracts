@@ -24,7 +24,7 @@ Versioning is also automatic, so even if a breaking change is included, only the
 ```
 // composer.json
 
-"revolution/atproto-lexicon-contracts": "1.0.30",
+"revolution/atproto-lexicon-contracts": "1.0.85",
 ```
 
 ## Example client
@@ -38,5 +38,5 @@ php ./example/example.php
 ## Implementation
 - Laravel https://github.com/invokable/laravel-bluesky
 
-## LICENCE
+## LICENSE
 MIT
