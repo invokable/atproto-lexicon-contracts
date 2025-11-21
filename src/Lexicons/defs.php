@@ -770,11 +770,6 @@ return array (
               4 => 'hotness',
             ),
           ),
-          'prioritizeFollowedUsers' => 
-          array (
-            'type' => 'boolean',
-            'description' => 'Show followed users at the top of all replies.',
-          ),
         ),
       ),
       'interestsPref' => 
@@ -9349,12 +9344,6 @@ return array (
               'format' => 'at-uri',
               'description' => 'Reference (AT-URI) to post record. This is the anchor post.',
             ),
-            'prioritizeFollowedUsers' => 
-            array (
-              'type' => 'boolean',
-              'description' => 'Whether to prioritize posts from followed users. It only has effect when the user is authenticated.',
-              'default' => false,
-            ),
           ),
         ),
         'output' => 
@@ -9462,12 +9451,6 @@ return array (
               'default' => 10,
               'minimum' => 0,
               'maximum' => 100,
-            ),
-            'prioritizeFollowedUsers' => 
-            array (
-              'type' => 'boolean',
-              'description' => 'Whether to prioritize posts from followed users. It only has effect when the user is authenticated.',
-              'default' => false,
             ),
             'sort' => 
             array (
@@ -20439,6 +20422,20 @@ return array (
             'type' => 'string',
             'description' => 'Severity level of the violation (e.g., \'sev-0\', \'sev-1\', \'sev-2\', etc.).',
           ),
+          'targetServices' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'string',
+              'knownValues' => 
+              array (
+                0 => 'appview',
+                1 => 'pds',
+              ),
+            ),
+            'description' => 'List of services where the takedown should be applied. If empty or not provided, takedown is applied on all configured services.',
+          ),
           'strikeCount' => 
           array (
             'type' => 'integer',
@@ -20844,6 +20841,11 @@ return array (
             'type' => 'string',
             'format' => 'datetime',
             'description' => 'When the strike should expire. If not provided, the strike never expires.',
+          ),
+          'isDelivered' => 
+          array (
+            'type' => 'boolean',
+            'description' => 'Indicates whether the email was successfully delivered to the user\'s inbox.',
           ),
         ),
       ),
@@ -22867,6 +22869,13 @@ return array (
             array (
               'type' => 'string',
               'description' => 'Specify when fetching subjects in a certain state',
+              'knownValues' => 
+              array (
+                0 => 'tools.ozone.moderation.defs#reviewOpen',
+                1 => 'tools.ozone.moderation.defs#reviewClosed',
+                2 => 'tools.ozone.moderation.defs#reviewEscalated',
+                3 => 'tools.ozone.moderation.defs#reviewNone',
+              ),
             ),
             'ignoreSubjects' => 
             array (
@@ -23142,6 +23151,32 @@ return array (
               'type' => 'string',
             ),
             'description' => 'Names/Keywords of the policies that drove the decision.',
+          ),
+          'severityLevel' => 
+          array (
+            'type' => 'string',
+            'description' => 'Severity level of the violation (e.g., \'sev-0\', \'sev-1\', \'sev-2\', etc.).',
+          ),
+          'strikeCount' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Number of strikes to assign to the user when takedown is applied.',
+          ),
+          'strikeExpiresAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+            'description' => 'When the strike should expire. If not provided, the strike never expires.',
+          ),
+          'emailContent' => 
+          array (
+            'type' => 'string',
+            'description' => 'Email content to be sent to the user upon takedown.',
+          ),
+          'emailSubject' => 
+          array (
+            'type' => 'string',
+            'description' => 'Subject of the email to be sent to the user upon takedown.',
           ),
         ),
       ),
