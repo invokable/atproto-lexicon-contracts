@@ -770,11 +770,6 @@ return array (
               4 => 'hotness',
             ),
           ),
-          'prioritizeFollowedUsers' => 
-          array (
-            'type' => 'boolean',
-            'description' => 'Show followed users at the top of all replies.',
-          ),
         ),
       ),
       'interestsPref' => 
@@ -1647,6 +1642,549 @@ return array (
       array (
         'type' => 'token',
         'description' => 'Advertises an account as currently offering live content.',
+      ),
+    ),
+  ),
+  'app.bsky.ageassurance.begin' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.ageassurance.begin',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'procedure',
+        'description' => 'Initiate Age Assurance for an account.',
+        'input' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'email',
+              1 => 'language',
+              2 => 'countryCode',
+            ),
+            'properties' => 
+            array (
+              'email' => 
+              array (
+                'type' => 'string',
+                'description' => 'The user\'s email address to receive Age Assurance instructions.',
+              ),
+              'language' => 
+              array (
+                'type' => 'string',
+                'description' => 'The user\'s preferred language for communication during the Age Assurance process.',
+              ),
+              'countryCode' => 
+              array (
+                'type' => 'string',
+                'description' => 'An ISO 3166-1 alpha-2 code of the user\'s location.',
+              ),
+              'regionCode' => 
+              array (
+                'type' => 'string',
+                'description' => 'An optional ISO 3166-2 code of the user\'s region or state within the country.',
+              ),
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.ageassurance.defs#state',
+          ),
+        ),
+        'errors' => 
+        array (
+          0 => 
+          array (
+            'name' => 'InvalidEmail',
+          ),
+          1 => 
+          array (
+            'name' => 'DidTooLong',
+          ),
+          2 => 
+          array (
+            'name' => 'InvalidInitiation',
+          ),
+          3 => 
+          array (
+            'name' => 'RegionNotSupported',
+          ),
+        ),
+      ),
+    ),
+  ),
+  'app.bsky.ageassurance.defs' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.ageassurance.defs',
+    'defs' => 
+    array (
+      'access' => 
+      array (
+        'description' => 'The access level granted based on Age Assurance data we\'ve processed.',
+        'type' => 'string',
+        'knownValues' => 
+        array (
+          0 => 'unknown',
+          1 => 'none',
+          2 => 'safe',
+          3 => 'full',
+        ),
+      ),
+      'status' => 
+      array (
+        'type' => 'string',
+        'description' => 'The status of the Age Assurance process.',
+        'knownValues' => 
+        array (
+          0 => 'unknown',
+          1 => 'pending',
+          2 => 'assured',
+          3 => 'blocked',
+        ),
+      ),
+      'state' => 
+      array (
+        'type' => 'object',
+        'description' => 'The user\'s computed Age Assurance state.',
+        'required' => 
+        array (
+          0 => 'status',
+          1 => 'access',
+        ),
+        'properties' => 
+        array (
+          'lastInitiatedAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+            'description' => 'The timestamp when this state was last updated.',
+          ),
+          'status' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.ageassurance.defs#status',
+          ),
+          'access' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.ageassurance.defs#access',
+          ),
+        ),
+      ),
+      'stateMetadata' => 
+      array (
+        'type' => 'object',
+        'description' => 'Additional metadata needed to compute Age Assurance state client-side.',
+        'required' => 
+        array (
+        ),
+        'properties' => 
+        array (
+          'accountCreatedAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+            'description' => 'The account creation timestamp.',
+          ),
+        ),
+      ),
+      'config' => 
+      array (
+        'type' => 'object',
+        'description' => '',
+        'required' => 
+        array (
+          0 => 'regions',
+        ),
+        'properties' => 
+        array (
+          'regions' => 
+          array (
+            'type' => 'array',
+            'description' => 'The per-region Age Assurance configuration.',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:app.bsky.ageassurance.defs#configRegion',
+            ),
+          ),
+        ),
+      ),
+      'configRegion' => 
+      array (
+        'type' => 'object',
+        'description' => 'The Age Assurance configuration for a specific region.',
+        'required' => 
+        array (
+          0 => 'countryCode',
+          1 => 'rules',
+        ),
+        'properties' => 
+        array (
+          'countryCode' => 
+          array (
+            'type' => 'string',
+            'description' => 'The ISO 3166-1 alpha-2 country code this configuration applies to.',
+          ),
+          'regionCode' => 
+          array (
+            'type' => 'string',
+            'description' => 'The ISO 3166-2 region code this configuration applies to. If omitted, the configuration applies to the entire country.',
+          ),
+          'rules' => 
+          array (
+            'type' => 'array',
+            'description' => 'The ordered list of Age Assurance rules that apply to this region. Rules should be applied in order, and the first matching rule determines the access level granted. The rules array should always include a default rule as the last item.',
+            'items' => 
+            array (
+              'type' => 'union',
+              'refs' => 
+              array (
+                0 => 'lex:app.bsky.ageassurance.defs#configRegionRuleDefault',
+                1 => 'lex:app.bsky.ageassurance.defs#configRegionRuleIfDeclaredOverAge',
+                2 => 'lex:app.bsky.ageassurance.defs#configRegionRuleIfDeclaredUnderAge',
+                3 => 'lex:app.bsky.ageassurance.defs#configRegionRuleIfAssuredOverAge',
+                4 => 'lex:app.bsky.ageassurance.defs#configRegionRuleIfAssuredUnderAge',
+                5 => 'lex:app.bsky.ageassurance.defs#configRegionRuleIfAccountNewerThan',
+                6 => 'lex:app.bsky.ageassurance.defs#configRegionRuleIfAccountOlderThan',
+              ),
+            ),
+          ),
+        ),
+      ),
+      'configRegionRuleDefault' => 
+      array (
+        'type' => 'object',
+        'description' => 'Age Assurance rule that applies by default.',
+        'required' => 
+        array (
+          0 => 'access',
+        ),
+        'properties' => 
+        array (
+          'access' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.ageassurance.defs#access',
+          ),
+        ),
+      ),
+      'configRegionRuleIfDeclaredOverAge' => 
+      array (
+        'type' => 'object',
+        'description' => 'Age Assurance rule that applies if the user has declared themselves equal-to or over a certain age.',
+        'required' => 
+        array (
+          0 => 'age',
+          1 => 'access',
+        ),
+        'properties' => 
+        array (
+          'age' => 
+          array (
+            'type' => 'integer',
+            'description' => 'The age threshold as a whole integer.',
+          ),
+          'access' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.ageassurance.defs#access',
+          ),
+        ),
+      ),
+      'configRegionRuleIfDeclaredUnderAge' => 
+      array (
+        'type' => 'object',
+        'description' => 'Age Assurance rule that applies if the user has declared themselves under a certain age.',
+        'required' => 
+        array (
+          0 => 'age',
+          1 => 'access',
+        ),
+        'properties' => 
+        array (
+          'age' => 
+          array (
+            'type' => 'integer',
+            'description' => 'The age threshold as a whole integer.',
+          ),
+          'access' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.ageassurance.defs#access',
+          ),
+        ),
+      ),
+      'configRegionRuleIfAssuredOverAge' => 
+      array (
+        'type' => 'object',
+        'description' => 'Age Assurance rule that applies if the user has been assured to be equal-to or over a certain age.',
+        'required' => 
+        array (
+          0 => 'age',
+          1 => 'access',
+        ),
+        'properties' => 
+        array (
+          'age' => 
+          array (
+            'type' => 'integer',
+            'description' => 'The age threshold as a whole integer.',
+          ),
+          'access' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.ageassurance.defs#access',
+          ),
+        ),
+      ),
+      'configRegionRuleIfAssuredUnderAge' => 
+      array (
+        'type' => 'object',
+        'description' => 'Age Assurance rule that applies if the user has been assured to be under a certain age.',
+        'required' => 
+        array (
+          0 => 'age',
+          1 => 'access',
+        ),
+        'properties' => 
+        array (
+          'age' => 
+          array (
+            'type' => 'integer',
+            'description' => 'The age threshold as a whole integer.',
+          ),
+          'access' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.ageassurance.defs#access',
+          ),
+        ),
+      ),
+      'configRegionRuleIfAccountNewerThan' => 
+      array (
+        'type' => 'object',
+        'description' => 'Age Assurance rule that applies if the account is equal-to or newer than a certain date.',
+        'required' => 
+        array (
+          0 => 'date',
+          1 => 'access',
+        ),
+        'properties' => 
+        array (
+          'date' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+            'description' => 'The date threshold as a datetime string.',
+          ),
+          'access' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.ageassurance.defs#access',
+          ),
+        ),
+      ),
+      'configRegionRuleIfAccountOlderThan' => 
+      array (
+        'type' => 'object',
+        'description' => 'Age Assurance rule that applies if the account is older than a certain date.',
+        'required' => 
+        array (
+          0 => 'date',
+          1 => 'access',
+        ),
+        'properties' => 
+        array (
+          'date' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+            'description' => 'The date threshold as a datetime string.',
+          ),
+          'access' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.ageassurance.defs#access',
+          ),
+        ),
+      ),
+      'event' => 
+      array (
+        'type' => 'object',
+        'description' => 'Object used to store Age Assurance data in stash.',
+        'required' => 
+        array (
+          0 => 'createdAt',
+          1 => 'status',
+          2 => 'access',
+          3 => 'attemptId',
+          4 => 'countryCode',
+        ),
+        'properties' => 
+        array (
+          'createdAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+            'description' => 'The date and time of this write operation.',
+          ),
+          'attemptId' => 
+          array (
+            'type' => 'string',
+            'description' => 'The unique identifier for this instance of the Age Assurance flow, in UUID format.',
+          ),
+          'status' => 
+          array (
+            'type' => 'string',
+            'description' => 'The status of the Age Assurance process.',
+            'knownValues' => 
+            array (
+              0 => 'unknown',
+              1 => 'pending',
+              2 => 'assured',
+              3 => 'blocked',
+            ),
+          ),
+          'access' => 
+          array (
+            'description' => 'The access level granted based on Age Assurance data we\'ve processed.',
+            'type' => 'string',
+            'knownValues' => 
+            array (
+              0 => 'unknown',
+              1 => 'none',
+              2 => 'safe',
+              3 => 'full',
+            ),
+          ),
+          'countryCode' => 
+          array (
+            'type' => 'string',
+            'description' => 'The ISO 3166-1 alpha-2 country code provided when beginning the Age Assurance flow.',
+          ),
+          'regionCode' => 
+          array (
+            'type' => 'string',
+            'description' => 'The ISO 3166-2 region code provided when beginning the Age Assurance flow.',
+          ),
+          'email' => 
+          array (
+            'type' => 'string',
+            'description' => 'The email used for Age Assurance.',
+          ),
+          'initIp' => 
+          array (
+            'type' => 'string',
+            'description' => 'The IP address used when initiating the Age Assurance flow.',
+          ),
+          'initUa' => 
+          array (
+            'type' => 'string',
+            'description' => 'The user agent used when initiating the Age Assurance flow.',
+          ),
+          'completeIp' => 
+          array (
+            'type' => 'string',
+            'description' => 'The IP address used when completing the Age Assurance flow.',
+          ),
+          'completeUa' => 
+          array (
+            'type' => 'string',
+            'description' => 'The user agent used when completing the Age Assurance flow.',
+          ),
+        ),
+      ),
+    ),
+  ),
+  'app.bsky.ageassurance.getConfig' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.ageassurance.getConfig',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'description' => 'Returns Age Assurance configuration for use on the client.',
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.ageassurance.defs#config',
+          ),
+        ),
+      ),
+    ),
+  ),
+  'app.bsky.ageassurance.getState' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.ageassurance.getState',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'description' => 'Returns server-computed Age Assurance state, if available, and any additional metadata needed to compute Age Assurance state client-side.',
+        'parameters' => 
+        array (
+          'type' => 'params',
+          'required' => 
+          array (
+            0 => 'countryCode',
+          ),
+          'properties' => 
+          array (
+            'countryCode' => 
+            array (
+              'type' => 'string',
+            ),
+            'regionCode' => 
+            array (
+              'type' => 'string',
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'state',
+              1 => 'metadata',
+            ),
+            'properties' => 
+            array (
+              'state' => 
+              array (
+                'type' => 'ref',
+                'ref' => 'lex:app.bsky.ageassurance.defs#state',
+              ),
+              'metadata' => 
+              array (
+                'type' => 'ref',
+                'ref' => 'lex:app.bsky.ageassurance.defs#stateMetadata',
+              ),
+            ),
+          ),
+        ),
       ),
     ),
   ),
@@ -9349,12 +9887,6 @@ return array (
               'format' => 'at-uri',
               'description' => 'Reference (AT-URI) to post record. This is the anchor post.',
             ),
-            'prioritizeFollowedUsers' => 
-            array (
-              'type' => 'boolean',
-              'description' => 'Whether to prioritize posts from followed users. It only has effect when the user is authenticated.',
-              'default' => false,
-            ),
           ),
         ),
         'output' => 
@@ -9462,12 +9994,6 @@ return array (
               'default' => 10,
               'minimum' => 0,
               'maximum' => 100,
-            ),
-            'prioritizeFollowedUsers' => 
-            array (
-              'type' => 'boolean',
-              'description' => 'Whether to prioritize posts from followed users. It only has effect when the user is authenticated.',
-              'default' => false,
             ),
             'sort' => 
             array (
@@ -20378,10 +20904,10 @@ return array (
         'type' => 'string',
         'knownValues' => 
         array (
-          0 => 'lex:tools.ozone.moderation.defs#reviewOpen',
-          1 => 'lex:tools.ozone.moderation.defs#reviewEscalated',
-          2 => 'lex:tools.ozone.moderation.defs#reviewClosed',
-          3 => 'lex:tools.ozone.moderation.defs#reviewNone',
+          0 => 'tools.ozone.moderation.defs#reviewOpen',
+          1 => 'tools.ozone.moderation.defs#reviewEscalated',
+          2 => 'tools.ozone.moderation.defs#reviewClosed',
+          3 => 'tools.ozone.moderation.defs#reviewNone',
         ),
       ),
       'reviewOpen' => 
@@ -20438,6 +20964,20 @@ return array (
           array (
             'type' => 'string',
             'description' => 'Severity level of the violation (e.g., \'sev-0\', \'sev-1\', \'sev-2\', etc.).',
+          ),
+          'targetServices' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'string',
+              'knownValues' => 
+              array (
+                0 => 'appview',
+                1 => 'pds',
+              ),
+            ),
+            'description' => 'List of services where the takedown should be applied. If empty or not provided, takedown is applied on all configured services.',
           ),
           'strikeCount' => 
           array (
@@ -20619,10 +21159,15 @@ return array (
             'format' => 'datetime',
             'description' => 'The date and time of this write operation.',
           ),
+          'attemptId' => 
+          array (
+            'type' => 'string',
+            'description' => 'The unique identifier for this instance of the age assurance flow, in UUID format.',
+          ),
           'status' => 
           array (
             'type' => 'string',
-            'description' => 'The status of the age assurance process.',
+            'description' => 'The status of the Age Assurance process.',
             'knownValues' => 
             array (
               0 => 'unknown',
@@ -20630,10 +21175,20 @@ return array (
               2 => 'assured',
             ),
           ),
-          'attemptId' => 
+          'access' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.ageassurance.defs#access',
+          ),
+          'countryCode' => 
           array (
             'type' => 'string',
-            'description' => 'The unique identifier for this instance of the age assurance flow, in UUID format.',
+            'description' => 'The ISO 3166-1 alpha-2 country code provided when beginning the Age Assurance flow.',
+          ),
+          'regionCode' => 
+          array (
+            'type' => 'string',
+            'description' => 'The ISO 3166-2 region code provided when beginning the Age Assurance flow.',
           ),
           'initIp' => 
           array (
@@ -20678,6 +21233,11 @@ return array (
               1 => 'reset',
               2 => 'blocked',
             ),
+          ),
+          'access' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.ageassurance.defs#access',
           ),
           'comment' => 
           array (
@@ -20844,6 +21404,11 @@ return array (
             'type' => 'string',
             'format' => 'datetime',
             'description' => 'When the strike should expire. If not provided, the strike never expires.',
+          ),
+          'isDelivered' => 
+          array (
+            'type' => 'boolean',
+            'description' => 'Indicates whether the email was successfully delivered to the user\'s inbox.',
           ),
         ),
       ),
@@ -22867,6 +23432,13 @@ return array (
             array (
               'type' => 'string',
               'description' => 'Specify when fetching subjects in a certain state',
+              'knownValues' => 
+              array (
+                0 => 'tools.ozone.moderation.defs#reviewOpen',
+                1 => 'tools.ozone.moderation.defs#reviewClosed',
+                2 => 'tools.ozone.moderation.defs#reviewEscalated',
+                3 => 'tools.ozone.moderation.defs#reviewNone',
+              ),
             ),
             'ignoreSubjects' => 
             array (
@@ -23142,6 +23714,32 @@ return array (
               'type' => 'string',
             ),
             'description' => 'Names/Keywords of the policies that drove the decision.',
+          ),
+          'severityLevel' => 
+          array (
+            'type' => 'string',
+            'description' => 'Severity level of the violation (e.g., \'sev-0\', \'sev-1\', \'sev-2\', etc.).',
+          ),
+          'strikeCount' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Number of strikes to assign to the user when takedown is applied.',
+          ),
+          'strikeExpiresAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+            'description' => 'When the strike should expire. If not provided, the strike never expires.',
+          ),
+          'emailContent' => 
+          array (
+            'type' => 'string',
+            'description' => 'Email content to be sent to the user upon takedown.',
+          ),
+          'emailSubject' => 
+          array (
+            'type' => 'string',
+            'description' => 'Subject of the email to be sent to the user upon takedown.',
           ),
         ),
       ),
@@ -25331,10 +25929,10 @@ return array (
             'type' => 'string',
             'knownValues' => 
             array (
-              0 => 'lex:tools.ozone.team.defs#roleAdmin',
-              1 => 'lex:tools.ozone.team.defs#roleModerator',
-              2 => 'lex:tools.ozone.team.defs#roleTriage',
-              3 => 'lex:tools.ozone.team.defs#roleVerifier',
+              0 => 'tools.ozone.team.defs#roleAdmin',
+              1 => 'tools.ozone.team.defs#roleModerator',
+              2 => 'tools.ozone.team.defs#roleTriage',
+              3 => 'tools.ozone.team.defs#roleVerifier',
             ),
           ),
         ),
