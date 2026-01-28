@@ -134,7 +134,7 @@ interface Server
     public function deleteAccount(#[Format('did')] string $did, #[\SensitiveParameter] string $password, string $token);
 
     /**
-     * Delete the current session. Requires auth.
+     * Delete the current session. Requires auth using the 'refreshJwt' (not the 'accessJwt').
      *
      * @link https://docs.bsky.app/docs/api/com-atproto-server-delete-session
      */
@@ -174,7 +174,7 @@ interface Server
     /**
      * Get information about the current auth session. Requires auth.
      *
-     * @return array{handle: string, did: string, email: string, emailConfirmed: bool, emailAuthFactor: bool, didDoc: mixed, active: bool, status: string}
+     * @return array{handle: string, did: string, didDoc: mixed, email: string, emailConfirmed: bool, emailAuthFactor: bool, active: bool, status: string}
      *
      * @link https://docs.bsky.app/docs/api/com-atproto-server-get-session
      */
@@ -194,7 +194,7 @@ interface Server
     /**
      * Refresh an authentication session. Requires auth using the 'refreshJwt' (not the 'accessJwt').
      *
-     * @return array{accessJwt: string, refreshJwt: string, handle: string, did: string, didDoc: mixed, active: bool, status: string}
+     * @return array{accessJwt: string, refreshJwt: string, handle: string, did: string, didDoc: mixed, email: string, emailConfirmed: bool, emailAuthFactor: bool, active: bool, status: string}
      *
      * @link https://docs.bsky.app/docs/api/com-atproto-server-refresh-session
      */

@@ -97,7 +97,7 @@ interface Unspecced
      * @link https://docs.bsky.app/docs/api/app-bsky-unspecced-get-post-thread-other-v2
      */
     #[Get, NSID(self::getPostThreadOtherV2)]
-    public function getPostThreadOtherV2(#[Format('at-uri')] string $anchor, ?bool $prioritizeFollowedUsers = null);
+    public function getPostThreadOtherV2(#[Format('at-uri')] string $anchor);
 
     /**
      * (NOTE: this endpoint is under development and WILL change without notice. Don't use it until it is moved out of `unspecced` or your application WILL break) Get posts in a thread. It is based in an anchor post at any depth of the tree, and returns posts above it (recursively resolving the parent, without further branching to their replies) and below it (recursive replies, with branching to their replies). Does not require auth, but additional metadata and filtering will be applied for authed requests.
@@ -107,7 +107,7 @@ interface Unspecced
      * @link https://docs.bsky.app/docs/api/app-bsky-unspecced-get-post-thread-v2
      */
     #[Get, NSID(self::getPostThreadV2)]
-    public function getPostThreadV2(#[Format('at-uri')] string $anchor, ?bool $above = null, ?int $below = 6, ?int $branchingFactor = 10, ?bool $prioritizeFollowedUsers = null, #[KnownValues(['newest', 'oldest', 'top'])] ?string $sort = 'oldest');
+    public function getPostThreadV2(#[Format('at-uri')] string $anchor, ?bool $above = null, ?int $below = 6, ?int $branchingFactor = 10, #[KnownValues(['newest', 'oldest', 'top'])] ?string $sort = 'oldest');
 
     /**
      * Get a list of suggested feeds.
@@ -152,7 +152,7 @@ interface Unspecced
     /**
      * Get a list of suggested users.
      *
-     * @return array{actors: array{did: string, handle: string, displayName: string, pronouns: string, description: string, avatar: string, associated: array, indexedAt: string, createdAt: string, viewer: array, labels: array, verification: array, status: array, debug: mixed}[]}
+     * @return array{actors: array{did: string, handle: string, displayName: string, pronouns: string, description: string, avatar: string, associated: array, indexedAt: string, createdAt: string, viewer: array, labels: array, verification: array, status: array, debug: mixed}[], recId: string}
      *
      * @link https://docs.bsky.app/docs/api/app-bsky-unspecced-get-suggested-users
      */
@@ -162,7 +162,7 @@ interface Unspecced
     /**
      * Get a skeleton of suggested users. Intended to be called and hydrated by app.bsky.unspecced.getSuggestedUsers.
      *
-     * @return array{dids: array}
+     * @return array{dids: array, recId: string}
      *
      * @link https://docs.bsky.app/docs/api/app-bsky-unspecced-get-suggested-users-skeleton
      */
