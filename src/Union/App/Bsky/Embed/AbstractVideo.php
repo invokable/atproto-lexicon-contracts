@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace Revolution\AtProto\Lexicon\Union\App\Bsky\Embed;
 
 use Revolution\AtProto\Lexicon\Attributes\Blob;
+use Revolution\AtProto\Lexicon\Attributes\KnownValues;
 use Revolution\AtProto\Lexicon\Attributes\Ref;
 use Revolution\AtProto\Lexicon\Attributes\Required;
 
@@ -36,4 +37,10 @@ abstract class AbstractVideo
 
     #[Ref('app.bsky.embed.defs#aspectRatio')]
     protected ?array $aspectRatio = null;
+
+    /**
+     * A hint to the client about how to present the video.
+     */
+    #[KnownValues(['default', 'gif'])]
+    protected ?string $presentation = null;
 }

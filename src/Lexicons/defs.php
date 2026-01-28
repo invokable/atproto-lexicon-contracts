@@ -324,6 +324,11 @@ return array (
             'type' => 'ref',
             'ref' => 'lex:app.bsky.actor.defs#profileAssociatedActivitySubscription',
           ),
+          'germ' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.actor.defs#profileAssociatedGerm',
+          ),
         ),
       ),
       'profileAssociatedChat' => 
@@ -343,6 +348,32 @@ return array (
               0 => 'all',
               1 => 'none',
               2 => 'following',
+            ),
+          ),
+        ),
+      ),
+      'profileAssociatedGerm' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'showButtonTo',
+          1 => 'messageMeUrl',
+        ),
+        'properties' => 
+        array (
+          'messageMeUrl' => 
+          array (
+            'type' => 'string',
+            'format' => 'uri',
+          ),
+          'showButtonTo' => 
+          array (
+            'type' => 'string',
+            'knownValues' => 
+            array (
+              0 => 'usersIFollow',
+              1 => 'everyone',
             ),
           ),
         ),
@@ -546,15 +577,17 @@ return array (
             2 => 'lex:app.bsky.actor.defs#savedFeedsPref',
             3 => 'lex:app.bsky.actor.defs#savedFeedsPrefV2',
             4 => 'lex:app.bsky.actor.defs#personalDetailsPref',
-            5 => 'lex:app.bsky.actor.defs#feedViewPref',
-            6 => 'lex:app.bsky.actor.defs#threadViewPref',
-            7 => 'lex:app.bsky.actor.defs#interestsPref',
-            8 => 'lex:app.bsky.actor.defs#mutedWordsPref',
-            9 => 'lex:app.bsky.actor.defs#hiddenPostsPref',
-            10 => 'lex:app.bsky.actor.defs#bskyAppStatePref',
-            11 => 'lex:app.bsky.actor.defs#labelersPref',
-            12 => 'lex:app.bsky.actor.defs#postInteractionSettingsPref',
-            13 => 'lex:app.bsky.actor.defs#verificationPrefs',
+            5 => 'lex:app.bsky.actor.defs#declaredAgePref',
+            6 => 'lex:app.bsky.actor.defs#feedViewPref',
+            7 => 'lex:app.bsky.actor.defs#threadViewPref',
+            8 => 'lex:app.bsky.actor.defs#interestsPref',
+            9 => 'lex:app.bsky.actor.defs#mutedWordsPref',
+            10 => 'lex:app.bsky.actor.defs#hiddenPostsPref',
+            11 => 'lex:app.bsky.actor.defs#bskyAppStatePref',
+            12 => 'lex:app.bsky.actor.defs#labelersPref',
+            13 => 'lex:app.bsky.actor.defs#postInteractionSettingsPref',
+            14 => 'lex:app.bsky.actor.defs#verificationPrefs',
+            15 => 'lex:app.bsky.actor.defs#liveEventPreferences',
           ),
         ),
       ),
@@ -710,6 +743,29 @@ return array (
           ),
         ),
       ),
+      'declaredAgePref' => 
+      array (
+        'type' => 'object',
+        'description' => 'Read-only preference containing value(s) inferred from the user\'s declared birthdate. Absence of this preference object in the response indicates that the user has not made a declaration.',
+        'properties' => 
+        array (
+          'isOverAge13' => 
+          array (
+            'type' => 'boolean',
+            'description' => 'Indicates if the user has declared that they are over 13 years of age.',
+          ),
+          'isOverAge16' => 
+          array (
+            'type' => 'boolean',
+            'description' => 'Indicates if the user has declared that they are over 16 years of age.',
+          ),
+          'isOverAge18' => 
+          array (
+            'type' => 'boolean',
+            'description' => 'Indicates if the user has declared that they are over 18 years of age.',
+          ),
+        ),
+      ),
       'feedViewPref' => 
       array (
         'type' => 'object',
@@ -769,11 +825,6 @@ return array (
               3 => 'random',
               4 => 'hotness',
             ),
-          ),
-          'prioritizeFollowedUsers' => 
-          array (
-            'type' => 'boolean',
-            'description' => 'Show followed users at the top of all replies.',
           ),
         ),
       ),
@@ -1045,6 +1096,29 @@ return array (
           ),
         ),
       ),
+      'liveEventPreferences' => 
+      array (
+        'type' => 'object',
+        'description' => 'Preferences for live events.',
+        'properties' => 
+        array (
+          'hiddenFeedIds' => 
+          array (
+            'description' => 'A list of feed IDs that the user has hidden from live events.',
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'string',
+            ),
+          ),
+          'hideAllFeeds' => 
+          array (
+            'description' => 'Whether to hide all feeds from live events.',
+            'type' => 'boolean',
+            'default' => false,
+          ),
+        ),
+      ),
       'postInteractionSettingsPref' => 
       array (
         'type' => 'object',
@@ -1097,6 +1171,16 @@ return array (
         ),
         'properties' => 
         array (
+          'uri' => 
+          array (
+            'type' => 'string',
+            'format' => 'at-uri',
+          ),
+          'cid' => 
+          array (
+            'type' => 'string',
+            'format' => 'cid',
+          ),
           'status' => 
           array (
             'type' => 'string',
@@ -1129,6 +1213,11 @@ return array (
           array (
             'type' => 'boolean',
             'description' => 'True if the status is not expired, false if it is expired. Only present if expiration was set.',
+          ),
+          'isDisabled' => 
+          array (
+            'type' => 'boolean',
+            'description' => 'True if the user\'s go-live access has been disabled by a moderator, false otherwise.',
           ),
         ),
       ),
@@ -1650,6 +1739,1111 @@ return array (
       ),
     ),
   ),
+  'app.bsky.ageassurance.begin' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.ageassurance.begin',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'procedure',
+        'description' => 'Initiate Age Assurance for an account.',
+        'input' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'email',
+              1 => 'language',
+              2 => 'countryCode',
+            ),
+            'properties' => 
+            array (
+              'email' => 
+              array (
+                'type' => 'string',
+                'description' => 'The user\'s email address to receive Age Assurance instructions.',
+              ),
+              'language' => 
+              array (
+                'type' => 'string',
+                'description' => 'The user\'s preferred language for communication during the Age Assurance process.',
+              ),
+              'countryCode' => 
+              array (
+                'type' => 'string',
+                'description' => 'An ISO 3166-1 alpha-2 code of the user\'s location.',
+              ),
+              'regionCode' => 
+              array (
+                'type' => 'string',
+                'description' => 'An optional ISO 3166-2 code of the user\'s region or state within the country.',
+              ),
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.ageassurance.defs#state',
+          ),
+        ),
+        'errors' => 
+        array (
+          0 => 
+          array (
+            'name' => 'InvalidEmail',
+          ),
+          1 => 
+          array (
+            'name' => 'DidTooLong',
+          ),
+          2 => 
+          array (
+            'name' => 'InvalidInitiation',
+          ),
+          3 => 
+          array (
+            'name' => 'RegionNotSupported',
+          ),
+        ),
+      ),
+    ),
+  ),
+  'app.bsky.ageassurance.defs' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.ageassurance.defs',
+    'defs' => 
+    array (
+      'access' => 
+      array (
+        'description' => 'The access level granted based on Age Assurance data we\'ve processed.',
+        'type' => 'string',
+        'knownValues' => 
+        array (
+          0 => 'unknown',
+          1 => 'none',
+          2 => 'safe',
+          3 => 'full',
+        ),
+      ),
+      'status' => 
+      array (
+        'type' => 'string',
+        'description' => 'The status of the Age Assurance process.',
+        'knownValues' => 
+        array (
+          0 => 'unknown',
+          1 => 'pending',
+          2 => 'assured',
+          3 => 'blocked',
+        ),
+      ),
+      'state' => 
+      array (
+        'type' => 'object',
+        'description' => 'The user\'s computed Age Assurance state.',
+        'required' => 
+        array (
+          0 => 'status',
+          1 => 'access',
+        ),
+        'properties' => 
+        array (
+          'lastInitiatedAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+            'description' => 'The timestamp when this state was last updated.',
+          ),
+          'status' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.ageassurance.defs#status',
+          ),
+          'access' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.ageassurance.defs#access',
+          ),
+        ),
+      ),
+      'stateMetadata' => 
+      array (
+        'type' => 'object',
+        'description' => 'Additional metadata needed to compute Age Assurance state client-side.',
+        'required' => 
+        array (
+        ),
+        'properties' => 
+        array (
+          'accountCreatedAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+            'description' => 'The account creation timestamp.',
+          ),
+        ),
+      ),
+      'config' => 
+      array (
+        'type' => 'object',
+        'description' => '',
+        'required' => 
+        array (
+          0 => 'regions',
+        ),
+        'properties' => 
+        array (
+          'regions' => 
+          array (
+            'type' => 'array',
+            'description' => 'The per-region Age Assurance configuration.',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:app.bsky.ageassurance.defs#configRegion',
+            ),
+          ),
+        ),
+      ),
+      'configRegion' => 
+      array (
+        'type' => 'object',
+        'description' => 'The Age Assurance configuration for a specific region.',
+        'required' => 
+        array (
+          0 => 'countryCode',
+          1 => 'minAccessAge',
+          2 => 'rules',
+        ),
+        'properties' => 
+        array (
+          'countryCode' => 
+          array (
+            'type' => 'string',
+            'description' => 'The ISO 3166-1 alpha-2 country code this configuration applies to.',
+          ),
+          'regionCode' => 
+          array (
+            'type' => 'string',
+            'description' => 'The ISO 3166-2 region code this configuration applies to. If omitted, the configuration applies to the entire country.',
+          ),
+          'minAccessAge' => 
+          array (
+            'type' => 'integer',
+            'description' => 'The minimum age (as a whole integer) required to use Bluesky in this region.',
+          ),
+          'rules' => 
+          array (
+            'type' => 'array',
+            'description' => 'The ordered list of Age Assurance rules that apply to this region. Rules should be applied in order, and the first matching rule determines the access level granted. The rules array should always include a default rule as the last item.',
+            'items' => 
+            array (
+              'type' => 'union',
+              'refs' => 
+              array (
+                0 => 'lex:app.bsky.ageassurance.defs#configRegionRuleDefault',
+                1 => 'lex:app.bsky.ageassurance.defs#configRegionRuleIfDeclaredOverAge',
+                2 => 'lex:app.bsky.ageassurance.defs#configRegionRuleIfDeclaredUnderAge',
+                3 => 'lex:app.bsky.ageassurance.defs#configRegionRuleIfAssuredOverAge',
+                4 => 'lex:app.bsky.ageassurance.defs#configRegionRuleIfAssuredUnderAge',
+                5 => 'lex:app.bsky.ageassurance.defs#configRegionRuleIfAccountNewerThan',
+                6 => 'lex:app.bsky.ageassurance.defs#configRegionRuleIfAccountOlderThan',
+              ),
+            ),
+          ),
+        ),
+      ),
+      'configRegionRuleDefault' => 
+      array (
+        'type' => 'object',
+        'description' => 'Age Assurance rule that applies by default.',
+        'required' => 
+        array (
+          0 => 'access',
+        ),
+        'properties' => 
+        array (
+          'access' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.ageassurance.defs#access',
+          ),
+        ),
+      ),
+      'configRegionRuleIfDeclaredOverAge' => 
+      array (
+        'type' => 'object',
+        'description' => 'Age Assurance rule that applies if the user has declared themselves equal-to or over a certain age.',
+        'required' => 
+        array (
+          0 => 'age',
+          1 => 'access',
+        ),
+        'properties' => 
+        array (
+          'age' => 
+          array (
+            'type' => 'integer',
+            'description' => 'The age threshold as a whole integer.',
+          ),
+          'access' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.ageassurance.defs#access',
+          ),
+        ),
+      ),
+      'configRegionRuleIfDeclaredUnderAge' => 
+      array (
+        'type' => 'object',
+        'description' => 'Age Assurance rule that applies if the user has declared themselves under a certain age.',
+        'required' => 
+        array (
+          0 => 'age',
+          1 => 'access',
+        ),
+        'properties' => 
+        array (
+          'age' => 
+          array (
+            'type' => 'integer',
+            'description' => 'The age threshold as a whole integer.',
+          ),
+          'access' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.ageassurance.defs#access',
+          ),
+        ),
+      ),
+      'configRegionRuleIfAssuredOverAge' => 
+      array (
+        'type' => 'object',
+        'description' => 'Age Assurance rule that applies if the user has been assured to be equal-to or over a certain age.',
+        'required' => 
+        array (
+          0 => 'age',
+          1 => 'access',
+        ),
+        'properties' => 
+        array (
+          'age' => 
+          array (
+            'type' => 'integer',
+            'description' => 'The age threshold as a whole integer.',
+          ),
+          'access' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.ageassurance.defs#access',
+          ),
+        ),
+      ),
+      'configRegionRuleIfAssuredUnderAge' => 
+      array (
+        'type' => 'object',
+        'description' => 'Age Assurance rule that applies if the user has been assured to be under a certain age.',
+        'required' => 
+        array (
+          0 => 'age',
+          1 => 'access',
+        ),
+        'properties' => 
+        array (
+          'age' => 
+          array (
+            'type' => 'integer',
+            'description' => 'The age threshold as a whole integer.',
+          ),
+          'access' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.ageassurance.defs#access',
+          ),
+        ),
+      ),
+      'configRegionRuleIfAccountNewerThan' => 
+      array (
+        'type' => 'object',
+        'description' => 'Age Assurance rule that applies if the account is equal-to or newer than a certain date.',
+        'required' => 
+        array (
+          0 => 'date',
+          1 => 'access',
+        ),
+        'properties' => 
+        array (
+          'date' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+            'description' => 'The date threshold as a datetime string.',
+          ),
+          'access' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.ageassurance.defs#access',
+          ),
+        ),
+      ),
+      'configRegionRuleIfAccountOlderThan' => 
+      array (
+        'type' => 'object',
+        'description' => 'Age Assurance rule that applies if the account is older than a certain date.',
+        'required' => 
+        array (
+          0 => 'date',
+          1 => 'access',
+        ),
+        'properties' => 
+        array (
+          'date' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+            'description' => 'The date threshold as a datetime string.',
+          ),
+          'access' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.ageassurance.defs#access',
+          ),
+        ),
+      ),
+      'event' => 
+      array (
+        'type' => 'object',
+        'description' => 'Object used to store Age Assurance data in stash.',
+        'required' => 
+        array (
+          0 => 'createdAt',
+          1 => 'status',
+          2 => 'access',
+          3 => 'attemptId',
+          4 => 'countryCode',
+        ),
+        'properties' => 
+        array (
+          'createdAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+            'description' => 'The date and time of this write operation.',
+          ),
+          'attemptId' => 
+          array (
+            'type' => 'string',
+            'description' => 'The unique identifier for this instance of the Age Assurance flow, in UUID format.',
+          ),
+          'status' => 
+          array (
+            'type' => 'string',
+            'description' => 'The status of the Age Assurance process.',
+            'knownValues' => 
+            array (
+              0 => 'unknown',
+              1 => 'pending',
+              2 => 'assured',
+              3 => 'blocked',
+            ),
+          ),
+          'access' => 
+          array (
+            'description' => 'The access level granted based on Age Assurance data we\'ve processed.',
+            'type' => 'string',
+            'knownValues' => 
+            array (
+              0 => 'unknown',
+              1 => 'none',
+              2 => 'safe',
+              3 => 'full',
+            ),
+          ),
+          'countryCode' => 
+          array (
+            'type' => 'string',
+            'description' => 'The ISO 3166-1 alpha-2 country code provided when beginning the Age Assurance flow.',
+          ),
+          'regionCode' => 
+          array (
+            'type' => 'string',
+            'description' => 'The ISO 3166-2 region code provided when beginning the Age Assurance flow.',
+          ),
+          'email' => 
+          array (
+            'type' => 'string',
+            'description' => 'The email used for Age Assurance.',
+          ),
+          'initIp' => 
+          array (
+            'type' => 'string',
+            'description' => 'The IP address used when initiating the Age Assurance flow.',
+          ),
+          'initUa' => 
+          array (
+            'type' => 'string',
+            'description' => 'The user agent used when initiating the Age Assurance flow.',
+          ),
+          'completeIp' => 
+          array (
+            'type' => 'string',
+            'description' => 'The IP address used when completing the Age Assurance flow.',
+          ),
+          'completeUa' => 
+          array (
+            'type' => 'string',
+            'description' => 'The user agent used when completing the Age Assurance flow.',
+          ),
+        ),
+      ),
+    ),
+  ),
+  'app.bsky.ageassurance.getConfig' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.ageassurance.getConfig',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'description' => 'Returns Age Assurance configuration for use on the client.',
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.ageassurance.defs#config',
+          ),
+        ),
+      ),
+    ),
+  ),
+  'app.bsky.ageassurance.getState' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.ageassurance.getState',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'description' => 'Returns server-computed Age Assurance state, if available, and any additional metadata needed to compute Age Assurance state client-side.',
+        'parameters' => 
+        array (
+          'type' => 'params',
+          'required' => 
+          array (
+            0 => 'countryCode',
+          ),
+          'properties' => 
+          array (
+            'countryCode' => 
+            array (
+              'type' => 'string',
+            ),
+            'regionCode' => 
+            array (
+              'type' => 'string',
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'state',
+              1 => 'metadata',
+            ),
+            'properties' => 
+            array (
+              'state' => 
+              array (
+                'type' => 'ref',
+                'ref' => 'lex:app.bsky.ageassurance.defs#state',
+              ),
+              'metadata' => 
+              array (
+                'type' => 'ref',
+                'ref' => 'lex:app.bsky.ageassurance.defs#stateMetadata',
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
+  'app.bsky.authCreatePosts' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.authCreatePosts',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'permission-set',
+        'title' => 'Create Bluesky Posts',
+        'title:lang' => 
+        array (
+        ),
+        'detail' => 'Can not update or delete posts.',
+        'detail:lang' => 
+        array (
+        ),
+        'permissions' => 
+        array (
+          0 => 
+          array (
+            'type' => 'permission',
+            'resource' => 'rpc',
+            'inheritAud' => true,
+            'lxm' => 
+            array (
+              0 => 'app.bsky.video.uploadVideo',
+              1 => 'app.bsky.video.getJobStatus',
+              2 => 'app.bsky.video.getUploadLimits',
+            ),
+          ),
+          1 => 
+          array (
+            'type' => 'permission',
+            'resource' => 'repo',
+            'action' => 
+            array (
+              0 => 'create',
+            ),
+            'collection' => 
+            array (
+              0 => 'app.bsky.feed.post',
+              1 => 'app.bsky.feed.postgate',
+              2 => 'app.bsky.feed.threadgate',
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
+  'app.bsky.authDeleteContent' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.authDeleteContent',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'permission-set',
+        'title' => 'Delete Bluesky Content',
+        'title:lang' => 
+        array (
+        ),
+        'detail' => 'Clean up public account history: posts, reposts, and likes.',
+        'detail:lang' => 
+        array (
+        ),
+        'permissions' => 
+        array (
+          0 => 
+          array (
+            'type' => 'permission',
+            'resource' => 'repo',
+            'action' => 
+            array (
+              0 => 'delete',
+            ),
+            'collection' => 
+            array (
+              0 => 'app.bsky.feed.like',
+              1 => 'app.bsky.feed.post',
+              2 => 'app.bsky.feed.postgate',
+              3 => 'app.bsky.feed.repost',
+              4 => 'app.bsky.feed.threadgate',
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
+  'app.bsky.authFullApp' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.authFullApp',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'permission-set',
+        'title' => 'Full Bluesky Social App Permissions',
+        'title:lang' => 
+        array (
+        ),
+        'detail' => 'Manage all public content and interactions, private preferences and subscriptions, and other Bluesky-specific app features and data.',
+        'detail:lang' => 
+        array (
+        ),
+        'permissions' => 
+        array (
+          0 => 
+          array (
+            'type' => 'permission',
+            'resource' => 'rpc',
+            'inheritAud' => true,
+            'lxm' => 
+            array (
+              0 => 'app.bsky.actor.getPreferences',
+              1 => 'app.bsky.actor.getProfile',
+              2 => 'app.bsky.actor.getProfiles',
+              3 => 'app.bsky.actor.getSuggestions',
+              4 => 'app.bsky.actor.putPreferences',
+              5 => 'app.bsky.actor.searchActors',
+              6 => 'app.bsky.actor.searchActorsTypeahead',
+              7 => 'app.bsky.bookmark.createBookmark',
+              8 => 'app.bsky.bookmark.deleteBookmark',
+              9 => 'app.bsky.bookmark.getBookmarks',
+              10 => 'app.bsky.contact.dismissMatch',
+              11 => 'app.bsky.contact.getMatches',
+              12 => 'app.bsky.contact.getSyncStatus',
+              13 => 'app.bsky.contact.importContacts',
+              14 => 'app.bsky.contact.removeData',
+              15 => 'app.bsky.contact.startPhoneVerification',
+              16 => 'app.bsky.contact.verifyPhone',
+              17 => 'app.bsky.feed.describeFeedGenerator',
+              18 => 'app.bsky.feed.getActorFeeds',
+              19 => 'app.bsky.feed.getActorLikes',
+              20 => 'app.bsky.feed.getAuthorFeed',
+              21 => 'app.bsky.feed.getFeed',
+              22 => 'app.bsky.feed.getFeedGenerator',
+              23 => 'app.bsky.feed.getFeedGenerators',
+              24 => 'app.bsky.feed.getFeedSkeleton',
+              25 => 'app.bsky.feed.getLikes',
+              26 => 'app.bsky.feed.getListFeed',
+              27 => 'app.bsky.feed.getPostThread',
+              28 => 'app.bsky.feed.getPosts',
+              29 => 'app.bsky.feed.getQuotes',
+              30 => 'app.bsky.feed.getRepostedBy',
+              31 => 'app.bsky.feed.getSuggestedFeeds',
+              32 => 'app.bsky.feed.getTimeline',
+              33 => 'app.bsky.feed.searchPosts',
+              34 => 'app.bsky.feed.sendInteractions',
+              35 => 'app.bsky.graph.getActorStarterPacks',
+              36 => 'app.bsky.graph.getBlocks',
+              37 => 'app.bsky.graph.getFollowers',
+              38 => 'app.bsky.graph.getFollows',
+              39 => 'app.bsky.graph.getKnownFollowers',
+              40 => 'app.bsky.graph.getList',
+              41 => 'app.bsky.graph.getListBlocks',
+              42 => 'app.bsky.graph.getListMutes',
+              43 => 'app.bsky.graph.getLists',
+              44 => 'app.bsky.graph.getListsWithMembership',
+              45 => 'app.bsky.graph.getMutes',
+              46 => 'app.bsky.graph.getRelationships',
+              47 => 'app.bsky.graph.getStarterPack',
+              48 => 'app.bsky.graph.getStarterPacks',
+              49 => 'app.bsky.graph.getStarterPacksWithMembership',
+              50 => 'app.bsky.graph.getSuggestedFollowsByActor',
+              51 => 'app.bsky.graph.muteActor',
+              52 => 'app.bsky.graph.muteActorList',
+              53 => 'app.bsky.graph.muteThread',
+              54 => 'app.bsky.graph.searchStarterPacks',
+              55 => 'app.bsky.graph.unmuteActor',
+              56 => 'app.bsky.graph.unmuteActorList',
+              57 => 'app.bsky.graph.unmuteThread',
+              58 => 'app.bsky.labeler.getServices',
+              59 => 'app.bsky.notification.getPreferences',
+              60 => 'app.bsky.notification.getUnreadCount',
+              61 => 'app.bsky.notification.listActivitySubscriptions',
+              62 => 'app.bsky.notification.listNotifications',
+              63 => 'app.bsky.notification.putActivitySubscription',
+              64 => 'app.bsky.notification.putPreferences',
+              65 => 'app.bsky.notification.putPreferencesV2',
+              66 => 'app.bsky.notification.registerPush',
+              67 => 'app.bsky.notification.registerPush',
+              68 => 'app.bsky.notification.unregisterPush',
+              69 => 'app.bsky.notification.updateSeen',
+              70 => 'app.bsky.unspecced.getAgeAssuranceState',
+              71 => 'app.bsky.unspecced.getConfig',
+              72 => 'app.bsky.unspecced.getOnboardingSuggestedStarterPacks',
+              73 => 'app.bsky.unspecced.getPopularFeedGenerators',
+              74 => 'app.bsky.unspecced.getPostThreadOtherV2',
+              75 => 'app.bsky.unspecced.getPostThreadV2',
+              76 => 'app.bsky.unspecced.getSuggestedFeeds',
+              77 => 'app.bsky.unspecced.getSuggestedFeedsSkeleton',
+              78 => 'app.bsky.unspecced.getSuggestedStarterPacks',
+              79 => 'app.bsky.unspecced.getSuggestedStarterPacksSkeleton',
+              80 => 'app.bsky.unspecced.getSuggestedUsers',
+              81 => 'app.bsky.unspecced.getSuggestedUsersSkeleton',
+              82 => 'app.bsky.unspecced.getSuggestionsSkeleton',
+              83 => 'app.bsky.unspecced.getTaggedSuggestions',
+              84 => 'app.bsky.unspecced.getTrendingTopics',
+              85 => 'app.bsky.unspecced.getTrends',
+              86 => 'app.bsky.unspecced.getTrendsSkeleton',
+              87 => 'app.bsky.unspecced.initAgeAssurance',
+              88 => 'app.bsky.unspecced.searchActorsSkeleton',
+              89 => 'app.bsky.unspecced.searchPostsSkeleton',
+              90 => 'app.bsky.unspecced.searchStarterPacksSkeleton',
+              91 => 'app.bsky.video.getJobStatus',
+              92 => 'app.bsky.video.getUploadLimits',
+              93 => 'app.bsky.video.uploadVideo',
+            ),
+          ),
+          1 => 
+          array (
+            'type' => 'permission',
+            'resource' => 'repo',
+            'action' => 
+            array (
+              0 => 'create',
+              1 => 'update',
+              2 => 'delete',
+            ),
+            'collection' => 
+            array (
+              0 => 'app.bsky.actor.profile',
+              1 => 'app.bsky.actor.status',
+              2 => 'app.bsky.feed.like',
+              3 => 'app.bsky.feed.post',
+              4 => 'app.bsky.feed.postgate',
+              5 => 'app.bsky.feed.repost',
+              6 => 'app.bsky.feed.threadgate',
+              7 => 'app.bsky.graph.block',
+              8 => 'app.bsky.graph.follow',
+              9 => 'app.bsky.graph.list',
+              10 => 'app.bsky.graph.listblock',
+              11 => 'app.bsky.graph.listitem',
+              12 => 'app.bsky.graph.starterpack',
+              13 => 'app.bsky.notification.declaration',
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
+  'app.bsky.authManageFeedDeclarations' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.authManageFeedDeclarations',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'permission-set',
+        'title' => 'Manage Hosted Feeds',
+        'title:lang' => 
+        array (
+        ),
+        'detail' => 'Configure feed generator declaration records.',
+        'detail:lang' => 
+        array (
+        ),
+        'permissions' => 
+        array (
+          0 => 
+          array (
+            'type' => 'permission',
+            'resource' => 'repo',
+            'action' => 
+            array (
+              0 => 'create',
+              1 => 'update',
+              2 => 'delete',
+            ),
+            'collection' => 
+            array (
+              0 => 'app.bsky.feed.generator',
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
+  'app.bsky.authManageLabelerService' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.authManageLabelerService',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'permission-set',
+        'title' => 'Manage Hosted Labeling Service',
+        'title:lang' => 
+        array (
+        ),
+        'detail' => 'Configure labeler declaration records.',
+        'detail:lang' => 
+        array (
+        ),
+        'permissions' => 
+        array (
+          0 => 
+          array (
+            'type' => 'permission',
+            'resource' => 'repo',
+            'action' => 
+            array (
+              0 => 'create',
+              1 => 'update',
+              2 => 'delete',
+            ),
+            'collection' => 
+            array (
+              0 => 'app.bsky.labeler.service',
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
+  'app.bsky.authManageModeration' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.authManageModeration',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'permission-set',
+        'title' => 'Manage Personal Moderation',
+        'title:lang' => 
+        array (
+        ),
+        'detail' => 'Control over blocks, mutes, mod lists, mod services, and preferences.',
+        'detail:lang' => 
+        array (
+        ),
+        'permissions' => 
+        array (
+          0 => 
+          array (
+            'type' => 'permission',
+            'resource' => 'rpc',
+            'inheritAud' => true,
+            'lxm' => 
+            array (
+              0 => 'app.bsky.actor.getPreferences',
+              1 => 'app.bsky.actor.putPreferences',
+              2 => 'app.bsky.graph.muteActor',
+              3 => 'app.bsky.graph.muteActorList',
+              4 => 'app.bsky.graph.muteThread',
+              5 => 'app.bsky.graph.unmuteActor',
+              6 => 'app.bsky.graph.unmuteActorList',
+              7 => 'app.bsky.graph.unmuteThread',
+            ),
+          ),
+          1 => 
+          array (
+            'type' => 'permission',
+            'resource' => 'repo',
+            'action' => 
+            array (
+              0 => 'create',
+              1 => 'update',
+              2 => 'delete',
+            ),
+            'collection' => 
+            array (
+              0 => 'app.bsky.graph.block',
+              1 => 'app.bsky.graph.listblock',
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
+  'app.bsky.authManageNotifications' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.authManageNotifications',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'permission-set',
+        'title' => 'Manage Bluesky Notifications',
+        'title:lang' => 
+        array (
+        ),
+        'detail' => 'View and configure notifications for the Bluesky app.',
+        'detail:lang' => 
+        array (
+        ),
+        'permissions' => 
+        array (
+          0 => 
+          array (
+            'type' => 'permission',
+            'resource' => 'rpc',
+            'inheritAud' => true,
+            'lxm' => 
+            array (
+              0 => 'app.bsky.notification.getPreferences',
+              1 => 'app.bsky.notification.getUnreadCount',
+              2 => 'app.bsky.notification.listActivitySubscriptions',
+              3 => 'app.bsky.notification.listNotifications',
+              4 => 'app.bsky.notification.putActivitySubscription',
+              5 => 'app.bsky.notification.putPreferences',
+              6 => 'app.bsky.notification.putPreferencesV2',
+              7 => 'app.bsky.notification.registerPush',
+              8 => 'app.bsky.notification.unregisterPush',
+              9 => 'app.bsky.notification.updateSeen',
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
+  'app.bsky.authManageProfile' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.authManageProfile',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'permission-set',
+        'title' => 'Manage Bluesky Profile',
+        'title:lang' => 
+        array (
+        ),
+        'detail' => 'Update profile data, as well as status and public chat visibility.',
+        'detail:lang' => 
+        array (
+        ),
+        'permissions' => 
+        array (
+          0 => 
+          array (
+            'type' => 'permission',
+            'resource' => 'repo',
+            'action' => 
+            array (
+              0 => 'create',
+              1 => 'update',
+              2 => 'delete',
+            ),
+            'collection' => 
+            array (
+              0 => 'app.bsky.actor.profile',
+              1 => 'app.bsky.actor.status',
+              2 => 'app.bsky.notification.declaration',
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
+  'app.bsky.authViewAll' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.authViewAll',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'permission-set',
+        'title' => 'Read-only access to all content',
+        'title:lang' => 
+        array (
+        ),
+        'detail' => 'View Bluesky network content from account perspective, and read all notifications and preferences.',
+        'detail:lang' => 
+        array (
+        ),
+        'permissions' => 
+        array (
+          0 => 
+          array (
+            'type' => 'permission',
+            'resource' => 'rpc',
+            'inheritAud' => true,
+            'lxm' => 
+            array (
+              0 => 'app.bsky.actor.getProfile',
+              1 => 'app.bsky.actor.getProfiles',
+              2 => 'app.bsky.actor.getSuggestions',
+              3 => 'app.bsky.actor.searchActors',
+              4 => 'app.bsky.actor.searchActorsTypeahead',
+              5 => 'app.bsky.bookmark.getBookmarks',
+              6 => 'app.bsky.feed.describeFeedGenerator',
+              7 => 'app.bsky.feed.getActorFeeds',
+              8 => 'app.bsky.feed.getActorLikes',
+              9 => 'app.bsky.feed.getAuthorFeed',
+              10 => 'app.bsky.feed.getFeed',
+              11 => 'app.bsky.feed.getFeedGenerator',
+              12 => 'app.bsky.feed.getFeedGenerators',
+              13 => 'app.bsky.feed.getFeedSkeleton',
+              14 => 'app.bsky.feed.getLikes',
+              15 => 'app.bsky.feed.getListFeed',
+              16 => 'app.bsky.feed.getPostThread',
+              17 => 'app.bsky.feed.getPosts',
+              18 => 'app.bsky.feed.getQuotes',
+              19 => 'app.bsky.feed.getRepostedBy',
+              20 => 'app.bsky.feed.getSuggestedFeeds',
+              21 => 'app.bsky.feed.getTimeline',
+              22 => 'app.bsky.feed.searchPosts',
+              23 => 'app.bsky.graph.getActorStarterPacks',
+              24 => 'app.bsky.graph.getBlocks',
+              25 => 'app.bsky.graph.getFollowers',
+              26 => 'app.bsky.graph.getFollows',
+              27 => 'app.bsky.graph.getKnownFollowers',
+              28 => 'app.bsky.graph.getListBlocks',
+              29 => 'app.bsky.graph.getListMutes',
+              30 => 'app.bsky.graph.getLists',
+              31 => 'app.bsky.graph.getListsWithMembership',
+              32 => 'app.bsky.graph.getMutes',
+              33 => 'app.bsky.graph.getRelationships',
+              34 => 'app.bsky.graph.getStarterPack',
+              35 => 'app.bsky.graph.getStarterPacks',
+              36 => 'app.bsky.graph.getStarterPacksWithMembership',
+              37 => 'app.bsky.graph.getSuggestedFollowsByActor',
+              38 => 'app.bsky.graph.searchStarterPacks',
+              39 => 'app.bsky.labeler.getServices',
+              40 => 'app.bsky.notification.getPreferences',
+              41 => 'app.bsky.notification.getUnreadCount',
+              42 => 'app.bsky.notification.listActivitySubscriptions',
+              43 => 'app.bsky.notification.listNotifications',
+              44 => 'app.bsky.notification.updateSeen',
+              45 => 'app.bsky.unspecced.getAgeAssuranceState',
+              46 => 'app.bsky.unspecced.getConfig',
+              47 => 'app.bsky.unspecced.getOnboardingSuggestedStarterPacks',
+              48 => 'app.bsky.unspecced.getPopularFeedGenerators',
+              49 => 'app.bsky.unspecced.getPostThreadOtherV2',
+              50 => 'app.bsky.unspecced.getPostThreadV2',
+              51 => 'app.bsky.unspecced.getSuggestedFeeds',
+              52 => 'app.bsky.unspecced.getSuggestedFeedsSkeleton',
+              53 => 'app.bsky.unspecced.getSuggestedStarterPacks',
+              54 => 'app.bsky.unspecced.getSuggestedStarterPacksSkeleton',
+              55 => 'app.bsky.unspecced.getSuggestedUsers',
+              56 => 'app.bsky.unspecced.getSuggestedUsersSkeleton',
+              57 => 'app.bsky.unspecced.getSuggestionsSkeleton',
+              58 => 'app.bsky.unspecced.getTaggedSuggestions',
+              59 => 'app.bsky.unspecced.getTrendingTopics',
+              60 => 'app.bsky.unspecced.getTrends',
+              61 => 'app.bsky.unspecced.getTrendsSkeleton',
+              62 => 'app.bsky.unspecced.searchActorsSkeleton',
+              63 => 'app.bsky.unspecced.searchPostsSkeleton',
+              64 => 'app.bsky.unspecced.searchStarterPacksSkeleton',
+              65 => 'app.bsky.video.getUploadLimits',
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
   'app.bsky.bookmark.createBookmark' => 
   array (
     'lexicon' => 1,
@@ -1849,6 +3043,1121 @@ return array (
                   'type' => 'ref',
                   'ref' => 'lex:app.bsky.bookmark.defs#bookmarkView',
                 ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
+  'app.bsky.contact.defs' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.contact.defs',
+    'defs' => 
+    array (
+      'matchAndContactIndex' => 
+      array (
+        'description' => 'Associates a profile with the positional index of the contact import input in the call to `app.bsky.contact.importContacts`, so clients can know which phone caused a particular match.',
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'match',
+          1 => 'contactIndex',
+        ),
+        'properties' => 
+        array (
+          'match' => 
+          array (
+            'description' => 'Profile of the matched user.',
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.actor.defs#profileView',
+          ),
+          'contactIndex' => 
+          array (
+            'description' => 'The index of this match in the import contact input.',
+            'type' => 'integer',
+            'minimum' => 0,
+            'maximum' => 999,
+          ),
+        ),
+      ),
+      'syncStatus' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'syncedAt',
+          1 => 'matchesCount',
+        ),
+        'properties' => 
+        array (
+          'syncedAt' => 
+          array (
+            'description' => 'Last date when contacts where imported.',
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+          'matchesCount' => 
+          array (
+            'description' => 'Number of existing contact matches resulting of the user imports and of their imported contacts having imported the user. Matches stop being counted when the user either follows the matched contact or dismisses the match.',
+            'type' => 'integer',
+            'minimum' => 0,
+          ),
+        ),
+      ),
+      'notification' => 
+      array (
+        'description' => 'A stash object to be sent via bsync representing a notification to be created.',
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'from',
+          1 => 'to',
+        ),
+        'properties' => 
+        array (
+          'from' => 
+          array (
+            'description' => 'The DID of who this notification comes from.',
+            'type' => 'string',
+            'format' => 'did',
+          ),
+          'to' => 
+          array (
+            'description' => 'The DID of who this notification should go to.',
+            'type' => 'string',
+            'format' => 'did',
+          ),
+        ),
+      ),
+    ),
+  ),
+  'app.bsky.contact.dismissMatch' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.contact.dismissMatch',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'procedure',
+        'description' => 'Removes a match that was found via contact import. It shouldn\'t appear again if the same contact is re-imported. Requires authentication.',
+        'input' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'subject',
+            ),
+            'properties' => 
+            array (
+              'subject' => 
+              array (
+                'description' => 'The subject\'s DID to dismiss the match with.',
+                'type' => 'string',
+                'format' => 'did',
+              ),
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'properties' => 
+            array (
+            ),
+          ),
+        ),
+        'errors' => 
+        array (
+          0 => 
+          array (
+            'name' => 'InvalidDid',
+          ),
+          1 => 
+          array (
+            'name' => 'InternalError',
+          ),
+        ),
+      ),
+    ),
+  ),
+  'app.bsky.contact.getMatches' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.contact.getMatches',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'description' => 'Returns the matched contacts (contacts that were mutually imported). Excludes dismissed matches. Requires authentication.',
+        'parameters' => 
+        array (
+          'type' => 'params',
+          'properties' => 
+          array (
+            'limit' => 
+            array (
+              'type' => 'integer',
+              'minimum' => 1,
+              'maximum' => 100,
+              'default' => 50,
+            ),
+            'cursor' => 
+            array (
+              'type' => 'string',
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'matches',
+            ),
+            'properties' => 
+            array (
+              'cursor' => 
+              array (
+                'type' => 'string',
+              ),
+              'matches' => 
+              array (
+                'type' => 'array',
+                'items' => 
+                array (
+                  'type' => 'ref',
+                  'ref' => 'lex:app.bsky.actor.defs#profileView',
+                ),
+              ),
+            ),
+          ),
+        ),
+        'errors' => 
+        array (
+          0 => 
+          array (
+            'name' => 'InvalidDid',
+          ),
+          1 => 
+          array (
+            'name' => 'InvalidLimit',
+          ),
+          2 => 
+          array (
+            'name' => 'InvalidCursor',
+          ),
+          3 => 
+          array (
+            'name' => 'InternalError',
+          ),
+        ),
+      ),
+    ),
+  ),
+  'app.bsky.contact.getSyncStatus' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.contact.getSyncStatus',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'description' => 'Gets the user\'s current contact import status. Requires authentication.',
+        'parameters' => 
+        array (
+          'type' => 'params',
+          'properties' => 
+          array (
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'properties' => 
+            array (
+              'syncStatus' => 
+              array (
+                'description' => 'If present, indicates the user has imported their contacts. If not present, indicates the user never used the feature or called `app.bsky.contact.removeData` and didn\'t import again since.',
+                'type' => 'ref',
+                'ref' => 'lex:app.bsky.contact.defs#syncStatus',
+              ),
+            ),
+          ),
+        ),
+        'errors' => 
+        array (
+          0 => 
+          array (
+            'name' => 'InvalidDid',
+          ),
+          1 => 
+          array (
+            'name' => 'InternalError',
+          ),
+        ),
+      ),
+    ),
+  ),
+  'app.bsky.contact.importContacts' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.contact.importContacts',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'procedure',
+        'description' => 'Import contacts for securely matching with other users. This follows the protocol explained in https://docs.bsky.app/blog/contact-import-rfc. Requires authentication.',
+        'input' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'token',
+              1 => 'contacts',
+            ),
+            'properties' => 
+            array (
+              'token' => 
+              array (
+                'description' => 'JWT to authenticate the call. Use the JWT received as a response to the call to `app.bsky.contact.verifyPhone`.',
+                'type' => 'string',
+              ),
+              'contacts' => 
+              array (
+                'description' => 'List of phone numbers in global E.164 format (e.g., \'+12125550123\'). Phone numbers that cannot be normalized into a valid phone number will be discarded. Should not repeat the \'phone\' input used in `app.bsky.contact.verifyPhone`.',
+                'type' => 'array',
+                'items' => 
+                array (
+                  'type' => 'string',
+                ),
+                'minLength' => 1,
+                'maxLength' => 1000,
+              ),
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'matchesAndContactIndexes',
+            ),
+            'properties' => 
+            array (
+              'matchesAndContactIndexes' => 
+              array (
+                'description' => 'The users that matched during import and their indexes on the input contacts, so the client can correlate with its local list.',
+                'type' => 'array',
+                'items' => 
+                array (
+                  'type' => 'ref',
+                  'ref' => 'lex:app.bsky.contact.defs#matchAndContactIndex',
+                ),
+              ),
+            ),
+          ),
+        ),
+        'errors' => 
+        array (
+          0 => 
+          array (
+            'name' => 'InvalidDid',
+          ),
+          1 => 
+          array (
+            'name' => 'InvalidContacts',
+          ),
+          2 => 
+          array (
+            'name' => 'TooManyContacts',
+          ),
+          3 => 
+          array (
+            'name' => 'InvalidToken',
+          ),
+          4 => 
+          array (
+            'name' => 'InternalError',
+          ),
+        ),
+      ),
+    ),
+  ),
+  'app.bsky.contact.removeData' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.contact.removeData',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'procedure',
+        'description' => 'Removes all stored hashes used for contact matching, existing matches, and sync status. Requires authentication.',
+        'input' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'properties' => 
+            array (
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'properties' => 
+            array (
+            ),
+          ),
+        ),
+        'errors' => 
+        array (
+          0 => 
+          array (
+            'name' => 'InvalidDid',
+          ),
+          1 => 
+          array (
+            'name' => 'InternalError',
+          ),
+        ),
+      ),
+    ),
+  ),
+  'app.bsky.contact.sendNotification' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.contact.sendNotification',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'procedure',
+        'description' => 'System endpoint to send notifications related to contact imports. Requires role authentication.',
+        'input' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'from',
+              1 => 'to',
+            ),
+            'properties' => 
+            array (
+              'from' => 
+              array (
+                'description' => 'The DID of who this notification comes from.',
+                'type' => 'string',
+                'format' => 'did',
+              ),
+              'to' => 
+              array (
+                'description' => 'The DID of who this notification should go to.',
+                'type' => 'string',
+                'format' => 'did',
+              ),
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'properties' => 
+            array (
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
+  'app.bsky.contact.startPhoneVerification' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.contact.startPhoneVerification',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'procedure',
+        'description' => 'Starts a phone verification flow. The phone passed will receive a code via SMS that should be passed to `app.bsky.contact.verifyPhone`. Requires authentication.',
+        'input' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'phone',
+            ),
+            'properties' => 
+            array (
+              'phone' => 
+              array (
+                'description' => 'The phone number to receive the code via SMS.',
+                'type' => 'string',
+              ),
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'properties' => 
+            array (
+            ),
+          ),
+        ),
+        'errors' => 
+        array (
+          0 => 
+          array (
+            'name' => 'RateLimitExceeded',
+          ),
+          1 => 
+          array (
+            'name' => 'InvalidDid',
+          ),
+          2 => 
+          array (
+            'name' => 'InvalidPhone',
+          ),
+          3 => 
+          array (
+            'name' => 'InternalError',
+          ),
+        ),
+      ),
+    ),
+  ),
+  'app.bsky.contact.verifyPhone' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.contact.verifyPhone',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'procedure',
+        'description' => 'Verifies control over a phone number with a code received via SMS and starts a contact import session. Requires authentication.',
+        'input' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'phone',
+              1 => 'code',
+            ),
+            'properties' => 
+            array (
+              'phone' => 
+              array (
+                'description' => 'The phone number to verify. Should be the same as the one passed to `app.bsky.contact.startPhoneVerification`.',
+                'type' => 'string',
+              ),
+              'code' => 
+              array (
+                'description' => 'The code received via SMS as a result of the call to `app.bsky.contact.startPhoneVerification`.',
+                'type' => 'string',
+              ),
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'token',
+            ),
+            'properties' => 
+            array (
+              'token' => 
+              array (
+                'description' => 'JWT to be used in a call to `app.bsky.contact.importContacts`. It is only valid for a single call.',
+                'type' => 'string',
+              ),
+            ),
+          ),
+        ),
+        'errors' => 
+        array (
+          0 => 
+          array (
+            'name' => 'RateLimitExceeded',
+          ),
+          1 => 
+          array (
+            'name' => 'InvalidDid',
+          ),
+          2 => 
+          array (
+            'name' => 'InvalidPhone',
+          ),
+          3 => 
+          array (
+            'name' => 'InvalidCode',
+          ),
+          4 => 
+          array (
+            'name' => 'InternalError',
+          ),
+        ),
+      ),
+    ),
+  ),
+  'app.bsky.draft.createDraft' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.draft.createDraft',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'procedure',
+        'description' => 'Inserts a draft using private storage (stash). An upper limit of drafts might be enforced. Requires authentication.',
+        'input' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'draft',
+            ),
+            'properties' => 
+            array (
+              'draft' => 
+              array (
+                'type' => 'ref',
+                'ref' => 'lex:app.bsky.draft.defs#draft',
+              ),
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'id',
+            ),
+            'properties' => 
+            array (
+              'id' => 
+              array (
+                'type' => 'string',
+                'description' => 'The ID of the created draft.',
+              ),
+            ),
+          ),
+        ),
+        'errors' => 
+        array (
+          0 => 
+          array (
+            'name' => 'DraftLimitReached',
+            'description' => 'Trying to insert a new draft when the limit was already reached.',
+          ),
+        ),
+      ),
+    ),
+  ),
+  'app.bsky.draft.defs' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.draft.defs',
+    'defs' => 
+    array (
+      'draftWithId' => 
+      array (
+        'description' => 'A draft with an identifier, used to store drafts in private storage (stash).',
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'id',
+          1 => 'draft',
+        ),
+        'properties' => 
+        array (
+          'id' => 
+          array (
+            'description' => 'A TID to be used as a draft identifier.',
+            'type' => 'string',
+            'format' => 'tid',
+          ),
+          'draft' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.draft.defs#draft',
+          ),
+        ),
+      ),
+      'draft' => 
+      array (
+        'description' => 'A draft containing an array of draft posts.',
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'posts',
+        ),
+        'properties' => 
+        array (
+          'posts' => 
+          array (
+            'description' => 'Array of draft posts that compose this draft.',
+            'type' => 'array',
+            'minLength' => 1,
+            'maxLength' => 100,
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:app.bsky.draft.defs#draftPost',
+            ),
+          ),
+          'langs' => 
+          array (
+            'type' => 'array',
+            'description' => 'Indicates human language of posts primary text content.',
+            'maxLength' => 3,
+            'items' => 
+            array (
+              'type' => 'string',
+              'format' => 'language',
+            ),
+          ),
+          'postgateEmbeddingRules' => 
+          array (
+            'description' => 'Embedding rules for the postgates to be created when this draft is published.',
+            'type' => 'array',
+            'maxLength' => 5,
+            'items' => 
+            array (
+              'type' => 'union',
+              'refs' => 
+              array (
+                0 => 'lex:app.bsky.feed.postgate#disableRule',
+              ),
+            ),
+          ),
+          'threadgateAllow' => 
+          array (
+            'description' => 'Allow-rules for the threadgate to be created when this draft is published.',
+            'type' => 'array',
+            'maxLength' => 5,
+            'items' => 
+            array (
+              'type' => 'union',
+              'refs' => 
+              array (
+                0 => 'lex:app.bsky.feed.threadgate#mentionRule',
+                1 => 'lex:app.bsky.feed.threadgate#followerRule',
+                2 => 'lex:app.bsky.feed.threadgate#followingRule',
+                3 => 'lex:app.bsky.feed.threadgate#listRule',
+              ),
+            ),
+          ),
+        ),
+      ),
+      'draftPost' => 
+      array (
+        'description' => 'One of the posts that compose a draft.',
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'text',
+        ),
+        'properties' => 
+        array (
+          'text' => 
+          array (
+            'type' => 'string',
+            'maxLength' => 3000,
+            'maxGraphemes' => 300,
+            'description' => 'The primary post content.',
+          ),
+          'labels' => 
+          array (
+            'type' => 'union',
+            'description' => 'Self-label values for this post. Effectively content warnings.',
+            'refs' => 
+            array (
+              0 => 'lex:com.atproto.label.defs#selfLabels',
+            ),
+          ),
+          'embedImages' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:app.bsky.draft.defs#draftEmbedImage',
+            ),
+            'maxLength' => 4,
+          ),
+          'embedVideos' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:app.bsky.draft.defs#draftEmbedVideo',
+            ),
+            'maxLength' => 1,
+          ),
+          'embedExternals' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:app.bsky.draft.defs#draftEmbedExternal',
+            ),
+            'maxLength' => 1,
+          ),
+          'embedRecords' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:app.bsky.draft.defs#draftEmbedRecord',
+            ),
+            'maxLength' => 1,
+          ),
+        ),
+      ),
+      'draftView' => 
+      array (
+        'description' => 'View to present drafts data to users.',
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'id',
+          1 => 'draft',
+          2 => 'createdAt',
+          3 => 'updatedAt',
+        ),
+        'properties' => 
+        array (
+          'id' => 
+          array (
+            'description' => 'A TID to be used as a draft identifier.',
+            'type' => 'string',
+            'format' => 'tid',
+          ),
+          'draft' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.draft.defs#draft',
+          ),
+          'createdAt' => 
+          array (
+            'description' => 'The time the draft was created.',
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+          'updatedAt' => 
+          array (
+            'description' => 'The time the draft was last updated.',
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+        ),
+      ),
+      'draftEmbedLocalRef' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'path',
+        ),
+        'properties' => 
+        array (
+          'path' => 
+          array (
+            'type' => 'string',
+            'description' => 'Local, on-device ref to file to be embedded. Embeds are currently device-bound for drafts.',
+            'minLength' => 1,
+            'maxLength' => 1024,
+          ),
+        ),
+      ),
+      'draftEmbedCaption' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'lang',
+          1 => 'content',
+        ),
+        'properties' => 
+        array (
+          'lang' => 
+          array (
+            'type' => 'string',
+            'format' => 'language',
+          ),
+          'content' => 
+          array (
+            'type' => 'string',
+            'maxLength' => 10000,
+          ),
+        ),
+      ),
+      'draftEmbedImage' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'localRef',
+        ),
+        'properties' => 
+        array (
+          'localRef' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.draft.defs#draftEmbedLocalRef',
+          ),
+          'alt' => 
+          array (
+            'type' => 'string',
+            'maxGraphemes' => 2000,
+          ),
+        ),
+      ),
+      'draftEmbedVideo' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'localRef',
+        ),
+        'properties' => 
+        array (
+          'localRef' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.draft.defs#draftEmbedLocalRef',
+          ),
+          'alt' => 
+          array (
+            'type' => 'string',
+            'maxGraphemes' => 2000,
+          ),
+          'captions' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:app.bsky.draft.defs#draftEmbedCaption',
+            ),
+            'maxLength' => 20,
+          ),
+        ),
+      ),
+      'draftEmbedExternal' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'uri',
+        ),
+        'properties' => 
+        array (
+          'uri' => 
+          array (
+            'type' => 'string',
+            'format' => 'uri',
+          ),
+        ),
+      ),
+      'draftEmbedRecord' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'record',
+        ),
+        'properties' => 
+        array (
+          'record' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:com.atproto.repo.strongRef',
+          ),
+        ),
+      ),
+    ),
+  ),
+  'app.bsky.draft.deleteDraft' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.draft.deleteDraft',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'procedure',
+        'description' => 'Deletes a draft by ID. Requires authentication.',
+        'input' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'id',
+            ),
+            'properties' => 
+            array (
+              'id' => 
+              array (
+                'type' => 'string',
+                'format' => 'tid',
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
+  'app.bsky.draft.getDrafts' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.draft.getDrafts',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'description' => 'Gets views of user drafts. Requires authentication.',
+        'parameters' => 
+        array (
+          'type' => 'params',
+          'properties' => 
+          array (
+            'limit' => 
+            array (
+              'type' => 'integer',
+              'minimum' => 1,
+              'maximum' => 100,
+              'default' => 50,
+            ),
+            'cursor' => 
+            array (
+              'type' => 'string',
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'drafts',
+            ),
+            'properties' => 
+            array (
+              'cursor' => 
+              array (
+                'type' => 'string',
+              ),
+              'drafts' => 
+              array (
+                'type' => 'array',
+                'items' => 
+                array (
+                  'type' => 'ref',
+                  'ref' => 'lex:app.bsky.draft.defs#draftView',
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
+  'app.bsky.draft.updateDraft' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.draft.updateDraft',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'procedure',
+        'description' => 'Updates a draft using private storage (stash). If the draft ID points to a non-existing ID, the update will be silently ignored. This is done because updates don\'t enforce draft limit, so it accepts all writes, but will ignore invalid ones. Requires authentication.',
+        'input' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'draft',
+            ),
+            'properties' => 
+            array (
+              'draft' => 
+              array (
+                'type' => 'ref',
+                'ref' => 'lex:app.bsky.draft.defs#draftWithId',
               ),
             ),
           ),
@@ -2426,6 +4735,16 @@ return array (
             'type' => 'ref',
             'ref' => 'lex:app.bsky.embed.defs#aspectRatio',
           ),
+          'presentation' => 
+          array (
+            'type' => 'string',
+            'description' => 'A hint to the client about how to present the video.',
+            'knownValues' => 
+            array (
+              0 => 'default',
+              1 => 'gif',
+            ),
+          ),
         ),
       ),
       'caption' => 
@@ -2489,6 +4808,16 @@ return array (
           array (
             'type' => 'ref',
             'ref' => 'lex:app.bsky.embed.defs#aspectRatio',
+          ),
+          'presentation' => 
+          array (
+            'type' => 'string',
+            'description' => 'A hint to the client about how to present the video.',
+            'knownValues' => 
+            array (
+              0 => 'default',
+              1 => 'gif',
+            ),
           ),
         ),
       ),
@@ -5588,6 +7917,30 @@ return array (
             'format' => 'at-uri',
             'description' => 'if the actor is followed by this DID, contains the AT-URI of the follow record',
           ),
+          'blocking' => 
+          array (
+            'type' => 'string',
+            'format' => 'at-uri',
+            'description' => 'if the actor blocks this DID, this is the AT-URI of the block record',
+          ),
+          'blockedBy' => 
+          array (
+            'type' => 'string',
+            'format' => 'at-uri',
+            'description' => 'if the actor is blocked by this DID, contains the AT-URI of the block record',
+          ),
+          'blockingByList' => 
+          array (
+            'type' => 'string',
+            'format' => 'at-uri',
+            'description' => 'if the actor blocks this DID via a block list, this is the AT-URI of the listblock record',
+          ),
+          'blockedByList' => 
+          array (
+            'type' => 'string',
+            'format' => 'at-uri',
+            'description' => 'if the actor is blocked by this DID via a block list, contains the AT-URI of the listblock record',
+          ),
         ),
       ),
     ),
@@ -8200,6 +10553,7 @@ return array (
               9 => 'like-via-repost',
               10 => 'repost-via-repost',
               11 => 'subscribed-post',
+              12 => 'contact-match',
             ),
           ),
           'reasonSubject' => 
@@ -9349,12 +11703,6 @@ return array (
               'format' => 'at-uri',
               'description' => 'Reference (AT-URI) to post record. This is the anchor post.',
             ),
-            'prioritizeFollowedUsers' => 
-            array (
-              'type' => 'boolean',
-              'description' => 'Whether to prioritize posts from followed users. It only has effect when the user is authenticated.',
-              'default' => false,
-            ),
           ),
         ),
         'output' => 
@@ -9462,12 +11810,6 @@ return array (
               'default' => 10,
               'minimum' => 0,
               'maximum' => 100,
-            ),
-            'prioritizeFollowedUsers' => 
-            array (
-              'type' => 'boolean',
-              'description' => 'Whether to prioritize posts from followed users. It only has effect when the user is authenticated.',
-              'default' => false,
             ),
             'sort' => 
             array (
@@ -9822,6 +12164,11 @@ return array (
                   'ref' => 'lex:app.bsky.actor.defs#profileView',
                 ),
               ),
+              'recId' => 
+              array (
+                'type' => 'string',
+                'description' => 'Snowflake for this recommendation, use when submitting recommendation events.',
+              ),
             ),
           ),
         ),
@@ -9883,6 +12230,11 @@ return array (
                   'type' => 'string',
                   'format' => 'did',
                 ),
+              ),
+              'recId' => 
+              array (
+                'type' => 'string',
+                'description' => 'Snowflake for this recommendation, use when submitting recommendation events.',
               ),
             ),
           ),
@@ -10950,6 +13302,73 @@ return array (
         'output' => 
         array (
           'encoding' => 'application/jsonl',
+        ),
+      ),
+    ),
+  ),
+  'chat.bsky.authFullChatClient' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'chat.bsky.authFullChatClient',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'permission-set',
+        'title' => 'Full Chat Client (All Conversations)',
+        'title:lang' => 
+        array (
+        ),
+        'detail' => 'Control of all chat conversations and configuration management.',
+        'detail:lang' => 
+        array (
+          'en' => 'All Chat Conversations',
+        ),
+        'permissions' => 
+        array (
+          0 => 
+          array (
+            'type' => 'permission',
+            'resource' => 'rpc',
+            'inheritAud' => true,
+            'lxm' => 
+            array (
+              0 => 'chat.bsky.actor.deleteAccount',
+              1 => 'chat.bsky.convo.acceptConvo',
+              2 => 'chat.bsky.convo.addReaction',
+              3 => 'chat.bsky.convo.deleteMessageForSelf',
+              4 => 'chat.bsky.convo.exportAccountData',
+              5 => 'chat.bsky.convo.getConvo',
+              6 => 'chat.bsky.convo.getConvoAvailability',
+              7 => 'chat.bsky.convo.getConvoForMembers',
+              8 => 'chat.bsky.convo.getLog',
+              9 => 'chat.bsky.convo.getMessages',
+              10 => 'chat.bsky.convo.leaveConvo',
+              11 => 'chat.bsky.convo.listConvos',
+              12 => 'chat.bsky.convo.muteConvo',
+              13 => 'chat.bsky.convo.removeReaction',
+              14 => 'chat.bsky.convo.sendMessage',
+              15 => 'chat.bsky.convo.sendMessageBatch',
+              16 => 'chat.bsky.convo.unmuteConvo',
+              17 => 'chat.bsky.convo.updateAllRead',
+              18 => 'chat.bsky.convo.updateRead',
+            ),
+          ),
+          1 => 
+          array (
+            'type' => 'permission',
+            'resource' => 'repo',
+            'action' => 
+            array (
+              0 => 'create',
+              1 => 'update',
+              2 => 'delete',
+            ),
+            'collection' => 
+            array (
+              0 => 'chat.bsky.actor.declaration',
+            ),
+          ),
         ),
       ),
     ),
@@ -16766,7 +19185,18 @@ return array (
       'main' => 
       array (
         'type' => 'procedure',
-        'description' => 'Delete the current session. Requires auth.',
+        'description' => 'Delete the current session. Requires auth using the \'refreshJwt\' (not the \'accessJwt\').',
+        'errors' => 
+        array (
+          0 => 
+          array (
+            'name' => 'InvalidToken',
+          ),
+          1 => 
+          array (
+            'name' => 'ExpiredToken',
+          ),
+        ),
       ),
     ),
   ),
@@ -17026,6 +19456,10 @@ return array (
                 'type' => 'string',
                 'format' => 'did',
               ),
+              'didDoc' => 
+              array (
+                'type' => 'unknown',
+              ),
               'email' => 
               array (
                 'type' => 'string',
@@ -17037,10 +19471,6 @@ return array (
               'emailAuthFactor' => 
               array (
                 'type' => 'boolean',
-              ),
-              'didDoc' => 
-              array (
-                'type' => 'unknown',
               ),
               'active' => 
               array (
@@ -17179,6 +19609,18 @@ return array (
               array (
                 'type' => 'unknown',
               ),
+              'email' => 
+              array (
+                'type' => 'string',
+              ),
+              'emailConfirmed' => 
+              array (
+                'type' => 'boolean',
+              ),
+              'emailAuthFactor' => 
+              array (
+                'type' => 'boolean',
+              ),
               'active' => 
               array (
                 'type' => 'boolean',
@@ -17202,6 +19644,14 @@ return array (
           0 => 
           array (
             'name' => 'AccountTakedown',
+          ),
+          1 => 
+          array (
+            'name' => 'InvalidToken',
+          ),
+          2 => 
+          array (
+            'name' => 'ExpiredToken',
           ),
         ),
       ),
@@ -19265,6 +21715,83 @@ return array (
       ),
     ),
   ),
+  'com.germnetwork.declaration' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'com.germnetwork.declaration',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'record',
+        'description' => 'A delegate messaging id',
+        'key' => 'literal:self',
+        'record' => 
+        array (
+          'type' => 'object',
+          'required' => 
+          array (
+            0 => 'version',
+            1 => 'currentKey',
+          ),
+          'properties' => 
+          array (
+            'version' => 
+            array (
+              'type' => 'string',
+            ),
+            'currentKey' => 
+            array (
+              'type' => 'bytes',
+            ),
+            'messageMe' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:com.germnetwork.declaration#messageMe',
+            ),
+            'keyPackage' => 
+            array (
+              'type' => 'bytes',
+            ),
+            'continuityProofs' => 
+            array (
+              'type' => 'array',
+              'items' => 
+              array (
+                'type' => 'bytes',
+              ),
+            ),
+          ),
+        ),
+      ),
+      'messageMe' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'showButtonTo',
+          1 => 'messageMeUrl',
+        ),
+        'properties' => 
+        array (
+          'messageMeUrl' => 
+          array (
+            'type' => 'string',
+            'format' => 'uri',
+          ),
+          'showButtonTo' => 
+          array (
+            'type' => 'string',
+            'knownValues' => 
+            array (
+              0 => 'usersIFollow',
+              1 => 'everyone',
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
   'tools.ozone.communication.createTemplate' => 
   array (
     'lexicon' => 1,
@@ -20378,10 +22905,10 @@ return array (
         'type' => 'string',
         'knownValues' => 
         array (
-          0 => 'lex:tools.ozone.moderation.defs#reviewOpen',
-          1 => 'lex:tools.ozone.moderation.defs#reviewEscalated',
-          2 => 'lex:tools.ozone.moderation.defs#reviewClosed',
-          3 => 'lex:tools.ozone.moderation.defs#reviewNone',
+          0 => 'tools.ozone.moderation.defs#reviewOpen',
+          1 => 'tools.ozone.moderation.defs#reviewEscalated',
+          2 => 'tools.ozone.moderation.defs#reviewClosed',
+          3 => 'tools.ozone.moderation.defs#reviewNone',
         ),
       ),
       'reviewOpen' => 
@@ -20438,6 +22965,20 @@ return array (
           array (
             'type' => 'string',
             'description' => 'Severity level of the violation (e.g., \'sev-0\', \'sev-1\', \'sev-2\', etc.).',
+          ),
+          'targetServices' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'string',
+              'knownValues' => 
+              array (
+                0 => 'appview',
+                1 => 'pds',
+              ),
+            ),
+            'description' => 'List of services where the takedown should be applied. If empty or not provided, takedown is applied on all configured services.',
           ),
           'strikeCount' => 
           array (
@@ -20619,10 +23160,15 @@ return array (
             'format' => 'datetime',
             'description' => 'The date and time of this write operation.',
           ),
+          'attemptId' => 
+          array (
+            'type' => 'string',
+            'description' => 'The unique identifier for this instance of the age assurance flow, in UUID format.',
+          ),
           'status' => 
           array (
             'type' => 'string',
-            'description' => 'The status of the age assurance process.',
+            'description' => 'The status of the Age Assurance process.',
             'knownValues' => 
             array (
               0 => 'unknown',
@@ -20630,10 +23176,20 @@ return array (
               2 => 'assured',
             ),
           ),
-          'attemptId' => 
+          'access' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.ageassurance.defs#access',
+          ),
+          'countryCode' => 
           array (
             'type' => 'string',
-            'description' => 'The unique identifier for this instance of the age assurance flow, in UUID format.',
+            'description' => 'The ISO 3166-1 alpha-2 country code provided when beginning the Age Assurance flow.',
+          ),
+          'regionCode' => 
+          array (
+            'type' => 'string',
+            'description' => 'The ISO 3166-2 region code provided when beginning the Age Assurance flow.',
           ),
           'initIp' => 
           array (
@@ -20679,9 +23235,15 @@ return array (
               2 => 'blocked',
             ),
           ),
+          'access' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.ageassurance.defs#access',
+          ),
           'comment' => 
           array (
             'type' => 'string',
+            'minLength' => 1,
             'description' => 'Comment describing the reason for the override.',
           ),
         ),
@@ -20698,6 +23260,7 @@ return array (
         array (
           'comment' => 
           array (
+            'minLength' => 1,
             'type' => 'string',
             'description' => 'Comment describing the reason for the revocation.',
           ),
@@ -20844,6 +23407,11 @@ return array (
             'type' => 'string',
             'format' => 'datetime',
             'description' => 'When the strike should expire. If not provided, the strike never expires.',
+          ),
+          'isDelivered' => 
+          array (
+            'type' => 'boolean',
+            'description' => 'Indicates whether the email was successfully delivered to the user\'s inbox.',
           ),
         ),
       ),
@@ -22867,6 +25435,13 @@ return array (
             array (
               'type' => 'string',
               'description' => 'Specify when fetching subjects in a certain state',
+              'knownValues' => 
+              array (
+                0 => 'tools.ozone.moderation.defs#reviewOpen',
+                1 => 'tools.ozone.moderation.defs#reviewClosed',
+                2 => 'tools.ozone.moderation.defs#reviewEscalated',
+                3 => 'tools.ozone.moderation.defs#reviewNone',
+              ),
             ),
             'ignoreSubjects' => 
             array (
@@ -23142,6 +25717,32 @@ return array (
               'type' => 'string',
             ),
             'description' => 'Names/Keywords of the policies that drove the decision.',
+          ),
+          'severityLevel' => 
+          array (
+            'type' => 'string',
+            'description' => 'Severity level of the violation (e.g., \'sev-0\', \'sev-1\', \'sev-2\', etc.).',
+          ),
+          'strikeCount' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Number of strikes to assign to the user when takedown is applied.',
+          ),
+          'strikeExpiresAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+            'description' => 'When the strike should expire. If not provided, the strike never expires.',
+          ),
+          'emailContent' => 
+          array (
+            'type' => 'string',
+            'description' => 'Email content to be sent to the user upon takedown.',
+          ),
+          'emailSubject' => 
+          array (
+            'type' => 'string',
+            'description' => 'Subject of the email to be sent to the user upon takedown.',
           ),
         ),
       ),
@@ -25331,10 +27932,10 @@ return array (
             'type' => 'string',
             'knownValues' => 
             array (
-              0 => 'lex:tools.ozone.team.defs#roleAdmin',
-              1 => 'lex:tools.ozone.team.defs#roleModerator',
-              2 => 'lex:tools.ozone.team.defs#roleTriage',
-              3 => 'lex:tools.ozone.team.defs#roleVerifier',
+              0 => 'tools.ozone.team.defs#roleAdmin',
+              1 => 'tools.ozone.team.defs#roleModerator',
+              2 => 'tools.ozone.team.defs#roleTriage',
+              3 => 'tools.ozone.team.defs#roleVerifier',
             ),
           ),
         ),
