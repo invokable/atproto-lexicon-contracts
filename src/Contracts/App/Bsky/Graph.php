@@ -192,7 +192,7 @@ interface Graph
     /**
      * Enumerates follows similar to a given account (actor). Expected use is to recommend additional accounts immediately after following one account.
      *
-     * @return array{suggestions: array{did: string, handle: string, displayName: string, pronouns: string, description: string, avatar: string, associated: array, indexedAt: string, createdAt: string, viewer: array, labels: array, verification: array, status: array, debug: mixed}[], isFallback: bool, recId: int}
+     * @return array{suggestions: array{did: string, handle: string, displayName: string, pronouns: string, description: string, avatar: string, associated: array, indexedAt: string, createdAt: string, viewer: array, labels: array, verification: array, status: array, debug: mixed}[], isFallback: bool, recId: int, recIdStr: string}
      *
      * @link https://docs.bsky.app/docs/api/app-bsky-graph-get-suggested-follows-by-actor
      */

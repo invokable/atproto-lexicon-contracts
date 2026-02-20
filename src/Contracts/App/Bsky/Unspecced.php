@@ -20,11 +20,13 @@ interface Unspecced
     public const getConfig = 'app.bsky.unspecced.getConfig';
     public const getOnboardingSuggestedStarterPacks = 'app.bsky.unspecced.getOnboardingSuggestedStarterPacks';
     public const getOnboardingSuggestedStarterPacksSkeleton = 'app.bsky.unspecced.getOnboardingSuggestedStarterPacksSkeleton';
+    public const getOnboardingSuggestedUsersSkeleton = 'app.bsky.unspecced.getOnboardingSuggestedUsersSkeleton';
     public const getPopularFeedGenerators = 'app.bsky.unspecced.getPopularFeedGenerators';
     public const getPostThreadOtherV2 = 'app.bsky.unspecced.getPostThreadOtherV2';
     public const getPostThreadV2 = 'app.bsky.unspecced.getPostThreadV2';
     public const getSuggestedFeeds = 'app.bsky.unspecced.getSuggestedFeeds';
     public const getSuggestedFeedsSkeleton = 'app.bsky.unspecced.getSuggestedFeedsSkeleton';
+    public const getSuggestedOnboardingUsers = 'app.bsky.unspecced.getSuggestedOnboardingUsers';
     public const getSuggestedStarterPacks = 'app.bsky.unspecced.getSuggestedStarterPacks';
     public const getSuggestedStarterPacksSkeleton = 'app.bsky.unspecced.getSuggestedStarterPacksSkeleton';
     public const getSuggestedUsers = 'app.bsky.unspecced.getSuggestedUsers';
@@ -80,6 +82,16 @@ interface Unspecced
     public function getOnboardingSuggestedStarterPacksSkeleton(#[Format('did')] ?string $viewer = null, ?int $limit = 10);
 
     /**
+     * Get a skeleton of suggested users for onboarding. Intended to be called and hydrated by app.bsky.unspecced.getSuggestedOnboardingUsers.
+     *
+     * @return array{dids: array, recId: string}
+     *
+     * @link https://docs.bsky.app/docs/api/app-bsky-unspecced-get-onboarding-suggested-users-skeleton
+     */
+    #[Get, NSID(self::getOnboardingSuggestedUsersSkeleton)]
+    public function getOnboardingSuggestedUsersSkeleton(#[Format('did')] ?string $viewer = null, ?string $category = null, ?int $limit = 25);
+
+    /**
      * An unspecced view of globally popular feed generators.
      *
      * @return array{cursor: string, feeds: array{uri: string, cid: string, did: string, creator: array, displayName: string, description: string, descriptionFacets: array, avatar: string, likeCount: int, acceptsInteractions: bool, labels: array, viewer: array, contentMode: string, indexedAt: string}[]}
@@ -130,6 +142,16 @@ interface Unspecced
     public function getSuggestedFeedsSkeleton(#[Format('did')] ?string $viewer = null, ?int $limit = 10);
 
     /**
+     * Get a list of suggested users for onboarding.
+     *
+     * @return array{actors: array{did: string, handle: string, displayName: string, pronouns: string, description: string, avatar: string, associated: array, indexedAt: string, createdAt: string, viewer: array, labels: array, verification: array, status: array, debug: mixed}[], recId: string}
+     *
+     * @link https://docs.bsky.app/docs/api/app-bsky-unspecced-get-suggested-onboarding-users
+     */
+    #[Get, NSID(self::getSuggestedOnboardingUsers)]
+    public function getSuggestedOnboardingUsers(?string $category = null, ?int $limit = 25);
+
+    /**
      * Get a list of suggested starterpacks.
      *
      * @return array{starterPacks: array{uri: string, cid: string, record: mixed, creator: array, list: array, listItemsSample: array, feeds: array, joinedWeekCount: int, joinedAllTimeCount: int, labels: array, indexedAt: string}[]}
@@ -172,7 +194,7 @@ interface Unspecced
     /**
      * Get a skeleton of suggested actors. Intended to be called and then hydrated through app.bsky.actor.getSuggestions.
      *
-     * @return array{cursor: string, actors: array{did: string}[], relativeToDid: string, recId: int}
+     * @return array{cursor: string, actors: array{did: string}[], relativeToDid: string, recId: int, recIdStr: string}
      *
      * @link https://docs.bsky.app/docs/api/app-bsky-unspecced-get-suggestions-skeleton
      */

@@ -2471,33 +2471,32 @@ return array (
               64 => 'app.bsky.notification.putPreferences',
               65 => 'app.bsky.notification.putPreferencesV2',
               66 => 'app.bsky.notification.registerPush',
-              67 => 'app.bsky.notification.registerPush',
-              68 => 'app.bsky.notification.unregisterPush',
-              69 => 'app.bsky.notification.updateSeen',
-              70 => 'app.bsky.unspecced.getAgeAssuranceState',
-              71 => 'app.bsky.unspecced.getConfig',
-              72 => 'app.bsky.unspecced.getOnboardingSuggestedStarterPacks',
-              73 => 'app.bsky.unspecced.getPopularFeedGenerators',
-              74 => 'app.bsky.unspecced.getPostThreadOtherV2',
-              75 => 'app.bsky.unspecced.getPostThreadV2',
-              76 => 'app.bsky.unspecced.getSuggestedFeeds',
-              77 => 'app.bsky.unspecced.getSuggestedFeedsSkeleton',
-              78 => 'app.bsky.unspecced.getSuggestedStarterPacks',
-              79 => 'app.bsky.unspecced.getSuggestedStarterPacksSkeleton',
-              80 => 'app.bsky.unspecced.getSuggestedUsers',
-              81 => 'app.bsky.unspecced.getSuggestedUsersSkeleton',
-              82 => 'app.bsky.unspecced.getSuggestionsSkeleton',
-              83 => 'app.bsky.unspecced.getTaggedSuggestions',
-              84 => 'app.bsky.unspecced.getTrendingTopics',
-              85 => 'app.bsky.unspecced.getTrends',
-              86 => 'app.bsky.unspecced.getTrendsSkeleton',
-              87 => 'app.bsky.unspecced.initAgeAssurance',
-              88 => 'app.bsky.unspecced.searchActorsSkeleton',
-              89 => 'app.bsky.unspecced.searchPostsSkeleton',
-              90 => 'app.bsky.unspecced.searchStarterPacksSkeleton',
-              91 => 'app.bsky.video.getJobStatus',
-              92 => 'app.bsky.video.getUploadLimits',
-              93 => 'app.bsky.video.uploadVideo',
+              67 => 'app.bsky.notification.unregisterPush',
+              68 => 'app.bsky.notification.updateSeen',
+              69 => 'app.bsky.unspecced.getAgeAssuranceState',
+              70 => 'app.bsky.unspecced.getConfig',
+              71 => 'app.bsky.unspecced.getOnboardingSuggestedStarterPacks',
+              72 => 'app.bsky.unspecced.getPopularFeedGenerators',
+              73 => 'app.bsky.unspecced.getPostThreadOtherV2',
+              74 => 'app.bsky.unspecced.getPostThreadV2',
+              75 => 'app.bsky.unspecced.getSuggestedFeeds',
+              76 => 'app.bsky.unspecced.getSuggestedFeedsSkeleton',
+              77 => 'app.bsky.unspecced.getSuggestedStarterPacks',
+              78 => 'app.bsky.unspecced.getSuggestedStarterPacksSkeleton',
+              79 => 'app.bsky.unspecced.getSuggestedUsers',
+              80 => 'app.bsky.unspecced.getSuggestedUsersSkeleton',
+              81 => 'app.bsky.unspecced.getSuggestionsSkeleton',
+              82 => 'app.bsky.unspecced.getTaggedSuggestions',
+              83 => 'app.bsky.unspecced.getTrendingTopics',
+              84 => 'app.bsky.unspecced.getTrends',
+              85 => 'app.bsky.unspecced.getTrendsSkeleton',
+              86 => 'app.bsky.unspecced.initAgeAssurance',
+              87 => 'app.bsky.unspecced.searchActorsSkeleton',
+              88 => 'app.bsky.unspecced.searchPostsSkeleton',
+              89 => 'app.bsky.unspecced.searchStarterPacksSkeleton',
+              90 => 'app.bsky.video.getJobStatus',
+              91 => 'app.bsky.video.getUploadLimits',
+              92 => 'app.bsky.video.uploadVideo',
             ),
           ),
           1 => 
@@ -3752,6 +3751,18 @@ return array (
         ),
         'properties' => 
         array (
+          'deviceId' => 
+          array (
+            'type' => 'string',
+            'description' => 'UUIDv4 identifier of the device that created this draft.',
+            'maxLength' => 100,
+          ),
+          'deviceName' => 
+          array (
+            'type' => 'string',
+            'description' => 'The device and/or platform on which the draft was created.',
+            'maxLength' => 100,
+          ),
           'posts' => 
           array (
             'description' => 'Array of draft posts that compose this draft.',
@@ -3821,9 +3832,9 @@ return array (
           'text' => 
           array (
             'type' => 'string',
-            'maxLength' => 3000,
-            'maxGraphemes' => 300,
-            'description' => 'The primary post content.',
+            'maxLength' => 10000,
+            'maxGraphemes' => 1000,
+            'description' => 'The primary post content. It has a higher limit than post contents to allow storing a larger text that can later be refined into smaller posts.',
           ),
           'labels' => 
           array (
@@ -9112,6 +9123,11 @@ return array (
               'recId' => 
               array (
                 'type' => 'integer',
+                'description' => 'DEPRECATED: use recIdStr instead.',
+              ),
+              'recIdStr' => 
+              array (
+                'type' => 'string',
                 'description' => 'Snowflake for this recommendation, use when submitting recommendation events.',
               ),
             ),
@@ -11615,6 +11631,73 @@ return array (
       ),
     ),
   ),
+  'app.bsky.unspecced.getOnboardingSuggestedUsersSkeleton' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.unspecced.getOnboardingSuggestedUsersSkeleton',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'description' => 'Get a skeleton of suggested users for onboarding. Intended to be called and hydrated by app.bsky.unspecced.getSuggestedOnboardingUsers',
+        'parameters' => 
+        array (
+          'type' => 'params',
+          'properties' => 
+          array (
+            'viewer' => 
+            array (
+              'type' => 'string',
+              'format' => 'did',
+              'description' => 'DID of the account making the request (not included for public/unauthenticated queries).',
+            ),
+            'category' => 
+            array (
+              'type' => 'string',
+              'description' => 'Category of users to get suggestions for.',
+            ),
+            'limit' => 
+            array (
+              'type' => 'integer',
+              'minimum' => 1,
+              'maximum' => 50,
+              'default' => 25,
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'dids',
+            ),
+            'properties' => 
+            array (
+              'dids' => 
+              array (
+                'type' => 'array',
+                'items' => 
+                array (
+                  'type' => 'string',
+                  'format' => 'did',
+                ),
+              ),
+              'recId' => 
+              array (
+                'type' => 'string',
+                'description' => 'Snowflake for this recommendation, use when submitting recommendation events.',
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
   'app.bsky.unspecced.getPopularFeedGenerators' => 
   array (
     'lexicon' => 1,
@@ -12006,6 +12089,67 @@ return array (
       ),
     ),
   ),
+  'app.bsky.unspecced.getSuggestedOnboardingUsers' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.unspecced.getSuggestedOnboardingUsers',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'description' => 'Get a list of suggested users for onboarding',
+        'parameters' => 
+        array (
+          'type' => 'params',
+          'properties' => 
+          array (
+            'category' => 
+            array (
+              'type' => 'string',
+              'description' => 'Category of users to get suggestions for.',
+            ),
+            'limit' => 
+            array (
+              'type' => 'integer',
+              'minimum' => 1,
+              'maximum' => 50,
+              'default' => 25,
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'actors',
+            ),
+            'properties' => 
+            array (
+              'actors' => 
+              array (
+                'type' => 'array',
+                'items' => 
+                array (
+                  'type' => 'ref',
+                  'ref' => 'lex:app.bsky.actor.defs#profileView',
+                ),
+              ),
+              'recId' => 
+              array (
+                'type' => 'string',
+                'description' => 'Snowflake for this recommendation, use when submitting recommendation events.',
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
   'app.bsky.unspecced.getSuggestedStarterPacks' => 
   array (
     'lexicon' => 1,
@@ -12316,6 +12460,11 @@ return array (
               'recId' => 
               array (
                 'type' => 'integer',
+                'description' => 'DEPRECATED: use recIdStr instead.',
+              ),
+              'recIdStr' => 
+              array (
+                'type' => 'string',
                 'description' => 'Snowflake for this recommendation, use when submitting recommendation events.',
               ),
             ),
@@ -21724,7 +21873,7 @@ return array (
       'main' => 
       array (
         'type' => 'record',
-        'description' => 'A delegate messaging id',
+        'description' => 'A declaration of a Germ Network account',
         'key' => 'literal:self',
         'record' => 
         array (
@@ -21739,27 +21888,35 @@ return array (
             'version' => 
             array (
               'type' => 'string',
+              'description' => 'Semver version number, without pre-release or build information, for the format of opaque content',
+              'minLength' => 5,
+              'maxLength' => 14,
             ),
             'currentKey' => 
             array (
               'type' => 'bytes',
+              'description' => 'Opaque value, an ed25519 public key prefixed with a byte enum',
             ),
             'messageMe' => 
             array (
               'type' => 'ref',
+              'description' => 'Controls who can message this account',
               'ref' => 'lex:com.germnetwork.declaration#messageMe',
             ),
             'keyPackage' => 
             array (
               'type' => 'bytes',
+              'description' => 'Opaque value, contains MLS KeyPackage(s), and other signature data, and is signed by the currentKey',
             ),
             'continuityProofs' => 
             array (
               'type' => 'array',
+              'description' => 'Array of opaque values to allow for key rolling',
               'items' => 
               array (
                 'type' => 'bytes',
               ),
+              'maxLength' => 1000,
             ),
           ),
         ),
@@ -21777,16 +21934,23 @@ return array (
           'messageMeUrl' => 
           array (
             'type' => 'string',
+            'description' => 'A URL to present to an account that does not have its own com.germnetwork.declaration record, must have an empty fragment component, where the app should fill in the fragment component with the DIDs of the two accounts who wish to message each other',
             'format' => 'uri',
+            'minLength' => 1,
+            'maxLength' => 2047,
           ),
           'showButtonTo' => 
           array (
             'type' => 'string',
             'knownValues' => 
             array (
-              0 => 'usersIFollow',
-              1 => 'everyone',
+              0 => 'none',
+              1 => 'usersIFollow',
+              2 => 'everyone',
             ),
+            'description' => 'The policy of who can message the account, this value is included in the keyPackage, but is duplicated here to allow applications to decide if they should show a \'Message on Germ\' button to the viewer.',
+            'minLength' => 1,
+            'maxLength' => 100,
           ),
         ),
       ),
