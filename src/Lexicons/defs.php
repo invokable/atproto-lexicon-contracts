@@ -7344,6 +7344,11 @@ return array (
             ),
             'properties' => 
             array (
+              'feed' => 
+              array (
+                'type' => 'string',
+                'format' => 'at-uri',
+              ),
               'interactions' => 
               array (
                 'type' => 'array',
