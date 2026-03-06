@@ -1416,6 +1416,11 @@ return array (
               'recId' => 
               array (
                 'type' => 'integer',
+                'description' => 'DEPRECATED: use recIdStr instead.',
+              ),
+              'recIdStr' => 
+              array (
+                'type' => 'string',
                 'description' => 'Snowflake for this recommendation, use when submitting recommendation events.',
               ),
             ),
@@ -11695,6 +11700,11 @@ return array (
               'recId' => 
               array (
                 'type' => 'string',
+                'description' => 'DEPRECATED: use recIdStr instead.',
+              ),
+              'recIdStr' => 
+              array (
+                'type' => 'string',
                 'description' => 'Snowflake for this recommendation, use when submitting recommendation events.',
               ),
             ),
@@ -12147,6 +12157,11 @@ return array (
               'recId' => 
               array (
                 'type' => 'string',
+                'description' => 'DEPRECATED: use recIdStr instead.',
+              ),
+              'recIdStr' => 
+              array (
+                'type' => 'string',
                 'description' => 'Snowflake for this recommendation, use when submitting recommendation events.',
               ),
             ),
@@ -12316,6 +12331,11 @@ return array (
               'recId' => 
               array (
                 'type' => 'string',
+                'description' => 'DEPRECATED: use recIdStr instead.',
+              ),
+              'recIdStr' => 
+              array (
+                'type' => 'string',
                 'description' => 'Snowflake for this recommendation, use when submitting recommendation events.',
               ),
             ),
@@ -12381,6 +12401,11 @@ return array (
                 ),
               ),
               'recId' => 
+              array (
+                'type' => 'string',
+                'description' => 'DEPRECATED: use recIdStr instead.',
+              ),
+              'recIdStr' => 
               array (
                 'type' => 'string',
                 'description' => 'Snowflake for this recommendation, use when submitting recommendation events.',
@@ -13488,10 +13513,10 @@ return array (
             'lxm' => 
             array (
               0 => 'chat.bsky.actor.deleteAccount',
-              1 => 'chat.bsky.convo.acceptConvo',
-              2 => 'chat.bsky.convo.addReaction',
-              3 => 'chat.bsky.convo.deleteMessageForSelf',
-              4 => 'chat.bsky.convo.exportAccountData',
+              1 => 'chat.bsky.actor.exportAccountData',
+              2 => 'chat.bsky.convo.acceptConvo',
+              3 => 'chat.bsky.convo.addReaction',
+              4 => 'chat.bsky.convo.deleteMessageForSelf',
               5 => 'chat.bsky.convo.getConvo',
               6 => 'chat.bsky.convo.getConvoAvailability',
               7 => 'chat.bsky.convo.getConvoForMembers',
