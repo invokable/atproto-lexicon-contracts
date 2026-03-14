@@ -1416,6 +1416,11 @@ return array (
               'recId' => 
               array (
                 'type' => 'integer',
+                'description' => 'DEPRECATED: use recIdStr instead.',
+              ),
+              'recIdStr' => 
+              array (
+                'type' => 'string',
                 'description' => 'Snowflake for this recommendation, use when submitting recommendation events.',
               ),
             ),
@@ -11695,6 +11700,11 @@ return array (
               'recId' => 
               array (
                 'type' => 'string',
+                'description' => 'DEPRECATED: use recIdStr instead.',
+              ),
+              'recIdStr' => 
+              array (
+                'type' => 'string',
                 'description' => 'Snowflake for this recommendation, use when submitting recommendation events.',
               ),
             ),
@@ -12147,6 +12157,11 @@ return array (
               'recId' => 
               array (
                 'type' => 'string',
+                'description' => 'DEPRECATED: use recIdStr instead.',
+              ),
+              'recIdStr' => 
+              array (
+                'type' => 'string',
                 'description' => 'Snowflake for this recommendation, use when submitting recommendation events.',
               ),
             ),
@@ -12316,6 +12331,11 @@ return array (
               'recId' => 
               array (
                 'type' => 'string',
+                'description' => 'DEPRECATED: use recIdStr instead.',
+              ),
+              'recIdStr' => 
+              array (
+                'type' => 'string',
                 'description' => 'Snowflake for this recommendation, use when submitting recommendation events.',
               ),
             ),
@@ -12381,6 +12401,11 @@ return array (
                 ),
               ),
               'recId' => 
+              array (
+                'type' => 'string',
+                'description' => 'DEPRECATED: use recIdStr instead.',
+              ),
+              'recIdStr' => 
               array (
                 'type' => 'string',
                 'description' => 'Snowflake for this recommendation, use when submitting recommendation events.',
@@ -13488,10 +13513,10 @@ return array (
             'lxm' => 
             array (
               0 => 'chat.bsky.actor.deleteAccount',
-              1 => 'chat.bsky.convo.acceptConvo',
-              2 => 'chat.bsky.convo.addReaction',
-              3 => 'chat.bsky.convo.deleteMessageForSelf',
-              4 => 'chat.bsky.convo.exportAccountData',
+              1 => 'chat.bsky.actor.exportAccountData',
+              2 => 'chat.bsky.convo.acceptConvo',
+              3 => 'chat.bsky.convo.addReaction',
+              4 => 'chat.bsky.convo.deleteMessageForSelf',
               5 => 'chat.bsky.convo.getConvo',
               6 => 'chat.bsky.convo.getConvoAvailability',
               7 => 'chat.bsky.convo.getConvoForMembers',
@@ -22606,9 +22631,10 @@ return array (
               18 => 'lex:tools.ozone.moderation.defs#modEventPriorityScore',
               19 => 'lex:tools.ozone.moderation.defs#ageAssuranceEvent',
               20 => 'lex:tools.ozone.moderation.defs#ageAssuranceOverrideEvent',
-              21 => 'lex:tools.ozone.moderation.defs#revokeAccountCredentialsEvent',
-              22 => 'lex:tools.ozone.moderation.defs#scheduleTakedownEvent',
-              23 => 'lex:tools.ozone.moderation.defs#cancelScheduledTakedownEvent',
+              21 => 'lex:tools.ozone.moderation.defs#ageAssurancePurgeEvent',
+              22 => 'lex:tools.ozone.moderation.defs#revokeAccountCredentialsEvent',
+              23 => 'lex:tools.ozone.moderation.defs#scheduleTakedownEvent',
+              24 => 'lex:tools.ozone.moderation.defs#cancelScheduledTakedownEvent',
             ),
           ),
           'subject' => 
@@ -22698,9 +22724,10 @@ return array (
               18 => 'lex:tools.ozone.moderation.defs#modEventPriorityScore',
               19 => 'lex:tools.ozone.moderation.defs#ageAssuranceEvent',
               20 => 'lex:tools.ozone.moderation.defs#ageAssuranceOverrideEvent',
-              21 => 'lex:tools.ozone.moderation.defs#revokeAccountCredentialsEvent',
-              22 => 'lex:tools.ozone.moderation.defs#scheduleTakedownEvent',
-              23 => 'lex:tools.ozone.moderation.defs#cancelScheduledTakedownEvent',
+              21 => 'lex:tools.ozone.moderation.defs#ageAssurancePurgeEvent',
+              22 => 'lex:tools.ozone.moderation.defs#revokeAccountCredentialsEvent',
+              23 => 'lex:tools.ozone.moderation.defs#scheduleTakedownEvent',
+              24 => 'lex:tools.ozone.moderation.defs#cancelScheduledTakedownEvent',
             ),
           ),
           'subject' => 
@@ -23414,6 +23441,24 @@ return array (
             'type' => 'string',
             'minLength' => 1,
             'description' => 'Comment describing the reason for the override.',
+          ),
+        ),
+      ),
+      'ageAssurancePurgeEvent' => 
+      array (
+        'type' => 'object',
+        'description' => 'Purges all age assurance events for the subject. Only works on DID subjects. Moderator-only.',
+        'required' => 
+        array (
+          0 => 'comment',
+        ),
+        'properties' => 
+        array (
+          'comment' => 
+          array (
+            'type' => 'string',
+            'minLength' => 1,
+            'description' => 'Comment describing the reason for the purge.',
           ),
         ),
       ),
@@ -24567,9 +24612,10 @@ return array (
                   18 => 'lex:tools.ozone.moderation.defs#modEventPriorityScore',
                   19 => 'lex:tools.ozone.moderation.defs#ageAssuranceEvent',
                   20 => 'lex:tools.ozone.moderation.defs#ageAssuranceOverrideEvent',
-                  21 => 'lex:tools.ozone.moderation.defs#revokeAccountCredentialsEvent',
-                  22 => 'lex:tools.ozone.moderation.defs#scheduleTakedownEvent',
-                  23 => 'lex:tools.ozone.moderation.defs#cancelScheduledTakedownEvent',
+                  21 => 'lex:tools.ozone.moderation.defs#ageAssurancePurgeEvent',
+                  22 => 'lex:tools.ozone.moderation.defs#revokeAccountCredentialsEvent',
+                  23 => 'lex:tools.ozone.moderation.defs#scheduleTakedownEvent',
+                  24 => 'lex:tools.ozone.moderation.defs#cancelScheduledTakedownEvent',
                 ),
               ),
               'subject' => 
