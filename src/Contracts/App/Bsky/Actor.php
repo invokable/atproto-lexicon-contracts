@@ -57,7 +57,7 @@ interface Actor
     /**
      * Get a list of suggested actors. Expected use is discovery of accounts to follow during new account onboarding.
      *
-     * @return array{cursor: string, actors: array{did: string, handle: string, displayName: string, pronouns: string, description: string, avatar: string, associated: array, indexedAt: string, createdAt: string, viewer: array, labels: array, verification: array, status: array, debug: mixed}[], recId: int}
+     * @return array{cursor: string, actors: array{did: string, handle: string, displayName: string, pronouns: string, description: string, avatar: string, associated: array, indexedAt: string, createdAt: string, viewer: array, labels: array, verification: array, status: array, debug: mixed}[], recId: int, recIdStr: string}
      *
      * @link https://docs.bsky.app/docs/api/app-bsky-actor-get-suggestions
      */

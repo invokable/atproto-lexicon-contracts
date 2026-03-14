@@ -84,7 +84,7 @@ interface Unspecced
     /**
      * Get a skeleton of suggested users for onboarding. Intended to be called and hydrated by app.bsky.unspecced.getSuggestedOnboardingUsers.
      *
-     * @return array{dids: array, recId: string}
+     * @return array{dids: array, recId: string, recIdStr: string}
      *
      * @link https://docs.bsky.app/docs/api/app-bsky-unspecced-get-onboarding-suggested-users-skeleton
      */
@@ -144,7 +144,7 @@ interface Unspecced
     /**
      * Get a list of suggested users for onboarding.
      *
-     * @return array{actors: array{did: string, handle: string, displayName: string, pronouns: string, description: string, avatar: string, associated: array, indexedAt: string, createdAt: string, viewer: array, labels: array, verification: array, status: array, debug: mixed}[], recId: string}
+     * @return array{actors: array{did: string, handle: string, displayName: string, pronouns: string, description: string, avatar: string, associated: array, indexedAt: string, createdAt: string, viewer: array, labels: array, verification: array, status: array, debug: mixed}[], recId: string, recIdStr: string}
      *
      * @link https://docs.bsky.app/docs/api/app-bsky-unspecced-get-suggested-onboarding-users
      */
@@ -174,7 +174,7 @@ interface Unspecced
     /**
      * Get a list of suggested users.
      *
-     * @return array{actors: array{did: string, handle: string, displayName: string, pronouns: string, description: string, avatar: string, associated: array, indexedAt: string, createdAt: string, viewer: array, labels: array, verification: array, status: array, debug: mixed}[], recId: string}
+     * @return array{actors: array{did: string, handle: string, displayName: string, pronouns: string, description: string, avatar: string, associated: array, indexedAt: string, createdAt: string, viewer: array, labels: array, verification: array, status: array, debug: mixed}[], recId: string, recIdStr: string}
      *
      * @link https://docs.bsky.app/docs/api/app-bsky-unspecced-get-suggested-users
      */
@@ -184,7 +184,7 @@ interface Unspecced
     /**
      * Get a skeleton of suggested users. Intended to be called and hydrated by app.bsky.unspecced.getSuggestedUsers.
      *
-     * @return array{dids: array, recId: string}
+     * @return array{dids: array, recId: string, recIdStr: string}
      *
      * @link https://docs.bsky.app/docs/api/app-bsky-unspecced-get-suggested-users-skeleton
      */
