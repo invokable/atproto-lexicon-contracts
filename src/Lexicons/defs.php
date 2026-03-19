@@ -9125,21 +9125,21 @@ return array (
                   'ref' => 'lex:app.bsky.actor.defs#profileView',
                 ),
               ),
+              'recIdStr' => 
+              array (
+                'type' => 'string',
+                'description' => 'Snowflake for this recommendation, use when submitting recommendation events.',
+              ),
               'isFallback' => 
               array (
                 'type' => 'boolean',
-                'description' => 'If true, response has fallen-back to generic results, and is not scoped using relativeToDid',
+                'description' => 'DEPRECATED, unused. Previously: if true, response has fallen-back to generic results, and is not scoped using relativeToDid',
                 'default' => false,
               ),
               'recId' => 
               array (
                 'type' => 'integer',
                 'description' => 'DEPRECATED: use recIdStr instead.',
-              ),
-              'recIdStr' => 
-              array (
-                'type' => 'string',
-                'description' => 'Snowflake for this recommendation, use when submitting recommendation events.',
               ),
             ),
           ),
