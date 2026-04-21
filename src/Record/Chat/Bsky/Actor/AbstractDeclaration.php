@@ -21,4 +21,10 @@ abstract class AbstractDeclaration
 
     #[KnownValues(['all', 'none', 'following'])]
     protected string $allowIncoming;
+
+    /**
+     * [NOTE: This is under active development and should be considered unstable while this note is here]. Declaration about group chat invitation preferences for the record owner.
+     */
+    #[KnownValues(['all', 'none', 'following'])]
+    protected ?string $allowGroupInvites = null;
 }

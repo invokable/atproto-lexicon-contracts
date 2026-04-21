@@ -26,17 +26,20 @@ interface Convo
     public const getLog = 'chat.bsky.convo.getLog';
     public const getMessages = 'chat.bsky.convo.getMessages';
     public const leaveConvo = 'chat.bsky.convo.leaveConvo';
+    public const listConvoRequests = 'chat.bsky.convo.listConvoRequests';
     public const listConvos = 'chat.bsky.convo.listConvos';
+    public const lockConvo = 'chat.bsky.convo.lockConvo';
     public const muteConvo = 'chat.bsky.convo.muteConvo';
     public const removeReaction = 'chat.bsky.convo.removeReaction';
     public const sendMessage = 'chat.bsky.convo.sendMessage';
     public const sendMessageBatch = 'chat.bsky.convo.sendMessageBatch';
+    public const unlockConvo = 'chat.bsky.convo.unlockConvo';
     public const unmuteConvo = 'chat.bsky.convo.unmuteConvo';
     public const updateAllRead = 'chat.bsky.convo.updateAllRead';
     public const updateRead = 'chat.bsky.convo.updateRead';
 
     /**
-     * chat.bsky.convo.acceptConvo.
+     * Marks a conversation as accepted, so it is shown in the list of accepted convos instead on the request convos.
      *
      * @return array{rev: string}
      *
@@ -56,7 +59,7 @@ interface Convo
     public function addReaction(string $convoId, string $messageId, string $value);
 
     /**
-     * chat.bsky.convo.deleteMessageForSelf.
+     * Marks a message as deleted for the viewer, so they won't see that message in future enumerations.
      *
      * @return array{id: string, rev: string, sender: mixed, sentAt: string}
      *
@@ -66,9 +69,9 @@ interface Convo
     public function deleteMessageForSelf(string $convoId, string $messageId);
 
     /**
-     * chat.bsky.convo.getConvo.
+     * Gets an existing conversation by its ID.
      *
-     * @return array{convo: array{id: string, rev: string, members: array, lastMessage: array, lastReaction: array, muted: bool, status: string, unreadCount: int}}
+     * @return array{convo: array{id: string, rev: string, members: array, lastMessage: array, lastReaction: array, muted: bool, status: array, unreadCount: int, kind: array}}
      *
      * @link https://docs.bsky.app/docs/api/chat-bsky-convo-get-convo
      */
@@ -76,9 +79,9 @@ interface Convo
     public function getConvo(string $convoId);
 
     /**
-     * Get whether the requester and the other members can chat. If an existing convo is found for these members, it is returned.
+     * Check whether the requester and the other members can start a 1-1 chat. Only applicable to direct (non-group) conversations. If an existing convo is found for these members, it is returned. Does not create a new convo if it doesn't exist.
      *
-     * @return array{canChat: bool, convo: array{id: string, rev: string, members: array, lastMessage: array, lastReaction: array, muted: bool, status: string, unreadCount: int}}
+     * @return array{canChat: bool, convo: array{id: string, rev: string, members: array, lastMessage: array, lastReaction: array, muted: bool, status: array, unreadCount: int, kind: array}}
      *
      * @link https://docs.bsky.app/docs/api/chat-bsky-convo-get-convo-availability
      */
@@ -86,9 +89,9 @@ interface Convo
     public function getConvoAvailability(#[Format('did')] array $members);
 
     /**
-     * chat.bsky.convo.getConvoForMembers.
+     * Get or create a 1-1 conversation for the given members. Always returns the same direct (non-group) conversation. To create a group conversation, use createGroup.
      *
-     * @return array{convo: array{id: string, rev: string, members: array, lastMessage: array, lastReaction: array, muted: bool, status: string, unreadCount: int}}
+     * @return array{convo: array{id: string, rev: string, members: array, lastMessage: array, lastReaction: array, muted: bool, status: array, unreadCount: int, kind: array}}
      *
      * @link https://docs.bsky.app/docs/api/chat-bsky-convo-get-convo-for-members
      */
@@ -106,7 +109,7 @@ interface Convo
     public function getLog(?string $cursor = null);
 
     /**
-     * chat.bsky.convo.getMessages.
+     * Returns a page of messages from a conversation.
      *
      * @return array{cursor: string, messages: array}
      *
@@ -116,7 +119,7 @@ interface Convo
     public function getMessages(string $convoId, ?int $limit = 50, ?string $cursor = null);
 
     /**
-     * chat.bsky.convo.leaveConvo.
+     * Leaves a conversation (direct or group). For group, this effectively removes membership. For direct, membership is never removed, only changed to remove from enumerations by the user who left.
      *
      * @return array{convoId: string, rev: string}
      *
@@ -126,19 +129,39 @@ interface Convo
     public function leaveConvo(string $convoId);
 
     /**
-     * chat.bsky.convo.listConvos.
+     * [NOTE: This is under active development and should be considered unstable while this note is here]. Returns a page of incoming conversation requests for the user. Direct convo requests are returned as convoView; group join requests are returned as joinRequestView.
      *
-     * @return array{cursor: string, convos: array{id: string, rev: string, members: array, lastMessage: array, lastReaction: array, muted: bool, status: string, unreadCount: int}[]}
+     * @return array{cursor: string, requests: array}
+     *
+     * @link https://docs.bsky.app/docs/api/chat-bsky-convo-list-convo-requests
+     */
+    #[Get, NSID(self::listConvoRequests)]
+    public function listConvoRequests(?int $limit = 50, ?string $cursor = null);
+
+    /**
+     * Returns a page of conversations (direct or group) for the user.
+     *
+     * @return array{cursor: string, convos: array{id: string, rev: string, members: array, lastMessage: array, lastReaction: array, muted: bool, status: array, unreadCount: int, kind: array}[]}
      *
      * @link https://docs.bsky.app/docs/api/chat-bsky-convo-list-convos
      */
     #[Get, NSID(self::listConvos)]
-    public function listConvos(?int $limit = 50, ?string $cursor = null, #[KnownValues(['unread'])] ?string $readState = null, #[KnownValues(['request', 'accepted'])] ?string $status = null);
+    public function listConvos(?int $limit = 50, ?string $cursor = null, #[KnownValues(['unread'])] ?string $readState = null, #[KnownValues(['request', 'accepted'])] ?string $status = null, #[KnownValues(['direct', 'group'])] ?string $kind = null);
 
     /**
-     * chat.bsky.convo.muteConvo.
+     * [NOTE: This is under active development and should be considered unstable while this note is here]. Locks a group convo so no more content (messages, reactions) can be added to it.
      *
-     * @return array{convo: array{id: string, rev: string, members: array, lastMessage: array, lastReaction: array, muted: bool, status: string, unreadCount: int}}
+     * @return array{convo: array{id: string, rev: string, members: array, lastMessage: array, lastReaction: array, muted: bool, status: array, unreadCount: int, kind: array}}
+     *
+     * @link https://docs.bsky.app/docs/api/chat-bsky-convo-lock-convo
+     */
+    #[Post, NSID(self::lockConvo)]
+    public function lockConvo(string $convoId);
+
+    /**
+     * Mutes a conversation, preventing notifications related to it.
+     *
+     * @return array{convo: array{id: string, rev: string, members: array, lastMessage: array, lastReaction: array, muted: bool, status: array, unreadCount: int, kind: array}}
      *
      * @link https://docs.bsky.app/docs/api/chat-bsky-convo-mute-convo
      */
@@ -156,7 +179,7 @@ interface Convo
     public function removeReaction(string $convoId, string $messageId, string $value);
 
     /**
-     * chat.bsky.convo.sendMessage.
+     * Sends a message to a conversation.
      *
      * @return array{id: string, rev: string, text: string, facets: array{index: array, features: array}[], embed: array, reactions: array{}[], sender: mixed, sentAt: string}
      *
@@ -166,7 +189,7 @@ interface Convo
     public function sendMessage(string $convoId, #[Ref('chat.bsky.convo.defs#messageInput')] array $message);
 
     /**
-     * chat.bsky.convo.sendMessageBatch.
+     * Sends a batch of messages to a conversation.
      *
      * @return array{items: array{id: string, rev: string, text: string, facets: array, embed: array, reactions: array, sender: array, sentAt: string}[]}
      *
@@ -176,9 +199,19 @@ interface Convo
     public function sendMessageBatch(#[Ref('chat.bsky.convo.sendMessageBatch#batchItem')] array $items);
 
     /**
-     * chat.bsky.convo.unmuteConvo.
+     * [NOTE: This is under active development and should be considered unstable while this note is here]. Unlocks a group convo so it is able to receive new content.
      *
-     * @return array{convo: array{id: string, rev: string, members: array, lastMessage: array, lastReaction: array, muted: bool, status: string, unreadCount: int}}
+     * @return array{convo: array{id: string, rev: string, members: array, lastMessage: array, lastReaction: array, muted: bool, status: array, unreadCount: int, kind: array}}
+     *
+     * @link https://docs.bsky.app/docs/api/chat-bsky-convo-unlock-convo
+     */
+    #[Post, NSID(self::unlockConvo)]
+    public function unlockConvo(string $convoId);
+
+    /**
+     * Unmutes a conversation, allowing notifications related to it.
+     *
+     * @return array{convo: array{id: string, rev: string, members: array, lastMessage: array, lastReaction: array, muted: bool, status: array, unreadCount: int, kind: array}}
      *
      * @link https://docs.bsky.app/docs/api/chat-bsky-convo-unmute-convo
      */
@@ -186,7 +219,7 @@ interface Convo
     public function unmuteConvo(string $convoId);
 
     /**
-     * chat.bsky.convo.updateAllRead.
+     * Sets conversations from a user as read to the latest message, with filters.
      *
      * @return array{updatedCount: int}
      *
@@ -196,9 +229,9 @@ interface Convo
     public function updateAllRead(#[KnownValues(['request', 'accepted'])] ?string $status = null);
 
     /**
-     * chat.bsky.convo.updateRead.
+     * Updates the read state of a conversation from, optionally specifying the last read message.
      *
-     * @return array{convo: array{id: string, rev: string, members: array, lastMessage: array, lastReaction: array, muted: bool, status: string, unreadCount: int}}
+     * @return array{convo: array{id: string, rev: string, members: array, lastMessage: array, lastReaction: array, muted: bool, status: array, unreadCount: int, kind: array}}
      *
      * @link https://docs.bsky.app/docs/api/chat-bsky-convo-update-read
      */
