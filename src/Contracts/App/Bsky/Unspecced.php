@@ -30,6 +30,12 @@ interface Unspecced
     public const getSuggestedStarterPacks = 'app.bsky.unspecced.getSuggestedStarterPacks';
     public const getSuggestedStarterPacksSkeleton = 'app.bsky.unspecced.getSuggestedStarterPacksSkeleton';
     public const getSuggestedUsers = 'app.bsky.unspecced.getSuggestedUsers';
+    public const getSuggestedUsersForDiscover = 'app.bsky.unspecced.getSuggestedUsersForDiscover';
+    public const getSuggestedUsersForDiscoverSkeleton = 'app.bsky.unspecced.getSuggestedUsersForDiscoverSkeleton';
+    public const getSuggestedUsersForExplore = 'app.bsky.unspecced.getSuggestedUsersForExplore';
+    public const getSuggestedUsersForExploreSkeleton = 'app.bsky.unspecced.getSuggestedUsersForExploreSkeleton';
+    public const getSuggestedUsersForSeeMore = 'app.bsky.unspecced.getSuggestedUsersForSeeMore';
+    public const getSuggestedUsersForSeeMoreSkeleton = 'app.bsky.unspecced.getSuggestedUsersForSeeMoreSkeleton';
     public const getSuggestedUsersSkeleton = 'app.bsky.unspecced.getSuggestedUsersSkeleton';
     public const getSuggestionsSkeleton = 'app.bsky.unspecced.getSuggestionsSkeleton';
     public const getTaggedSuggestions = 'app.bsky.unspecced.getTaggedSuggestions';
@@ -180,6 +186,66 @@ interface Unspecced
      */
     #[Get, NSID(self::getSuggestedUsers)]
     public function getSuggestedUsers(?string $category = null, ?int $limit = 25);
+
+    /**
+     * Get a list of suggested users for the Discover page.
+     *
+     * @return array{actors: array{did: string, handle: string, displayName: string, pronouns: string, description: string, avatar: string, associated: array, indexedAt: string, createdAt: string, viewer: array, labels: array, verification: array, status: array, debug: mixed}[], recIdStr: string}
+     *
+     * @link https://docs.bsky.app/docs/api/app-bsky-unspecced-get-suggested-users-for-discover
+     */
+    #[Get, NSID(self::getSuggestedUsersForDiscover)]
+    public function getSuggestedUsersForDiscover(?int $limit = 25);
+
+    /**
+     * Get a skeleton of suggested users for the Discover page. Intended to be called and hydrated by app.bsky.unspecced.getSuggestedUsersForDiscover.
+     *
+     * @return array{dids: array, recIdStr: string}
+     *
+     * @link https://docs.bsky.app/docs/api/app-bsky-unspecced-get-suggested-users-for-discover-skeleton
+     */
+    #[Get, NSID(self::getSuggestedUsersForDiscoverSkeleton)]
+    public function getSuggestedUsersForDiscoverSkeleton(#[Format('did')] ?string $viewer = null, ?int $limit = 25);
+
+    /**
+     * Get a list of suggested users for the Explore page.
+     *
+     * @return array{actors: array{did: string, handle: string, displayName: string, pronouns: string, description: string, avatar: string, associated: array, indexedAt: string, createdAt: string, viewer: array, labels: array, verification: array, status: array, debug: mixed}[], recIdStr: string}
+     *
+     * @link https://docs.bsky.app/docs/api/app-bsky-unspecced-get-suggested-users-for-explore
+     */
+    #[Get, NSID(self::getSuggestedUsersForExplore)]
+    public function getSuggestedUsersForExplore(?string $category = null, ?int $limit = 25);
+
+    /**
+     * Get a skeleton of suggested users for the Explore page. Intended to be called and hydrated by app.bsky.unspecced.getSuggestedUsersForExplore.
+     *
+     * @return array{dids: array, recIdStr: string}
+     *
+     * @link https://docs.bsky.app/docs/api/app-bsky-unspecced-get-suggested-users-for-explore-skeleton
+     */
+    #[Get, NSID(self::getSuggestedUsersForExploreSkeleton)]
+    public function getSuggestedUsersForExploreSkeleton(#[Format('did')] ?string $viewer = null, ?string $category = null, ?int $limit = 25);
+
+    /**
+     * Get a list of suggested users for the See More page.
+     *
+     * @return array{actors: array{did: string, handle: string, displayName: string, pronouns: string, description: string, avatar: string, associated: array, indexedAt: string, createdAt: string, viewer: array, labels: array, verification: array, status: array, debug: mixed}[], recIdStr: string}
+     *
+     * @link https://docs.bsky.app/docs/api/app-bsky-unspecced-get-suggested-users-for-see-more
+     */
+    #[Get, NSID(self::getSuggestedUsersForSeeMore)]
+    public function getSuggestedUsersForSeeMore(?string $category = null, ?int $limit = 25);
+
+    /**
+     * Get a skeleton of suggested users for the See More page. Intended to be called and hydrated by app.bsky.unspecced.getSuggestedUsersForSeeMore.
+     *
+     * @return array{dids: array, recIdStr: string}
+     *
+     * @link https://docs.bsky.app/docs/api/app-bsky-unspecced-get-suggested-users-for-see-more-skeleton
+     */
+    #[Get, NSID(self::getSuggestedUsersForSeeMoreSkeleton)]
+    public function getSuggestedUsersForSeeMoreSkeleton(#[Format('did')] ?string $viewer = null, ?string $category = null, ?int $limit = 25);
 
     /**
      * Get a skeleton of suggested users. Intended to be called and hydrated by app.bsky.unspecced.getSuggestedUsers.
