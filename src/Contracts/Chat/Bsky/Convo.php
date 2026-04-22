@@ -23,6 +23,7 @@ interface Convo
     public const getConvo = 'chat.bsky.convo.getConvo';
     public const getConvoAvailability = 'chat.bsky.convo.getConvoAvailability';
     public const getConvoForMembers = 'chat.bsky.convo.getConvoForMembers';
+    public const getConvoMembers = 'chat.bsky.convo.getConvoMembers';
     public const getLog = 'chat.bsky.convo.getLog';
     public const getMessages = 'chat.bsky.convo.getMessages';
     public const leaveConvo = 'chat.bsky.convo.leaveConvo';
@@ -97,6 +98,16 @@ interface Convo
      */
     #[Get, NSID(self::getConvoForMembers)]
     public function getConvoForMembers(#[Format('did')] array $members);
+
+    /**
+     * Returns a paginated list of members from a conversation.
+     *
+     * @return array{cursor: string, members: array{did: string, handle: string, displayName: string, avatar: string, associated: array, viewer: array, labels: array, createdAt: string, chatDisabled: bool, verification: array, kind: array}[]}
+     *
+     * @link https://docs.bsky.app/docs/api/chat-bsky-convo-get-convo-members
+     */
+    #[Get, NSID(self::getConvoMembers)]
+    public function getConvoMembers(string $convoId, ?int $limit = 50, ?string $cursor = null);
 
     /**
      * chat.bsky.convo.getLog.
