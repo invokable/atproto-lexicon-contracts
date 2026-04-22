@@ -33,7 +33,7 @@ interface Group
     /**
      * [NOTE: This is under active development and should be considered unstable while this note is here]. Adds members to a group. The members are added in 'request' status, so they have to accept it. This creates convo memberships.
      *
-     * @return array{convo: array{id: string, rev: string, members: array, lastMessage: array, lastReaction: array, muted: bool, status: array, unreadCount: int, kind: array}}
+     * @return array{convo: array{id: string, rev: string, members: array, lastMessage: array, lastReaction: array, muted: bool, status: array, unreadCount: int, kind: array}, addedMembers: array{did: string, handle: string, displayName: string, avatar: string, associated: array, viewer: array, labels: array, createdAt: string, chatDisabled: bool, verification: array, kind: array}[]}
      *
      * @link https://docs.bsky.app/docs/api/chat-bsky-group-add-members
      */

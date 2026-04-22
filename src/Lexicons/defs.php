@@ -14715,7 +14715,7 @@ return array (
           ),
           'members' => 
           array (
-            'description' => 'Members of this conversation. For direct convos, it will be an immutable list of the 2 members. For group convos, it will a list of important members (the first few members, the viewer, the member who invited the viewer, the member who sent the last message, the member who sent the last reaction), but will not contain the full list of members. NOTE: TBD an endpoint to list all members.',
+            'description' => 'Members of this conversation. For direct convos, it will be an immutable list of the 2 members. For group convos, it will a list of important members (the first few members, the viewer, the member who invited the viewer, the member who sent the last message, the member who sent the last reaction), but will not contain the full list of members. Use chat.bsky.convo.getConvoMembers to list all members.',
             'type' => 'array',
             'items' => 
             array (
@@ -14783,6 +14783,7 @@ return array (
         array (
           0 => 'name',
           1 => 'lockStatus',
+          2 => 'memberCount',
         ),
         'properties' => 
         array (
@@ -14792,6 +14793,11 @@ return array (
             'description' => 'The display name of the group conversation.',
             'maxGraphemes' => 128,
             'maxLength' => 1280,
+          ),
+          'memberCount' => 
+          array (
+            'type' => 'integer',
+            'description' => 'The total number of members in the group conversation.',
           ),
           'joinLink' => 
           array (
@@ -15133,8 +15139,9 @@ return array (
           ),
           'message' => 
           array (
+            'description' => 'A system message with data of type #systemMessageDataAddMember',
             'type' => 'ref',
-            'ref' => 'lex:chat.bsky.convo.defs#systemMessageDataAddMember',
+            'ref' => 'lex:chat.bsky.convo.defs#systemMessageView',
           ),
         ),
       ),
@@ -15160,8 +15167,9 @@ return array (
           ),
           'message' => 
           array (
+            'description' => 'A system message with data of type #systemMessageDataRemoveMember',
             'type' => 'ref',
-            'ref' => 'lex:chat.bsky.convo.defs#systemMessageDataRemoveMember',
+            'ref' => 'lex:chat.bsky.convo.defs#systemMessageView',
           ),
         ),
       ),
@@ -15187,8 +15195,9 @@ return array (
           ),
           'message' => 
           array (
+            'description' => 'A system message with data of type #systemMessageDataMemberJoin',
             'type' => 'ref',
-            'ref' => 'lex:chat.bsky.convo.defs#systemMessageDataMemberJoin',
+            'ref' => 'lex:chat.bsky.convo.defs#systemMessageView',
           ),
         ),
       ),
@@ -15214,8 +15223,9 @@ return array (
           ),
           'message' => 
           array (
+            'description' => 'A system message with data of type #systemMessageDataMemberLeave',
             'type' => 'ref',
-            'ref' => 'lex:chat.bsky.convo.defs#systemMessageDataMemberLeave',
+            'ref' => 'lex:chat.bsky.convo.defs#systemMessageView',
           ),
         ),
       ),
@@ -15241,8 +15251,9 @@ return array (
           ),
           'message' => 
           array (
+            'description' => 'A system message with data of type #systemMessageDataLockConvo',
             'type' => 'ref',
-            'ref' => 'lex:chat.bsky.convo.defs#systemMessageDataLockConvo',
+            'ref' => 'lex:chat.bsky.convo.defs#systemMessageView',
           ),
         ),
       ),
@@ -15268,8 +15279,9 @@ return array (
           ),
           'message' => 
           array (
+            'description' => 'A system message with data of type #systemMessageDataUnlockConvo',
             'type' => 'ref',
-            'ref' => 'lex:chat.bsky.convo.defs#systemMessageDataUnlockConvo',
+            'ref' => 'lex:chat.bsky.convo.defs#systemMessageView',
           ),
         ),
       ),
@@ -15295,8 +15307,9 @@ return array (
           ),
           'message' => 
           array (
+            'description' => 'A system message with data of type #systemMessageDataLockConvoPermanently',
             'type' => 'ref',
-            'ref' => 'lex:chat.bsky.convo.defs#systemMessageDataLockConvoPermanently',
+            'ref' => 'lex:chat.bsky.convo.defs#systemMessageView',
           ),
         ),
       ),
@@ -15322,8 +15335,9 @@ return array (
           ),
           'message' => 
           array (
+            'description' => 'A system message with data of type #systemMessageDataEditGroup',
             'type' => 'ref',
-            'ref' => 'lex:chat.bsky.convo.defs#systemMessageDataEditGroup',
+            'ref' => 'lex:chat.bsky.convo.defs#systemMessageView',
           ),
         ),
       ),
@@ -15349,8 +15363,9 @@ return array (
           ),
           'message' => 
           array (
+            'description' => 'A system message with data of type #systemMessageDataCreateJoinLink',
             'type' => 'ref',
-            'ref' => 'lex:chat.bsky.convo.defs#systemMessageDataCreateJoinLink',
+            'ref' => 'lex:chat.bsky.convo.defs#systemMessageView',
           ),
         ),
       ),
@@ -15376,8 +15391,9 @@ return array (
           ),
           'message' => 
           array (
+            'description' => 'A system message with data of type #systemMessageDataEditJoinLink',
             'type' => 'ref',
-            'ref' => 'lex:chat.bsky.convo.defs#systemMessageDataEditJoinLink',
+            'ref' => 'lex:chat.bsky.convo.defs#systemMessageView',
           ),
         ),
       ),
@@ -15403,8 +15419,9 @@ return array (
           ),
           'message' => 
           array (
+            'description' => 'A system message with data of type #systemMessageDataEnableJoinLink',
             'type' => 'ref',
-            'ref' => 'lex:chat.bsky.convo.defs#systemMessageDataEnableJoinLink',
+            'ref' => 'lex:chat.bsky.convo.defs#systemMessageView',
           ),
         ),
       ),
@@ -15430,8 +15447,9 @@ return array (
           ),
           'message' => 
           array (
+            'description' => 'A system message with data of type #systemMessageDataDisableJoinLink',
             'type' => 'ref',
-            'ref' => 'lex:chat.bsky.convo.defs#systemMessageDataDisableJoinLink',
+            'ref' => 'lex:chat.bsky.convo.defs#systemMessageView',
           ),
         ),
       ),
@@ -15785,6 +15803,80 @@ return array (
               array (
                 'type' => 'ref',
                 'ref' => 'lex:chat.bsky.convo.defs#convoView',
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
+  'chat.bsky.convo.getConvoMembers' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'chat.bsky.convo.getConvoMembers',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'description' => 'Returns a paginated list of members from a conversation.',
+        'errors' => 
+        array (
+          0 => 
+          array (
+            'name' => 'InvalidConvo',
+          ),
+        ),
+        'parameters' => 
+        array (
+          'type' => 'params',
+          'required' => 
+          array (
+            0 => 'convoId',
+          ),
+          'properties' => 
+          array (
+            'convoId' => 
+            array (
+              'type' => 'string',
+            ),
+            'limit' => 
+            array (
+              'type' => 'integer',
+              'minimum' => 1,
+              'maximum' => 100,
+              'default' => 50,
+            ),
+            'cursor' => 
+            array (
+              'type' => 'string',
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'members',
+            ),
+            'properties' => 
+            array (
+              'cursor' => 
+              array (
+                'type' => 'string',
+              ),
+              'members' => 
+              array (
+                'type' => 'array',
+                'items' => 
+                array (
+                  'type' => 'ref',
+                  'ref' => 'lex:chat.bsky.actor.defs#profileViewBasic',
+                ),
               ),
             ),
           ),
@@ -16871,6 +16963,15 @@ return array (
               array (
                 'type' => 'ref',
                 'ref' => 'lex:chat.bsky.convo.defs#convoView',
+              ),
+              'addedMembers' => 
+              array (
+                'type' => 'array',
+                'items' => 
+                array (
+                  'type' => 'ref',
+                  'ref' => 'lex:chat.bsky.actor.defs#profileViewBasic',
+                ),
               ),
             ),
           ),
