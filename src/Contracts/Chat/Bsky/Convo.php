@@ -122,7 +122,7 @@ interface Convo
     /**
      * Returns a page of messages from a conversation.
      *
-     * @return array{cursor: string, messages: array}
+     * @return array{cursor: string, messages: array, relatedProfiles: array{did: string, handle: string, displayName: string, avatar: string, associated: array, viewer: array, labels: array, createdAt: string, chatDisabled: bool, verification: array, kind: array}[]}
      *
      * @link https://docs.bsky.app/docs/api/chat-bsky-convo-get-messages
      */

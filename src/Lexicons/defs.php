@@ -13870,6 +13870,7 @@ return array (
             array (
               0 => 'lex:chat.bsky.actor.defs#directConvoMember',
               1 => 'lex:chat.bsky.actor.defs#groupConvoMember',
+              2 => 'lex:chat.bsky.actor.defs#pastGroupConvoMember',
             ),
           ),
         ),
@@ -13884,7 +13885,7 @@ return array (
       ),
       'groupConvoMember' => 
       array (
-        'description' => '[NOTE: This is under active development and should be considered unstable while this note is here].',
+        'description' => '[NOTE: This is under active development and should be considered unstable while this note is here]. A current group convo member.',
         'type' => 'object',
         'required' => 
         array (
@@ -13904,6 +13905,17 @@ return array (
             'type' => 'ref',
             'ref' => 'lex:chat.bsky.actor.defs#memberRole',
           ),
+        ),
+      ),
+      'pastGroupConvoMember' => 
+      array (
+        'description' => '[NOTE: This is under active development and should be considered unstable while this note is here]. A past group convo member.',
+        'type' => 'object',
+        'required' => 
+        array (
+        ),
+        'properties' => 
+        array (
         ),
       ),
     ),
@@ -14324,6 +14336,22 @@ return array (
           ),
         ),
       ),
+      'systemMessageReferredUser' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'did',
+        ),
+        'properties' => 
+        array (
+          'did' => 
+          array (
+            'type' => 'string',
+            'format' => 'did',
+          ),
+        ),
+      ),
       'systemMessageView' => 
       array (
         'description' => '[NOTE: This is under active development and should be considered unstable while this note is here].',
@@ -14387,7 +14415,7 @@ return array (
           array (
             'description' => 'Current view of the member who was added.',
             'type' => 'ref',
-            'ref' => 'lex:chat.bsky.actor.defs#profileViewBasic',
+            'ref' => 'lex:chat.bsky.convo.defs#systemMessageReferredUser',
           ),
           'role' => 
           array (
@@ -14398,7 +14426,7 @@ return array (
           'addedBy' => 
           array (
             'type' => 'ref',
-            'ref' => 'lex:chat.bsky.actor.defs#profileViewBasic',
+            'ref' => 'lex:chat.bsky.convo.defs#systemMessageReferredUser',
           ),
         ),
       ),
@@ -14417,12 +14445,12 @@ return array (
           array (
             'description' => 'Current view of the member who was removed.',
             'type' => 'ref',
-            'ref' => 'lex:chat.bsky.actor.defs#profileViewBasic',
+            'ref' => 'lex:chat.bsky.convo.defs#systemMessageReferredUser',
           ),
           'removedBy' => 
           array (
             'type' => 'ref',
-            'ref' => 'lex:chat.bsky.actor.defs#profileViewBasic',
+            'ref' => 'lex:chat.bsky.convo.defs#systemMessageReferredUser',
           ),
         ),
       ),
@@ -14441,7 +14469,7 @@ return array (
           array (
             'description' => 'Current view of the member who joined.',
             'type' => 'ref',
-            'ref' => 'lex:chat.bsky.actor.defs#profileViewBasic',
+            'ref' => 'lex:chat.bsky.convo.defs#systemMessageReferredUser',
           ),
           'role' => 
           array (
@@ -14453,7 +14481,7 @@ return array (
           array (
             'description' => 'If join link was configured to require approval, this will be set to who approved the request. Undefined if approval was not required.',
             'type' => 'ref',
-            'ref' => 'lex:chat.bsky.actor.defs#profileViewBasic',
+            'ref' => 'lex:chat.bsky.convo.defs#systemMessageReferredUser',
           ),
         ),
       ),
@@ -14471,7 +14499,7 @@ return array (
           array (
             'description' => 'Current view of the member who left the group.',
             'type' => 'ref',
-            'ref' => 'lex:chat.bsky.actor.defs#profileViewBasic',
+            'ref' => 'lex:chat.bsky.convo.defs#systemMessageReferredUser',
           ),
         ),
       ),
@@ -14489,7 +14517,7 @@ return array (
           array (
             'description' => 'Current view of the member who locked the group.',
             'type' => 'ref',
-            'ref' => 'lex:chat.bsky.actor.defs#profileViewBasic',
+            'ref' => 'lex:chat.bsky.convo.defs#systemMessageReferredUser',
           ),
         ),
       ),
@@ -14507,7 +14535,7 @@ return array (
           array (
             'description' => 'Current view of the member who unlocked the group.',
             'type' => 'ref',
-            'ref' => 'lex:chat.bsky.actor.defs#profileViewBasic',
+            'ref' => 'lex:chat.bsky.convo.defs#systemMessageReferredUser',
           ),
         ),
       ),
@@ -14525,7 +14553,7 @@ return array (
           array (
             'description' => 'Current view of the member who locked the group.',
             'type' => 'ref',
-            'ref' => 'lex:chat.bsky.actor.defs#profileViewBasic',
+            'ref' => 'lex:chat.bsky.convo.defs#systemMessageReferredUser',
           ),
         ),
       ),
@@ -15126,6 +15154,7 @@ return array (
           0 => 'rev',
           1 => 'convoId',
           2 => 'message',
+          3 => 'relatedProfiles',
         ),
         'properties' => 
         array (
@@ -15143,6 +15172,16 @@ return array (
             'type' => 'ref',
             'ref' => 'lex:chat.bsky.convo.defs#systemMessageView',
           ),
+          'relatedProfiles' => 
+          array (
+            'description' => 'Profiles referred in the system message.',
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:chat.bsky.actor.defs#profileViewBasic',
+            ),
+          ),
         ),
       ),
       'logRemoveMember' => 
@@ -15154,6 +15193,7 @@ return array (
           0 => 'rev',
           1 => 'convoId',
           2 => 'message',
+          3 => 'relatedProfiles',
         ),
         'properties' => 
         array (
@@ -15171,6 +15211,16 @@ return array (
             'type' => 'ref',
             'ref' => 'lex:chat.bsky.convo.defs#systemMessageView',
           ),
+          'relatedProfiles' => 
+          array (
+            'description' => 'Profiles referred in the system message.',
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:chat.bsky.actor.defs#profileViewBasic',
+            ),
+          ),
         ),
       ),
       'logMemberJoin' => 
@@ -15182,6 +15232,7 @@ return array (
           0 => 'rev',
           1 => 'convoId',
           2 => 'message',
+          3 => 'relatedProfiles',
         ),
         'properties' => 
         array (
@@ -15199,6 +15250,16 @@ return array (
             'type' => 'ref',
             'ref' => 'lex:chat.bsky.convo.defs#systemMessageView',
           ),
+          'relatedProfiles' => 
+          array (
+            'description' => 'Profiles referred in the system message.',
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:chat.bsky.actor.defs#profileViewBasic',
+            ),
+          ),
         ),
       ),
       'logMemberLeave' => 
@@ -15210,6 +15271,7 @@ return array (
           0 => 'rev',
           1 => 'convoId',
           2 => 'message',
+          3 => 'relatedProfiles',
         ),
         'properties' => 
         array (
@@ -15227,6 +15289,16 @@ return array (
             'type' => 'ref',
             'ref' => 'lex:chat.bsky.convo.defs#systemMessageView',
           ),
+          'relatedProfiles' => 
+          array (
+            'description' => 'Profiles referred in the system message.',
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:chat.bsky.actor.defs#profileViewBasic',
+            ),
+          ),
         ),
       ),
       'logLockConvo' => 
@@ -15238,6 +15310,7 @@ return array (
           0 => 'rev',
           1 => 'convoId',
           2 => 'message',
+          3 => 'relatedProfiles',
         ),
         'properties' => 
         array (
@@ -15255,6 +15328,16 @@ return array (
             'type' => 'ref',
             'ref' => 'lex:chat.bsky.convo.defs#systemMessageView',
           ),
+          'relatedProfiles' => 
+          array (
+            'description' => 'Profiles referred in the system message.',
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:chat.bsky.actor.defs#profileViewBasic',
+            ),
+          ),
         ),
       ),
       'logUnlockConvo' => 
@@ -15266,6 +15349,7 @@ return array (
           0 => 'rev',
           1 => 'convoId',
           2 => 'message',
+          3 => 'relatedProfiles',
         ),
         'properties' => 
         array (
@@ -15283,6 +15367,16 @@ return array (
             'type' => 'ref',
             'ref' => 'lex:chat.bsky.convo.defs#systemMessageView',
           ),
+          'relatedProfiles' => 
+          array (
+            'description' => 'Profiles referred in the system message.',
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:chat.bsky.actor.defs#profileViewBasic',
+            ),
+          ),
         ),
       ),
       'logLockConvoPermanently' => 
@@ -15294,6 +15388,7 @@ return array (
           0 => 'rev',
           1 => 'convoId',
           2 => 'message',
+          3 => 'relatedProfiles',
         ),
         'properties' => 
         array (
@@ -15310,6 +15405,16 @@ return array (
             'description' => 'A system message with data of type #systemMessageDataLockConvoPermanently',
             'type' => 'ref',
             'ref' => 'lex:chat.bsky.convo.defs#systemMessageView',
+          ),
+          'relatedProfiles' => 
+          array (
+            'description' => 'Profiles referred in the system message.',
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:chat.bsky.actor.defs#profileViewBasic',
+            ),
           ),
         ),
       ),
@@ -16038,6 +16143,16 @@ return array (
                     1 => 'lex:chat.bsky.convo.defs#deletedMessageView',
                     2 => 'lex:chat.bsky.convo.defs#systemMessageView',
                   ),
+                ),
+              ),
+              'relatedProfiles' => 
+              array (
+                'description' => 'Set of all members who authored or reacted to the returned messages. Members referred to by system messages are also included.',
+                'type' => 'array',
+                'items' => 
+                array (
+                  'type' => 'ref',
+                  'ref' => 'lex:chat.bsky.actor.defs#profileViewBasic',
                 ),
               ),
             ),
