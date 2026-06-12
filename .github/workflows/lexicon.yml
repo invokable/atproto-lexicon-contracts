@@ -32,7 +32,7 @@ jobs:
         run: composer run lexicon
         working-directory: ./command
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v7 #https://github.com/peter-evans/create-pull-request
+        uses: peter-evans/create-pull-request@v8 #https://github.com/peter-evans/create-pull-request
         with:
           branch: 'lexicon'
           commit-message: 'lexicon update'
