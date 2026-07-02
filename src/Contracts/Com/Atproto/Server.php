@@ -169,7 +169,7 @@ interface Server
      * @link https://docs.bsky.app/docs/api/com-atproto-server-get-service-auth
      */
     #[Get, NSID(self::getServiceAuth)]
-    public function getServiceAuth(#[Format('did')] string $aud, ?int $exp = null, #[Format('nsid')] ?string $lxm = null);
+    public function getServiceAuth(string $aud, ?int $exp = null, #[Format('nsid')] ?string $lxm = null);
 
     /**
      * Get information about the current auth session. Requires auth.
