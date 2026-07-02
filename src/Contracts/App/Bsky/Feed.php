@@ -34,6 +34,7 @@ interface Feed
     public const getSuggestedFeeds = 'app.bsky.feed.getSuggestedFeeds';
     public const getTimeline = 'app.bsky.feed.getTimeline';
     public const searchPosts = 'app.bsky.feed.searchPosts';
+    public const searchPostsV2 = 'app.bsky.feed.searchPostsV2';
     public const sendInteractions = 'app.bsky.feed.sendInteractions';
 
     /**
@@ -205,6 +206,16 @@ interface Feed
      */
     #[Get, NSID(self::searchPosts)]
     public function searchPosts(string $q, #[KnownValues(['top', 'latest'])] ?string $sort = 'latest', ?string $since = null, ?string $until = null, #[Format('at-identifier')] ?string $mentions = null, #[Format('at-identifier')] ?string $author = null, #[Format('language')] ?string $lang = null, ?string $domain = null, #[Format('uri')] ?string $url = null, ?array $tag = null, ?int $limit = 25, ?string $cursor = null);
+
+    /**
+     * Find posts matching a search query or filters, returning search hits for matching post records.
+     *
+     * @return array{cursor: string, hitsTotal: int, posts: array{uri: string, cid: string, author: array, record: mixed, embed: array, bookmarkCount: int, replyCount: int, repostCount: int, likeCount: int, quoteCount: int, indexedAt: string, viewer: array, labels: array, threadgate: array, debug: mixed}[], detectedQueryLanguages: array}
+     *
+     * @link https://docs.bsky.app/docs/api/app-bsky-feed-search-posts-v2
+     */
+    #[Get, NSID(self::searchPostsV2)]
+    public function searchPostsV2(?string $cursor = null, ?int $limit = 25, ?string $query = null, #[KnownValues(['recent', 'top'])] ?string $sort = null, #[Format('at-identifier')] ?array $authors = null, #[Format('at-identifier')] ?array $mentions = null, ?array $domains = null, #[Format('uri')] ?array $urls = null, #[Format('at-uri')] ?array $embeddedAtUris = null, ?array $hashtags = null, #[Format('at-identifier')] ?array $excludeAuthors = null, #[Format('at-identifier')] ?array $excludeMentions = null, ?array $excludeDomains = null, #[Format('uri')] ?array $excludeUrls = null, #[Format('at-uri')] ?array $excludeEmbeddedAtUris = null, ?array $excludeHashtags = null, ?string $since = null, ?string $until = null, ?bool $allTime = null, #[Format('language')] ?array $languages = null, #[Format('language')] ?array $excludeLanguages = null, ?bool $hasMedia = null, ?bool $hasVideo = null, #[Format('at-uri')] ?string $replyParentUri = null, #[Format('at-uri')] ?string $threadRootUri = null, ?bool $excludeReplies = null, ?bool $repliesOnly = null, ?bool $following = null, #[KnownValues(['ja', 'zh', 'ko', 'th', 'ar'])] ?string $queryLanguage = null);
 
     /**
      * Send information about interactions with feed items back to the feed generator that served them.

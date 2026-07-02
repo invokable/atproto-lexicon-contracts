@@ -23,6 +23,6 @@ abstract class AbstractRecordWithMedia
     #[Ref('app.bsky.embed.record')]
     protected array $record;
 
-    #[Union(['app.bsky.embed.images', 'app.bsky.embed.video', 'app.bsky.embed.external'])]
+    #[Union(['app.bsky.embed.images', 'app.bsky.embed.video', 'app.bsky.embed.gallery', 'app.bsky.embed.external'])]
     protected array $media;
 }
