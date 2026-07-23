@@ -35,7 +35,7 @@ abstract class AbstractPost
     #[Ref('app.bsky.feed.post#replyRef')]
     protected ?array $reply = null;
 
-    #[Union(['app.bsky.embed.images', 'app.bsky.embed.video', 'app.bsky.embed.external', 'app.bsky.embed.record', 'app.bsky.embed.recordWithMedia'])]
+    #[Union(['app.bsky.embed.images', 'app.bsky.embed.video', 'app.bsky.embed.gallery', 'app.bsky.embed.external', 'app.bsky.embed.record', 'app.bsky.embed.recordWithMedia'])]
     protected ?array $embed = null;
 
     /**

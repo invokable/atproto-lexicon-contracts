@@ -16,6 +16,11 @@ enum Embed: string
     case External = 'app.bsky.embed.external';
 
     /**
+     * An assortment of media embedded in a Bluesky record (eg, a post).
+     */
+    case Gallery = 'app.bsky.embed.gallery';
+
+    /**
      * A set of images embedded in a Bluesky record (eg, a post).
      */
     case Images = 'app.bsky.embed.images';

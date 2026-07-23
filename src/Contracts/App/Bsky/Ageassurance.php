@@ -31,7 +31,7 @@ interface Ageassurance
     /**
      * Returns Age Assurance configuration for use on the client.
      *
-     * @return array{regions: array{countryCode: string, regionCode: string, minAccessAge: int, rules: array}[]}
+     * @return array{regions: array{platforms: array, countryCode: string, regionCode: string, minAccessAge: int, additionalVerificationMethods: array, rules: array}[]}
      *
      * @link https://docs.bsky.app/docs/api/app-bsky-ageassurance-get-config
      */

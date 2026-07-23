@@ -10,6 +10,7 @@ namespace Revolution\AtProto\Lexicon\Contracts\App\Bsky;
 
 use Revolution\AtProto\Lexicon\Attributes\Format;
 use Revolution\AtProto\Lexicon\Attributes\Get;
+use Revolution\AtProto\Lexicon\Attributes\KnownValues;
 use Revolution\AtProto\Lexicon\Attributes\NSID;
 use Revolution\AtProto\Lexicon\Attributes\Post;
 
@@ -35,6 +36,7 @@ interface Graph
     public const muteActorList = 'app.bsky.graph.muteActorList';
     public const muteThread = 'app.bsky.graph.muteThread';
     public const searchStarterPacks = 'app.bsky.graph.searchStarterPacks';
+    public const searchStarterPacksV2 = 'app.bsky.graph.searchStarterPacksV2';
     public const unmuteActor = 'app.bsky.graph.unmuteActor';
     public const unmuteActorList = 'app.bsky.graph.unmuteActorList';
     public const unmuteThread = 'app.bsky.graph.unmuteThread';
@@ -67,7 +69,7 @@ interface Graph
      * @link https://docs.bsky.app/docs/api/app-bsky-graph-get-followers
      */
     #[Get, NSID(self::getFollowers)]
-    public function getFollowers(#[Format('at-identifier')] string $actor, ?int $limit = 50, ?string $cursor = null);
+    public function getFollowers(#[Format('at-identifier')] string $actor, ?int $limit = 50, ?string $cursor = null, #[KnownValues(['latest', 'top'])] ?string $sort = null);
 
     /**
      * Enumerates accounts which a specified account (actor) follows.
@@ -77,7 +79,7 @@ interface Graph
      * @link https://docs.bsky.app/docs/api/app-bsky-graph-get-follows
      */
     #[Get, NSID(self::getFollows)]
-    public function getFollows(#[Format('at-identifier')] string $actor, ?int $limit = 50, ?string $cursor = null);
+    public function getFollows(#[Format('at-identifier')] string $actor, ?int $limit = 50, ?string $cursor = null, #[KnownValues(['latest', 'top'])] ?string $sort = null);
 
     /**
      * Enumerates accounts which follow a specified account (actor) and are followed by the viewer.
@@ -232,6 +234,16 @@ interface Graph
      */
     #[Get, NSID(self::searchStarterPacks)]
     public function searchStarterPacks(string $q, ?int $limit = 25, ?string $cursor = null);
+
+    /**
+     * Find starter packs matching search criteria. Does not require auth.
+     *
+     * @return array{cursor: string, hitsTotal: int, starterPacks: array{uri: string, cid: string, record: mixed, creator: array, list: array, listItemsSample: array, feeds: array, joinedWeekCount: int, joinedAllTimeCount: int, labels: array, indexedAt: string}[]}
+     *
+     * @link https://docs.bsky.app/docs/api/app-bsky-graph-search-starter-packs-v2
+     */
+    #[Get, NSID(self::searchStarterPacksV2)]
+    public function searchStarterPacksV2(string $q, ?int $limit = 25, ?string $cursor = null);
 
     /**
      * Unmutes the specified account. Requires auth.

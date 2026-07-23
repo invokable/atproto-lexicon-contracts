@@ -290,7 +290,7 @@ interface Unspecced
     /**
      * Get the current trends on the network.
      *
-     * @return array{trends: array{topic: string, displayName: string, link: string, startedAt: string, postCount: int, status: string, category: string, actors: array}[]}
+     * @return array{trends: array{topic: string, displayName: string, description: string, link: string, startedAt: string, postCount: int, status: string, category: string, actors: array}[], recIdStr: string}
      *
      * @link https://docs.bsky.app/docs/api/app-bsky-unspecced-get-trends
      */
@@ -300,7 +300,7 @@ interface Unspecced
     /**
      * Get the skeleton of trends on the network. Intended to be called and then hydrated through app.bsky.unspecced.getTrends.
      *
-     * @return array{trends: array{topic: string, displayName: string, link: string, startedAt: string, postCount: int, status: string, category: string, dids: array}[]}
+     * @return array{trends: array{topic: string, displayName: string, description: string, link: string, startedAt: string, postCount: int, status: string, category: string, dids: array}[], recIdStr: string}
      *
      * @link https://docs.bsky.app/docs/api/app-bsky-unspecced-get-trends-skeleton
      */
