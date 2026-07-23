@@ -26,6 +26,7 @@ interface Convo
     public const getConvoMembers = 'chat.bsky.convo.getConvoMembers';
     public const getLog = 'chat.bsky.convo.getLog';
     public const getMessages = 'chat.bsky.convo.getMessages';
+    public const getUnreadCounts = 'chat.bsky.convo.getUnreadCounts';
     public const leaveConvo = 'chat.bsky.convo.leaveConvo';
     public const listConvoRequests = 'chat.bsky.convo.listConvoRequests';
     public const listConvos = 'chat.bsky.convo.listConvos';
@@ -52,7 +53,7 @@ interface Convo
     /**
      * Adds an emoji reaction to a message. Requires authentication. It is idempotent, so multiple calls from the same user with the same emoji result in a single reaction.
      *
-     * @return array{message: array{id: string, rev: string, text: string, facets: array, embed: array, reactions: array, sender: array, sentAt: string}}
+     * @return array{message: array{id: string, rev: string, text: string, facets: array, embed: array, reactions: array, replyTo: array, sender: array, sentAt: string}}
      *
      * @link https://docs.bsky.app/docs/api/chat-bsky-convo-add-reaction
      */
@@ -130,6 +131,16 @@ interface Convo
     public function getMessages(string $convoId, ?int $limit = 50, ?string $cursor = null);
 
     /**
+     * Returns unread conversation counts for conversations that are unlocked, not muted, split by convo status. Direct convos are excluded when a block relationship exists between the actor and the other member, or when the other member's account is deleted or deactivated. Group convos are considered unread if they have unread join request counts.
+     *
+     * @return array{unreadAcceptedConvos: int, unreadRequestConvos: int}
+     *
+     * @link https://docs.bsky.app/docs/api/chat-bsky-convo-get-unread-counts
+     */
+    #[Get, NSID(self::getUnreadCounts)]
+    public function getUnreadCounts(?bool $includeGroupChats = null);
+
+    /**
      * Leaves a conversation (direct or group). For group, this effectively removes membership. For direct, membership is never removed, only changed to remove from enumerations by the user who left.
      *
      * @return array{convoId: string, rev: string}
@@ -140,7 +151,7 @@ interface Convo
     public function leaveConvo(string $convoId);
 
     /**
-     * [NOTE: This is under active development and should be considered unstable while this note is here]. Returns a page of incoming conversation requests for the user. Direct convo requests are returned as convoView; group join requests are returned as joinRequestView.
+     * Returns a page of incoming conversation requests for the user. Direct convo requests are returned as convoView; group join requests made by the user are returned as joinRequestConvoView.
      *
      * @return array{cursor: string, requests: array}
      *
@@ -157,10 +168,10 @@ interface Convo
      * @link https://docs.bsky.app/docs/api/chat-bsky-convo-list-convos
      */
     #[Get, NSID(self::listConvos)]
-    public function listConvos(?int $limit = 50, ?string $cursor = null, #[KnownValues(['unread'])] ?string $readState = null, #[KnownValues(['request', 'accepted'])] ?string $status = null, #[KnownValues(['direct', 'group'])] ?string $kind = null);
+    public function listConvos(?int $limit = 50, ?string $cursor = null, #[KnownValues(['unread'])] ?string $readState = null, #[KnownValues(['request', 'accepted'])] ?string $status = null, #[KnownValues(['direct', 'group'])] ?string $kind = null, #[KnownValues(['unlocked', 'locked', 'locked-permanently'])] ?string $lockStatus = null);
 
     /**
-     * [NOTE: This is under active development and should be considered unstable while this note is here]. Locks a group convo so no more content (messages, reactions) can be added to it.
+     * Locks a group convo so no more content (messages, reactions) can be added to it.
      *
      * @return array{convo: array{id: string, rev: string, members: array, lastMessage: array, lastReaction: array, muted: bool, status: array, unreadCount: int, kind: array}}
      *
@@ -182,7 +193,7 @@ interface Convo
     /**
      * Removes an emoji reaction from a message. Requires authentication. It is idempotent, so multiple calls from the same user with the same emoji result in that reaction not being present, even if it already wasn't.
      *
-     * @return array{message: array{id: string, rev: string, text: string, facets: array, embed: array, reactions: array, sender: array, sentAt: string}}
+     * @return array{message: array{id: string, rev: string, text: string, facets: array, embed: array, reactions: array, replyTo: array, sender: array, sentAt: string}}
      *
      * @link https://docs.bsky.app/docs/api/chat-bsky-convo-remove-reaction
      */
@@ -192,7 +203,7 @@ interface Convo
     /**
      * Sends a message to a conversation.
      *
-     * @return array{id: string, rev: string, text: string, facets: array{index: array, features: array}[], embed: array, reactions: array{}[], sender: mixed, sentAt: string}
+     * @return array{id: string, rev: string, text: string, facets: array{index: array, features: array}[], embed: array, reactions: array{}[], replyTo: array, sender: mixed, sentAt: string}
      *
      * @link https://docs.bsky.app/docs/api/chat-bsky-convo-send-message
      */
@@ -202,7 +213,7 @@ interface Convo
     /**
      * Sends a batch of messages to a conversation.
      *
-     * @return array{items: array{id: string, rev: string, text: string, facets: array, embed: array, reactions: array, sender: array, sentAt: string}[]}
+     * @return array{items: array{id: string, rev: string, text: string, facets: array, embed: array, reactions: array, replyTo: array, sender: array, sentAt: string}[]}
      *
      * @link https://docs.bsky.app/docs/api/chat-bsky-convo-send-message-batch
      */
@@ -210,7 +221,7 @@ interface Convo
     public function sendMessageBatch(#[Ref('chat.bsky.convo.sendMessageBatch#batchItem')] array $items);
 
     /**
-     * [NOTE: This is under active development and should be considered unstable while this note is here]. Unlocks a group convo so it is able to receive new content.
+     * Unlocks a group convo so it is able to receive new content.
      *
      * @return array{convo: array{id: string, rev: string, members: array, lastMessage: array, lastReaction: array, muted: bool, status: array, unreadCount: int, kind: array}}
      *

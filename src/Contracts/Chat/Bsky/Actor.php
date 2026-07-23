@@ -16,6 +16,7 @@ interface Actor
 {
     public const deleteAccount = 'chat.bsky.actor.deleteAccount';
     public const exportAccountData = 'chat.bsky.actor.exportAccountData';
+    public const getStatus = 'chat.bsky.actor.getStatus';
 
     /**
      * chat.bsky.actor.deleteAccount.
@@ -32,4 +33,14 @@ interface Actor
      */
     #[Get, NSID(self::exportAccountData)]
     public function exportAccountData();
+
+    /**
+     * Get the authenticated viewer's chat status: whether their account is chat-disabled and whether their group-membership additions are restricted to accounts they follow.
+     *
+     * @return array{chatDisabled: bool, canCreateGroups: bool, groupMemberLimit: int}
+     *
+     * @link https://docs.bsky.app/docs/api/chat-bsky-actor-get-status
+     */
+    #[Get, NSID(self::getStatus)]
+    public function getStatus();
 }

@@ -555,6 +555,17 @@ return array (
             'description' => 'The user who issued this verification.',
             'format' => 'did',
           ),
+          'issuerDisplayName' => 
+          array (
+            'type' => 'string',
+            'description' => 'The display name of the issuer.',
+          ),
+          'issuerHandle' => 
+          array (
+            'type' => 'string',
+            'description' => 'The handle of the issuer.',
+            'format' => 'handle',
+          ),
           'uri' => 
           array (
             'type' => 'string',
@@ -1011,6 +1022,11 @@ return array (
           array (
             'type' => 'ref',
             'ref' => 'lex:app.bsky.actor.defs#bskyAppProgressGuide',
+          ),
+          'isBetaUser' => 
+          array (
+            'description' => 'Indicates if the user is participating in the beta features program.',
+            'type' => 'boolean',
           ),
           'queuedNudges' => 
           array (
@@ -1951,6 +1967,21 @@ return array (
         ),
         'properties' => 
         array (
+          'platforms' => 
+          array (
+            'type' => 'array',
+            'description' => 'The platforms this configuration applies to. If omitted, the configuration applies to all platforms.',
+            'items' => 
+            array (
+              'type' => 'string',
+              'knownValues' => 
+              array (
+                0 => 'web',
+                1 => 'ios',
+                2 => 'android',
+              ),
+            ),
+          ),
           'countryCode' => 
           array (
             'type' => 'string',
@@ -1965,6 +1996,19 @@ return array (
           array (
             'type' => 'integer',
             'description' => 'The minimum age (as a whole integer) required to use Bluesky in this region.',
+          ),
+          'additionalVerificationMethods' => 
+          array (
+            'type' => 'array',
+            'description' => 'Verification methods permitted in this region in addition to the third-party (KWS) flow, which is always supported. `device` permits using the native on-device age APIs (e.g. Apple Declared Age Range, Google Play Age Signals).',
+            'items' => 
+            array (
+              'type' => 'string',
+              'knownValues' => 
+              array (
+                0 => 'device',
+              ),
+            ),
           ),
           'rules' => 
           array (
@@ -2462,65 +2506,67 @@ return array (
               31 => 'app.bsky.feed.getSuggestedFeeds',
               32 => 'app.bsky.feed.getTimeline',
               33 => 'app.bsky.feed.searchPosts',
-              34 => 'app.bsky.feed.sendInteractions',
-              35 => 'app.bsky.graph.getActorStarterPacks',
-              36 => 'app.bsky.graph.getBlocks',
-              37 => 'app.bsky.graph.getFollowers',
-              38 => 'app.bsky.graph.getFollows',
-              39 => 'app.bsky.graph.getKnownFollowers',
-              40 => 'app.bsky.graph.getList',
-              41 => 'app.bsky.graph.getListBlocks',
-              42 => 'app.bsky.graph.getListMutes',
-              43 => 'app.bsky.graph.getLists',
-              44 => 'app.bsky.graph.getListsWithMembership',
-              45 => 'app.bsky.graph.getMutes',
-              46 => 'app.bsky.graph.getRelationships',
-              47 => 'app.bsky.graph.getStarterPack',
-              48 => 'app.bsky.graph.getStarterPacks',
-              49 => 'app.bsky.graph.getStarterPacksWithMembership',
-              50 => 'app.bsky.graph.getSuggestedFollowsByActor',
-              51 => 'app.bsky.graph.muteActor',
-              52 => 'app.bsky.graph.muteActorList',
-              53 => 'app.bsky.graph.muteThread',
-              54 => 'app.bsky.graph.searchStarterPacks',
-              55 => 'app.bsky.graph.unmuteActor',
-              56 => 'app.bsky.graph.unmuteActorList',
-              57 => 'app.bsky.graph.unmuteThread',
-              58 => 'app.bsky.labeler.getServices',
-              59 => 'app.bsky.notification.getPreferences',
-              60 => 'app.bsky.notification.getUnreadCount',
-              61 => 'app.bsky.notification.listActivitySubscriptions',
-              62 => 'app.bsky.notification.listNotifications',
-              63 => 'app.bsky.notification.putActivitySubscription',
-              64 => 'app.bsky.notification.putPreferences',
-              65 => 'app.bsky.notification.putPreferencesV2',
-              66 => 'app.bsky.notification.registerPush',
-              67 => 'app.bsky.notification.unregisterPush',
-              68 => 'app.bsky.notification.updateSeen',
-              69 => 'app.bsky.unspecced.getAgeAssuranceState',
-              70 => 'app.bsky.unspecced.getConfig',
-              71 => 'app.bsky.unspecced.getOnboardingSuggestedStarterPacks',
-              72 => 'app.bsky.unspecced.getPopularFeedGenerators',
-              73 => 'app.bsky.unspecced.getPostThreadOtherV2',
-              74 => 'app.bsky.unspecced.getPostThreadV2',
-              75 => 'app.bsky.unspecced.getSuggestedFeeds',
-              76 => 'app.bsky.unspecced.getSuggestedFeedsSkeleton',
-              77 => 'app.bsky.unspecced.getSuggestedStarterPacks',
-              78 => 'app.bsky.unspecced.getSuggestedStarterPacksSkeleton',
-              79 => 'app.bsky.unspecced.getSuggestedUsers',
-              80 => 'app.bsky.unspecced.getSuggestedUsersSkeleton',
-              81 => 'app.bsky.unspecced.getSuggestionsSkeleton',
-              82 => 'app.bsky.unspecced.getTaggedSuggestions',
-              83 => 'app.bsky.unspecced.getTrendingTopics',
-              84 => 'app.bsky.unspecced.getTrends',
-              85 => 'app.bsky.unspecced.getTrendsSkeleton',
-              86 => 'app.bsky.unspecced.initAgeAssurance',
-              87 => 'app.bsky.unspecced.searchActorsSkeleton',
-              88 => 'app.bsky.unspecced.searchPostsSkeleton',
-              89 => 'app.bsky.unspecced.searchStarterPacksSkeleton',
-              90 => 'app.bsky.video.getJobStatus',
-              91 => 'app.bsky.video.getUploadLimits',
-              92 => 'app.bsky.video.uploadVideo',
+              34 => 'app.bsky.feed.searchPostsV2',
+              35 => 'app.bsky.feed.sendInteractions',
+              36 => 'app.bsky.graph.getActorStarterPacks',
+              37 => 'app.bsky.graph.getBlocks',
+              38 => 'app.bsky.graph.getFollowers',
+              39 => 'app.bsky.graph.getFollows',
+              40 => 'app.bsky.graph.getKnownFollowers',
+              41 => 'app.bsky.graph.getList',
+              42 => 'app.bsky.graph.getListBlocks',
+              43 => 'app.bsky.graph.getListMutes',
+              44 => 'app.bsky.graph.getLists',
+              45 => 'app.bsky.graph.getListsWithMembership',
+              46 => 'app.bsky.graph.getMutes',
+              47 => 'app.bsky.graph.getRelationships',
+              48 => 'app.bsky.graph.getStarterPack',
+              49 => 'app.bsky.graph.getStarterPacks',
+              50 => 'app.bsky.graph.getStarterPacksWithMembership',
+              51 => 'app.bsky.graph.getSuggestedFollowsByActor',
+              52 => 'app.bsky.graph.muteActor',
+              53 => 'app.bsky.graph.muteActorList',
+              54 => 'app.bsky.graph.muteThread',
+              55 => 'app.bsky.graph.searchStarterPacks',
+              56 => 'app.bsky.graph.searchStarterPacksV2',
+              57 => 'app.bsky.graph.unmuteActor',
+              58 => 'app.bsky.graph.unmuteActorList',
+              59 => 'app.bsky.graph.unmuteThread',
+              60 => 'app.bsky.labeler.getServices',
+              61 => 'app.bsky.notification.getPreferences',
+              62 => 'app.bsky.notification.getUnreadCount',
+              63 => 'app.bsky.notification.listActivitySubscriptions',
+              64 => 'app.bsky.notification.listNotifications',
+              65 => 'app.bsky.notification.putActivitySubscription',
+              66 => 'app.bsky.notification.putPreferences',
+              67 => 'app.bsky.notification.putPreferencesV2',
+              68 => 'app.bsky.notification.registerPush',
+              69 => 'app.bsky.notification.unregisterPush',
+              70 => 'app.bsky.notification.updateSeen',
+              71 => 'app.bsky.unspecced.getAgeAssuranceState',
+              72 => 'app.bsky.unspecced.getConfig',
+              73 => 'app.bsky.unspecced.getOnboardingSuggestedStarterPacks',
+              74 => 'app.bsky.unspecced.getPopularFeedGenerators',
+              75 => 'app.bsky.unspecced.getPostThreadOtherV2',
+              76 => 'app.bsky.unspecced.getPostThreadV2',
+              77 => 'app.bsky.unspecced.getSuggestedFeeds',
+              78 => 'app.bsky.unspecced.getSuggestedFeedsSkeleton',
+              79 => 'app.bsky.unspecced.getSuggestedStarterPacks',
+              80 => 'app.bsky.unspecced.getSuggestedStarterPacksSkeleton',
+              81 => 'app.bsky.unspecced.getSuggestedUsers',
+              82 => 'app.bsky.unspecced.getSuggestedUsersSkeleton',
+              83 => 'app.bsky.unspecced.getSuggestionsSkeleton',
+              84 => 'app.bsky.unspecced.getTaggedSuggestions',
+              85 => 'app.bsky.unspecced.getTrendingTopics',
+              86 => 'app.bsky.unspecced.getTrends',
+              87 => 'app.bsky.unspecced.getTrendsSkeleton',
+              88 => 'app.bsky.unspecced.initAgeAssurance',
+              89 => 'app.bsky.unspecced.searchActorsSkeleton',
+              90 => 'app.bsky.unspecced.searchPostsSkeleton',
+              91 => 'app.bsky.unspecced.searchStarterPacksSkeleton',
+              92 => 'app.bsky.video.getJobStatus',
+              93 => 'app.bsky.video.getUploadLimits',
+              94 => 'app.bsky.video.uploadVideo',
             ),
           ),
           1 => 
@@ -2819,49 +2865,51 @@ return array (
               21 => 'app.bsky.feed.getSuggestedFeeds',
               22 => 'app.bsky.feed.getTimeline',
               23 => 'app.bsky.feed.searchPosts',
-              24 => 'app.bsky.graph.getActorStarterPacks',
-              25 => 'app.bsky.graph.getBlocks',
-              26 => 'app.bsky.graph.getFollowers',
-              27 => 'app.bsky.graph.getFollows',
-              28 => 'app.bsky.graph.getKnownFollowers',
-              29 => 'app.bsky.graph.getListBlocks',
-              30 => 'app.bsky.graph.getListMutes',
-              31 => 'app.bsky.graph.getLists',
-              32 => 'app.bsky.graph.getListsWithMembership',
-              33 => 'app.bsky.graph.getMutes',
-              34 => 'app.bsky.graph.getRelationships',
-              35 => 'app.bsky.graph.getStarterPack',
-              36 => 'app.bsky.graph.getStarterPacks',
-              37 => 'app.bsky.graph.getStarterPacksWithMembership',
-              38 => 'app.bsky.graph.getSuggestedFollowsByActor',
-              39 => 'app.bsky.graph.searchStarterPacks',
-              40 => 'app.bsky.labeler.getServices',
-              41 => 'app.bsky.notification.getPreferences',
-              42 => 'app.bsky.notification.getUnreadCount',
-              43 => 'app.bsky.notification.listActivitySubscriptions',
-              44 => 'app.bsky.notification.listNotifications',
-              45 => 'app.bsky.notification.updateSeen',
-              46 => 'app.bsky.unspecced.getAgeAssuranceState',
-              47 => 'app.bsky.unspecced.getConfig',
-              48 => 'app.bsky.unspecced.getOnboardingSuggestedStarterPacks',
-              49 => 'app.bsky.unspecced.getPopularFeedGenerators',
-              50 => 'app.bsky.unspecced.getPostThreadOtherV2',
-              51 => 'app.bsky.unspecced.getPostThreadV2',
-              52 => 'app.bsky.unspecced.getSuggestedFeeds',
-              53 => 'app.bsky.unspecced.getSuggestedFeedsSkeleton',
-              54 => 'app.bsky.unspecced.getSuggestedStarterPacks',
-              55 => 'app.bsky.unspecced.getSuggestedStarterPacksSkeleton',
-              56 => 'app.bsky.unspecced.getSuggestedUsers',
-              57 => 'app.bsky.unspecced.getSuggestedUsersSkeleton',
-              58 => 'app.bsky.unspecced.getSuggestionsSkeleton',
-              59 => 'app.bsky.unspecced.getTaggedSuggestions',
-              60 => 'app.bsky.unspecced.getTrendingTopics',
-              61 => 'app.bsky.unspecced.getTrends',
-              62 => 'app.bsky.unspecced.getTrendsSkeleton',
-              63 => 'app.bsky.unspecced.searchActorsSkeleton',
-              64 => 'app.bsky.unspecced.searchPostsSkeleton',
-              65 => 'app.bsky.unspecced.searchStarterPacksSkeleton',
-              66 => 'app.bsky.video.getUploadLimits',
+              24 => 'app.bsky.feed.searchPostsV2',
+              25 => 'app.bsky.graph.getActorStarterPacks',
+              26 => 'app.bsky.graph.getBlocks',
+              27 => 'app.bsky.graph.getFollowers',
+              28 => 'app.bsky.graph.getFollows',
+              29 => 'app.bsky.graph.getKnownFollowers',
+              30 => 'app.bsky.graph.getListBlocks',
+              31 => 'app.bsky.graph.getListMutes',
+              32 => 'app.bsky.graph.getLists',
+              33 => 'app.bsky.graph.getListsWithMembership',
+              34 => 'app.bsky.graph.getMutes',
+              35 => 'app.bsky.graph.getRelationships',
+              36 => 'app.bsky.graph.getStarterPack',
+              37 => 'app.bsky.graph.getStarterPacks',
+              38 => 'app.bsky.graph.getStarterPacksWithMembership',
+              39 => 'app.bsky.graph.getSuggestedFollowsByActor',
+              40 => 'app.bsky.graph.searchStarterPacks',
+              41 => 'app.bsky.graph.searchStarterPacksV2',
+              42 => 'app.bsky.labeler.getServices',
+              43 => 'app.bsky.notification.getPreferences',
+              44 => 'app.bsky.notification.getUnreadCount',
+              45 => 'app.bsky.notification.listActivitySubscriptions',
+              46 => 'app.bsky.notification.listNotifications',
+              47 => 'app.bsky.notification.updateSeen',
+              48 => 'app.bsky.unspecced.getAgeAssuranceState',
+              49 => 'app.bsky.unspecced.getConfig',
+              50 => 'app.bsky.unspecced.getOnboardingSuggestedStarterPacks',
+              51 => 'app.bsky.unspecced.getPopularFeedGenerators',
+              52 => 'app.bsky.unspecced.getPostThreadOtherV2',
+              53 => 'app.bsky.unspecced.getPostThreadV2',
+              54 => 'app.bsky.unspecced.getSuggestedFeeds',
+              55 => 'app.bsky.unspecced.getSuggestedFeedsSkeleton',
+              56 => 'app.bsky.unspecced.getSuggestedStarterPacks',
+              57 => 'app.bsky.unspecced.getSuggestedStarterPacksSkeleton',
+              58 => 'app.bsky.unspecced.getSuggestedUsers',
+              59 => 'app.bsky.unspecced.getSuggestedUsersSkeleton',
+              60 => 'app.bsky.unspecced.getSuggestionsSkeleton',
+              61 => 'app.bsky.unspecced.getTaggedSuggestions',
+              62 => 'app.bsky.unspecced.getTrendingTopics',
+              63 => 'app.bsky.unspecced.getTrends',
+              64 => 'app.bsky.unspecced.getTrendsSkeleton',
+              65 => 'app.bsky.unspecced.searchActorsSkeleton',
+              66 => 'app.bsky.unspecced.searchPostsSkeleton',
+              67 => 'app.bsky.unspecced.searchStarterPacksSkeleton',
+              68 => 'app.bsky.video.getUploadLimits',
             ),
           ),
         ),
@@ -3880,6 +3928,11 @@ return array (
             ),
             'maxLength' => 4,
           ),
+          'embedGallery' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.draft.defs#draftEmbedGallery',
+          ),
           'embedVideos' => 
           array (
             'type' => 'array',
@@ -3989,6 +4042,36 @@ return array (
             'maxLength' => 10000,
           ),
         ),
+      ),
+      'draftEmbedGallery' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'items',
+        ),
+        'properties' => 
+        array (
+          'items' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.draft.defs#draftEmbedGalleryItems',
+          ),
+        ),
+      ),
+      'draftEmbedGalleryItems' => 
+      array (
+        'type' => 'array',
+        'items' => 
+        array (
+          'type' => 'union',
+          'refs' => 
+          array (
+            0 => 'lex:app.bsky.draft.defs#draftEmbedImage',
+          ),
+        ),
+        'maxLength' => 20,
+        'description' => 'The schema-level maxLength of 20 is a future-proof ceiling. Clients should currently enforce a soft limit of 10 items in authoring UIs.',
       ),
       'draftEmbedImage' => 
       array (
@@ -4288,6 +4371,16 @@ return array (
             ),
             'maxSize' => 1000000,
           ),
+          'associatedRefs' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:com.atproto.repo.strongRef',
+            ),
+            'description' => 'StrongRefs (uri+cid) of the Atmosphere records that backed this view.',
+          ),
         ),
       ),
       'view' => 
@@ -4334,6 +4427,359 @@ return array (
           array (
             'type' => 'string',
             'format' => 'uri',
+          ),
+          'createdAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+            'description' => 'When the external content was created, if available. Example: a publication date, for an article.',
+          ),
+          'updatedAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+            'description' => 'When the external content was updated, if available.',
+          ),
+          'readingTime' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Estimated reading time in minutes, if applicable and available.',
+          ),
+          'labels' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:com.atproto.label.defs#label',
+            ),
+          ),
+          'source' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.embed.external#viewExternalSource',
+          ),
+          'associatedRefs' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:com.atproto.repo.strongRef',
+            ),
+            'description' => 'StrongRefs (uri+cid) of the Atmosphere records that backed this view.',
+          ),
+          'associatedProfiles' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:app.bsky.actor.defs#profileViewBasic',
+            ),
+            'description' => 'Profiles of the owners of the Atmosphere records that backed this view.',
+          ),
+        ),
+      ),
+      'viewExternalSource' => 
+      array (
+        'type' => 'object',
+        'description' => 'The source of an external embed, such as a standard.site publication.',
+        'required' => 
+        array (
+          0 => 'uri',
+          1 => 'title',
+        ),
+        'properties' => 
+        array (
+          'uri' => 
+          array (
+            'type' => 'string',
+            'format' => 'uri',
+            'description' => 'URI of the source, if available. Example: the https:// URL of a site.standard.publication record.',
+          ),
+          'icon' => 
+          array (
+            'type' => 'string',
+            'format' => 'uri',
+            'description' => 'Fully-qualified URL where an icon representing the source can be fetched. For example, CDN location provided by the App View.',
+          ),
+          'title' => 
+          array (
+            'type' => 'string',
+          ),
+          'description' => 
+          array (
+            'type' => 'string',
+          ),
+          'theme' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.embed.external#viewExternalSourceTheme',
+          ),
+        ),
+      ),
+      'viewExternalSourceTheme' => 
+      array (
+        'type' => 'object',
+        'description' => 'The theme colors of an external source, such as a site.standard.publication. These colors may be used when rendering an embed from that source.',
+        'properties' => 
+        array (
+          'backgroundRGB' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.embed.external#colorRGB',
+          ),
+          'foregroundRGB' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.embed.external#colorRGB',
+          ),
+          'accentRGB' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.embed.external#colorRGB',
+          ),
+          'accentForegroundRGB' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.embed.external#colorRGB',
+          ),
+        ),
+      ),
+      'colorRGB' => 
+      array (
+        'type' => 'object',
+        'description' => 'RGB color definition, inspired by site.standard.theme.color#rgb',
+        'required' => 
+        array (
+          0 => 'r',
+          1 => 'g',
+          2 => 'b',
+        ),
+        'properties' => 
+        array (
+          'r' => 
+          array (
+            'type' => 'integer',
+            'minimum' => 0,
+            'maximum' => 255,
+          ),
+          'g' => 
+          array (
+            'type' => 'integer',
+            'minimum' => 0,
+            'maximum' => 255,
+          ),
+          'b' => 
+          array (
+            'type' => 'integer',
+            'minimum' => 0,
+            'maximum' => 255,
+          ),
+        ),
+      ),
+    ),
+  ),
+  'app.bsky.embed.gallery' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.embed.gallery',
+    'description' => 'An assortment of media embedded in a Bluesky record (eg, a post).',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'items',
+        ),
+        'properties' => 
+        array (
+          'items' => 
+          array (
+            'type' => 'array',
+            'maxLength' => 20,
+            'description' => 'The schema-level maxLength of 20 is a future-proof ceiling. Clients should currently enforce a soft limit of 10 items in authoring UIs.',
+            'items' => 
+            array (
+              'type' => 'union',
+              'refs' => 
+              array (
+                0 => 'lex:app.bsky.embed.gallery#image',
+              ),
+              'description' => 'The media items in the gallery. Each item may be of a different type, but all types must be supported by the client.',
+            ),
+          ),
+        ),
+      ),
+      'image' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'image',
+          1 => 'alt',
+          2 => 'aspectRatio',
+        ),
+        'properties' => 
+        array (
+          'image' => 
+          array (
+            'type' => 'blob',
+            'accept' => 
+            array (
+              0 => 'image/*',
+            ),
+            'maxSize' => 2000000,
+          ),
+          'alt' => 
+          array (
+            'type' => 'string',
+            'description' => 'Alt text description of the image, for accessibility.',
+          ),
+          'aspectRatio' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.embed.defs#aspectRatio',
+          ),
+        ),
+      ),
+      'view' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'items',
+        ),
+        'properties' => 
+        array (
+          'items' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'union',
+              'refs' => 
+              array (
+                0 => 'lex:app.bsky.embed.gallery#viewImage',
+              ),
+            ),
+          ),
+        ),
+      ),
+      'viewImage' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'thumbnail',
+          1 => 'fullsize',
+          2 => 'alt',
+          3 => 'aspectRatio',
+        ),
+        'properties' => 
+        array (
+          'thumbnail' => 
+          array (
+            'type' => 'string',
+            'format' => 'uri',
+            'description' => 'Fully-qualified URL where a thumbnail of the image can be fetched. For example, CDN location provided by the App View.',
+          ),
+          'fullsize' => 
+          array (
+            'type' => 'string',
+            'format' => 'uri',
+            'description' => 'Fully-qualified URL where a large version of the image can be fetched. May or may not be the exact original blob. For example, CDN location provided by the App View.',
+          ),
+          'alt' => 
+          array (
+            'type' => 'string',
+            'description' => 'Alt text description of the image, for accessibility.',
+          ),
+          'aspectRatio' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.embed.defs#aspectRatio',
+          ),
+        ),
+      ),
+    ),
+  ),
+  'app.bsky.embed.getEmbedExternalView' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.embed.getEmbedExternalView',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'description' => 'Resolve one or more AT-URIs into the data needed to render an enhanced external embed. Returns `associatedRefs` (strongRefs to embed into a post\'s external.associatedRefs), the raw `associatedRecords`, and a hydrated `view`. The response is empty (`{}`) when no records were resolvable, or when validation determined the resolved records don\'t actually back the requested URL; clients should fall back to their own link-card rendering in that case and skip writing strongRefs to the post.',
+        'parameters' => 
+        array (
+          'type' => 'params',
+          'required' => 
+          array (
+            0 => 'url',
+            1 => 'uris',
+          ),
+          'properties' => 
+          array (
+            'url' => 
+            array (
+              'type' => 'string',
+              'format' => 'uri',
+              'description' => 'The canonical web URL the embed represents (typically the URL the user pasted into the composer). Used as the returned view\'s `uri`. May be used for validation in the future.',
+            ),
+            'uris' => 
+            array (
+              'type' => 'array',
+              'description' => 'AT-URIs of any Atmosphere records that can be resolved and used to construct #externalView views. Example: a site.standard.document and optionally its associated site.standard.publication.',
+              'items' => 
+              array (
+                'type' => 'string',
+                'format' => 'at-uri',
+              ),
+              'maxLength' => 4,
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'properties' => 
+            array (
+              'view' => 
+              array (
+                'type' => 'ref',
+                'ref' => 'lex:app.bsky.embed.external#view',
+                'description' => 'Hydrated view of the embed. Present only when the resolved records back the requested URL and supply enough information to populate the required `viewExternal` fields. Omitted alongside the rest of the response when no records resolved or validation failed.',
+              ),
+              'associatedRefs' => 
+              array (
+                'type' => 'array',
+                'items' => 
+                array (
+                  'type' => 'ref',
+                  'ref' => 'lex:com.atproto.repo.strongRef',
+                ),
+                'description' => 'StrongRefs (URI+CID) of the Atmosphere records that backed this view, suitable for embedding into a post\'s external.associatedRefs.',
+              ),
+              'associatedRecords' => 
+              array (
+                'type' => 'array',
+                'items' => 
+                array (
+                  'type' => 'unknown',
+                  'description' => 'The raw record data of the Atmosphere records that backed this view. This is returned for convenience, to avoid the need for the client to separately fetch the record data for the associatedRefs. Example: the site.standard.document and site.standard.publication records that backed this view.',
+                ),
+              ),
+            ),
           ),
         ),
       ),
@@ -4574,9 +5020,10 @@ return array (
               array (
                 0 => 'lex:app.bsky.embed.images#view',
                 1 => 'lex:app.bsky.embed.video#view',
-                2 => 'lex:app.bsky.embed.external#view',
-                3 => 'lex:app.bsky.embed.record#view',
-                4 => 'lex:app.bsky.embed.recordWithMedia#view',
+                2 => 'lex:app.bsky.embed.gallery#view',
+                3 => 'lex:app.bsky.embed.external#view',
+                4 => 'lex:app.bsky.embed.record#view',
+                5 => 'lex:app.bsky.embed.recordWithMedia#view',
               ),
             ),
           ),
@@ -4690,7 +5137,8 @@ return array (
             array (
               0 => 'lex:app.bsky.embed.images',
               1 => 'lex:app.bsky.embed.video',
-              2 => 'lex:app.bsky.embed.external',
+              2 => 'lex:app.bsky.embed.gallery',
+              3 => 'lex:app.bsky.embed.external',
             ),
           ),
         ),
@@ -4717,7 +5165,8 @@ return array (
             array (
               0 => 'lex:app.bsky.embed.images#view',
               1 => 'lex:app.bsky.embed.video#view',
-              2 => 'lex:app.bsky.embed.external#view',
+              2 => 'lex:app.bsky.embed.gallery#view',
+              3 => 'lex:app.bsky.embed.external#view',
             ),
           ),
         ),
@@ -4905,9 +5354,10 @@ return array (
             array (
               0 => 'lex:app.bsky.embed.images#view',
               1 => 'lex:app.bsky.embed.video#view',
-              2 => 'lex:app.bsky.embed.external#view',
-              3 => 'lex:app.bsky.embed.record#view',
-              4 => 'lex:app.bsky.embed.recordWithMedia#view',
+              2 => 'lex:app.bsky.embed.gallery#view',
+              3 => 'lex:app.bsky.embed.external#view',
+              4 => 'lex:app.bsky.embed.record#view',
+              5 => 'lex:app.bsky.embed.recordWithMedia#view',
             ),
           ),
           'bookmarkCount' => 
@@ -6974,9 +7424,10 @@ return array (
               array (
                 0 => 'lex:app.bsky.embed.images',
                 1 => 'lex:app.bsky.embed.video',
-                2 => 'lex:app.bsky.embed.external',
-                3 => 'lex:app.bsky.embed.record',
-                4 => 'lex:app.bsky.embed.recordWithMedia',
+                2 => 'lex:app.bsky.embed.gallery',
+                3 => 'lex:app.bsky.embed.external',
+                4 => 'lex:app.bsky.embed.record',
+                5 => 'lex:app.bsky.embed.recordWithMedia',
               ),
             ),
             'langs' => 
@@ -7334,6 +7785,321 @@ return array (
                   'type' => 'ref',
                   'ref' => 'lex:app.bsky.feed.defs#postView',
                 ),
+              ),
+            ),
+          ),
+        ),
+        'errors' => 
+        array (
+          0 => 
+          array (
+            'name' => 'BadQueryString',
+          ),
+        ),
+      ),
+    ),
+  ),
+  'app.bsky.feed.searchPostsV2' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.feed.searchPostsV2',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'description' => 'Find posts matching a search query or filters, returning search hits for matching post records.',
+        'parameters' => 
+        array (
+          'type' => 'params',
+          'required' => 
+          array (
+          ),
+          'properties' => 
+          array (
+            'cursor' => 
+            array (
+              'type' => 'string',
+              'description' => 'Optional pagination cursor.',
+            ),
+            'limit' => 
+            array (
+              'type' => 'integer',
+              'minimum' => 1,
+              'maximum' => 100,
+              'default' => 25,
+              'description' => 'Maximum number of results to return.',
+            ),
+            'query' => 
+            array (
+              'type' => 'string',
+              'description' => 'Search query string. A query or at least one filter is required.',
+            ),
+            'sort' => 
+            array (
+              'type' => 'string',
+              'knownValues' => 
+              array (
+                0 => 'recent',
+                1 => 'top',
+              ),
+              'description' => 'Ranking order for results. \'recent\' sorts by recency; \'top\' uses search ranking.',
+            ),
+            'authors' => 
+            array (
+              'type' => 'array',
+              'items' => 
+              array (
+                'type' => 'string',
+                'format' => 'at-identifier',
+              ),
+              'description' => 'Include posts by any of these authors. Handles are resolved to DIDs before searching.',
+            ),
+            'mentions' => 
+            array (
+              'type' => 'array',
+              'items' => 
+              array (
+                'type' => 'string',
+                'format' => 'at-identifier',
+              ),
+              'description' => 'Include posts that mention any of these accounts. Handles are resolved to DIDs before searching.',
+            ),
+            'domains' => 
+            array (
+              'type' => 'array',
+              'items' => 
+              array (
+                'type' => 'string',
+              ),
+              'description' => 'Include posts that link to any of these domains.',
+            ),
+            'urls' => 
+            array (
+              'type' => 'array',
+              'items' => 
+              array (
+                'type' => 'string',
+                'format' => 'uri',
+              ),
+              'description' => 'Include posts that link to any of these URLs.',
+            ),
+            'embeddedAtUris' => 
+            array (
+              'type' => 'array',
+              'items' => 
+              array (
+                'type' => 'string',
+                'format' => 'at-uri',
+              ),
+              'description' => 'Include posts that embed any of these AT URIs.',
+            ),
+            'hashtags' => 
+            array (
+              'type' => 'array',
+              'items' => 
+              array (
+                'type' => 'string',
+                'maxLength' => 640,
+                'maxGraphemes' => 64,
+              ),
+              'description' => 'Include posts tagged with any of these hashtags. Do not include the hash (#) prefix.',
+            ),
+            'excludeAuthors' => 
+            array (
+              'type' => 'array',
+              'items' => 
+              array (
+                'type' => 'string',
+                'format' => 'at-identifier',
+              ),
+              'description' => 'Exclude posts by any of these authors. Handles are resolved to DIDs before searching.',
+            ),
+            'excludeMentions' => 
+            array (
+              'type' => 'array',
+              'items' => 
+              array (
+                'type' => 'string',
+                'format' => 'at-identifier',
+              ),
+              'description' => 'Exclude posts that mention any of these accounts. Handles are resolved to DIDs before searching.',
+            ),
+            'excludeDomains' => 
+            array (
+              'type' => 'array',
+              'items' => 
+              array (
+                'type' => 'string',
+              ),
+              'description' => 'Exclude posts that link to any of these domains.',
+            ),
+            'excludeUrls' => 
+            array (
+              'type' => 'array',
+              'items' => 
+              array (
+                'type' => 'string',
+                'format' => 'uri',
+              ),
+              'description' => 'Exclude posts that link to any of these URLs.',
+            ),
+            'excludeEmbeddedAtUris' => 
+            array (
+              'type' => 'array',
+              'items' => 
+              array (
+                'type' => 'string',
+                'format' => 'at-uri',
+              ),
+              'description' => 'Exclude posts that embed any of these AT URIs.',
+            ),
+            'excludeHashtags' => 
+            array (
+              'type' => 'array',
+              'items' => 
+              array (
+                'type' => 'string',
+                'maxLength' => 640,
+                'maxGraphemes' => 64,
+              ),
+              'description' => 'Exclude posts tagged with any of these hashtags. Do not include the hash (#) prefix.',
+            ),
+            'since' => 
+            array (
+              'type' => 'string',
+              'description' => 'Include posts indexed at or after this timestamp. Can be a datetime, or just an ISO date (YYYY-MM-DD).',
+            ),
+            'until' => 
+            array (
+              'type' => 'string',
+              'description' => 'Include posts indexed before this timestamp. Defaults to the current time. Can be a datetime, or just an ISO date (YYYY-MM-DD).',
+            ),
+            'allTime' => 
+            array (
+              'type' => 'boolean',
+              'description' => 'Search the full index instead of the recent-post window.',
+            ),
+            'languages' => 
+            array (
+              'type' => 'array',
+              'items' => 
+              array (
+                'type' => 'string',
+                'format' => 'language',
+              ),
+              'description' => 'Include posts whose language matches any of these language codes.',
+            ),
+            'excludeLanguages' => 
+            array (
+              'type' => 'array',
+              'items' => 
+              array (
+                'type' => 'string',
+                'format' => 'language',
+              ),
+              'description' => 'Exclude posts whose language matches any of these language codes.',
+            ),
+            'hasMedia' => 
+            array (
+              'type' => 'boolean',
+              'description' => 'Include only posts with media.',
+            ),
+            'hasVideo' => 
+            array (
+              'type' => 'boolean',
+              'description' => 'Include only posts with video.',
+            ),
+            'replyParentUri' => 
+            array (
+              'type' => 'string',
+              'format' => 'at-uri',
+              'description' => 'Include only direct replies to this parent post URI.',
+            ),
+            'threadRootUri' => 
+            array (
+              'type' => 'string',
+              'format' => 'at-uri',
+              'description' => 'Include only posts in the thread rooted at this post URI.',
+            ),
+            'excludeReplies' => 
+            array (
+              'type' => 'boolean',
+              'description' => 'Exclude replies from results. Mutually exclusive with repliesOnly.',
+            ),
+            'repliesOnly' => 
+            array (
+              'type' => 'boolean',
+              'description' => 'Include only replies. Mutually exclusive with excludeReplies.',
+            ),
+            'following' => 
+            array (
+              'type' => 'boolean',
+              'description' => 'Include only posts from accounts followed by the viewer.',
+            ),
+            'queryLanguage' => 
+            array (
+              'type' => 'string',
+              'knownValues' => 
+              array (
+                0 => 'ja',
+                1 => 'zh',
+                2 => 'ko',
+                3 => 'th',
+                4 => 'ar',
+              ),
+              'description' => 'Language analyzer hint for the query text. If unset, the server auto-detects when possible.',
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'posts',
+            ),
+            'properties' => 
+            array (
+              'cursor' => 
+              array (
+                'type' => 'string',
+                'description' => 'Cursor for the next page of results.',
+              ),
+              'hitsTotal' => 
+              array (
+                'type' => 'integer',
+                'description' => 'Estimated total number of matching hits. May be rounded or truncated.',
+              ),
+              'posts' => 
+              array (
+                'type' => 'array',
+                'items' => 
+                array (
+                  'type' => 'ref',
+                  'ref' => 'lex:app.bsky.feed.defs#postView',
+                ),
+                'description' => 'Hydrated views of matching posts.',
+              ),
+              'detectedQueryLanguages' => 
+              array (
+                'type' => 'array',
+                'items' => 
+                array (
+                  'type' => 'string',
+                  'knownValues' => 
+                  array (
+                    0 => 'ja',
+                    1 => 'zh',
+                    2 => 'ko',
+                    3 => 'th',
+                    4 => 'ar',
+                  ),
+                ),
+                'description' => 'Query languages detected for CJK, Thai, or Arabic text. Empty or omitted for other scripts.',
               ),
             ),
           ),
@@ -8190,6 +8956,15 @@ return array (
             array (
               'type' => 'string',
             ),
+            'sort' => 
+            array (
+              'type' => 'string',
+              'knownValues' => 
+              array (
+                0 => 'latest',
+                1 => 'top',
+              ),
+            ),
           ),
         ),
         'output' => 
@@ -8263,6 +9038,15 @@ return array (
             'cursor' => 
             array (
               'type' => 'string',
+            ),
+            'sort' => 
+            array (
+              'type' => 'string',
+              'knownValues' => 
+              array (
+                0 => 'latest',
+                1 => 'top',
+              ),
             ),
           ),
         ),
@@ -9493,6 +10277,79 @@ return array (
       ),
     ),
   ),
+  'app.bsky.graph.searchStarterPacksV2' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.graph.searchStarterPacksV2',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'description' => 'Find starter packs matching search criteria. Does not require auth.',
+        'parameters' => 
+        array (
+          'type' => 'params',
+          'required' => 
+          array (
+            0 => 'q',
+          ),
+          'properties' => 
+          array (
+            'q' => 
+            array (
+              'type' => 'string',
+              'description' => 'Search query string. Syntax, phrase, boolean, and faceting is unspecified, but Lucene query syntax is recommended.',
+            ),
+            'limit' => 
+            array (
+              'type' => 'integer',
+              'minimum' => 1,
+              'maximum' => 100,
+              'default' => 25,
+            ),
+            'cursor' => 
+            array (
+              'type' => 'string',
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'starterPacks',
+            ),
+            'properties' => 
+            array (
+              'cursor' => 
+              array (
+                'type' => 'string',
+              ),
+              'hitsTotal' => 
+              array (
+                'type' => 'integer',
+                'description' => 'Estimated total number of matching hits. May be rounded or truncated.',
+              ),
+              'starterPacks' => 
+              array (
+                'type' => 'array',
+                'items' => 
+                array (
+                  'type' => 'ref',
+                  'ref' => 'lex:app.bsky.graph.defs#starterPackView',
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
   'app.bsky.graph.starterpack' => 
   array (
     'lexicon' => 1,
@@ -10115,6 +10972,7 @@ return array (
       'chatPreference' => 
       array (
         'type' => 'object',
+        'description' => 'Deprecated: use chat.bsky.notification preferences instead. This will only return a default value.',
         'required' => 
         array (
           0 => 'include',
@@ -10212,6 +11070,7 @@ return array (
           array (
             'type' => 'ref',
             'ref' => 'lex:app.bsky.notification.defs#chatPreference',
+            'description' => 'Deprecated: use chat.bsky.notification preferences instead. This will only return a default value.',
           ),
           'follow' => 
           array (
@@ -10752,6 +11611,7 @@ return array (
               array (
                 'type' => 'ref',
                 'ref' => 'lex:app.bsky.notification.defs#chatPreference',
+                'description' => 'Deprecated: use chat.bsky.notification preferences instead. Setting this won\'t stick and the default values will be returned.',
               ),
               'follow' => 
               array (
@@ -11204,6 +12064,10 @@ return array (
           array (
             'type' => 'string',
           ),
+          'description' => 
+          array (
+            'type' => 'string',
+          ),
           'link' => 
           array (
             'type' => 'string',
@@ -11259,6 +12123,10 @@ return array (
             'type' => 'string',
           ),
           'displayName' => 
+          array (
+            'type' => 'string',
+          ),
+          'description' => 
           array (
             'type' => 'string',
           ),
@@ -13085,6 +13953,11 @@ return array (
                   'ref' => 'lex:app.bsky.unspecced.defs#trendView',
                 ),
               ),
+              'recIdStr' => 
+              array (
+                'type' => 'string',
+                'description' => 'Snowflake for this recommendation, use when submitting recommendation events.',
+              ),
             ),
           ),
         ),
@@ -13141,6 +14014,11 @@ return array (
                   'type' => 'ref',
                   'ref' => 'lex:app.bsky.unspecced.defs#skeletonTrend',
                 ),
+              ),
+              'recIdStr' => 
+              array (
+                'type' => 'string',
+                'description' => 'Snowflake for this recommendation, use when submitting recommendation events.',
               ),
             ),
           ),
@@ -13768,7 +14646,7 @@ return array (
             ),
             'allowGroupInvites' => 
             array (
-              'description' => '[NOTE: This is under active development and should be considered unstable while this note is here]. Declaration about group chat invitation preferences for the record owner.',
+              'description' => 'Declaration about group chat invitation preferences for the record owner.',
               'type' => 'string',
               'knownValues' => 
               array (
@@ -13877,7 +14755,6 @@ return array (
       ),
       'directConvoMember' => 
       array (
-        'description' => '[NOTE: This is under active development and should be considered unstable while this note is here].',
         'type' => 'object',
         'properties' => 
         array (
@@ -13885,7 +14762,7 @@ return array (
       ),
       'groupConvoMember' => 
       array (
-        'description' => '[NOTE: This is under active development and should be considered unstable while this note is here]. A current group convo member.',
+        'description' => 'A current group convo member.',
         'type' => 'object',
         'required' => 
         array (
@@ -13909,7 +14786,7 @@ return array (
       ),
       'pastGroupConvoMember' => 
       array (
-        'description' => '[NOTE: This is under active development and should be considered unstable while this note is here]. A past group convo member.',
+        'description' => 'A past group convo member.',
         'type' => 'object',
         'required' => 
         array (
@@ -13959,6 +14836,51 @@ return array (
       ),
     ),
   ),
+  'chat.bsky.actor.getStatus' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'chat.bsky.actor.getStatus',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'description' => 'Get the authenticated viewer\'s chat status: whether their account is chat-disabled and whether their group-membership additions are restricted to accounts they follow.',
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'chatDisabled',
+              1 => 'canCreateGroups',
+              2 => 'groupMemberLimit',
+            ),
+            'properties' => 
+            array (
+              'chatDisabled' => 
+              array (
+                'type' => 'boolean',
+                'description' => 'True when the viewer\'s account is disabled and cannot actively participate in chat.',
+              ),
+              'canCreateGroups' => 
+              array (
+                'type' => 'boolean',
+                'description' => 'Whether the viewer\'s account is allowed to create group chats. New accounts are restricted from creating groups.',
+              ),
+              'groupMemberLimit' => 
+              array (
+                'type' => 'integer',
+                'description' => 'The maximum number of members allowed in a group conversation.',
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
   'chat.bsky.authFullChatClient' => 
   array (
     'lexicon' => 1,
@@ -13987,24 +14909,44 @@ return array (
             'lxm' => 
             array (
               0 => 'chat.bsky.actor.deleteAccount',
-              1 => 'chat.bsky.convo.acceptConvo',
-              2 => 'chat.bsky.convo.addReaction',
-              3 => 'chat.bsky.convo.deleteMessageForSelf',
-              4 => 'chat.bsky.convo.exportAccountData',
-              5 => 'chat.bsky.convo.getConvo',
-              6 => 'chat.bsky.convo.getConvoAvailability',
-              7 => 'chat.bsky.convo.getConvoForMembers',
-              8 => 'chat.bsky.convo.getLog',
-              9 => 'chat.bsky.convo.getMessages',
-              10 => 'chat.bsky.convo.leaveConvo',
-              11 => 'chat.bsky.convo.listConvos',
-              12 => 'chat.bsky.convo.muteConvo',
-              13 => 'chat.bsky.convo.removeReaction',
-              14 => 'chat.bsky.convo.sendMessage',
-              15 => 'chat.bsky.convo.sendMessageBatch',
-              16 => 'chat.bsky.convo.unmuteConvo',
-              17 => 'chat.bsky.convo.updateAllRead',
-              18 => 'chat.bsky.convo.updateRead',
+              1 => 'chat.bsky.actor.getStatus',
+              2 => 'chat.bsky.convo.acceptConvo',
+              3 => 'chat.bsky.convo.addReaction',
+              4 => 'chat.bsky.convo.deleteMessageForSelf',
+              5 => 'chat.bsky.convo.exportAccountData',
+              6 => 'chat.bsky.convo.getConvo',
+              7 => 'chat.bsky.convo.getConvoAvailability',
+              8 => 'chat.bsky.convo.getConvoForMembers',
+              9 => 'chat.bsky.convo.getConvoMembers',
+              10 => 'chat.bsky.convo.getLog',
+              11 => 'chat.bsky.convo.getMessages',
+              12 => 'chat.bsky.convo.leaveConvo',
+              13 => 'chat.bsky.convo.listConvoRequests',
+              14 => 'chat.bsky.convo.listConvos',
+              15 => 'chat.bsky.convo.lockConvo',
+              16 => 'chat.bsky.convo.muteConvo',
+              17 => 'chat.bsky.convo.removeReaction',
+              18 => 'chat.bsky.convo.sendMessage',
+              19 => 'chat.bsky.convo.sendMessageBatch',
+              20 => 'chat.bsky.convo.unlockConvo',
+              21 => 'chat.bsky.convo.unmuteConvo',
+              22 => 'chat.bsky.convo.updateAllRead',
+              23 => 'chat.bsky.convo.updateRead',
+              24 => 'chat.bsky.group.addMembers',
+              25 => 'chat.bsky.group.approveJoinRequest',
+              26 => 'chat.bsky.group.createGroup',
+              27 => 'chat.bsky.group.createJoinLink',
+              28 => 'chat.bsky.group.disableJoinLink',
+              29 => 'chat.bsky.group.editGroup',
+              30 => 'chat.bsky.group.editJoinLink',
+              31 => 'chat.bsky.group.enableJoinLink',
+              32 => 'chat.bsky.group.getJoinLinkPreviews',
+              33 => 'chat.bsky.group.listJoinRequests',
+              34 => 'chat.bsky.group.listMutualGroups',
+              35 => 'chat.bsky.group.rejectJoinRequest',
+              36 => 'chat.bsky.group.removeMembers',
+              37 => 'chat.bsky.group.requestJoin',
+              38 => 'chat.bsky.group.withdrawJoinRequest',
             ),
           ),
           1 => 
@@ -14208,6 +15150,27 @@ return array (
           1 => 'accepted',
         ),
       ),
+      'convoRef' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'did',
+          1 => 'convoId',
+        ),
+        'properties' => 
+        array (
+          'did' => 
+          array (
+            'type' => 'string',
+            'format' => 'did',
+          ),
+          'convoId' => 
+          array (
+            'type' => 'string',
+          ),
+        ),
+      ),
       'messageRef' => 
       array (
         'type' => 'object',
@@ -14265,7 +15228,30 @@ return array (
             'refs' => 
             array (
               0 => 'lex:app.bsky.embed.record',
+              1 => 'lex:chat.bsky.embed.joinLink',
             ),
+          ),
+          'replyTo' => 
+          array (
+            'description' => 'If set, the message this message is replying to. The referenced message must be in the same convo.',
+            'type' => 'ref',
+            'ref' => 'lex:chat.bsky.convo.defs#replyRef',
+          ),
+        ),
+      ),
+      'replyRef' => 
+      array (
+        'description' => 'A reference to another message within the same convo, used to indicate that a message is a reply to it.',
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'messageId',
+        ),
+        'properties' => 
+        array (
+          'messageId' => 
+          array (
+            'type' => 'string',
           ),
         ),
       ),
@@ -14312,6 +15298,7 @@ return array (
             'refs' => 
             array (
               0 => 'lex:app.bsky.embed.record#view',
+              1 => 'lex:chat.bsky.embed.joinLink#view',
             ),
           ),
           'reactions' => 
@@ -14322,6 +15309,17 @@ return array (
             array (
               'type' => 'ref',
               'ref' => 'lex:chat.bsky.convo.defs#reactionView',
+            ),
+          ),
+          'replyTo' => 
+          array (
+            'description' => 'If set, the message this message is replying to. The full view of the referenced message is embedded so the client can render it inline. Only a single level is embedded: the embedded message will not itself have a populated \'replyTo\' field even if it was also a reply.',
+            'type' => 'union',
+            'refs' => 
+            array (
+              0 => 'lex:chat.bsky.convo.defs#messageView',
+              1 => 'lex:chat.bsky.convo.defs#deletedMessageView',
+              2 => 'lex:chat.bsky.convo.defs#messageBeforeUserJoinedGroupView',
             ),
           ),
           'sender' => 
@@ -14354,7 +15352,6 @@ return array (
       ),
       'systemMessageView' => 
       array (
-        'description' => '[NOTE: This is under active development and should be considered unstable while this note is here].',
         'type' => 'object',
         'required' => 
         array (
@@ -14401,7 +15398,7 @@ return array (
       ),
       'systemMessageDataAddMember' => 
       array (
-        'description' => '[NOTE: This is under active development and should be considered unstable while this note is here]. System message indicating a user was added to the group convo.',
+        'description' => 'System message indicating a user was added to the group convo.',
         'type' => 'object',
         'required' => 
         array (
@@ -14432,7 +15429,7 @@ return array (
       ),
       'systemMessageDataRemoveMember' => 
       array (
-        'description' => '[NOTE: This is under active development and should be considered unstable while this note is here]. System message indicating a user was removed from the group convo.',
+        'description' => 'System message indicating a user was removed from the group convo.',
         'type' => 'object',
         'required' => 
         array (
@@ -14456,7 +15453,7 @@ return array (
       ),
       'systemMessageDataMemberJoin' => 
       array (
-        'description' => '[NOTE: This is under active development and should be considered unstable while this note is here]. System message indicating a user joined the group convo via join link.',
+        'description' => 'System message indicating a user joined the group convo via join link.',
         'type' => 'object',
         'required' => 
         array (
@@ -14487,7 +15484,7 @@ return array (
       ),
       'systemMessageDataMemberLeave' => 
       array (
-        'description' => '[NOTE: This is under active development and should be considered unstable while this note is here]. System message indicating a user voluntarily left the group convo.',
+        'description' => 'System message indicating a user voluntarily left the group convo.',
         'type' => 'object',
         'required' => 
         array (
@@ -14505,7 +15502,7 @@ return array (
       ),
       'systemMessageDataLockConvo' => 
       array (
-        'description' => '[NOTE: This is under active development and should be considered unstable while this note is here]. System message indicating the group convo was locked.',
+        'description' => 'System message indicating the group convo was locked.',
         'type' => 'object',
         'required' => 
         array (
@@ -14523,7 +15520,7 @@ return array (
       ),
       'systemMessageDataUnlockConvo' => 
       array (
-        'description' => '[NOTE: This is under active development and should be considered unstable while this note is here]. System message indicating the group convo was unlocked.',
+        'description' => 'System message indicating the group convo was unlocked.',
         'type' => 'object',
         'required' => 
         array (
@@ -14541,7 +15538,7 @@ return array (
       ),
       'systemMessageDataLockConvoPermanently' => 
       array (
-        'description' => '[NOTE: This is under active development and should be considered unstable while this note is here]. System message indicating the group convo was locked permanently.',
+        'description' => 'System message indicating the group convo was locked permanently.',
         'type' => 'object',
         'required' => 
         array (
@@ -14559,7 +15556,7 @@ return array (
       ),
       'systemMessageDataEditGroup' => 
       array (
-        'description' => '[NOTE: This is under active development and should be considered unstable while this note is here]. System message indicating the group info was edited.',
+        'description' => 'System message indicating the group info was edited.',
         'type' => 'object',
         'properties' => 
         array (
@@ -14577,7 +15574,7 @@ return array (
       ),
       'systemMessageDataCreateJoinLink' => 
       array (
-        'description' => '[NOTE: This is under active development and should be considered unstable while this note is here]. System message indicating the group join link was created.',
+        'description' => 'System message indicating the group join link was created.',
         'type' => 'object',
         'properties' => 
         array (
@@ -14585,7 +15582,7 @@ return array (
       ),
       'systemMessageDataEditJoinLink' => 
       array (
-        'description' => '[NOTE: This is under active development and should be considered unstable while this note is here]. System message indicating the group join link was edited.',
+        'description' => 'System message indicating the group join link was edited.',
         'type' => 'object',
         'properties' => 
         array (
@@ -14593,7 +15590,7 @@ return array (
       ),
       'systemMessageDataEnableJoinLink' => 
       array (
-        'description' => '[NOTE: This is under active development and should be considered unstable while this note is here]. System message indicating the group join link was enabled.',
+        'description' => 'System message indicating the group join link was enabled.',
         'type' => 'object',
         'properties' => 
         array (
@@ -14601,7 +15598,7 @@ return array (
       ),
       'systemMessageDataDisableJoinLink' => 
       array (
-        'description' => '[NOTE: This is under active development and should be considered unstable while this note is here]. System message indicating the group join link was disabled.',
+        'description' => 'System message indicating the group join link was disabled.',
         'type' => 'object',
         'properties' => 
         array (
@@ -14637,6 +15634,14 @@ return array (
             'type' => 'string',
             'format' => 'datetime',
           ),
+        ),
+      ),
+      'messageBeforeUserJoinedGroupView' => 
+      array (
+        'description' => 'Placeholder embedded in place of a reply\'s parent message when that parent was sent before the viewer joined the group convo. The viewer has no access to that history, so no message data is carried.',
+        'type' => 'object',
+        'properties' => 
+        array (
         ),
       ),
       'messageViewSender' => 
@@ -14743,7 +15748,7 @@ return array (
           ),
           'members' => 
           array (
-            'description' => 'Members of this conversation. For direct convos, it will be an immutable list of the 2 members. For group convos, it will a list of important members (the first few members, the viewer, the member who invited the viewer, the member who sent the last message, the member who sent the last reaction), but will not contain the full list of members. Use chat.bsky.convo.getConvoMembers to list all members.',
+            'description' => 'Members of this conversation. For direct convos, it will be an immutable list of the 2 members. For group convos, it will a list of important members (the first few members, the viewer, the member who added the viewer, the member who sent the last message, the member who sent the last reaction), but will not contain the full list of members. Use chat.bsky.convo.getConvoMembers to list all members.',
             'type' => 'array',
             'items' => 
             array (
@@ -14797,7 +15802,6 @@ return array (
       ),
       'directConvo' => 
       array (
-        'description' => '[NOTE: This is under active development and should be considered unstable while this note is here].',
         'type' => 'object',
         'properties' => 
         array (
@@ -14805,38 +15809,65 @@ return array (
       ),
       'groupConvo' => 
       array (
-        'description' => '[NOTE: This is under active development and should be considered unstable while this note is here].',
         'type' => 'object',
         'required' => 
         array (
-          0 => 'name',
+          0 => 'createdAt',
           1 => 'lockStatus',
-          2 => 'memberCount',
+          2 => 'lockStatusModerationOverride',
+          3 => 'memberCount',
+          4 => 'memberLimit',
+          5 => 'name',
         ),
         'properties' => 
         array (
-          'name' => 
+          'createdAt' => 
           array (
             'type' => 'string',
-            'description' => 'The display name of the group conversation.',
-            'maxGraphemes' => 128,
-            'maxLength' => 1280,
-          ),
-          'memberCount' => 
-          array (
-            'type' => 'integer',
-            'description' => 'The total number of members in the group conversation.',
+            'format' => 'datetime',
           ),
           'joinLink' => 
           array (
             'type' => 'ref',
             'ref' => 'lex:chat.bsky.group.defs#joinLinkView',
           ),
+          'joinRequestCount' => 
+          array (
+            'type' => 'integer',
+            'description' => 'The total number of pending join requests for the group conversation. Only present for the owner. Capped at 21.',
+          ),
           'lockStatus' => 
           array (
             'description' => 'The lock status of the conversation.',
             'type' => 'ref',
             'ref' => 'lex:chat.bsky.convo.defs#convoLockStatus',
+          ),
+          'lockStatusModerationOverride' => 
+          array (
+            'description' => 'Whether the lock status is being forced by a moderation override (account inactivation or convo takedown) rather than the owner\'s own setting.',
+            'type' => 'boolean',
+          ),
+          'memberCount' => 
+          array (
+            'type' => 'integer',
+            'description' => 'The total number of members in the group conversation.',
+          ),
+          'memberLimit' => 
+          array (
+            'type' => 'integer',
+            'description' => 'The maximum number of members allowed in the group conversation.',
+          ),
+          'name' => 
+          array (
+            'type' => 'string',
+            'description' => 'The display name of the group conversation.',
+            'maxGraphemes' => 50,
+            'maxLength' => 500,
+          ),
+          'unreadJoinRequestCount' => 
+          array (
+            'type' => 'integer',
+            'description' => 'The number of unread join requests for the group conversation. Only present for the owner.',
           ),
         ),
       ),
@@ -14974,6 +16005,16 @@ return array (
               1 => 'lex:chat.bsky.convo.defs#deletedMessageView',
             ),
           ),
+          'relatedProfiles' => 
+          array (
+            'description' => 'Profiles referred to in the message view. This isn\'t required for compatibility, because it was added later, but should generally be present.',
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:chat.bsky.actor.defs#profileViewBasic',
+            ),
+          ),
         ),
       ),
       'logDeleteMessage' => 
@@ -15074,6 +16115,16 @@ return array (
             'type' => 'ref',
             'ref' => 'lex:chat.bsky.convo.defs#reactionView',
           ),
+          'relatedProfiles' => 
+          array (
+            'description' => 'Profiles referred in the message and reaction views. This isn\'t required for compatibility, because it was added later, but should generally be present.',
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:chat.bsky.actor.defs#profileViewBasic',
+            ),
+          ),
         ),
       ),
       'logRemoveReaction' => 
@@ -15111,11 +16162,21 @@ return array (
             'type' => 'ref',
             'ref' => 'lex:chat.bsky.convo.defs#reactionView',
           ),
+          'relatedProfiles' => 
+          array (
+            'description' => 'Profiles referred in the message and reaction views. This isn\'t required for compatibility, because it was added later, but should generally be present.',
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:chat.bsky.actor.defs#profileViewBasic',
+            ),
+          ),
         ),
       ),
       'logReadConvo' => 
       array (
-        'description' => '[NOTE: This is under active development and should be considered unstable while this note is here]. Event indicating a convo was read up to a certain message.',
+        'description' => 'Event indicating a convo was read up to a certain message.',
         'type' => 'object',
         'required' => 
         array (
@@ -15147,7 +16208,7 @@ return array (
       ),
       'logAddMember' => 
       array (
-        'description' => '[NOTE: This is under active development and should be considered unstable while this note is here]. Event indicating a member was added to a group convo. The member who was added gets a logBeginConvo (to create the convo) but also a logAddMember (to show the system message as the first message the user sees).',
+        'description' => 'Event indicating a member was added to a group convo. The member who was added gets a logBeginConvo (to create the convo) but also a logAddMember (to show the system message as the first message the user sees).',
         'type' => 'object',
         'required' => 
         array (
@@ -15186,7 +16247,7 @@ return array (
       ),
       'logRemoveMember' => 
       array (
-        'description' => '[NOTE: This is under active development and should be considered unstable while this note is here]. Event indicating a member was removed from a group convo. The member who was removed gets a logLeaveConvo (to leave the convo) but not a logRemoveMember (because they already left, so can\'t see the system message).',
+        'description' => 'Event indicating a member was removed from a group convo. The member who was removed gets a logLeaveConvo (to leave the convo) but not a logRemoveMember (because they already left, so can\'t see the system message).',
         'type' => 'object',
         'required' => 
         array (
@@ -15225,7 +16286,7 @@ return array (
       ),
       'logMemberJoin' => 
       array (
-        'description' => '[NOTE: This is under active development and should be considered unstable while this note is here]. Event indicating a member joined a group convo via join link. The member who was added gets a logBeginConvo (to create the convo) but also a logMemberJoin (to show the system message as the first message the user sees).',
+        'description' => 'Event indicating a member joined a group convo via join link. The member who was added gets a logBeginConvo (to create the convo) but also a logMemberJoin (to show the system message as the first message the user sees).',
         'type' => 'object',
         'required' => 
         array (
@@ -15264,7 +16325,7 @@ return array (
       ),
       'logMemberLeave' => 
       array (
-        'description' => '[NOTE: This is under active development and should be considered unstable while this note is here]. Event indicating a member voluntarily left a group convo. The member who was removed gets a logLeaveConvo (to leave the convo) but not a logMemberLeave (because they already left, so can\'t see the system message).',
+        'description' => 'Event indicating a member voluntarily left a group convo. The member who was removed gets a logLeaveConvo (to leave the convo) but not a logMemberLeave (because they already left, so can\'t see the system message).',
         'type' => 'object',
         'required' => 
         array (
@@ -15303,7 +16364,7 @@ return array (
       ),
       'logLockConvo' => 
       array (
-        'description' => '[NOTE: This is under active development and should be considered unstable while this note is here]. Event indicating a group convo was locked.',
+        'description' => 'Event indicating a group convo was locked.',
         'type' => 'object',
         'required' => 
         array (
@@ -15342,7 +16403,7 @@ return array (
       ),
       'logUnlockConvo' => 
       array (
-        'description' => '[NOTE: This is under active development and should be considered unstable while this note is here]. Event indicating a group convo was unlocked.',
+        'description' => 'Event indicating a group convo was unlocked.',
         'type' => 'object',
         'required' => 
         array (
@@ -15381,7 +16442,7 @@ return array (
       ),
       'logLockConvoPermanently' => 
       array (
-        'description' => '[NOTE: This is under active development and should be considered unstable while this note is here]. Event indicating a group convo was locked permanently.',
+        'description' => 'Event indicating a group convo was locked permanently.',
         'type' => 'object',
         'required' => 
         array (
@@ -15420,7 +16481,7 @@ return array (
       ),
       'logEditGroup' => 
       array (
-        'description' => '[NOTE: This is under active development and should be considered unstable while this note is here]. Event indicating info about group convo was edited.',
+        'description' => 'Event indicating info about group convo was edited.',
         'type' => 'object',
         'required' => 
         array (
@@ -15448,7 +16509,7 @@ return array (
       ),
       'logCreateJoinLink' => 
       array (
-        'description' => '[NOTE: This is under active development and should be considered unstable while this note is here]. Event indicating a join link was created for a group convo.',
+        'description' => 'Event indicating a join link was created for a group convo.',
         'type' => 'object',
         'required' => 
         array (
@@ -15476,7 +16537,7 @@ return array (
       ),
       'logEditJoinLink' => 
       array (
-        'description' => '[NOTE: This is under active development and should be considered unstable while this note is here]. Event indicating a settings about a join link for a group convo were edited.',
+        'description' => 'Event indicating a settings about a join link for a group convo were edited.',
         'type' => 'object',
         'required' => 
         array (
@@ -15504,7 +16565,7 @@ return array (
       ),
       'logEnableJoinLink' => 
       array (
-        'description' => '[NOTE: This is under active development and should be considered unstable while this note is here]. Event indicating a join link was enabled for a group convo.',
+        'description' => 'Event indicating a join link was enabled for a group convo.',
         'type' => 'object',
         'required' => 
         array (
@@ -15532,7 +16593,7 @@ return array (
       ),
       'logDisableJoinLink' => 
       array (
-        'description' => '[NOTE: This is under active development and should be considered unstable while this note is here]. Event indicating a join link was disabled for a group convo.',
+        'description' => 'Event indicating a join link was disabled for a group convo.',
         'type' => 'object',
         'required' => 
         array (
@@ -15560,7 +16621,7 @@ return array (
       ),
       'logIncomingJoinRequest' => 
       array (
-        'description' => '[NOTE: This is under active development and should be considered unstable while this note is here]. Event indicating a join request was made to a group the viewer owns. Only the owner gets this.',
+        'description' => 'Event indicating a join request was made to a group the viewer owns. Only the owner gets this.',
         'type' => 'object',
         'required' => 
         array (
@@ -15588,7 +16649,7 @@ return array (
       ),
       'logApproveJoinRequest' => 
       array (
-        'description' => '[NOTE: This is under active development and should be considered unstable while this note is here]. Event indicating a join request was approved by the viewer. Only the owner gets this. The approved member gets a logBeginConvo.',
+        'description' => 'Event indicating a join request was approved by the viewer. Only the owner gets this. The approved member gets a logBeginConvo.',
         'type' => 'object',
         'required' => 
         array (
@@ -15616,7 +16677,7 @@ return array (
       ),
       'logRejectJoinRequest' => 
       array (
-        'description' => '[NOTE: This is under active development and should be considered unstable while this note is here]. Event indicating a join request was rejected by the viewer. Only the owner gets this.',
+        'description' => 'Event indicating a join request was rejected by the viewer. Only the owner gets this.',
         'type' => 'object',
         'required' => 
         array (
@@ -15644,7 +16705,77 @@ return array (
       ),
       'logOutgoingJoinRequest' => 
       array (
-        'description' => '[NOTE: This is under active development and should be considered unstable while this note is here]. Event indicating a join request was made by the viewer.',
+        'description' => 'Event indicating a join request was made by the requester. Only requester actor gets this.',
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'rev',
+          1 => 'convoId',
+        ),
+        'properties' => 
+        array (
+          'rev' => 
+          array (
+            'type' => 'string',
+          ),
+          'convoId' => 
+          array (
+            'type' => 'string',
+          ),
+        ),
+      ),
+      'logWithdrawIncomingJoinRequest' => 
+      array (
+        'description' => 'Event indicating a prospective member withdrew their join request. Only the owner gets this.',
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'rev',
+          1 => 'convoId',
+          2 => 'member',
+        ),
+        'properties' => 
+        array (
+          'rev' => 
+          array (
+            'type' => 'string',
+          ),
+          'convoId' => 
+          array (
+            'type' => 'string',
+          ),
+          'member' => 
+          array (
+            'description' => 'Prospective member who withdrew their join request.',
+            'type' => 'ref',
+            'ref' => 'lex:chat.bsky.actor.defs#profileViewBasic',
+          ),
+        ),
+      ),
+      'logWithdrawOutgoingJoinRequest' => 
+      array (
+        'description' => 'Event indicating the viewer withdrew their own join request. Only requester actor gets this.',
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'rev',
+          1 => 'convoId',
+        ),
+        'properties' => 
+        array (
+          'rev' => 
+          array (
+            'type' => 'string',
+          ),
+          'convoId' => 
+          array (
+            'type' => 'string',
+          ),
+        ),
+      ),
+      'logReadJoinRequests' => 
+      array (
+        'description' => 'Event indicating the group owner marked join requests as read. Only the owner gets this.',
         'type' => 'object',
         'required' => 
         array (
@@ -15859,13 +16990,17 @@ return array (
           ),
           2 => 
           array (
-            'name' => 'MessagesDisabled',
+            'name' => 'BlockedSubject',
           ),
           3 => 
           array (
-            'name' => 'NotFollowedBySender',
+            'name' => 'MessagesDisabled',
           ),
           4 => 
+          array (
+            'name' => 'NotFollowedBySender',
+          ),
+          5 => 
           array (
             'name' => 'RecipientNotFound',
           ),
@@ -16063,6 +17198,9 @@ return array (
                     24 => 'lex:chat.bsky.convo.defs#logApproveJoinRequest',
                     25 => 'lex:chat.bsky.convo.defs#logRejectJoinRequest',
                     26 => 'lex:chat.bsky.convo.defs#logOutgoingJoinRequest',
+                    27 => 'lex:chat.bsky.convo.defs#logWithdrawIncomingJoinRequest',
+                    28 => 'lex:chat.bsky.convo.defs#logWithdrawOutgoingJoinRequest',
+                    29 => 'lex:chat.bsky.convo.defs#logReadJoinRequests',
                   ),
                 ),
               ),
@@ -16161,6 +17299,58 @@ return array (
       ),
     ),
   ),
+  'chat.bsky.convo.getUnreadCounts' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'chat.bsky.convo.getUnreadCounts',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'description' => 'Returns unread conversation counts for conversations that are unlocked, not muted, split by convo status. Direct convos are excluded when a block relationship exists between the actor and the other member, or when the other member\'s account is deleted or deactivated. Group convos are considered unread if they have unread join request counts.',
+        'parameters' => 
+        array (
+          'type' => 'params',
+          'properties' => 
+          array (
+            'includeGroupChats' => 
+            array (
+              'type' => 'boolean',
+              'default' => true,
+              'description' => 'When false, group convos are excluded from the counts.',
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'unreadAcceptedConvos',
+              1 => 'unreadRequestConvos',
+            ),
+            'properties' => 
+            array (
+              'unreadAcceptedConvos' => 
+              array (
+                'type' => 'integer',
+                'description' => 'Number of unread, unlocked accepted convos. Counts convos with unread messages and unread join requests. Capped at 100, where 100 means more than 99.',
+              ),
+              'unreadRequestConvos' => 
+              array (
+                'type' => 'integer',
+                'description' => 'Number of unread, unlocked request convos. Includes convos with unread messages, but not with unread join request, since only the owner of a group has join requests to read, and the group would necessarily be accepted. Capped at 100, where 100 means more than 99.',
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
   'chat.bsky.convo.leaveConvo' => 
   array (
     'lexicon' => 1,
@@ -16238,7 +17428,7 @@ return array (
       'main' => 
       array (
         'type' => 'query',
-        'description' => '[NOTE: This is under active development and should be considered unstable while this note is here]. Returns a page of incoming conversation requests for the user. Direct convo requests are returned as convoView; group join requests are returned as joinRequestView.',
+        'description' => 'Returns a page of incoming conversation requests for the user. Direct convo requests are returned as convoView; group join requests made by the user are returned as joinRequestConvoView.',
         'parameters' => 
         array (
           'type' => 'params',
@@ -16282,7 +17472,7 @@ return array (
                   'refs' => 
                   array (
                     0 => 'lex:chat.bsky.convo.defs#convoView',
-                    1 => 'lex:chat.bsky.group.defs#joinRequestView',
+                    1 => 'lex:chat.bsky.group.defs#joinRequestConvoView',
                   ),
                 ),
               ),
@@ -16346,6 +17536,17 @@ return array (
                 1 => 'group',
               ),
             ),
+            'lockStatus' => 
+            array (
+              'type' => 'string',
+              'description' => 'Filter by conversation lock status. Values follow chat.bsky.convo.defs#convoLockStatus.',
+              'knownValues' => 
+              array (
+                0 => 'unlocked',
+                1 => 'locked',
+                2 => 'locked-permanently',
+              ),
+            ),
           ),
         ),
         'output' => 
@@ -16388,7 +17589,7 @@ return array (
       'main' => 
       array (
         'type' => 'procedure',
-        'description' => '[NOTE: This is under active development and should be considered unstable while this note is here]. Locks a group convo so no more content (messages, reactions) can be added to it.',
+        'description' => 'Locks a group convo so no more content (messages, reactions) can be added to it.',
         'errors' => 
         array (
           0 => 
@@ -16613,6 +17814,10 @@ return array (
           array (
             'name' => 'InvalidConvo',
           ),
+          2 => 
+          array (
+            'name' => 'ReplyTargetNotFound',
+          ),
         ),
         'input' => 
         array (
@@ -16670,6 +17875,10 @@ return array (
           1 => 
           array (
             'name' => 'InvalidConvo',
+          ),
+          2 => 
+          array (
+            'name' => 'ReplyTargetNotFound',
           ),
         ),
         'input' => 
@@ -16754,7 +17963,7 @@ return array (
       'main' => 
       array (
         'type' => 'procedure',
-        'description' => '[NOTE: This is under active development and should be considered unstable while this note is here]. Unlocks a group convo so it is able to receive new content.',
+        'description' => 'Unlocks a group convo so it is able to receive new content.',
         'errors' => 
         array (
           0 => 
@@ -16764,6 +17973,10 @@ return array (
           1 => 
           array (
             'name' => 'InsufficientRole',
+          ),
+          2 => 
+          array (
+            'name' => 'ConvoLockedByModeration',
           ),
         ),
         'input' => 
@@ -16983,6 +18196,52 @@ return array (
       ),
     ),
   ),
+  'chat.bsky.embed.joinLink' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'chat.bsky.embed.joinLink',
+    'description' => 'A join link embedded in a chat message.',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'code',
+        ),
+        'properties' => 
+        array (
+          'code' => 
+          array (
+            'type' => 'string',
+            'description' => 'The join link code.',
+          ),
+        ),
+      ),
+      'view' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'joinLinkPreview',
+        ),
+        'properties' => 
+        array (
+          'joinLinkPreview' => 
+          array (
+            'type' => 'union',
+            'refs' => 
+            array (
+              0 => 'lex:chat.bsky.group.defs#joinLinkPreviewView',
+              1 => 'lex:chat.bsky.group.defs#disabledJoinLinkPreviewView',
+              2 => 'lex:chat.bsky.group.defs#invalidJoinLinkPreviewView',
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
   'chat.bsky.group.addMembers' => 
   array (
     'lexicon' => 1,
@@ -16992,7 +18251,7 @@ return array (
       'main' => 
       array (
         'type' => 'procedure',
-        'description' => '[NOTE: This is under active development and should be considered unstable while this note is here]. Adds members to a group. The members are added in \'request\' status, so they have to accept it. This creates convo memberships.',
+        'description' => 'Adds members to a group. The members are added in \'request\' status, so they have to accept it. This creates convo memberships.',
         'errors' => 
         array (
           0 => 
@@ -17005,7 +18264,7 @@ return array (
           ),
           2 => 
           array (
-            'name' => 'GroupInvitesDisabled',
+            'name' => 'BlockedSubject',
           ),
           3 => 
           array (
@@ -17030,6 +18289,10 @@ return array (
           8 => 
           array (
             'name' => 'RecipientNotFound',
+          ),
+          9 => 
+          array (
+            'name' => 'UserForbidsGroups',
           ),
         ),
         'input' => 
@@ -17103,7 +18366,7 @@ return array (
       'main' => 
       array (
         'type' => 'procedure',
-        'description' => '[NOTE: This is under active development and should be considered unstable while this note is here]. Approves a request to join a group (via join link) the user owns. Action taken by the group owner.',
+        'description' => 'Approves a request to join a group (via join link) the user owns. Action taken by the group owner.',
         'errors' => 
         array (
           0 => 
@@ -17176,7 +18439,7 @@ return array (
       'main' => 
       array (
         'type' => 'procedure',
-        'description' => '[NOTE: This is under active development and should be considered unstable while this note is here]. Creates a group convo, specifying the members to be added to it. Unlike getConvoForMembers, this isn\'t idempotent. It will create new groups even if the membership is identical to pre-existing groups. Will create \'pending\' membership for all members, except the owner who is \'accepted\'.',
+        'description' => 'Creates a group convo, specifying the members to be added to it. Unlike getConvoForMembers, this isn\'t idempotent. It will create new groups even if the membership is identical to pre-existing groups. Will create \'request\' membership for all members, except the owner who is \'accepted\'.',
         'errors' => 
         array (
           0 => 
@@ -17189,15 +18452,23 @@ return array (
           ),
           2 => 
           array (
-            'name' => 'GroupInvitesDisabled',
+            'name' => 'BlockedSubject',
           ),
           3 => 
           array (
-            'name' => 'NotFollowedBySender',
+            'name' => 'NewAccountCannotCreateGroup',
           ),
           4 => 
           array (
+            'name' => 'NotFollowedBySender',
+          ),
+          5 => 
+          array (
             'name' => 'RecipientNotFound',
+          ),
+          6 => 
+          array (
+            'name' => 'UserForbidsGroups',
           ),
         ),
         'input' => 
@@ -17227,8 +18498,8 @@ return array (
               array (
                 'type' => 'string',
                 'minLength' => 1,
-                'maxGraphemes' => 128,
-                'maxLength' => 1280,
+                'maxGraphemes' => 50,
+                'maxLength' => 500,
               ),
             ),
           ),
@@ -17265,7 +18536,7 @@ return array (
       'main' => 
       array (
         'type' => 'procedure',
-        'description' => '[NOTE: This is under active development and should be considered unstable while this note is here]. Creates a join link for the group convo.',
+        'description' => 'Creates a join link for the group convo.',
         'errors' => 
         array (
           0 => 
@@ -17338,7 +18609,6 @@ return array (
   array (
     'lexicon' => 1,
     'id' => 'chat.bsky.group.defs',
-    'description' => '[NOTE: This is under active development and should be considered unstable while this note is here].',
     'defs' => 
     array (
       'linkEnabledStatus' => 
@@ -17361,6 +18631,7 @@ return array (
       ),
       'joinLinkView' => 
       array (
+        'description' => 'Join link view to be used within a group view, so the convo is surrounding, not specified inside this view.',
         'type' => 'object',
         'required' => 
         array (
@@ -17397,18 +18668,31 @@ return array (
           ),
         ),
       ),
-      'groupPublicView' => 
+      'joinLinkPreviewView' => 
       array (
+        'description' => 'Preview that can be shown in feeds, including to unauthenticated viewers.',
         'type' => 'object',
         'required' => 
         array (
-          0 => 'name',
-          1 => 'owner',
-          2 => 'memberCount',
-          3 => 'requireApproval',
+          0 => 'convoId',
+          1 => 'code',
+          2 => 'name',
+          3 => 'owner',
+          4 => 'memberCount',
+          5 => 'memberLimit',
+          6 => 'requireApproval',
+          7 => 'joinRule',
         ),
         'properties' => 
         array (
+          'convoId' => 
+          array (
+            'type' => 'string',
+          ),
+          'code' => 
+          array (
+            'type' => 'string',
+          ),
           'name' => 
           array (
             'type' => 'string',
@@ -17422,14 +18706,79 @@ return array (
           array (
             'type' => 'integer',
           ),
+          'memberLimit' => 
+          array (
+            'type' => 'integer',
+          ),
           'requireApproval' => 
           array (
             'type' => 'boolean',
+          ),
+          'joinRule' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:chat.bsky.group.defs#joinRule',
+          ),
+          'convo' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:chat.bsky.convo.defs#convoView',
+            'description' => 'Present only if the request is authenticated and the user is a member of the group.',
+          ),
+          'viewer' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:chat.bsky.group.defs#joinLinkViewerState',
+          ),
+        ),
+      ),
+      'disabledJoinLinkPreviewView' => 
+      array (
+        'description' => 'Preview for a disabled join link. Carries only the code so clients can correlate with the input and render a disabled state.',
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'code',
+        ),
+        'properties' => 
+        array (
+          'code' => 
+          array (
+            'type' => 'string',
+          ),
+        ),
+      ),
+      'invalidJoinLinkPreviewView' => 
+      array (
+        'description' => 'Preview for a join link code that does not map to an existing link. Carries only the code so clients can correlate with the input and render an invalid state.',
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'code',
+        ),
+        'properties' => 
+        array (
+          'code' => 
+          array (
+            'type' => 'string',
+          ),
+        ),
+      ),
+      'joinLinkViewerState' => 
+      array (
+        'type' => 'object',
+        'properties' => 
+        array (
+          'requestedAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
           ),
         ),
       ),
       'joinRequestView' => 
       array (
+        'description' => 'A join request from the perspective of the group owner.',
         'type' => 'object',
         'required' => 
         array (
@@ -17455,6 +18804,49 @@ return array (
           ),
         ),
       ),
+      'joinRequestConvoView' => 
+      array (
+        'description' => 'A join request from the perspective of the requester, including enough group context to render the request in a list (e.g. group name, owner, member count).',
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'convoId',
+          1 => 'name',
+          2 => 'owner',
+          3 => 'memberCount',
+          4 => 'memberLimit',
+          5 => 'viewer',
+        ),
+        'properties' => 
+        array (
+          'convoId' => 
+          array (
+            'type' => 'string',
+          ),
+          'name' => 
+          array (
+            'type' => 'string',
+          ),
+          'owner' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:chat.bsky.actor.defs#profileViewBasic',
+          ),
+          'memberCount' => 
+          array (
+            'type' => 'integer',
+          ),
+          'memberLimit' => 
+          array (
+            'type' => 'integer',
+          ),
+          'viewer' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:chat.bsky.group.defs#joinLinkViewerState',
+          ),
+        ),
+      ),
     ),
   ),
   'chat.bsky.group.disableJoinLink' => 
@@ -17466,7 +18858,7 @@ return array (
       'main' => 
       array (
         'type' => 'procedure',
-        'description' => '[NOTE: This is under active development and should be considered unstable while this note is here]. Disables the active join link for the group convo.',
+        'description' => 'Disables the active join link for the group convo.',
         'errors' => 
         array (
           0 => 
@@ -17533,7 +18925,7 @@ return array (
       'main' => 
       array (
         'type' => 'procedure',
-        'description' => '[NOTE: This is under active development and should be considered unstable while this note is here]. Edits group settings.',
+        'description' => 'Edits group settings.',
         'errors' => 
         array (
           0 => 
@@ -17570,8 +18962,8 @@ return array (
               array (
                 'type' => 'string',
                 'minLength' => 1,
-                'maxGraphemes' => 128,
-                'maxLength' => 1280,
+                'maxGraphemes' => 50,
+                'maxLength' => 500,
               ),
             ),
           ),
@@ -17608,7 +19000,7 @@ return array (
       'main' => 
       array (
         'type' => 'procedure',
-        'description' => '[NOTE: This is under active development and should be considered unstable while this note is here]. Edits the existing join link settings for the group convo.',
+        'description' => 'Edits the existing join link settings for the group convo.',
         'errors' => 
         array (
           0 => 
@@ -17684,7 +19076,7 @@ return array (
       'main' => 
       array (
         'type' => 'procedure',
-        'description' => '[NOTE: This is under active development and should be considered unstable while this note is here]. Re-enables a previously disabled join link for the group convo.',
+        'description' => 'Re-enables a previously disabled join link for the group convo.',
         'errors' => 
         array (
           0 => 
@@ -17746,35 +19138,34 @@ return array (
       ),
     ),
   ),
-  'chat.bsky.group.getGroupPublicInfo' => 
+  'chat.bsky.group.getJoinLinkPreviews' => 
   array (
     'lexicon' => 1,
-    'id' => 'chat.bsky.group.getGroupPublicInfo',
+    'id' => 'chat.bsky.group.getJoinLinkPreviews',
     'defs' => 
     array (
       'main' => 
       array (
         'type' => 'query',
-        'description' => '[NOTE: This is under active development and should be considered unstable while this note is here]. Get public information about a group from an join link.',
-        'errors' => 
-        array (
-          0 => 
-          array (
-            'name' => 'InvalidCode',
-          ),
-        ),
+        'description' => 'Get public information about groups from join links. The output array matches the input codes one-to-one by position (and each view also carries its \'code\'). Disabled codes return a disabledJoinLinkPreviewView, and codes that do not map to a previewable link return an invalidJoinLinkPreviewView.',
         'parameters' => 
         array (
           'type' => 'params',
           'required' => 
           array (
-            0 => 'code',
+            0 => 'codes',
           ),
           'properties' => 
           array (
-            'code' => 
+            'codes' => 
             array (
-              'type' => 'string',
+              'type' => 'array',
+              'minLength' => 1,
+              'maxLength' => 50,
+              'items' => 
+              array (
+                'type' => 'string',
+              ),
             ),
           ),
         ),
@@ -17786,14 +19177,23 @@ return array (
             'type' => 'object',
             'required' => 
             array (
-              0 => 'group',
+              0 => 'joinLinkPreviews',
             ),
             'properties' => 
             array (
-              'group' => 
+              'joinLinkPreviews' => 
               array (
-                'type' => 'ref',
-                'ref' => 'lex:chat.bsky.group.defs#groupPublicView',
+                'type' => 'array',
+                'items' => 
+                array (
+                  'type' => 'union',
+                  'refs' => 
+                  array (
+                    0 => 'lex:chat.bsky.group.defs#joinLinkPreviewView',
+                    1 => 'lex:chat.bsky.group.defs#disabledJoinLinkPreviewView',
+                    2 => 'lex:chat.bsky.group.defs#invalidJoinLinkPreviewView',
+                  ),
+                ),
               ),
             ),
           ),
@@ -17810,7 +19210,7 @@ return array (
       'main' => 
       array (
         'type' => 'query',
-        'description' => '[NOTE: This is under active development and should be considered unstable while this note is here]. Lists a page of request to join a group (via join link) the user owns. Shows the data from the owner\'s point of view.',
+        'description' => 'Lists a page of request to join a group (via join link) the user owns. Shows the data from the owner\'s point of view.',
         'errors' => 
         array (
           0 => 
@@ -17879,6 +19279,74 @@ return array (
       ),
     ),
   ),
+  'chat.bsky.group.listMutualGroups' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'chat.bsky.group.listMutualGroups',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'description' => 'Returns a page of group conversations that both the requester and the specified actor are members of.',
+        'parameters' => 
+        array (
+          'type' => 'params',
+          'required' => 
+          array (
+            0 => 'subject',
+          ),
+          'properties' => 
+          array (
+            'subject' => 
+            array (
+              'type' => 'string',
+              'format' => 'did',
+            ),
+            'limit' => 
+            array (
+              'type' => 'integer',
+              'minimum' => 1,
+              'maximum' => 100,
+              'default' => 50,
+            ),
+            'cursor' => 
+            array (
+              'type' => 'string',
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'convos',
+            ),
+            'properties' => 
+            array (
+              'cursor' => 
+              array (
+                'type' => 'string',
+              ),
+              'convos' => 
+              array (
+                'type' => 'array',
+                'items' => 
+                array (
+                  'type' => 'ref',
+                  'ref' => 'lex:chat.bsky.convo.defs#convoView',
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
   'chat.bsky.group.rejectJoinRequest' => 
   array (
     'lexicon' => 1,
@@ -17888,7 +19356,7 @@ return array (
       'main' => 
       array (
         'type' => 'procedure',
-        'description' => '[NOTE: This is under active development and should be considered unstable while this note is here]. Rejects a request to join a group (via join link) the user owns. Action taken by the group owner.',
+        'description' => 'Rejects a request to join a group (via join link) the user owns. Action taken by the group owner.',
         'errors' => 
         array (
           0 => 
@@ -17951,7 +19419,7 @@ return array (
       'main' => 
       array (
         'type' => 'procedure',
-        'description' => '[NOTE: This is under active development and should be considered unstable while this note is here]. Removes members from a group. This deletes convo memberships, doesn\'t just set a status.',
+        'description' => 'Removes members from a group. This deletes convo memberships, doesn\'t just set a status.',
         'errors' => 
         array (
           0 => 
@@ -18025,7 +19493,7 @@ return array (
       'main' => 
       array (
         'type' => 'procedure',
-        'description' => '[NOTE: This is under active development and should be considered unstable while this note is here]. Sends a request to join a group (via join link) to the group owner. Action taken by the prospective group member.',
+        'description' => 'Sends a request to join a group (via join link) to the group owner. Action taken by the prospective group member.',
         'errors' => 
         array (
           0 => 
@@ -18100,6 +19568,218 @@ return array (
                 'ref' => 'lex:chat.bsky.convo.defs#convoView',
               ),
             ),
+          ),
+        ),
+      ),
+    ),
+  ),
+  'chat.bsky.group.updateJoinRequestsRead' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'chat.bsky.group.updateJoinRequestsRead',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'procedure',
+        'description' => 'Marks all join requests as read for the group owner.',
+        'errors' => 
+        array (
+          0 => 
+          array (
+            'name' => 'InvalidConvo',
+          ),
+          1 => 
+          array (
+            'name' => 'InsufficientRole',
+          ),
+        ),
+        'input' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'convoId',
+            ),
+            'properties' => 
+            array (
+              'convoId' => 
+              array (
+                'type' => 'string',
+              ),
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+            ),
+            'properties' => 
+            array (
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
+  'chat.bsky.group.withdrawJoinRequest' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'chat.bsky.group.withdrawJoinRequest',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'procedure',
+        'description' => 'Withdraws a pending request to join a group. Action taken by the prospective member who originally requested to join.',
+        'errors' => 
+        array (
+          0 => 
+          array (
+            'name' => 'InvalidJoinRequest',
+          ),
+        ),
+        'input' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'convoId',
+            ),
+            'properties' => 
+            array (
+              'convoId' => 
+              array (
+                'type' => 'string',
+              ),
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+            ),
+            'properties' => 
+            array (
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
+  'chat.bsky.moderation.defs' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'chat.bsky.moderation.defs',
+    'defs' => 
+    array (
+      'convoView' => 
+      array (
+        'description' => 'A view of a conversation for moderation purposes. Unlike chat.bsky.convo.defs#convoView, it does not include viewer-specific data (such as muted, unreadCount, status, lastMessage, lastReaction), since the requester is a moderator and not a member of the conversation. The member list is not included; use chat.bsky.moderation.getConvoMembers to list members.',
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'id',
+          1 => 'rev',
+        ),
+        'properties' => 
+        array (
+          'id' => 
+          array (
+            'type' => 'string',
+          ),
+          'rev' => 
+          array (
+            'type' => 'string',
+          ),
+          'kind' => 
+          array (
+            'description' => 'Union field that has data specific to different kinds of convos.',
+            'type' => 'union',
+            'refs' => 
+            array (
+              0 => 'lex:chat.bsky.moderation.defs#directConvo',
+              1 => 'lex:chat.bsky.moderation.defs#groupConvo',
+            ),
+          ),
+        ),
+      ),
+      'directConvo' => 
+      array (
+        'description' => 'Data specific to a direct conversation, for moderation purposes.',
+        'type' => 'object',
+        'properties' => 
+        array (
+        ),
+      ),
+      'groupConvo' => 
+      array (
+        'description' => 'Data specific to a group conversation, for moderation purposes. Unlike chat.bsky.convo.defs#groupConvo, it does not include viewer-specific data (such as unreadJoinRequestCount), since the requester is a moderator and not a member of the conversation.',
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'createdAt',
+          1 => 'joinRequestCount',
+          2 => 'lockStatus',
+          3 => 'memberCount',
+          4 => 'memberLimit',
+          5 => 'name',
+        ),
+        'properties' => 
+        array (
+          'createdAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+          'joinLink' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:chat.bsky.group.defs#joinLinkView',
+          ),
+          'joinRequestCount' => 
+          array (
+            'type' => 'integer',
+            'description' => 'The total number of pending join requests for the group conversation. This information is only visible to the owner and to moderators. Capped at 21.',
+          ),
+          'lockStatus' => 
+          array (
+            'description' => 'The lock status of the conversation.',
+            'type' => 'ref',
+            'ref' => 'lex:chat.bsky.convo.defs#convoLockStatus',
+          ),
+          'memberCount' => 
+          array (
+            'type' => 'integer',
+            'description' => 'The total number of members in the group conversation.',
+          ),
+          'memberLimit' => 
+          array (
+            'type' => 'integer',
+            'description' => 'The maximum number of members allowed in the group conversation.',
+          ),
+          'name' => 
+          array (
+            'type' => 'string',
+            'description' => 'The display name of the group conversation.',
+            'maxGraphemes' => 50,
+            'maxLength' => 500,
           ),
         ),
       ),
@@ -18195,6 +19875,193 @@ return array (
       ),
     ),
   ),
+  'chat.bsky.moderation.getConvo' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'chat.bsky.moderation.getConvo',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'description' => 'Gets an existing conversation by its ID, for moderation purposes. Does not require the requester to be a member of the conversation.',
+        'errors' => 
+        array (
+          0 => 
+          array (
+            'name' => 'InvalidConvo',
+          ),
+        ),
+        'parameters' => 
+        array (
+          'type' => 'params',
+          'required' => 
+          array (
+            0 => 'convoId',
+          ),
+          'properties' => 
+          array (
+            'convoId' => 
+            array (
+              'type' => 'string',
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'convo',
+            ),
+            'properties' => 
+            array (
+              'convo' => 
+              array (
+                'type' => 'ref',
+                'ref' => 'lex:chat.bsky.moderation.defs#convoView',
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
+  'chat.bsky.moderation.getConvoMembers' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'chat.bsky.moderation.getConvoMembers',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'description' => 'Returns a paginated list of members from a conversation, for moderation purposes. Does not require the requester to be a member of the conversation.',
+        'errors' => 
+        array (
+          0 => 
+          array (
+            'name' => 'InvalidConvo',
+          ),
+        ),
+        'parameters' => 
+        array (
+          'type' => 'params',
+          'required' => 
+          array (
+            0 => 'convoId',
+          ),
+          'properties' => 
+          array (
+            'convoId' => 
+            array (
+              'type' => 'string',
+            ),
+            'limit' => 
+            array (
+              'type' => 'integer',
+              'minimum' => 1,
+              'maximum' => 100,
+              'default' => 50,
+            ),
+            'cursor' => 
+            array (
+              'type' => 'string',
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'members',
+            ),
+            'properties' => 
+            array (
+              'cursor' => 
+              array (
+                'type' => 'string',
+              ),
+              'members' => 
+              array (
+                'type' => 'array',
+                'items' => 
+                array (
+                  'type' => 'ref',
+                  'ref' => 'lex:chat.bsky.actor.defs#profileViewBasic',
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
+  'chat.bsky.moderation.getConvos' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'chat.bsky.moderation.getConvos',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'description' => 'Gets existing conversations by their IDs, for moderation purposes. Does not require the requester to be a member of the conversations. Unknown IDs are silently omitted from the response.',
+        'parameters' => 
+        array (
+          'type' => 'params',
+          'required' => 
+          array (
+            0 => 'convoIds',
+          ),
+          'properties' => 
+          array (
+            'convoIds' => 
+            array (
+              'type' => 'array',
+              'minLength' => 1,
+              'maxLength' => 100,
+              'items' => 
+              array (
+                'type' => 'string',
+              ),
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'convos',
+            ),
+            'properties' => 
+            array (
+              'convos' => 
+              array (
+                'type' => 'array',
+                'items' => 
+                array (
+                  'type' => 'ref',
+                  'ref' => 'lex:chat.bsky.moderation.defs#convoView',
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
   'chat.bsky.moderation.getMessageContext' => 
   array (
     'lexicon' => 1,
@@ -18226,11 +20093,21 @@ return array (
             array (
               'type' => 'integer',
               'default' => 5,
+              'description' => 'Number of user messages before the target to include. System messages between the earliest returned user message and the target are also included, capped per gap by `maxInterleavedSystemMessages`. If there are no user messages before the target, up to `maxInterleavedSystemMessages` system messages immediately preceding the target are returned instead.',
             ),
             'after' => 
             array (
               'type' => 'integer',
               'default' => 5,
+              'description' => 'Number of user messages after the target to include. System messages between the target and the latest returned user message are also included, capped per gap by `maxInterleavedSystemMessages`. If there are no user messages after the target, up to `maxInterleavedSystemMessages` system messages immediately following the target are returned instead.',
+            ),
+            'maxInterleavedSystemMessages' => 
+            array (
+              'type' => 'integer',
+              'default' => 10,
+              'minimum' => 0,
+              'maximum' => 1000,
+              'description' => 'Maximum number of system messages to include per gap between consecutive returned messages (and per side when there are no user messages on that side). Within a gap, the system messages closest to the earlier message are kept.',
             ),
           ),
         ),
@@ -18255,8 +20132,7 @@ return array (
                   'refs' => 
                   array (
                     0 => 'lex:chat.bsky.convo.defs#messageView',
-                    1 => 'lex:chat.bsky.convo.defs#deletedMessageView',
-                    2 => 'lex:chat.bsky.convo.defs#systemMessageView',
+                    1 => 'lex:chat.bsky.convo.defs#systemMessageView',
                   ),
                 ),
               ),
@@ -18296,6 +20172,16 @@ return array (
             'refs' => 
             array (
               0 => 'lex:chat.bsky.moderation.subscribeModEvents#eventConvoFirstMessage',
+              1 => 'lex:chat.bsky.moderation.subscribeModEvents#eventGroupChatCreated',
+              2 => 'lex:chat.bsky.moderation.subscribeModEvents#eventGroupChatMemberAdded',
+              3 => 'lex:chat.bsky.moderation.subscribeModEvents#eventGroupChatMemberJoined',
+              4 => 'lex:chat.bsky.moderation.subscribeModEvents#eventGroupChatJoinRequest',
+              5 => 'lex:chat.bsky.moderation.subscribeModEvents#eventGroupChatJoinRequestApproved',
+              6 => 'lex:chat.bsky.moderation.subscribeModEvents#eventGroupChatJoinRequestRejected',
+              7 => 'lex:chat.bsky.moderation.subscribeModEvents#eventChatAccepted',
+              8 => 'lex:chat.bsky.moderation.subscribeModEvents#eventGroupChatMemberLeft',
+              9 => 'lex:chat.bsky.moderation.subscribeModEvents#eventGroupChatUpdated',
+              10 => 'lex:chat.bsky.moderation.subscribeModEvents#eventRateLimitExceeded',
             ),
           ),
         ),
@@ -18315,6 +20201,7 @@ return array (
       'eventConvoFirstMessage' => 
       array (
         'type' => 'object',
+        'description' => 'Fired when the first message was sent on a convo.',
         'required' => 
         array (
           0 => 'createdAt',
@@ -18360,6 +20247,726 @@ return array (
           ),
         ),
       ),
+      'eventGroupChatCreated' => 
+      array (
+        'type' => 'object',
+        'description' => 'Fire when a group chat is created.',
+        'required' => 
+        array (
+          0 => 'actorDid',
+          1 => 'convoCreatedAt',
+          2 => 'convoId',
+          3 => 'createdAt',
+          4 => 'groupMemberCount',
+          5 => 'groupName',
+          6 => 'initialMemberDids',
+          7 => 'ownerDid',
+          8 => 'rev',
+        ),
+        'properties' => 
+        array (
+          'actorDid' => 
+          array (
+            'description' => 'The DID of the actor performing the action. For this event, same as ownerDid.',
+            'type' => 'string',
+            'format' => 'did',
+          ),
+          'convoCreatedAt' => 
+          array (
+            'description' => 'When the group was originally created.',
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+          'convoId' => 
+          array (
+            'type' => 'string',
+          ),
+          'createdAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+          'groupMemberCount' => 
+          array (
+            'description' => 'Current member count at the time of the event.',
+            'type' => 'integer',
+          ),
+          'groupName' => 
+          array (
+            'description' => 'The name set at creation time.',
+            'type' => 'string',
+          ),
+          'initialMemberDids' => 
+          array (
+            'description' => 'DIDs of everyone added at creation time.',
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'string',
+              'format' => 'did',
+            ),
+          ),
+          'ownerDid' => 
+          array (
+            'description' => 'The DID of the group chat owner.',
+            'type' => 'string',
+            'format' => 'did',
+          ),
+          'rev' => 
+          array (
+            'type' => 'string',
+          ),
+        ),
+      ),
+      'eventGroupChatMemberAdded' => 
+      array (
+        'type' => 'object',
+        'description' => 'Fired when a member is added to a group chat. Note that members are added in the \'request\' state.',
+        'required' => 
+        array (
+          0 => 'actorDid',
+          1 => 'convoCreatedAt',
+          2 => 'convoId',
+          3 => 'createdAt',
+          4 => 'groupMemberCount',
+          5 => 'groupName',
+          6 => 'ownerDid',
+          7 => 'requestMembersCount',
+          8 => 'rev',
+          9 => 'subjectDid',
+          10 => 'subjectFollowsOwner',
+        ),
+        'properties' => 
+        array (
+          'actorDid' => 
+          array (
+            'description' => 'The DID of the actor performing the action. For this event, same as ownerDid.',
+            'type' => 'string',
+            'format' => 'did',
+          ),
+          'convoCreatedAt' => 
+          array (
+            'description' => 'When the group was originally created.',
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+          'convoId' => 
+          array (
+            'type' => 'string',
+          ),
+          'createdAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+          'groupMemberCount' => 
+          array (
+            'description' => 'Current member count at the time of the event.',
+            'type' => 'integer',
+          ),
+          'groupName' => 
+          array (
+            'type' => 'string',
+          ),
+          'ownerDid' => 
+          array (
+            'description' => 'The DID of the group chat owner.',
+            'type' => 'string',
+            'format' => 'did',
+          ),
+          'requestMembersCount' => 
+          array (
+            'description' => 'The number of members who have not yet accepted the convo.',
+            'type' => 'integer',
+          ),
+          'rev' => 
+          array (
+            'type' => 'string',
+          ),
+          'subjectDid' => 
+          array (
+            'description' => 'The DID of the member who was added.',
+            'type' => 'string',
+            'format' => 'did',
+          ),
+          'subjectFollowsOwner' => 
+          array (
+            'description' => 'Whether the added member follows the group owner.',
+            'type' => 'boolean',
+          ),
+        ),
+      ),
+      'eventGroupChatMemberJoined' => 
+      array (
+        'type' => 'object',
+        'description' => 'Fired when a member joins a group chat via an join link that does not require approval.',
+        'required' => 
+        array (
+          0 => 'actorDid',
+          1 => 'convoCreatedAt',
+          2 => 'convoId',
+          3 => 'createdAt',
+          4 => 'groupMemberCount',
+          5 => 'groupName',
+          6 => 'joinLinkCode',
+          7 => 'ownerDid',
+          8 => 'rev',
+          9 => 'subjectFollowsOwner',
+        ),
+        'properties' => 
+        array (
+          'actorDid' => 
+          array (
+            'description' => 'The DID of the person joining.',
+            'type' => 'string',
+            'format' => 'did',
+          ),
+          'convoCreatedAt' => 
+          array (
+            'description' => 'When the group was originally created.',
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+          'convoId' => 
+          array (
+            'type' => 'string',
+          ),
+          'createdAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+          'groupMemberCount' => 
+          array (
+            'description' => 'Current member count at the time of the event.',
+            'type' => 'integer',
+          ),
+          'groupName' => 
+          array (
+            'type' => 'string',
+          ),
+          'joinLinkCode' => 
+          array (
+            'description' => 'The code of the join link used to join.',
+            'type' => 'string',
+          ),
+          'ownerDid' => 
+          array (
+            'description' => 'The DID of the group chat owner.',
+            'type' => 'string',
+            'format' => 'did',
+          ),
+          'rev' => 
+          array (
+            'type' => 'string',
+          ),
+          'subjectFollowsOwner' => 
+          array (
+            'description' => 'Whether the joining member follows the group owner.',
+            'type' => 'boolean',
+          ),
+        ),
+      ),
+      'eventGroupChatJoinRequest' => 
+      array (
+        'type' => 'object',
+        'description' => 'Fired when a user requests to join a group chat via an join link that requires approval.',
+        'required' => 
+        array (
+          0 => 'actorDid',
+          1 => 'convoCreatedAt',
+          2 => 'convoId',
+          3 => 'createdAt',
+          4 => 'groupMemberCount',
+          5 => 'groupName',
+          6 => 'joinLinkCode',
+          7 => 'ownerDid',
+          8 => 'rev',
+          9 => 'subjectFollowsOwner',
+        ),
+        'properties' => 
+        array (
+          'actorDid' => 
+          array (
+            'description' => 'The DID of the person requesting to join.',
+            'type' => 'string',
+            'format' => 'did',
+          ),
+          'convoCreatedAt' => 
+          array (
+            'description' => 'When the group was originally created.',
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+          'convoId' => 
+          array (
+            'type' => 'string',
+          ),
+          'createdAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+          'groupMemberCount' => 
+          array (
+            'description' => 'Current member count at the time of the event.',
+            'type' => 'integer',
+          ),
+          'groupName' => 
+          array (
+            'type' => 'string',
+          ),
+          'joinLinkCode' => 
+          array (
+            'description' => 'The code of the join link used to request joining.',
+            'type' => 'string',
+          ),
+          'ownerDid' => 
+          array (
+            'description' => 'The DID of the group chat owner.',
+            'type' => 'string',
+            'format' => 'did',
+          ),
+          'rev' => 
+          array (
+            'type' => 'string',
+          ),
+          'subjectFollowsOwner' => 
+          array (
+            'description' => 'Whether the requesting member follows the group owner.',
+            'type' => 'boolean',
+          ),
+        ),
+      ),
+      'eventGroupChatJoinRequestApproved' => 
+      array (
+        'type' => 'object',
+        'description' => 'Fired when a join request is approved by the group owner.',
+        'required' => 
+        array (
+          0 => 'actorDid',
+          1 => 'convoCreatedAt',
+          2 => 'convoId',
+          3 => 'createdAt',
+          4 => 'groupMemberCount',
+          5 => 'groupName',
+          6 => 'ownerDid',
+          7 => 'rev',
+          8 => 'subjectDid',
+        ),
+        'properties' => 
+        array (
+          'actorDid' => 
+          array (
+            'description' => 'The DID of the owner approving the request.',
+            'type' => 'string',
+            'format' => 'did',
+          ),
+          'convoCreatedAt' => 
+          array (
+            'description' => 'When the group was originally created.',
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+          'convoId' => 
+          array (
+            'type' => 'string',
+          ),
+          'createdAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+          'groupMemberCount' => 
+          array (
+            'description' => 'Current member count at the time of the event.',
+            'type' => 'integer',
+          ),
+          'groupName' => 
+          array (
+            'type' => 'string',
+          ),
+          'ownerDid' => 
+          array (
+            'description' => 'The DID of the group chat owner.',
+            'type' => 'string',
+            'format' => 'did',
+          ),
+          'rev' => 
+          array (
+            'type' => 'string',
+          ),
+          'subjectDid' => 
+          array (
+            'description' => 'The DID of the member whose request was approved.',
+            'type' => 'string',
+            'format' => 'did',
+          ),
+        ),
+      ),
+      'eventGroupChatJoinRequestRejected' => 
+      array (
+        'type' => 'object',
+        'description' => 'Fired when a join request is rejected by the group owner.',
+        'required' => 
+        array (
+          0 => 'actorDid',
+          1 => 'convoCreatedAt',
+          2 => 'convoId',
+          3 => 'createdAt',
+          4 => 'groupMemberCount',
+          5 => 'groupName',
+          6 => 'ownerDid',
+          7 => 'rev',
+          8 => 'subjectDid',
+        ),
+        'properties' => 
+        array (
+          'actorDid' => 
+          array (
+            'description' => 'The DID of the owner rejecting the request.',
+            'type' => 'string',
+            'format' => 'did',
+          ),
+          'convoCreatedAt' => 
+          array (
+            'description' => 'When the group was originally created.',
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+          'convoId' => 
+          array (
+            'type' => 'string',
+          ),
+          'createdAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+          'groupMemberCount' => 
+          array (
+            'description' => 'Current member count at the time of the event.',
+            'type' => 'integer',
+          ),
+          'groupName' => 
+          array (
+            'type' => 'string',
+          ),
+          'ownerDid' => 
+          array (
+            'description' => 'The DID of the group chat owner.',
+            'type' => 'string',
+            'format' => 'did',
+          ),
+          'rev' => 
+          array (
+            'type' => 'string',
+          ),
+          'subjectDid' => 
+          array (
+            'description' => 'The DID of the member whose request was rejected.',
+            'type' => 'string',
+            'format' => 'did',
+          ),
+        ),
+      ),
+      'eventChatAccepted' => 
+      array (
+        'type' => 'object',
+        'description' => 'Fired when a user accepts a chat convo, either explicitly or by sending a message.',
+        'required' => 
+        array (
+          0 => 'actorDid',
+          1 => 'convoCreatedAt',
+          2 => 'convoId',
+          3 => 'createdAt',
+          4 => 'method',
+          5 => 'rev',
+        ),
+        'properties' => 
+        array (
+          'actorDid' => 
+          array (
+            'description' => 'The DID of the person accepting the convo.',
+            'type' => 'string',
+            'format' => 'did',
+          ),
+          'convoCreatedAt' => 
+          array (
+            'description' => 'When the convo was originally created.',
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+          'convoId' => 
+          array (
+            'type' => 'string',
+          ),
+          'createdAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+          'groupMemberCount' => 
+          array (
+            'description' => 'Current member count at the time of the event. Only present for group convos.',
+            'type' => 'integer',
+          ),
+          'groupName' => 
+          array (
+            'description' => 'The name of the group chat. Only present for group convos.',
+            'type' => 'string',
+          ),
+          'method' => 
+          array (
+            'description' => 'How the convo was accepted.',
+            'type' => 'string',
+            'knownValues' => 
+            array (
+              0 => 'explicit',
+              1 => 'message',
+            ),
+          ),
+          'ownerDid' => 
+          array (
+            'description' => 'The DID of the group chat owner. Only present for group convos.',
+            'type' => 'string',
+            'format' => 'did',
+          ),
+          'rev' => 
+          array (
+            'type' => 'string',
+          ),
+        ),
+      ),
+      'eventGroupChatMemberLeft' => 
+      array (
+        'type' => 'object',
+        'description' => 'Fired when a member leaves or is removed from a group chat.',
+        'required' => 
+        array (
+          0 => 'actorDid',
+          1 => 'convoCreatedAt',
+          2 => 'convoId',
+          3 => 'createdAt',
+          4 => 'groupMemberCount',
+          5 => 'groupName',
+          6 => 'leaveMethod',
+          7 => 'ownerDid',
+          8 => 'rev',
+          9 => 'subjectDid',
+        ),
+        'properties' => 
+        array (
+          'actorDid' => 
+          array (
+            'description' => 'The DID of the actor. For voluntary: the person leaving. For kicked: the owner.',
+            'type' => 'string',
+            'format' => 'did',
+          ),
+          'convoCreatedAt' => 
+          array (
+            'description' => 'When the group was originally created.',
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+          'convoId' => 
+          array (
+            'type' => 'string',
+          ),
+          'createdAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+          'groupMemberCount' => 
+          array (
+            'description' => 'Current member count at the time of the event.',
+            'type' => 'integer',
+          ),
+          'groupName' => 
+          array (
+            'type' => 'string',
+          ),
+          'leaveMethod' => 
+          array (
+            'description' => 'How the member left.',
+            'type' => 'string',
+            'knownValues' => 
+            array (
+              0 => 'voluntary',
+              1 => 'kicked',
+            ),
+          ),
+          'ownerDid' => 
+          array (
+            'description' => 'The DID of the group chat owner.',
+            'type' => 'string',
+            'format' => 'did',
+          ),
+          'rev' => 
+          array (
+            'type' => 'string',
+          ),
+          'subjectDid' => 
+          array (
+            'description' => 'The DID of the member who left or was removed.',
+            'type' => 'string',
+            'format' => 'did',
+          ),
+        ),
+      ),
+      'eventGroupChatUpdated' => 
+      array (
+        'type' => 'object',
+        'description' => 'Fired when a group chat\'s metadata or status changes.',
+        'required' => 
+        array (
+          0 => 'actorDid',
+          1 => 'convoCreatedAt',
+          2 => 'convoId',
+          3 => 'createdAt',
+          4 => 'groupMemberCount',
+          5 => 'groupName',
+          6 => 'ownerDid',
+          7 => 'rev',
+          8 => 'updateType',
+        ),
+        'properties' => 
+        array (
+          'actorDid' => 
+          array (
+            'description' => 'The DID of the actor performing the action (the owner).',
+            'type' => 'string',
+            'format' => 'did',
+          ),
+          'convoCreatedAt' => 
+          array (
+            'description' => 'When the group was originally created.',
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+          'convoId' => 
+          array (
+            'type' => 'string',
+          ),
+          'createdAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+          'groupMemberCount' => 
+          array (
+            'description' => 'Current member count at the time of the event.',
+            'type' => 'integer',
+          ),
+          'groupName' => 
+          array (
+            'description' => 'Current group name.',
+            'type' => 'string',
+          ),
+          'joinLinkCode' => 
+          array (
+            'description' => 'The code of the join link. Only present when updateType is join-link-related.',
+            'type' => 'string',
+          ),
+          'joinLinkFollowersOnly' => 
+          array (
+            'description' => 'Whether the join link is restricted to followers of the owner. Only present when updateType is join-link-related.',
+            'type' => 'boolean',
+          ),
+          'joinLinkRequiresApproval' => 
+          array (
+            'description' => 'Whether the join link requires owner approval to join. Only present when updateType is join-link-related.',
+            'type' => 'boolean',
+          ),
+          'lockReason' => 
+          array (
+            'description' => 'Why the group was locked. Only present when updateType is \'locked\'.',
+            'type' => 'string',
+            'knownValues' => 
+            array (
+              0 => 'owner_action',
+              1 => 'owner_left',
+              2 => 'owner_deactivated',
+              3 => 'owner_deleted',
+              4 => 'owner_suspended',
+              5 => 'owner_taken_down',
+              6 => 'label_applied',
+              7 => 'convo_taken_down',
+            ),
+          ),
+          'newName' => 
+          array (
+            'description' => 'The new group name. Only present when updateType is \'name_changed\'.',
+            'type' => 'string',
+          ),
+          'oldName' => 
+          array (
+            'description' => 'The previous group name. Only present when updateType is \'name_changed\'.',
+            'type' => 'string',
+          ),
+          'ownerDid' => 
+          array (
+            'description' => 'The DID of the group chat owner.',
+            'type' => 'string',
+            'format' => 'did',
+          ),
+          'rev' => 
+          array (
+            'type' => 'string',
+          ),
+          'updateType' => 
+          array (
+            'description' => 'What changed.',
+            'type' => 'string',
+            'knownValues' => 
+            array (
+              0 => 'name_changed',
+              1 => 'locked',
+              2 => 'locked_permanently',
+              3 => 'unlocked',
+              4 => 'join_link_created',
+              5 => 'join_link_disabled',
+              6 => 'join_link_settings_changed',
+            ),
+          ),
+        ),
+      ),
+      'eventRateLimitExceeded' => 
+      array (
+        'type' => 'object',
+        'description' => 'Fired when a user exceeds a rate limit.',
+        'required' => 
+        array (
+          0 => 'actorDid',
+          1 => 'createdAt',
+          2 => 'endpoint',
+          3 => 'rev',
+        ),
+        'properties' => 
+        array (
+          'actorDid' => 
+          array (
+            'description' => 'The DID of the user who hit the rate limit.',
+            'type' => 'string',
+            'format' => 'did',
+          ),
+          'createdAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+          'endpoint' => 
+          array (
+            'description' => 'The NSID of the endpoint that was rate limited.',
+            'type' => 'string',
+          ),
+          'rev' => 
+          array (
+            'type' => 'string',
+          ),
+        ),
+      ),
     ),
   ),
   'chat.bsky.moderation.updateActorAccess' => 
@@ -18396,6 +21003,148 @@ return array (
               'ref' => 
               array (
                 'type' => 'string',
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
+  'chat.bsky.notification.defs' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'chat.bsky.notification.defs',
+    'defs' => 
+    array (
+      'preferences' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'chat',
+          1 => 'chatRequest',
+        ),
+        'properties' => 
+        array (
+          'chat' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:chat.bsky.notification.defs#chatPreference',
+          ),
+          'chatRequest' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:chat.bsky.notification.defs#chatPreference',
+          ),
+        ),
+      ),
+      'chatPreference' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'include',
+          1 => 'push',
+        ),
+        'properties' => 
+        array (
+          'include' => 
+          array (
+            'type' => 'string',
+            'knownValues' => 
+            array (
+              0 => 'all',
+              1 => 'follows',
+            ),
+          ),
+          'push' => 
+          array (
+            'type' => 'boolean',
+          ),
+        ),
+      ),
+    ),
+  ),
+  'chat.bsky.notification.getPreferences' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'chat.bsky.notification.getPreferences',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'description' => 'Get the requesting account\'s chat notification preferences. Defaults are returned for accounts that have not set any preferences. Requires auth.',
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'preferences',
+            ),
+            'properties' => 
+            array (
+              'preferences' => 
+              array (
+                'type' => 'ref',
+                'ref' => 'lex:chat.bsky.notification.defs#preferences',
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
+  'chat.bsky.notification.putPreferences' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'chat.bsky.notification.putPreferences',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'procedure',
+        'description' => 'Set the requesting account\'s chat notification preferences. Only the provided preferences are updated; omitted preferences are left unchanged.',
+        'input' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'properties' => 
+            array (
+              'chat' => 
+              array (
+                'type' => 'ref',
+                'ref' => 'lex:chat.bsky.notification.defs#chatPreference',
+              ),
+              'chatRequest' => 
+              array (
+                'type' => 'ref',
+                'ref' => 'lex:chat.bsky.notification.defs#chatPreference',
+              ),
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'preferences',
+            ),
+            'properties' => 
+            array (
+              'preferences' => 
+              array (
+                'type' => 'ref',
+                'ref' => 'lex:chat.bsky.notification.defs#preferences',
               ),
             ),
           ),
@@ -22608,8 +25357,8 @@ return array (
             'aud' => 
             array (
               'type' => 'string',
-              'format' => 'did',
-              'description' => 'The DID of the service that the token will be used to authenticate with',
+              'maxLength' => 2048,
+              'description' => 'The DID or `did#serviceId` reference of the service that the token will be used to authenticate with.',
             ),
             'exp' => 
             array (
@@ -25038,6 +27787,550 @@ return array (
       ),
     ),
   ),
+  'internal.bsky.actor.getProfiles' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'internal.bsky.actor.getProfiles',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'description' => 'Get detailed profile views of multiple actors, hydrating social proof (known followers) only for a subset of them. Intended for internal service-to-service use.',
+        'parameters' => 
+        array (
+          'type' => 'params',
+          'required' => 
+          array (
+            0 => 'dids',
+          ),
+          'properties' => 
+          array (
+            'dids' => 
+            array (
+              'type' => 'array',
+              'items' => 
+              array (
+                'type' => 'string',
+                'format' => 'did',
+              ),
+              'maxLength' => 200,
+            ),
+            'viewer' => 
+            array (
+              'type' => 'string',
+              'format' => 'did',
+              'description' => 'DID of the account on whose behalf the request is made (not included for public/unauthenticated requests). Used for viewer-relative state, including social proof.',
+            ),
+            'socialProof' => 
+            array (
+              'type' => 'array',
+              'description' => 'DIDs to hydrate social proof (known followers) for. DIDs not also present in `dids` are ignored.',
+              'items' => 
+              array (
+                'type' => 'string',
+                'format' => 'did',
+              ),
+              'maxLength' => 200,
+            ),
+            'includeTakedowns' => 
+            array (
+              'type' => 'boolean',
+              'default' => false,
+              'description' => 'Include taken-down accounts in the response rather than omitting them. For service-to-service moderation use only.',
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'profiles',
+            ),
+            'properties' => 
+            array (
+              'profiles' => 
+              array (
+                'type' => 'array',
+                'items' => 
+                array (
+                  'type' => 'ref',
+                  'ref' => 'lex:app.bsky.actor.defs#profileViewDetailed',
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
+  'site.standard.document' => 
+  array (
+    'defs' => 
+    array (
+      'contributor' => 
+      array (
+        'properties' => 
+        array (
+          'did' => 
+          array (
+            'format' => 'did',
+            'type' => 'string',
+          ),
+          'displayName' => 
+          array (
+            'maxGraphemes' => 100,
+            'maxLength' => 1000,
+            'type' => 'string',
+          ),
+          'role' => 
+          array (
+            'maxGraphemes' => 100,
+            'maxLength' => 1000,
+            'type' => 'string',
+          ),
+        ),
+        'required' => 
+        array (
+          0 => 'did',
+        ),
+        'type' => 'object',
+      ),
+      'main' => 
+      array (
+        'description' => 'A document record representing a published article, blog post, or other content. Documents can belong to a publication or exist independently.',
+        'key' => 'tid',
+        'record' => 
+        array (
+          'properties' => 
+          array (
+            'bskyPostRef' => 
+            array (
+              'description' => 'Strong reference to a Bluesky post. Useful to keep track of comments off-platform.',
+              'ref' => 'lex:com.atproto.repo.strongRef',
+              'type' => 'ref',
+            ),
+            'content' => 
+            array (
+              'closed' => false,
+              'description' => 'Open union used to define the record\'s content. Each entry must specify a $type and may be extended with other lexicons to support additional content formats.',
+              'refs' => 
+              array (
+              ),
+              'type' => 'union',
+            ),
+            'contributors' => 
+            array (
+              'items' => 
+              array (
+                'ref' => 'lex:site.standard.document#contributor',
+                'type' => 'ref',
+              ),
+              'type' => 'array',
+            ),
+            'coverImage' => 
+            array (
+              'accept' => 
+              array (
+                0 => 'image/*',
+              ),
+              'description' => 'Image to used for thumbnail or cover image. Less than 1MB is size.',
+              'maxSize' => 1000000,
+              'type' => 'blob',
+            ),
+            'description' => 
+            array (
+              'description' => 'A brief description or excerpt from the document.',
+              'maxGraphemes' => 3000,
+              'maxLength' => 30000,
+              'type' => 'string',
+            ),
+            'labels' => 
+            array (
+              'description' => 'Self-label values for this post. Effectively content warnings.',
+              'refs' => 
+              array (
+                0 => 'lex:com.atproto.label.defs#selfLabels',
+              ),
+              'type' => 'union',
+            ),
+            'links' => 
+            array (
+              'description' => 'Array of values describing relationships between this document and external resources',
+              'refs' => 
+              array (
+              ),
+              'type' => 'union',
+            ),
+            'path' => 
+            array (
+              'description' => 'Combine with site or publication url to construct a canonical URL to the document. Prepend with a leading slash.',
+              'type' => 'string',
+            ),
+            'publishedAt' => 
+            array (
+              'description' => 'Timestamp of the documents publish time.',
+              'format' => 'datetime',
+              'type' => 'string',
+            ),
+            'site' => 
+            array (
+              'description' => 'Points to a publication record (at://) or a publication url (https://) for loose documents. Avoid trailing slashes.',
+              'format' => 'uri',
+              'type' => 'string',
+            ),
+            'tags' => 
+            array (
+              'description' => 'Array of strings used to tag or categorize the document. Avoid prepending tags with hashtags.',
+              'items' => 
+              array (
+                'maxGraphemes' => 128,
+                'maxLength' => 1280,
+                'type' => 'string',
+              ),
+              'type' => 'array',
+            ),
+            'textContent' => 
+            array (
+              'description' => 'Plaintext representation of the documents contents. Should not contain markdown or other formatting.',
+              'type' => 'string',
+            ),
+            'title' => 
+            array (
+              'description' => 'Title of the document.',
+              'maxGraphemes' => 500,
+              'maxLength' => 5000,
+              'type' => 'string',
+            ),
+            'updatedAt' => 
+            array (
+              'description' => 'Timestamp of the documents last edit.',
+              'format' => 'datetime',
+              'type' => 'string',
+            ),
+          ),
+          'required' => 
+          array (
+            0 => 'site',
+            1 => 'title',
+            2 => 'publishedAt',
+          ),
+          'type' => 'object',
+        ),
+        'type' => 'record',
+      ),
+    ),
+    'id' => 'site.standard.document',
+    'lexicon' => 1,
+  ),
+  'site.standard.graph.recommend' => 
+  array (
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'description' => 'Record declaring a recommendation of a document.',
+        'key' => 'tid',
+        'record' => 
+        array (
+          'properties' => 
+          array (
+            'createdAt' => 
+            array (
+              'format' => 'datetime',
+              'type' => 'string',
+            ),
+            'document' => 
+            array (
+              'description' => 'AT-URI reference to the document record being recommended (ex: at://did:plc:abc123/site.standard.document/xyz789).',
+              'format' => 'at-uri',
+              'type' => 'string',
+            ),
+          ),
+          'required' => 
+          array (
+            0 => 'document',
+            1 => 'createdAt',
+          ),
+          'type' => 'object',
+        ),
+        'type' => 'record',
+      ),
+    ),
+    'id' => 'site.standard.graph.recommend',
+    'lexicon' => 1,
+  ),
+  'site.standard.graph.subscription' => 
+  array (
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'description' => 'Record declaring a subscription to a publication.',
+        'key' => 'tid',
+        'record' => 
+        array (
+          'properties' => 
+          array (
+            'createdAt' => 
+            array (
+              'format' => 'datetime',
+              'type' => 'string',
+            ),
+            'publication' => 
+            array (
+              'description' => 'AT-URI reference to the publication record being subscribed to (ex: at://did:plc:abc123/site.standard.publication/xyz789).',
+              'format' => 'at-uri',
+              'type' => 'string',
+            ),
+          ),
+          'required' => 
+          array (
+            0 => 'publication',
+          ),
+          'type' => 'object',
+        ),
+        'type' => 'record',
+      ),
+    ),
+    'id' => 'site.standard.graph.subscription',
+    'lexicon' => 1,
+  ),
+  'site.standard.publication' => 
+  array (
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'description' => 'A publication record representing a blog, website, or content platform. Publications serve as containers for documents and define the overall branding and settings.',
+        'key' => 'tid',
+        'record' => 
+        array (
+          'properties' => 
+          array (
+            'basicTheme' => 
+            array (
+              'description' => 'Simplified publication theme for tools and apps to utilize when displaying content.',
+              'ref' => 'lex:site.standard.theme.basic',
+              'type' => 'ref',
+            ),
+            'description' => 
+            array (
+              'description' => 'Brief description of the publication.',
+              'maxGraphemes' => 3000,
+              'maxLength' => 30000,
+              'type' => 'string',
+            ),
+            'icon' => 
+            array (
+              'accept' => 
+              array (
+                0 => 'image/*',
+              ),
+              'description' => 'Square image to identify the publication. Should be at least 256x256.',
+              'maxSize' => 1000000,
+              'type' => 'blob',
+            ),
+            'labels' => 
+            array (
+              'description' => 'Self-label values for this publication. Effectively content warnings.',
+              'refs' => 
+              array (
+                0 => 'lex:com.atproto.label.defs#selfLabels',
+              ),
+              'type' => 'union',
+            ),
+            'name' => 
+            array (
+              'description' => 'Name of the publication.',
+              'maxGraphemes' => 500,
+              'maxLength' => 5000,
+              'type' => 'string',
+            ),
+            'preferences' => 
+            array (
+              'description' => 'Object containing platform specific preferences (with a few shared properties).',
+              'ref' => 'lex:site.standard.publication#preferences',
+              'type' => 'ref',
+            ),
+            'url' => 
+            array (
+              'description' => 'Base publication url (ex: https://standard.site). The canonical document URL is formed by combining this value with the document path.',
+              'format' => 'uri',
+              'type' => 'string',
+            ),
+          ),
+          'required' => 
+          array (
+            0 => 'url',
+            1 => 'name',
+          ),
+          'type' => 'object',
+        ),
+        'type' => 'record',
+      ),
+      'preferences' => 
+      array (
+        'properties' => 
+        array (
+          'showInDiscover' => 
+          array (
+            'default' => true,
+            'description' => 'Boolean which decides whether the publication should appear in discovery feeds.',
+            'type' => 'boolean',
+          ),
+        ),
+        'type' => 'object',
+      ),
+    ),
+    'id' => 'site.standard.publication',
+    'lexicon' => 1,
+  ),
+  'site.standard.theme.basic' => 
+  array (
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'description' => 'A simplified theme definition for publications, providing basic color customization for content display across different platforms and applications.',
+        'key' => 'tid',
+        'record' => 
+        array (
+          'properties' => 
+          array (
+            'accent' => 
+            array (
+              'description' => 'Color used for links and button backgrounds.',
+              'refs' => 
+              array (
+                0 => 'lex:site.standard.theme.color#rgb',
+              ),
+              'type' => 'union',
+            ),
+            'accentForeground' => 
+            array (
+              'description' => 'Color used for button text.',
+              'refs' => 
+              array (
+                0 => 'lex:site.standard.theme.color#rgb',
+              ),
+              'type' => 'union',
+            ),
+            'background' => 
+            array (
+              'description' => 'Color used for content background.',
+              'refs' => 
+              array (
+                0 => 'lex:site.standard.theme.color#rgb',
+              ),
+              'type' => 'union',
+            ),
+            'foreground' => 
+            array (
+              'description' => 'Color used for content text.',
+              'refs' => 
+              array (
+                0 => 'lex:site.standard.theme.color#rgb',
+              ),
+              'type' => 'union',
+            ),
+          ),
+          'required' => 
+          array (
+            0 => 'background',
+            1 => 'foreground',
+            2 => 'accent',
+            3 => 'accentForeground',
+          ),
+          'type' => 'object',
+        ),
+        'type' => 'record',
+      ),
+    ),
+    'id' => 'site.standard.theme.basic',
+    'lexicon' => 1,
+  ),
+  'site.standard.theme.color' => 
+  array (
+    'defs' => 
+    array (
+      'rgb' => 
+      array (
+        'properties' => 
+        array (
+          'b' => 
+          array (
+            'maximum' => 255,
+            'minimum' => 0,
+            'type' => 'integer',
+          ),
+          'g' => 
+          array (
+            'maximum' => 255,
+            'minimum' => 0,
+            'type' => 'integer',
+          ),
+          'r' => 
+          array (
+            'maximum' => 255,
+            'minimum' => 0,
+            'type' => 'integer',
+          ),
+        ),
+        'required' => 
+        array (
+          0 => 'r',
+          1 => 'g',
+          2 => 'b',
+        ),
+        'type' => 'object',
+      ),
+      'rgba' => 
+      array (
+        'properties' => 
+        array (
+          'a' => 
+          array (
+            'maximum' => 100,
+            'minimum' => 0,
+            'type' => 'integer',
+          ),
+          'b' => 
+          array (
+            'maximum' => 255,
+            'minimum' => 0,
+            'type' => 'integer',
+          ),
+          'g' => 
+          array (
+            'maximum' => 255,
+            'minimum' => 0,
+            'type' => 'integer',
+          ),
+          'r' => 
+          array (
+            'maximum' => 255,
+            'minimum' => 0,
+            'type' => 'integer',
+          ),
+        ),
+        'required' => 
+        array (
+          0 => 'r',
+          1 => 'g',
+          2 => 'b',
+          3 => 'a',
+        ),
+        'type' => 'object',
+      ),
+    ),
+    'id' => 'site.standard.theme.color',
+    'lexicon' => 1,
+  ),
   'tools.ozone.communication.createTemplate' => 
   array (
     'lexicon' => 1,
@@ -25697,6 +28990,7 @@ return array (
               0 => 'lex:com.atproto.admin.defs#repoRef',
               1 => 'lex:com.atproto.repo.strongRef',
               2 => 'lex:chat.bsky.convo.defs#messageRef',
+              3 => 'lex:chat.bsky.convo.defs#convoRef',
             ),
           ),
           'subjectBlobCids' => 
@@ -25791,6 +29085,7 @@ return array (
               1 => 'lex:tools.ozone.moderation.defs#repoViewNotFound',
               2 => 'lex:tools.ozone.moderation.defs#recordView',
               3 => 'lex:tools.ozone.moderation.defs#recordViewNotFound',
+              4 => 'lex:tools.ozone.moderation.defs#convoView',
             ),
           ),
           'subjectBlobs' => 
@@ -25844,6 +29139,7 @@ return array (
               0 => 'lex:com.atproto.admin.defs#repoRef',
               1 => 'lex:com.atproto.repo.strongRef',
               2 => 'lex:chat.bsky.convo.defs#messageRef',
+              3 => 'lex:chat.bsky.convo.defs#convoRef',
             ),
           ),
           'hosting' => 
@@ -26727,6 +30023,11 @@ return array (
             'type' => 'string',
             'description' => 'Additional comment about added/removed tags.',
           ),
+          'durationInHours' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Indicates how long the tags being added should remain before automatically being removed. Only applies to tags being added.',
+          ),
         ),
       ),
       'accountEvent' => 
@@ -27199,6 +30500,27 @@ return array (
           array (
             'type' => 'string',
             'format' => 'at-uri',
+          ),
+        ),
+      ),
+      'convoView' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'did',
+          1 => 'convoId',
+        ),
+        'properties' => 
+        array (
+          'did' => 
+          array (
+            'type' => 'string',
+            'format' => 'did',
+          ),
+          'convoId' => 
+          array (
+            'type' => 'string',
           ),
         ),
       ),
@@ -27703,6 +31025,12 @@ return array (
                 'type' => 'string',
                 'description' => 'An optional external ID for the event, used to deduplicate events from external systems. Fails when an event of same type with the same external ID exists for the same subject.',
               ),
+              'reportAction' => 
+              array (
+                'type' => 'ref',
+                'ref' => 'lex:tools.ozone.moderation.emitEvent#reportAction',
+                'description' => 'Optional report-level targeting. If provided, this event will be linked to specific reports and reporters may be notified.',
+              ),
             ),
           ),
         ),
@@ -27725,6 +31053,42 @@ return array (
           array (
             'name' => 'DuplicateExternalId',
             'description' => 'An event with the same external ID already exists for the subject.',
+          ),
+        ),
+      ),
+      'reportAction' => 
+      array (
+        'type' => 'object',
+        'description' => 'Target specific reports when emitting a moderation event',
+        'properties' => 
+        array (
+          'ids' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'integer',
+            ),
+            'description' => 'Target specific report IDs',
+          ),
+          'types' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'string',
+            ),
+            'description' => 'Target reports matching these report types on the subject (fully qualified NSIDs)',
+          ),
+          'all' => 
+          array (
+            'type' => 'boolean',
+            'description' => 'Target ALL reports on the subject',
+          ),
+          'note' => 
+          array (
+            'type' => 'string',
+            'description' => 'Note to send to reporter(s) when actioning their report',
           ),
         ),
       ),
@@ -28433,11 +31797,12 @@ return array (
             'subjectType' => 
             array (
               'type' => 'string',
-              'description' => 'If specified, only events where the subject is of the given type (account or record) will be returned. When this is set to \'account\' the \'collections\' parameter will be ignored. When includeAllUserRecords or subject is set, this will be ignored.',
+              'description' => 'If specified, only events where the subject is of the given type (account, record, or conversation) will be returned. When this is set to \'account\' the \'collections\' parameter will be ignored. When includeAllUserRecords or subject is set, this will be ignored.',
               'knownValues' => 
               array (
                 0 => 'account',
                 1 => 'record',
+                2 => 'conversation',
               ),
             ),
             'includeAllUserRecords' => 
@@ -28801,11 +32166,12 @@ return array (
             'subjectType' => 
             array (
               'type' => 'string',
-              'description' => 'If specified, subjects of the given type (account or record) will be returned. When this is set to \'account\' the \'collections\' parameter will be ignored. When includeAllUserRecords or subject is set, this will be ignored.',
+              'description' => 'If specified, subjects of the given type (account, record, or conversation) will be returned. When this is set to \'account\' the \'collections\' parameter will be ignored. When includeAllUserRecords or subject is set, this will be ignored.',
               'knownValues' => 
               array (
                 0 => 'account',
                 1 => 'record',
+                2 => 'conversation',
               ),
             ),
             'minAccountSuspendCount' => 
@@ -29164,6 +32530,946 @@ return array (
       ),
     ),
   ),
+  'tools.ozone.queue.assignModerator' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'tools.ozone.queue.assignModerator',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'procedure',
+        'description' => 'Assign a user to a queue.',
+        'input' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'queueId',
+              1 => 'did',
+            ),
+            'properties' => 
+            array (
+              'queueId' => 
+              array (
+                'type' => 'integer',
+                'description' => 'The ID of the queue to assign the user to.',
+              ),
+              'did' => 
+              array (
+                'type' => 'string',
+                'description' => 'DID to be assigned.',
+              ),
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:tools.ozone.queue.defs#assignmentView',
+          ),
+        ),
+        'errors' => 
+        array (
+          0 => 
+          array (
+            'name' => 'InvalidAssignment',
+            'description' => 'The specified queue does not exist or is not enabled.',
+          ),
+        ),
+      ),
+    ),
+  ),
+  'tools.ozone.queue.createQueue' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'tools.ozone.queue.createQueue',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'procedure',
+        'description' => 'Create a new moderation queue. A queue can have optional matching criteria that ozone\'s queue router will use to match reports. A queue with no criteria must have reports assigned to it manually via (1) `modTool.meta.queueId` in `tools.ozone.moderation.emitEvent` or (2) `tools.ozone.report.reassignQueue`.',
+        'input' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'name',
+            ),
+            'properties' => 
+            array (
+              'name' => 
+              array (
+                'type' => 'string',
+                'description' => 'Display name for the queue (must be unique)',
+              ),
+              'subjectTypes' => 
+              array (
+                'type' => 'array',
+                'items' => 
+                array (
+                  'type' => 'string',
+                  'knownValues' => 
+                  array (
+                    0 => 'account',
+                    1 => 'record',
+                    2 => 'message',
+                    3 => 'conversation',
+                  ),
+                ),
+                'description' => 'Subject types this queue accepts',
+              ),
+              'collection' => 
+              array (
+                'type' => 'string',
+                'format' => 'nsid',
+                'description' => 'Collection name for record subjects. Required if subjectTypes includes \'record\'.',
+              ),
+              'reportTypes' => 
+              array (
+                'type' => 'array',
+                'items' => 
+                array (
+                  'type' => 'string',
+                ),
+                'maxLength' => 25,
+                'description' => 'Report reason types (fully qualified NSIDs)',
+              ),
+              'description' => 
+              array (
+                'type' => 'string',
+                'description' => 'Optional description of the queue',
+              ),
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'queue',
+            ),
+            'properties' => 
+            array (
+              'queue' => 
+              array (
+                'type' => 'ref',
+                'ref' => 'lex:tools.ozone.queue.defs#queueView',
+              ),
+            ),
+          ),
+        ),
+        'errors' => 
+        array (
+          0 => 
+          array (
+            'name' => 'ConflictingQueue',
+            'description' => 'The queue configuration conflicts with an existing queue',
+          ),
+        ),
+      ),
+    ),
+  ),
+  'tools.ozone.queue.defs' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'tools.ozone.queue.defs',
+    'defs' => 
+    array (
+      'queueView' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'id',
+          1 => 'name',
+          2 => 'createdBy',
+          3 => 'createdAt',
+          4 => 'updatedAt',
+          5 => 'enabled',
+          6 => 'stats',
+        ),
+        'properties' => 
+        array (
+          'id' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Queue ID',
+          ),
+          'name' => 
+          array (
+            'type' => 'string',
+            'description' => 'Display name of the queue',
+          ),
+          'subjectTypes' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'string',
+              'knownValues' => 
+              array (
+                0 => 'account',
+                1 => 'record',
+                2 => 'message',
+                3 => 'conversation',
+              ),
+            ),
+            'description' => 'Subject types this queue accepts.',
+          ),
+          'collection' => 
+          array (
+            'type' => 'string',
+            'format' => 'nsid',
+            'description' => 'Collection name for record subjects (e.g., \'app.bsky.feed.post\')',
+          ),
+          'reportTypes' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'string',
+            ),
+            'description' => 'Report reason types this queue accepts (fully qualified NSIDs)',
+          ),
+          'description' => 
+          array (
+            'type' => 'string',
+            'description' => 'Optional description of the queue',
+          ),
+          'createdBy' => 
+          array (
+            'type' => 'string',
+            'format' => 'did',
+            'description' => 'DID of moderator who created this queue',
+          ),
+          'createdAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+          'updatedAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+          'enabled' => 
+          array (
+            'type' => 'boolean',
+            'description' => 'Whether this queue is currently active',
+          ),
+          'deletedAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+            'description' => 'When the queue was deleted, if applicable',
+          ),
+          'stats' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:tools.ozone.queue.defs#queueStats',
+            'description' => 'Statistics about this queue',
+          ),
+        ),
+      ),
+      'queueStats' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+        ),
+        'properties' => 
+        array (
+          'pendingCount' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Number of reports in \'open\' status',
+          ),
+          'actionedCount' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Number of reports in \'closed\' status',
+          ),
+          'escalatedCount' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Number of reports in \'escalated\' status',
+          ),
+          'inboundCount' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Reports received in this queue in the last 24 hours.',
+          ),
+          'actionRate' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Percentage of reports actioned (actionedCount / inboundCount * 100), rounded to nearest integer. Absent when inboundCount is 0.',
+          ),
+          'avgHandlingTimeSec' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Average time in seconds from report creation to close, for reports closed in this period.',
+          ),
+          'lastUpdated' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+            'description' => 'When these statistics were last computed',
+          ),
+        ),
+      ),
+      'assignmentView' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'id',
+          1 => 'did',
+          2 => 'queue',
+          3 => 'startAt',
+        ),
+        'properties' => 
+        array (
+          'id' => 
+          array (
+            'type' => 'integer',
+          ),
+          'did' => 
+          array (
+            'type' => 'string',
+            'format' => 'did',
+          ),
+          'moderator' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:tools.ozone.team.defs#member',
+            'description' => 'The moderator assigned to this queue',
+          ),
+          'queue' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:tools.ozone.queue.defs#queueView',
+          ),
+          'startAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+          'endAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+        ),
+      ),
+    ),
+  ),
+  'tools.ozone.queue.deleteQueue' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'tools.ozone.queue.deleteQueue',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'procedure',
+        'description' => 'Delete a moderation queue. Optionally migrate reports to another queue.',
+        'input' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'queueId',
+            ),
+            'properties' => 
+            array (
+              'queueId' => 
+              array (
+                'type' => 'integer',
+                'description' => 'ID of the queue to delete',
+              ),
+              'migrateToQueueId' => 
+              array (
+                'type' => 'integer',
+                'description' => 'Optional: migrate all reports to this queue. If not specified, reports will be set to unassigned (-1).',
+              ),
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'deleted',
+            ),
+            'properties' => 
+            array (
+              'deleted' => 
+              array (
+                'type' => 'boolean',
+              ),
+              'reportsMigrated' => 
+              array (
+                'type' => 'integer',
+                'description' => 'Number of reports that were migrated (if migration occurred)',
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
+  'tools.ozone.queue.getAssignments' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'tools.ozone.queue.getAssignments',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'description' => 'Get moderator assignments, optionally filtered by active status, queue, or moderator.',
+        'parameters' => 
+        array (
+          'type' => 'params',
+          'properties' => 
+          array (
+            'onlyActive' => 
+            array (
+              'type' => 'boolean',
+              'default' => true,
+              'description' => 'When true, only returns active assignments.',
+            ),
+            'queueIds' => 
+            array (
+              'type' => 'array',
+              'items' => 
+              array (
+                'type' => 'integer',
+              ),
+              'description' => 'If specified, returns assignments for these queues only.',
+            ),
+            'dids' => 
+            array (
+              'type' => 'array',
+              'items' => 
+              array (
+                'type' => 'string',
+                'format' => 'did',
+              ),
+              'description' => 'If specified, returns assignments for these moderators only.',
+            ),
+            'limit' => 
+            array (
+              'type' => 'integer',
+              'minimum' => 1,
+              'maximum' => 100,
+              'default' => 50,
+            ),
+            'cursor' => 
+            array (
+              'type' => 'string',
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'assignments',
+            ),
+            'properties' => 
+            array (
+              'cursor' => 
+              array (
+                'type' => 'string',
+              ),
+              'assignments' => 
+              array (
+                'type' => 'array',
+                'items' => 
+                array (
+                  'type' => 'ref',
+                  'ref' => 'lex:tools.ozone.queue.defs#assignmentView',
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
+  'tools.ozone.queue.listQueues' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'tools.ozone.queue.listQueues',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'description' => 'List all configured moderation queues with statistics.',
+        'parameters' => 
+        array (
+          'type' => 'params',
+          'properties' => 
+          array (
+            'enabled' => 
+            array (
+              'type' => 'boolean',
+              'description' => 'Filter by enabled status. If not specified, returns all queues.',
+            ),
+            'subjectType' => 
+            array (
+              'type' => 'string',
+              'description' => 'Filter queues that handle this subject type (\'account\', \'record\', \'message\', or \'conversation\').',
+            ),
+            'collection' => 
+            array (
+              'type' => 'string',
+              'description' => 'Filter queues by collection name (e.g. \'app.bsky.feed.post\').',
+            ),
+            'reportTypes' => 
+            array (
+              'type' => 'array',
+              'items' => 
+              array (
+                'type' => 'string',
+              ),
+              'maxLength' => 10,
+              'description' => 'Filter queues that handle any of these report reason types.',
+            ),
+            'limit' => 
+            array (
+              'type' => 'integer',
+              'minimum' => 1,
+              'maximum' => 100,
+              'default' => 50,
+            ),
+            'cursor' => 
+            array (
+              'type' => 'string',
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'queues',
+            ),
+            'properties' => 
+            array (
+              'cursor' => 
+              array (
+                'type' => 'string',
+              ),
+              'queues' => 
+              array (
+                'type' => 'array',
+                'items' => 
+                array (
+                  'type' => 'ref',
+                  'ref' => 'lex:tools.ozone.queue.defs#queueView',
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
+  'tools.ozone.queue.routeReports' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'tools.ozone.queue.routeReports',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'procedure',
+        'description' => 'Route reports within an ID range to matching queues based.',
+        'input' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'startReportId',
+              1 => 'endReportId',
+            ),
+            'properties' => 
+            array (
+              'startReportId' => 
+              array (
+                'type' => 'integer',
+                'description' => 'Start of report ID range (inclusive).',
+              ),
+              'endReportId' => 
+              array (
+                'type' => 'integer',
+                'description' => 'End of report ID range (inclusive). Difference between start and end must be less than 5,000.',
+              ),
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'assigned',
+              1 => 'unmatched',
+            ),
+            'properties' => 
+            array (
+              'assigned' => 
+              array (
+                'type' => 'integer',
+                'description' => 'The number of reports assigned to a queue.',
+              ),
+              'unmatched' => 
+              array (
+                'type' => 'integer',
+                'description' => 'The number of reports with no matching queue.',
+              ),
+            ),
+          ),
+        ),
+        'errors' => 
+        array (
+          0 => 
+          array (
+            'name' => 'OutOfRange',
+            'description' => 'The request is invalid, such as missing required fields or invalid field values.',
+          ),
+        ),
+      ),
+    ),
+  ),
+  'tools.ozone.queue.unassignModerator' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'tools.ozone.queue.unassignModerator',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'procedure',
+        'description' => 'Remove a user\'s assignment from a queue.',
+        'input' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'queueId',
+              1 => 'did',
+            ),
+            'properties' => 
+            array (
+              'queueId' => 
+              array (
+                'type' => 'integer',
+                'description' => 'The ID of the queue to unassign the user from.',
+              ),
+              'did' => 
+              array (
+                'type' => 'string',
+                'format' => 'did',
+                'description' => 'DID to be unassigned.',
+              ),
+            ),
+          ),
+        ),
+        'errors' => 
+        array (
+          0 => 
+          array (
+            'name' => 'InvalidAssignment',
+            'description' => 'No active assignment exists for the given queue and user.',
+          ),
+        ),
+      ),
+    ),
+  ),
+  'tools.ozone.queue.updateQueue' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'tools.ozone.queue.updateQueue',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'procedure',
+        'description' => 'Update queue properties. Currently only supports updating the name and enabled status to prevent configuration conflicts.',
+        'input' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'queueId',
+            ),
+            'properties' => 
+            array (
+              'queueId' => 
+              array (
+                'type' => 'integer',
+                'description' => 'ID of the queue to update',
+              ),
+              'name' => 
+              array (
+                'type' => 'string',
+                'description' => 'New display name for the queue',
+              ),
+              'enabled' => 
+              array (
+                'type' => 'boolean',
+                'description' => 'Enable or disable the queue',
+              ),
+              'description' => 
+              array (
+                'type' => 'string',
+                'description' => 'Optional description of the queue',
+              ),
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'queue',
+            ),
+            'properties' => 
+            array (
+              'queue' => 
+              array (
+                'type' => 'ref',
+                'ref' => 'lex:tools.ozone.queue.defs#queueView',
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
+  'tools.ozone.report.assignModerator' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'tools.ozone.report.assignModerator',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'procedure',
+        'description' => 'Assign a report to a user. Defaults to the caller. Admins may assign to any moderator.',
+        'input' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'reportId',
+            ),
+            'properties' => 
+            array (
+              'reportId' => 
+              array (
+                'type' => 'integer',
+                'description' => 'The ID of the report to assign.',
+              ),
+              'queueId' => 
+              array (
+                'type' => 'integer',
+                'description' => 'Optional queue ID to associate the assignment with. If not provided and the report has been assigned on a queue before, it will stay on that queue.',
+              ),
+              'did' => 
+              array (
+                'type' => 'string',
+                'format' => 'did',
+                'description' => 'DID to be assigned. Defaults to the caller\'s DID. Admins may assign to any moderator.',
+              ),
+              'isPermanent' => 
+              array (
+                'type' => 'boolean',
+                'description' => 'When true, the assignment has no expiry (endAt is null). Throws AlreadyAssigned if another user already has a permanent assignment on this report.',
+              ),
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:tools.ozone.report.defs#assignmentView',
+          ),
+        ),
+        'errors' => 
+        array (
+          0 => 
+          array (
+            'name' => 'AlreadyAssigned',
+            'description' => 'The report is already assigned to another user.',
+          ),
+          1 => 
+          array (
+            'name' => 'InvalidAssignment',
+            'description' => 'The report ID or queue ID is invalid.',
+          ),
+        ),
+      ),
+    ),
+  ),
+  'tools.ozone.report.createActivity' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'tools.ozone.report.createActivity',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'procedure',
+        'description' => 'Register an activity on a report. For state-change activity types, validates the transition and updates report.status atomically.',
+        'input' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'reportId',
+              1 => 'activity',
+            ),
+            'properties' => 
+            array (
+              'reportId' => 
+              array (
+                'type' => 'integer',
+                'description' => 'ID of the report to record activity on',
+              ),
+              'activity' => 
+              array (
+                'type' => 'union',
+                'refs' => 
+                array (
+                  0 => 'lex:tools.ozone.report.defs#queueActivity',
+                  1 => 'lex:tools.ozone.report.defs#assignmentActivity',
+                  2 => 'lex:tools.ozone.report.defs#escalationActivity',
+                  3 => 'lex:tools.ozone.report.defs#closeActivity',
+                  4 => 'lex:tools.ozone.report.defs#reopenActivity',
+                  5 => 'lex:tools.ozone.report.defs#noteActivity',
+                ),
+                'description' => 'The type of activity to record.',
+              ),
+              'internalNote' => 
+              array (
+                'type' => 'string',
+                'description' => 'Optional moderator-only note. Not visible to reporters.',
+              ),
+              'publicNote' => 
+              array (
+                'type' => 'string',
+                'description' => 'Optional public-facing note, potentially visible to the reporter.',
+              ),
+              'isAutomated' => 
+              array (
+                'type' => 'boolean',
+                'description' => 'Set true when this activity is triggered by an automated process. Defaults to false.',
+                'default' => false,
+              ),
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'activity',
+            ),
+            'properties' => 
+            array (
+              'activity' => 
+              array (
+                'type' => 'ref',
+                'ref' => 'lex:tools.ozone.report.defs#reportActivityView',
+              ),
+            ),
+          ),
+        ),
+        'errors' => 
+        array (
+          0 => 
+          array (
+            'name' => 'ReportNotFound',
+            'description' => 'No report exists with the given reportId',
+          ),
+          1 => 
+          array (
+            'name' => 'InvalidStateTransition',
+            'description' => 'The requested state transition is not permitted from the report\'s current status',
+          ),
+          2 => 
+          array (
+            'name' => 'AlreadyInTargetState',
+            'description' => 'The report is already in the status implied by this activity type',
+          ),
+        ),
+      ),
+    ),
+  ),
   'tools.ozone.report.defs' => 
   array (
     'lexicon' => 1,
@@ -29416,6 +33722,1389 @@ return array (
       array (
         'type' => 'token',
         'description' => 'Other dangerous content',
+      ),
+      'reportAssignment' => 
+      array (
+        'type' => 'object',
+        'description' => 'Information about the moderator currently assigned to a report.',
+        'required' => 
+        array (
+          0 => 'did',
+          1 => 'assignedAt',
+        ),
+        'properties' => 
+        array (
+          'did' => 
+          array (
+            'type' => 'string',
+            'format' => 'did',
+            'description' => 'DID of the assigned moderator',
+          ),
+          'moderator' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:tools.ozone.team.defs#member',
+            'description' => 'Full member record of the assigned moderator',
+          ),
+          'assignedAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+            'description' => 'When the report was assigned',
+          ),
+        ),
+      ),
+      'reportView' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'id',
+          1 => 'eventId',
+          2 => 'status',
+          3 => 'subject',
+          4 => 'reportType',
+          5 => 'reportedBy',
+          6 => 'reporter',
+          7 => 'createdAt',
+        ),
+        'properties' => 
+        array (
+          'id' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Report ID',
+          ),
+          'eventId' => 
+          array (
+            'type' => 'integer',
+            'description' => 'ID of the moderation event that created this report',
+          ),
+          'status' => 
+          array (
+            'type' => 'string',
+            'knownValues' => 
+            array (
+              0 => 'open',
+              1 => 'closed',
+              2 => 'escalated',
+              3 => 'queued',
+              4 => 'assigned',
+            ),
+            'description' => 'Current status of the report',
+          ),
+          'subject' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:tools.ozone.moderation.defs#subjectView',
+            'description' => 'The subject that was reported with full details',
+          ),
+          'reportType' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:com.atproto.moderation.defs#reasonType',
+            'description' => 'Type of report',
+          ),
+          'reportedBy' => 
+          array (
+            'type' => 'string',
+            'format' => 'did',
+            'description' => 'DID of the user who made the report',
+          ),
+          'reporter' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:tools.ozone.moderation.defs#subjectView',
+            'description' => 'Full subject view of the reporter account',
+          ),
+          'comment' => 
+          array (
+            'type' => 'string',
+            'description' => 'Comment provided by the reporter',
+          ),
+          'createdAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+            'description' => 'When the report was created',
+          ),
+          'updatedAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+            'description' => 'When the report was last updated',
+          ),
+          'queuedAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+            'description' => 'When the report was assigned to its current queue',
+          ),
+          'actionEventIds' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'integer',
+            ),
+            'description' => 'Array of moderation event IDs representing actions taken on this report (sorted DESC, most recent first)',
+          ),
+          'actions' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:tools.ozone.moderation.defs#modEventView',
+            ),
+            'description' => 'Optional: expanded action events',
+          ),
+          'actionNote' => 
+          array (
+            'type' => 'string',
+            'description' => 'Note sent to reporter when report was actioned',
+          ),
+          'subjectStatus' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:tools.ozone.moderation.defs#subjectStatusView',
+            'description' => 'Current status of the reported subject',
+          ),
+          'relatedReportCount' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Number of other pending reports on the same subject',
+          ),
+          'assignment' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:tools.ozone.report.defs#reportAssignment',
+            'description' => 'Information about moderator currently assigned to this report (if any)',
+          ),
+          'queue' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:tools.ozone.queue.defs#queueView',
+            'description' => 'The queue this report is assigned to (if any)',
+          ),
+          'isMuted' => 
+          array (
+            'type' => 'boolean',
+            'description' => 'Whether this report is muted. A report is muted if the reporter was muted or the subject was muted at the time the report was created.',
+          ),
+          'isAutomated' => 
+          array (
+            'type' => 'boolean',
+            'default' => false,
+            'description' => 'Whether this report was emitted by automated tooling.',
+          ),
+        ),
+      ),
+      'queueActivity' => 
+      array (
+        'type' => 'object',
+        'description' => 'Activity recording a report being routed to a queue.',
+        'properties' => 
+        array (
+          'previousStatus' => 
+          array (
+            'type' => 'string',
+            'knownValues' => 
+            array (
+              0 => 'open',
+              1 => 'closed',
+              2 => 'escalated',
+              3 => 'queued',
+              4 => 'assigned',
+            ),
+            'description' => 'The report\'s status before this activity. Populated automatically from the report row; not required in input.',
+          ),
+        ),
+      ),
+      'assignmentActivity' => 
+      array (
+        'type' => 'object',
+        'description' => 'Activity recording a moderator being assigned to a report.',
+        'properties' => 
+        array (
+          'previousStatus' => 
+          array (
+            'type' => 'string',
+            'knownValues' => 
+            array (
+              0 => 'open',
+              1 => 'closed',
+              2 => 'escalated',
+              3 => 'queued',
+              4 => 'assigned',
+            ),
+            'description' => 'The report\'s status before this activity. Populated automatically from the report row; not required in input.',
+          ),
+        ),
+      ),
+      'escalationActivity' => 
+      array (
+        'type' => 'object',
+        'description' => 'Activity recording a report being escalated.',
+        'properties' => 
+        array (
+          'previousStatus' => 
+          array (
+            'type' => 'string',
+            'knownValues' => 
+            array (
+              0 => 'open',
+              1 => 'closed',
+              2 => 'escalated',
+              3 => 'queued',
+              4 => 'assigned',
+            ),
+            'description' => 'The report\'s status before this activity. Populated automatically from the report row; not required in input.',
+          ),
+        ),
+      ),
+      'closeActivity' => 
+      array (
+        'type' => 'object',
+        'description' => 'Activity recording a report being closed.',
+        'properties' => 
+        array (
+          'previousStatus' => 
+          array (
+            'type' => 'string',
+            'knownValues' => 
+            array (
+              0 => 'open',
+              1 => 'closed',
+              2 => 'escalated',
+              3 => 'queued',
+              4 => 'assigned',
+            ),
+            'description' => 'The report\'s status before this activity. Populated automatically from the report row; not required in input.',
+          ),
+        ),
+      ),
+      'reopenActivity' => 
+      array (
+        'type' => 'object',
+        'description' => 'Activity recording a closed report being reopened. Only valid when the report is in \'closed\' status.',
+        'properties' => 
+        array (
+          'previousStatus' => 
+          array (
+            'type' => 'string',
+            'knownValues' => 
+            array (
+              0 => 'open',
+              1 => 'closed',
+              2 => 'escalated',
+              3 => 'queued',
+              4 => 'assigned',
+            ),
+            'description' => 'The report\'s status before this activity. Populated automatically from the report row; not required in input.',
+          ),
+        ),
+      ),
+      'noteActivity' => 
+      array (
+        'type' => 'object',
+        'description' => 'Activity recording a note on a report. Use internalNote for moderator-only notes or publicNote for reporter-visible notes (or both).',
+        'properties' => 
+        array (
+        ),
+      ),
+      'reportActivityView' => 
+      array (
+        'type' => 'object',
+        'description' => 'A single activity entry on a report.',
+        'required' => 
+        array (
+          0 => 'id',
+          1 => 'reportId',
+          2 => 'activity',
+          3 => 'isAutomated',
+          4 => 'createdBy',
+          5 => 'createdAt',
+        ),
+        'properties' => 
+        array (
+          'id' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Activity ID',
+          ),
+          'reportId' => 
+          array (
+            'type' => 'integer',
+            'description' => 'ID of the report this activity belongs to',
+          ),
+          'activity' => 
+          array (
+            'type' => 'union',
+            'refs' => 
+            array (
+              0 => 'lex:tools.ozone.report.defs#queueActivity',
+              1 => 'lex:tools.ozone.report.defs#assignmentActivity',
+              2 => 'lex:tools.ozone.report.defs#escalationActivity',
+              3 => 'lex:tools.ozone.report.defs#closeActivity',
+              4 => 'lex:tools.ozone.report.defs#reopenActivity',
+              5 => 'lex:tools.ozone.report.defs#noteActivity',
+            ),
+            'description' => 'The typed activity object describing what occurred.',
+          ),
+          'internalNote' => 
+          array (
+            'type' => 'string',
+            'description' => 'Optional moderator-only note. Not visible to reporters.',
+          ),
+          'publicNote' => 
+          array (
+            'type' => 'string',
+            'description' => 'Optional public note, potentially visible to the reporter.',
+          ),
+          'meta' => 
+          array (
+            'type' => 'unknown',
+            'description' => 'Extensible JSON payload for loose activity-specific metadata (e.g. assignmentId).',
+          ),
+          'isAutomated' => 
+          array (
+            'type' => 'boolean',
+            'description' => 'True if this activity was created by an automated process (e.g. queue router) rather than a direct human action.',
+          ),
+          'createdBy' => 
+          array (
+            'type' => 'string',
+            'format' => 'did',
+            'description' => 'DID of the actor who created this activity, or the service DID for automated activities.',
+          ),
+          'moderator' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:tools.ozone.team.defs#member',
+            'description' => 'Full member record of the moderator who created this activity',
+          ),
+          'report' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:tools.ozone.report.defs#reportView',
+            'description' => 'Full view of the report this activity belongs to.',
+          ),
+          'createdAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+            'description' => 'When this activity was created',
+          ),
+        ),
+      ),
+      'liveStats' => 
+      array (
+        'description' => 'Live statistics for reports for the current calendar day, filterable by queue, moderator, or report type.',
+        'type' => 'object',
+        'properties' => 
+        array (
+          'pendingCount' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Number of reports currently not closed.',
+          ),
+          'actionedCount' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Number of reports closed today.',
+          ),
+          'escalatedCount' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Number of reports escalated today.',
+          ),
+          'inboundCount' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Reports received today.',
+          ),
+          'actionRate' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Percentage of reports actioned (actionedCount / inboundCount * 100), rounded to nearest integer.',
+          ),
+          'avgHandlingTimeSec' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Average time in seconds from report creation (or moderator assignment) to close.',
+          ),
+          'lastUpdated' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+            'description' => 'When these statistics were last computed.',
+          ),
+        ),
+      ),
+      'historicalStats' => 
+      array (
+        'description' => 'A single daily snapshot of report statistics for a calendar date.',
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'date',
+        ),
+        'properties' => 
+        array (
+          'date' => 
+          array (
+            'type' => 'string',
+            'description' => 'The calendar date this snapshot covers (YYYY-MM-DD).',
+          ),
+          'computedAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+            'description' => 'When this snapshot was last computed.',
+          ),
+          'pendingCount' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Number of reports not closed at time of computation.',
+          ),
+          'actionedCount' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Number of reports closed during this day.',
+          ),
+          'escalatedCount' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Number of reports escalated during this day.',
+          ),
+          'inboundCount' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Reports received during this day.',
+          ),
+          'actionRate' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Percentage of reports actioned (actionedCount / inboundCount * 100), rounded to nearest integer.',
+          ),
+          'avgHandlingTimeSec' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Average time in seconds from report creation (or moderator assignment) to close.',
+          ),
+        ),
+      ),
+      'assignmentView' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'id',
+          1 => 'did',
+          2 => 'reportId',
+          3 => 'startAt',
+        ),
+        'properties' => 
+        array (
+          'id' => 
+          array (
+            'type' => 'integer',
+          ),
+          'did' => 
+          array (
+            'type' => 'string',
+            'format' => 'did',
+          ),
+          'moderator' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:tools.ozone.team.defs#member',
+            'description' => 'The moderator assigned to this report',
+          ),
+          'queue' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:tools.ozone.queue.defs#queueView',
+          ),
+          'reportId' => 
+          array (
+            'type' => 'integer',
+          ),
+          'startAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+          'endAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+        ),
+      ),
+    ),
+  ),
+  'tools.ozone.report.getAssignments' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'tools.ozone.report.getAssignments',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'description' => 'Get assignments for reports.',
+        'parameters' => 
+        array (
+          'type' => 'params',
+          'properties' => 
+          array (
+            'onlyActive' => 
+            array (
+              'type' => 'boolean',
+              'default' => true,
+              'description' => 'When true, only returns active assignments.',
+            ),
+            'reportIds' => 
+            array (
+              'type' => 'array',
+              'items' => 
+              array (
+                'type' => 'integer',
+              ),
+              'maxLength' => 50,
+              'description' => 'If specified, returns assignments for these reports only.',
+            ),
+            'dids' => 
+            array (
+              'type' => 'array',
+              'items' => 
+              array (
+                'type' => 'string',
+                'format' => 'did',
+              ),
+              'maxLength' => 50,
+              'description' => 'If specified, returns assignments for these moderators only.',
+            ),
+            'limit' => 
+            array (
+              'type' => 'integer',
+              'minimum' => 1,
+              'maximum' => 100,
+              'default' => 50,
+            ),
+            'cursor' => 
+            array (
+              'type' => 'string',
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'assignments',
+            ),
+            'properties' => 
+            array (
+              'cursor' => 
+              array (
+                'type' => 'string',
+              ),
+              'assignments' => 
+              array (
+                'type' => 'array',
+                'items' => 
+                array (
+                  'type' => 'ref',
+                  'ref' => 'lex:tools.ozone.report.defs#assignmentView',
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
+  'tools.ozone.report.getHistoricalStats' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'tools.ozone.report.getHistoricalStats',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'description' => 'Get historical daily report statistics. Returns a paginated list of daily stat snapshots, newest first. Filter by queue, moderator, or report type.',
+        'parameters' => 
+        array (
+          'type' => 'params',
+          'properties' => 
+          array (
+            'queueId' => 
+            array (
+              'type' => 'integer',
+              'description' => 'Filter stats by queue. Use -1 for unqueued reports.',
+            ),
+            'moderatorDid' => 
+            array (
+              'type' => 'string',
+              'format' => 'did',
+              'description' => 'Filter stats by moderator DID.',
+            ),
+            'reportTypes' => 
+            array (
+              'type' => 'array',
+              'items' => 
+              array (
+                'type' => 'string',
+              ),
+              'description' => 'Filter stats by report types.',
+            ),
+            'startDate' => 
+            array (
+              'type' => 'string',
+              'format' => 'datetime',
+              'description' => 'Earliest date to include (inclusive).',
+            ),
+            'endDate' => 
+            array (
+              'type' => 'string',
+              'format' => 'datetime',
+              'description' => 'Latest date to include (inclusive).',
+            ),
+            'limit' => 
+            array (
+              'type' => 'integer',
+              'minimum' => 1,
+              'maximum' => 100,
+              'default' => 30,
+              'description' => 'Maximum number of entries to return.',
+            ),
+            'cursor' => 
+            array (
+              'type' => 'string',
+              'description' => 'Pagination cursor.',
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'stats',
+            ),
+            'properties' => 
+            array (
+              'stats' => 
+              array (
+                'type' => 'array',
+                'items' => 
+                array (
+                  'type' => 'ref',
+                  'ref' => 'lex:tools.ozone.report.defs#historicalStats',
+                ),
+              ),
+              'cursor' => 
+              array (
+                'type' => 'string',
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
+  'tools.ozone.report.getLatestReport' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'tools.ozone.report.getLatestReport',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'description' => 'Get the most recent report.',
+        'parameters' => 
+        array (
+          'type' => 'params',
+          'properties' => 
+          array (
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'report',
+            ),
+            'properties' => 
+            array (
+              'report' => 
+              array (
+                'type' => 'ref',
+                'ref' => 'lex:tools.ozone.report.defs#reportView',
+              ),
+            ),
+          ),
+        ),
+        'errors' => 
+        array (
+          0 => 
+          array (
+            'name' => 'NotFound',
+            'description' => 'No report found.',
+          ),
+        ),
+      ),
+    ),
+  ),
+  'tools.ozone.report.getLiveStats' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'tools.ozone.report.getLiveStats',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'description' => 'Get live report statistics from the past 24 hours. Filter by queue, moderator, or report type. Omit all parameters for aggregate stats.',
+        'parameters' => 
+        array (
+          'type' => 'params',
+          'properties' => 
+          array (
+            'queueId' => 
+            array (
+              'type' => 'integer',
+              'description' => 'Filter stats by queue. Use -1 for unqueued reports.',
+            ),
+            'moderatorDid' => 
+            array (
+              'type' => 'string',
+              'format' => 'did',
+              'description' => 'Filter stats by moderator DID.',
+            ),
+            'reportTypes' => 
+            array (
+              'type' => 'array',
+              'items' => 
+              array (
+                'type' => 'string',
+              ),
+              'description' => 'Filter stats by report types.',
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'stats',
+            ),
+            'properties' => 
+            array (
+              'stats' => 
+              array (
+                'type' => 'ref',
+                'ref' => 'lex:tools.ozone.report.defs#liveStats',
+                'description' => 'Statistics for the requested filter.',
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
+  'tools.ozone.report.getReport' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'tools.ozone.report.getReport',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'description' => 'Get details about a single moderation report by ID.',
+        'parameters' => 
+        array (
+          'type' => 'params',
+          'required' => 
+          array (
+            0 => 'id',
+          ),
+          'properties' => 
+          array (
+            'id' => 
+            array (
+              'type' => 'integer',
+              'description' => 'The ID of the report to retrieve.',
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:tools.ozone.report.defs#reportView',
+          ),
+        ),
+        'errors' => 
+        array (
+          0 => 
+          array (
+            'name' => 'NotFound',
+            'description' => 'No report found.',
+          ),
+        ),
+      ),
+    ),
+  ),
+  'tools.ozone.report.listActivities' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'tools.ozone.report.listActivities',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'description' => 'List all activities for a report, sorted most-recent-first.',
+        'parameters' => 
+        array (
+          'type' => 'params',
+          'required' => 
+          array (
+            0 => 'reportId',
+          ),
+          'properties' => 
+          array (
+            'reportId' => 
+            array (
+              'type' => 'integer',
+              'description' => 'ID of the report whose activities to list',
+            ),
+            'limit' => 
+            array (
+              'type' => 'integer',
+              'minimum' => 1,
+              'maximum' => 100,
+              'default' => 50,
+            ),
+            'cursor' => 
+            array (
+              'type' => 'string',
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'activities',
+            ),
+            'properties' => 
+            array (
+              'activities' => 
+              array (
+                'type' => 'array',
+                'items' => 
+                array (
+                  'type' => 'ref',
+                  'ref' => 'lex:tools.ozone.report.defs#reportActivityView',
+                ),
+              ),
+              'cursor' => 
+              array (
+                'type' => 'string',
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
+  'tools.ozone.report.queryActivities' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'tools.ozone.report.queryActivities',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'description' => 'Query report activities across all reports, ordered by createdAt. Used by downstream pollers; for per-report activity history use listActivities.',
+        'parameters' => 
+        array (
+          'type' => 'params',
+          'properties' => 
+          array (
+            'activityTypes' => 
+            array (
+              'type' => 'array',
+              'items' => 
+              array (
+                'type' => 'string',
+              ),
+              'description' => 'Filter to specific activity types (e.g. closeActivity, escalationActivity). If omitted, all types are returned.',
+            ),
+            'createdAfter' => 
+            array (
+              'type' => 'string',
+              'format' => 'datetime',
+              'description' => 'Retrieve activities created at or after a given timestamp',
+            ),
+            'createdBefore' => 
+            array (
+              'type' => 'string',
+              'format' => 'datetime',
+              'description' => 'Retrieve activities created at or before a given timestamp',
+            ),
+            'sortDirection' => 
+            array (
+              'type' => 'string',
+              'default' => 'desc',
+              'enum' => 
+              array (
+                0 => 'asc',
+                1 => 'desc',
+              ),
+            ),
+            'limit' => 
+            array (
+              'type' => 'integer',
+              'minimum' => 1,
+              'maximum' => 100,
+              'default' => 50,
+            ),
+            'cursor' => 
+            array (
+              'type' => 'string',
+              'description' => 'Cursor of the form `<createdAtMs>::<activityId>`.',
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'activities',
+            ),
+            'properties' => 
+            array (
+              'activities' => 
+              array (
+                'type' => 'array',
+                'items' => 
+                array (
+                  'type' => 'ref',
+                  'ref' => 'lex:tools.ozone.report.defs#reportActivityView',
+                ),
+              ),
+              'cursor' => 
+              array (
+                'type' => 'string',
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
+  'tools.ozone.report.queryReports' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'tools.ozone.report.queryReports',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'description' => 'View moderation reports. Reports are individual instances of content being reported, as opposed to subject statuses which aggregate reports at the subject level.',
+        'parameters' => 
+        array (
+          'type' => 'params',
+          'required' => 
+          array (
+            0 => 'status',
+          ),
+          'properties' => 
+          array (
+            'queueId' => 
+            array (
+              'type' => 'integer',
+              'description' => 'Filter by queue ID. Use -1 for unassigned reports.',
+            ),
+            'reportTypes' => 
+            array (
+              'type' => 'array',
+              'items' => 
+              array (
+                'type' => 'string',
+              ),
+              'description' => 'Filter by report types (fully qualified string in the format of com.atproto.moderation.defs#reason<name>).',
+            ),
+            'status' => 
+            array (
+              'type' => 'string',
+              'knownValues' => 
+              array (
+                0 => 'open',
+                1 => 'closed',
+                2 => 'escalated',
+                3 => 'queued',
+                4 => 'assigned',
+              ),
+              'description' => 'Filter by report status.',
+            ),
+            'subject' => 
+            array (
+              'type' => 'string',
+              'format' => 'uri',
+              'description' => 'Filter by subject DID or AT-URI.',
+            ),
+            'did' => 
+            array (
+              'type' => 'string',
+              'format' => 'did',
+              'description' => 'Filter to reports where the subject is this DID or any record owned by this DID. Unlike `subject` (which scopes to a specific account or record), this returns all reports tied to the DID across both account-level and record-level subjects.',
+            ),
+            'subjectType' => 
+            array (
+              'type' => 'string',
+              'description' => 'If specified, reports of the given subject type will be returned.',
+              'knownValues' => 
+              array (
+                0 => 'account',
+                1 => 'record',
+                2 => 'message',
+                3 => 'conversation',
+              ),
+            ),
+            'collections' => 
+            array (
+              'type' => 'array',
+              'maxLength' => 20,
+              'description' => 'If specified, reports where the subject belongs to the given collections will be returned. When subjectType is set to \'account\', this will be ignored.',
+              'items' => 
+              array (
+                'type' => 'string',
+                'format' => 'nsid',
+              ),
+            ),
+            'reportedAfter' => 
+            array (
+              'type' => 'string',
+              'format' => 'datetime',
+              'description' => 'Retrieve reports created after a given timestamp',
+            ),
+            'reportedBefore' => 
+            array (
+              'type' => 'string',
+              'format' => 'datetime',
+              'description' => 'Retrieve reports created before a given timestamp',
+            ),
+            'isMuted' => 
+            array (
+              'type' => 'boolean',
+              'default' => false,
+              'description' => 'Filter by muted status. true returns only muted reports, false returns only unmuted reports. Defaults to false.',
+            ),
+            'assignedTo' => 
+            array (
+              'type' => 'string',
+              'format' => 'did',
+              'description' => 'Filter by the DID of the moderator permanently assigned to the report.',
+            ),
+            'sortField' => 
+            array (
+              'type' => 'string',
+              'default' => 'createdAt',
+              'enum' => 
+              array (
+                0 => 'createdAt',
+                1 => 'updatedAt',
+              ),
+            ),
+            'sortDirection' => 
+            array (
+              'type' => 'string',
+              'default' => 'desc',
+              'enum' => 
+              array (
+                0 => 'asc',
+                1 => 'desc',
+              ),
+            ),
+            'limit' => 
+            array (
+              'type' => 'integer',
+              'minimum' => 1,
+              'maximum' => 100,
+              'default' => 50,
+            ),
+            'cursor' => 
+            array (
+              'type' => 'string',
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'reports',
+            ),
+            'properties' => 
+            array (
+              'cursor' => 
+              array (
+                'type' => 'string',
+              ),
+              'reports' => 
+              array (
+                'type' => 'array',
+                'items' => 
+                array (
+                  'type' => 'ref',
+                  'ref' => 'lex:tools.ozone.report.defs#reportView',
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
+  'tools.ozone.report.reassignQueue' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'tools.ozone.report.reassignQueue',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'procedure',
+        'description' => 'Manually reassign a report to a different queue (or unassign it). Records a queueActivity entry on the report.',
+        'input' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'reportId',
+              1 => 'queueId',
+            ),
+            'properties' => 
+            array (
+              'reportId' => 
+              array (
+                'type' => 'integer',
+                'description' => 'ID of the report to reassign',
+              ),
+              'queueId' => 
+              array (
+                'type' => 'integer',
+                'description' => 'Target queue ID. Use -1 to unassign from any queue.',
+              ),
+              'comment' => 
+              array (
+                'type' => 'string',
+                'description' => 'Optional moderator-only note recorded on the resulting queueActivity as internalNote.',
+              ),
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'report',
+            ),
+            'properties' => 
+            array (
+              'report' => 
+              array (
+                'type' => 'ref',
+                'ref' => 'lex:tools.ozone.report.defs#reportView',
+              ),
+            ),
+          ),
+        ),
+        'errors' => 
+        array (
+          0 => 
+          array (
+            'name' => 'ReportNotFound',
+            'description' => 'No report exists with the given reportId',
+          ),
+          1 => 
+          array (
+            'name' => 'ReportClosed',
+            'description' => 'The report is closed and cannot be reassigned',
+          ),
+          2 => 
+          array (
+            'name' => 'AlreadyInTargetQueue',
+            'description' => 'The report is already assigned to the target queue',
+          ),
+          3 => 
+          array (
+            'name' => 'QueueNotFound',
+            'description' => 'No active queue exists with the given queueId',
+          ),
+          4 => 
+          array (
+            'name' => 'QueueDisabled',
+            'description' => 'The target queue is disabled and cannot receive new assignments',
+          ),
+        ),
+      ),
+    ),
+  ),
+  'tools.ozone.report.refreshStats' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'tools.ozone.report.refreshStats',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'procedure',
+        'description' => 'Recompute report statistics for a date range. Useful for backfilling after failures or data corrections.',
+        'input' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'startDate',
+              1 => 'endDate',
+            ),
+            'properties' => 
+            array (
+              'startDate' => 
+              array (
+                'type' => 'string',
+                'description' => 'Start date for recomputation, inclusive (YYYY-MM-DD).',
+              ),
+              'endDate' => 
+              array (
+                'type' => 'string',
+                'description' => 'End date for recomputation, inclusive (YYYY-MM-DD).',
+              ),
+              'queueIds' => 
+              array (
+                'type' => 'array',
+                'items' => 
+                array (
+                  'type' => 'integer',
+                ),
+                'description' => 'Optional list of queue IDs to recompute. Omit to recompute all groups.',
+              ),
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'properties' => 
+            array (
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
+  'tools.ozone.report.unassignModerator' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'tools.ozone.report.unassignModerator',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'procedure',
+        'description' => 'Remove report assignment.',
+        'input' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'reportId',
+            ),
+            'properties' => 
+            array (
+              'reportId' => 
+              array (
+                'type' => 'integer',
+                'description' => 'The ID of the report to unassign.',
+              ),
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:tools.ozone.report.defs#assignmentView',
+          ),
+        ),
+        'errors' => 
+        array (
+          0 => 
+          array (
+            'name' => 'InvalidAssignment',
+            'description' => 'The report ID is invalid.',
+          ),
+        ),
       ),
     ),
   ),
