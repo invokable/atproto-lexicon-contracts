@@ -11471,6 +11471,12 @@ return array (
           array (
             'type' => 'unknown',
           ),
+          'starterPack' => 
+          array (
+            'description' => 'The starter pack associated with this notification. Present when the notification is for a follow originating from a starter pack.',
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.graph.defs#starterPackViewBasic',
+          ),
           'isRead' => 
           array (
             'type' => 'boolean',
