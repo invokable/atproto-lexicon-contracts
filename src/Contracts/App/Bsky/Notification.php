@@ -61,7 +61,7 @@ interface Notification
     /**
      * Enumerate notifications for the requesting account. Requires auth.
      *
-     * @return array{cursor: string, notifications: array{uri: string, cid: string, author: array, reason: string, reasonSubject: string, record: mixed, isRead: bool, indexedAt: string, labels: array}[], priority: bool, seenAt: string}
+     * @return array{cursor: string, notifications: array{uri: string, cid: string, author: array, reason: string, reasonSubject: string, record: mixed, starterPack: array, isRead: bool, indexedAt: string, labels: array}[], priority: bool, seenAt: string}
      *
      * @link https://docs.bsky.app/docs/api/app-bsky-notification-list-notifications
      */
