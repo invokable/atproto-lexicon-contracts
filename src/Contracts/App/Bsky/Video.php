@@ -21,7 +21,7 @@ interface Video
     /**
      * Get status details for a video processing job.
      *
-     * @return array{jobStatus: array{jobId: string, did: string, state: string, progress: int, blob: array, error: string, message: string}}
+     * @return array{jobStatus: array{jobId: string, did: string, state: string, progress: int, blob: array, error: string, failureCode: string, message: string}}
      *
      * @link https://docs.bsky.app/docs/api/app-bsky-video-get-job-status
      */
@@ -41,7 +41,7 @@ interface Video
     /**
      * Upload a video to be processed then stored on the PDS.
      *
-     * @return array{jobStatus: array{jobId: string, did: string, state: string, progress: int, blob: array, error: string, message: string}}
+     * @return array{jobStatus: array{jobId: string, did: string, state: string, progress: int, blob: array, error: string, failureCode: string, message: string}}
      *
      * @link https://docs.bsky.app/docs/api/app-bsky-video-upload-video
      */

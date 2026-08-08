@@ -142,7 +142,7 @@ interface Graph
     public function getListsWithMembership(#[Format('at-identifier')] string $actor, ?int $limit = 50, ?string $cursor = null, ?array $purposes = null);
 
     /**
-     * Enumerates accounts that the requesting account (actor) currently has muted. Requires auth.
+     * Enumerates accounts that the requesting account (actor) currently has fully muted. Mutes scoped to specific kinds of content (only reposts, only quote posts) are not included. Responses may contain more items than the requested limit. Requires auth.
      *
      * @return array{cursor: string, mutes: array{did: string, handle: string, displayName: string, pronouns: string, description: string, avatar: string, associated: array, indexedAt: string, createdAt: string, viewer: array, labels: array, verification: array, status: array, debug: mixed}[]}
      *
@@ -202,12 +202,12 @@ interface Graph
     public function getSuggestedFollowsByActor(#[Format('at-identifier')] string $actor);
 
     /**
-     * Creates a mute relationship for the specified account. Mutes are private in Bluesky. Requires auth.
+     * Creates a mute relationship for the specified account. If a mute already exists for the account, it is updated in place: the stored scope is replaced with the scope in this request. Mutes are private in Bluesky. Requires auth.
      *
      * @link https://docs.bsky.app/docs/api/app-bsky-graph-mute-actor
      */
     #[Post, NSID(self::muteActor)]
-    public function muteActor(#[Format('at-identifier')] string $actor);
+    public function muteActor(#[Format('at-identifier')] string $actor, ?bool $onlyReposts = null, ?bool $onlyQuoteposts = null);
 
     /**
      * Creates a mute relationship for the specified list of accounts. Mutes are private in Bluesky. Requires auth.

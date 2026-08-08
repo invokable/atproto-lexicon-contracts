@@ -144,7 +144,7 @@ interface Server
     /**
      * Describes the server's account creation requirements and capabilities. Implemented by PDS.
      *
-     * @return array{inviteCodeRequired: bool, phoneVerificationRequired: bool, availableUserDomains: array, links: array{privacyPolicy: string, termsOfService: string}, contact: array{email: string}, did: string}
+     * @return array{inviteCodeRequired: bool, phoneVerificationRequired: bool, blobUploadLimit: int, availableUserDomains: array, links: array{privacyPolicy: string, termsOfService: string}, contact: array{email: string}, did: string}
      *
      * @link https://docs.bsky.app/docs/api/com-atproto-server-describe-server
      */
