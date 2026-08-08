@@ -18,6 +18,7 @@ use Revolution\AtProto\Lexicon\Attributes\Union;
 interface Report
 {
     public const assignModerator = 'tools.ozone.report.assignModerator';
+    public const closeReports = 'tools.ozone.report.closeReports';
     public const createActivity = 'tools.ozone.report.createActivity';
     public const getAssignments = 'tools.ozone.report.getAssignments';
     public const getHistoricalStats = 'tools.ozone.report.getHistoricalStats';
@@ -34,12 +35,22 @@ interface Report
     /**
      * Assign a report to a user. Defaults to the caller. Admins may assign to any moderator.
      *
-     * @return array{id: int, did: string, moderator: array{did: string, disabled: bool, profile: array, createdAt: string, updatedAt: string, lastUpdatedBy: string, role: string}, queue: array{id: int, name: string, subjectTypes: array, collection: string, reportTypes: array, description: string, createdBy: string, createdAt: string, updatedAt: string, enabled: bool, deletedAt: string, stats: array}, reportId: int, startAt: string, endAt: string}
+     * @return array{id: int, did: string, moderator: array{did: string, disabled: bool, profile: array, createdAt: string, updatedAt: string, lastUpdatedBy: string, role: string}, queue: array{id: int, name: string, subjectTypes: array, collection: string, reportTypes: array, description: string, recommendedPolicies: array, createdBy: string, createdAt: string, updatedAt: string, enabled: bool, deletedAt: string, stats: array}, reportId: int, startAt: string, endAt: string}
      *
      * @link https://docs.bsky.app/docs/api/tools-ozone-report-assign-moderator
      */
     #[Post, NSID(self::assignModerator)]
     public function assignModerator(int $reportId, ?int $queueId = null, #[Format('did')] ?string $did = null, ?bool $isPermanent = null);
+
+    /**
+     * Close all reports on a subject matching the given criteria. Reports whose current status does not permit a transition to closed are skipped silently. Intended for automated flows that resolve reports without taking action on the subject.
+     *
+     * @return array{closedCount: int, reportIds: array}
+     *
+     * @link https://docs.bsky.app/docs/api/tools-ozone-report-close-reports
+     */
+    #[Post, NSID(self::closeReports)]
+    public function closeReports(#[Format('uri')] string $subject, ?array $reportTypes = null, ?string $internalNote = null, ?bool $isAutomated = null);
 
     /**
      * Register an activity on a report. For state-change activity types, validates the transition and updates report.status atomically.
@@ -49,7 +60,7 @@ interface Report
      * @link https://docs.bsky.app/docs/api/tools-ozone-report-create-activity
      */
     #[Post, NSID(self::createActivity)]
-    public function createActivity(int $reportId, #[Union(['tools.ozone.report.defs#queueActivity', 'tools.ozone.report.defs#assignmentActivity', 'tools.ozone.report.defs#escalationActivity', 'tools.ozone.report.defs#closeActivity', 'tools.ozone.report.defs#reopenActivity', 'tools.ozone.report.defs#noteActivity'])] array $activity, ?string $internalNote = null, ?string $publicNote = null, ?bool $isAutomated = null);
+    public function createActivity(#[Union(['tools.ozone.report.defs#queueActivity', 'tools.ozone.report.defs#assignmentActivity', 'tools.ozone.report.defs#escalationActivity', 'tools.ozone.report.defs#closeActivity', 'tools.ozone.report.defs#reopenActivity', 'tools.ozone.report.defs#noteActivity'])] array $activity, ?int $reportId = null, ?int $eventId = null, ?string $internalNote = null, ?string $publicNote = null, ?bool $isAutomated = null);
 
     /**
      * Get assignments for reports.
@@ -94,7 +105,7 @@ interface Report
     /**
      * Get details about a single moderation report by ID.
      *
-     * @return array{id: int, eventId: int, status: string, subject: array{type: array, subject: string, status: array, repo: array, profile: array, record: array}, reportType: string, reportedBy: string, reporter: array{type: array, subject: string, status: array, repo: array, profile: array, record: array}, comment: string, createdAt: string, updatedAt: string, queuedAt: string, actionEventIds: array, actions: array{id: int, event: array, subject: array, subjectBlobCids: array, createdBy: string, createdAt: string, creatorHandle: string, subjectHandle: string, modTool: array}[], actionNote: string, subjectStatus: array{id: int, subject: array, hosting: array, subjectBlobCids: array, subjectRepoHandle: string, updatedAt: string, createdAt: string, reviewState: array, comment: string, priorityScore: int, muteUntil: string, muteReportingUntil: string, lastReviewedBy: string, lastReviewedAt: string, lastReportedAt: string, lastAppealedAt: string, takendown: bool, appealed: bool, suspendUntil: string, tags: array, accountStats: array, recordsStats: array, accountStrike: array, ageAssuranceState: string, ageAssuranceUpdatedBy: string}, relatedReportCount: int, assignment: mixed, queue: array{id: int, name: string, subjectTypes: array, collection: string, reportTypes: array, description: string, createdBy: string, createdAt: string, updatedAt: string, enabled: bool, deletedAt: string, stats: array}, isMuted: bool, isAutomated: bool}
+     * @return array{id: int, eventId: int, status: string, subject: array{type: array, subject: string, status: array, repo: array, profile: array, record: array}, reportType: string, reportedBy: string, reporter: array{type: array, subject: string, status: array, repo: array, profile: array, record: array}, comment: string, createdAt: string, updatedAt: string, queuedAt: string, actionEventIds: array, actions: array{id: int, event: array, subject: array, subjectBlobCids: array, createdBy: string, createdAt: string, creatorHandle: string, subjectHandle: string, modTool: array}[], actionNote: string, subjectStatus: array{id: int, subject: array, hosting: array, subjectBlobCids: array, subjectRepoHandle: string, updatedAt: string, createdAt: string, reviewState: array, comment: string, priorityScore: int, muteUntil: string, muteReportingUntil: string, lastReviewedBy: string, lastReviewedAt: string, lastReportedAt: string, lastAppealedAt: string, takendown: bool, appealed: bool, suspendUntil: string, tags: array, accountStats: array, recordsStats: array, accountStrike: array, ageAssuranceState: string, ageAssuranceUpdatedBy: string}, relatedReportCount: int, assignment: mixed, queue: array{id: int, name: string, subjectTypes: array, collection: string, reportTypes: array, description: string, recommendedPolicies: array, createdBy: string, createdAt: string, updatedAt: string, enabled: bool, deletedAt: string, stats: array}, isMuted: bool, isAutomated: bool}
      *
      * @link https://docs.bsky.app/docs/api/tools-ozone-report-get-report
      */
@@ -152,7 +163,7 @@ interface Report
     /**
      * Remove report assignment.
      *
-     * @return array{id: int, did: string, moderator: array{did: string, disabled: bool, profile: array, createdAt: string, updatedAt: string, lastUpdatedBy: string, role: string}, queue: array{id: int, name: string, subjectTypes: array, collection: string, reportTypes: array, description: string, createdBy: string, createdAt: string, updatedAt: string, enabled: bool, deletedAt: string, stats: array}, reportId: int, startAt: string, endAt: string}
+     * @return array{id: int, did: string, moderator: array{did: string, disabled: bool, profile: array, createdAt: string, updatedAt: string, lastUpdatedBy: string, role: string}, queue: array{id: int, name: string, subjectTypes: array, collection: string, reportTypes: array, description: string, recommendedPolicies: array, createdBy: string, createdAt: string, updatedAt: string, enabled: bool, deletedAt: string, stats: array}, reportId: int, startAt: string, endAt: string}
      *
      * @link https://docs.bsky.app/docs/api/tools-ozone-report-unassign-moderator
      */

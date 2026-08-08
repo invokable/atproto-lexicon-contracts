@@ -418,6 +418,17 @@ return array (
           'muted' => 
           array (
             'type' => 'boolean',
+            'description' => 'Whether the account is fully muted, directly or via a mutelist. False when the mute is scoped to specific kinds; see mutedOnlyReposts and mutedOnlyQuoteposts.',
+          ),
+          'mutedOnlyReposts' => 
+          array (
+            'type' => 'boolean',
+            'description' => 'Whether the account\'s reposts are muted. Scoped mutes are exclusive with muted: this can be true while muted is false. If muted is true, this will be false.',
+          ),
+          'mutedOnlyQuoteposts' => 
+          array (
+            'type' => 'boolean',
+            'description' => 'Whether the account\'s quote posts are muted. Scoped mutes are exclusive with muted: this can be true while muted is false. If muted is true, this will be false.',
           ),
           'mutedByList' => 
           array (
@@ -3768,6 +3779,7 @@ return array (
               'id' => 
               array (
                 'type' => 'string',
+                'format' => 'tid',
                 'description' => 'The ID of the created draft.',
               ),
             ),
@@ -9551,7 +9563,7 @@ return array (
       'main' => 
       array (
         'type' => 'query',
-        'description' => 'Enumerates accounts that the requesting account (actor) currently has muted. Requires auth.',
+        'description' => 'Enumerates accounts that the requesting account (actor) currently has fully muted. Mutes scoped to specific kinds of content (only reposts, only quote posts) are not included. Responses may contain more items than the requested limit. Requires auth.',
         'parameters' => 
         array (
           'type' => 'params',
@@ -10119,7 +10131,7 @@ return array (
       'main' => 
       array (
         'type' => 'procedure',
-        'description' => 'Creates a mute relationship for the specified account. Mutes are private in Bluesky. Requires auth.',
+        'description' => 'Creates a mute relationship for the specified account. If a mute already exists for the account, it is updated in place: the stored scope is replaced with the scope in this request. Mutes are private in Bluesky. Requires auth.',
         'input' => 
         array (
           'encoding' => 'application/json',
@@ -10136,6 +10148,16 @@ return array (
               array (
                 'type' => 'string',
                 'format' => 'at-identifier',
+              ),
+              'onlyReposts' => 
+              array (
+                'type' => 'boolean',
+                'description' => 'Restrict the mute to the account\'s reposts. When any \'only\' scope is set, just the scoped content is muted; when none are set, the account is fully muted. Repeat calls replace the stored scope rather than adding to it.',
+              ),
+              'onlyQuoteposts' => 
+              array (
+                'type' => 'boolean',
+                'description' => 'Restrict the mute to the account\'s quote posts. See onlyReposts.',
               ),
             ),
           ),
@@ -12204,7 +12226,17 @@ return array (
           'opThread' => 
           array (
             'type' => 'boolean',
-            'description' => 'This post is part of a contiguous thread by the OP from the thread root. Many different OP threads can happen in the same thread.',
+            'description' => 'This post is part of a contiguous thread by the OP from the thread root. Sub-threads by OP deeper in the tree are not considered an OP thread.',
+          ),
+          'opThreadPostIndex' => 
+          array (
+            'type' => 'integer',
+            'description' => 'The 1-indexed position of this post within the contiguous OP thread. Only present when this post is part of the OP thread (see `opThread`).',
+          ),
+          'opThreadPostCount' => 
+          array (
+            'type' => 'integer',
+            'description' => 'The total number of posts in the contiguous OP thread that this post belongs to. Only present when this post is part of the OP thread (see `opThread`).',
           ),
           'hiddenByThreadgate' => 
           array (
@@ -14478,6 +14510,19 @@ return array (
           'error' => 
           array (
             'type' => 'string',
+          ),
+          'failureCode' => 
+          array (
+            'type' => 'string',
+            'description' => 'A machine-readable code for why the video processing job failed.',
+            'knownValues' => 
+            array (
+              0 => 'validation_failure',
+              1 => 'encoding_failure',
+              2 => 'pds_upload_failure',
+              3 => 'pds_upload_unsupported_blob_size',
+              4 => 'generic_failure',
+            ),
           ),
           'message' => 
           array (
@@ -18493,7 +18538,8 @@ return array (
               'members' => 
               array (
                 'type' => 'array',
-                'maxLength' => 49,
+                'description' => 'The members to add to the group. The owner is automatically added. Implementations may enforce a lower maximum than the 10,000-item schema limit; Bluesky currently supports up to 100 total members. If the owner is included in this list, the list may contain up to the implementation\'s total member limit. Otherwise, it may contain one fewer.',
+                'maxLength' => 10000,
                 'items' => 
                 array (
                   'type' => 'string',
@@ -25218,6 +25264,11 @@ return array (
               array (
                 'type' => 'boolean',
                 'description' => 'If true, a phone verification token must be supplied to create an account on this instance.',
+              ),
+              'blobUploadLimit' => 
+              array (
+                'type' => 'integer',
+                'description' => 'Maximum size of a blob that can be uploaded via com.atproto.repo.uploadBlob, in bytes.',
               ),
               'availableUserDomains' => 
               array (
@@ -32656,6 +32707,15 @@ return array (
                 'type' => 'string',
                 'description' => 'Optional description of the queue',
               ),
+              'recommendedPolicies' => 
+              array (
+                'type' => 'array',
+                'items' => 
+                array (
+                  'type' => 'string',
+                ),
+                'description' => 'Policy keys to recommend when actioning reports in this queue',
+              ),
             ),
           ),
         ),
@@ -32682,6 +32742,11 @@ return array (
         'errors' => 
         array (
           0 => 
+          array (
+            'name' => 'InvalidRecommendedPolicies',
+            'description' => 'One or more recommended policy keys do not exist in the configured policy list',
+          ),
+          1 => 
           array (
             'name' => 'ConflictingQueue',
             'description' => 'The queue configuration conflicts with an existing queue',
@@ -32756,6 +32821,15 @@ return array (
           array (
             'type' => 'string',
             'description' => 'Optional description of the queue',
+          ),
+          'recommendedPolicies' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'string',
+            ),
+            'description' => 'Policy keys recommended when actioning reports in this queue',
           ),
           'createdBy' => 
           array (
@@ -33244,7 +33318,7 @@ return array (
       'main' => 
       array (
         'type' => 'procedure',
-        'description' => 'Update queue properties. Currently only supports updating the name and enabled status to prevent configuration conflicts.',
+        'description' => 'Update queue properties.',
         'input' => 
         array (
           'encoding' => 'application/json',
@@ -33277,6 +33351,15 @@ return array (
                 'type' => 'string',
                 'description' => 'Optional description of the queue',
               ),
+              'recommendedPolicies' => 
+              array (
+                'type' => 'array',
+                'items' => 
+                array (
+                  'type' => 'string',
+                ),
+                'description' => 'Policy keys to recommend when actioning reports in this queue',
+              ),
             ),
           ),
         ),
@@ -33298,6 +33381,14 @@ return array (
                 'ref' => 'lex:tools.ozone.queue.defs#queueView',
               ),
             ),
+          ),
+        ),
+        'errors' => 
+        array (
+          0 => 
+          array (
+            'name' => 'InvalidRecommendedPolicies',
+            'description' => 'One or more recommended policy keys do not exist in the configured policy list',
           ),
         ),
       ),
@@ -33374,6 +33465,90 @@ return array (
       ),
     ),
   ),
+  'tools.ozone.report.closeReports' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'tools.ozone.report.closeReports',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'procedure',
+        'description' => 'Close all reports on a subject matching the given criteria. Reports whose current status does not permit a transition to closed are skipped silently. Intended for automated flows that resolve reports without taking action on the subject.',
+        'input' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'subject',
+            ),
+            'properties' => 
+            array (
+              'subject' => 
+              array (
+                'type' => 'string',
+                'format' => 'uri',
+                'description' => 'Subject DID (account-level reports) or AT-URI (record-level reports) whose reports should be closed.',
+              ),
+              'reportTypes' => 
+              array (
+                'type' => 'array',
+                'items' => 
+                array (
+                  'type' => 'string',
+                ),
+                'description' => 'If specified, only reports of the given report types (fully qualified reason NSIDs) are closed. When omitted, all non-closed reports on the subject are targeted.',
+              ),
+              'internalNote' => 
+              array (
+                'type' => 'string',
+                'description' => 'Optional moderator-only note recorded on each close activity. Not visible to reporters.',
+              ),
+              'isAutomated' => 
+              array (
+                'type' => 'boolean',
+                'description' => 'Set true when this action is triggered by an automated process. Defaults to false.',
+                'default' => false,
+              ),
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'closedCount',
+              1 => 'reportIds',
+            ),
+            'properties' => 
+            array (
+              'closedCount' => 
+              array (
+                'type' => 'integer',
+                'description' => 'Number of reports that were transitioned to closed.',
+              ),
+              'reportIds' => 
+              array (
+                'type' => 'array',
+                'items' => 
+                array (
+                  'type' => 'integer',
+                ),
+                'description' => 'IDs of the reports that were closed.',
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
   'tools.ozone.report.createActivity' => 
   array (
     'lexicon' => 1,
@@ -33392,15 +33567,19 @@ return array (
             'type' => 'object',
             'required' => 
             array (
-              0 => 'reportId',
-              1 => 'activity',
+              0 => 'activity',
             ),
             'properties' => 
             array (
               'reportId' => 
               array (
                 'type' => 'integer',
-                'description' => 'ID of the report to record activity on',
+                'description' => 'ID of the report to record activity on. Exactly one of reportId or eventId must be provided.',
+              ),
+              'eventId' => 
+              array (
+                'type' => 'integer',
+                'description' => 'ID of the report moderation event. Resolves to the report created from that event. Exactly one of reportId or eventId must be provided.',
               ),
               'activity' => 
               array (
@@ -33460,7 +33639,7 @@ return array (
           0 => 
           array (
             'name' => 'ReportNotFound',
-            'description' => 'No report exists with the given reportId',
+            'description' => 'No report exists with the given reportId or eventId',
           ),
           1 => 
           array (

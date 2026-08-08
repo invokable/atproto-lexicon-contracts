@@ -37,12 +37,12 @@ interface Queue
     /**
      * Create a new moderation queue. A queue can have optional matching criteria that ozone's queue router will use to match reports. A queue with no criteria must have reports assigned to it manually via (1) `modTool.meta.queueId` in `tools.ozone.moderation.emitEvent` or (2) `tools.ozone.report.reassignQueue`.
      *
-     * @return array{queue: array{id: int, name: string, subjectTypes: array, collection: string, reportTypes: array, description: string, createdBy: string, createdAt: string, updatedAt: string, enabled: bool, deletedAt: string, stats: array}}
+     * @return array{queue: array{id: int, name: string, subjectTypes: array, collection: string, reportTypes: array, description: string, recommendedPolicies: array, createdBy: string, createdAt: string, updatedAt: string, enabled: bool, deletedAt: string, stats: array}}
      *
      * @link https://docs.bsky.app/docs/api/tools-ozone-queue-create-queue
      */
     #[Post, NSID(self::createQueue)]
-    public function createQueue(string $name, ?array $subjectTypes = null, #[Format('nsid')] ?string $collection = null, ?array $reportTypes = null, ?string $description = null);
+    public function createQueue(string $name, ?array $subjectTypes = null, #[Format('nsid')] ?string $collection = null, ?array $reportTypes = null, ?string $description = null, ?array $recommendedPolicies = null);
 
     /**
      * Delete a moderation queue. Optionally migrate reports to another queue.
@@ -67,7 +67,7 @@ interface Queue
     /**
      * List all configured moderation queues with statistics.
      *
-     * @return array{cursor: string, queues: array{id: int, name: string, subjectTypes: array, collection: string, reportTypes: array, description: string, createdBy: string, createdAt: string, updatedAt: string, enabled: bool, deletedAt: string, stats: array}[]}
+     * @return array{cursor: string, queues: array{id: int, name: string, subjectTypes: array, collection: string, reportTypes: array, description: string, recommendedPolicies: array, createdBy: string, createdAt: string, updatedAt: string, enabled: bool, deletedAt: string, stats: array}[]}
      *
      * @link https://docs.bsky.app/docs/api/tools-ozone-queue-list-queues
      */
@@ -93,12 +93,12 @@ interface Queue
     public function unassignModerator(int $queueId, #[Format('did')] string $did);
 
     /**
-     * Update queue properties. Currently only supports updating the name and enabled status to prevent configuration conflicts.
+     * Update queue properties.
      *
-     * @return array{queue: array{id: int, name: string, subjectTypes: array, collection: string, reportTypes: array, description: string, createdBy: string, createdAt: string, updatedAt: string, enabled: bool, deletedAt: string, stats: array}}
+     * @return array{queue: array{id: int, name: string, subjectTypes: array, collection: string, reportTypes: array, description: string, recommendedPolicies: array, createdBy: string, createdAt: string, updatedAt: string, enabled: bool, deletedAt: string, stats: array}}
      *
      * @link https://docs.bsky.app/docs/api/tools-ozone-queue-update-queue
      */
     #[Post, NSID(self::updateQueue)]
-    public function updateQueue(int $queueId, ?string $name = null, ?bool $enabled = null, ?string $description = null);
+    public function updateQueue(int $queueId, ?string $name = null, ?bool $enabled = null, ?string $description = null, ?array $recommendedPolicies = null);
 }
