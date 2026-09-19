@@ -46,7 +46,7 @@ interface Notification
      * @link https://docs.bsky.app/docs/api/app-bsky-notification-get-unread-count
      */
     #[Get, NSID(self::getUnreadCount)]
-    public function getUnreadCount(?bool $priority = null, #[Format('datetime')] ?string $seenAt = null);
+    public function getUnreadCount(#[Format('datetime')] ?string $seenAt = null);
 
     /**
      * Enumerate all accounts to which the requesting account is subscribed to receive notifications for. Requires auth.
@@ -61,12 +61,12 @@ interface Notification
     /**
      * Enumerate notifications for the requesting account. Requires auth.
      *
-     * @return array{cursor: string, notifications: array{uri: string, cid: string, author: array, reason: string, reasonSubject: string, record: mixed, starterPack: array, isRead: bool, indexedAt: string, labels: array}[], priority: bool, seenAt: string}
+     * @return array{cursor: string, notifications: array{uri: string, cid: string, author: array, reason: string, reasonSubject: string, record: mixed, starterPack: array, isRead: bool, indexedAt: string, labels: array}[], seenAt: string}
      *
      * @link https://docs.bsky.app/docs/api/app-bsky-notification-list-notifications
      */
     #[Get, NSID(self::listNotifications)]
-    public function listNotifications(?array $reasons = null, ?int $limit = 50, ?bool $priority = null, ?string $cursor = null, #[Format('datetime')] ?string $seenAt = null);
+    public function listNotifications(?array $reasons = null, ?int $limit = 50, ?string $cursor = null, #[Format('datetime')] ?string $seenAt = null);
 
     /**
      * Puts an activity subscription entry. The key should be omitted for creation and provided for updates. Requires auth.
