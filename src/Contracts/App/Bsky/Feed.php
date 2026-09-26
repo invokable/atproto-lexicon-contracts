@@ -60,7 +60,7 @@ interface Feed
     /**
      * Get a list of posts liked by an actor. Requires auth, actor must be the requesting account.
      *
-     * @return array{cursor: string, feed: array{post: array, reply: array, reason: array, feedContext: string, reqId: string}[]}
+     * @return array{cursor: string, feed: array{post: array, reply: array, opThreadPostIndex: int, opThreadPostCount: int, reason: array, feedContext: string, reqId: string}[]}
      *
      * @link https://docs.bsky.app/docs/api/app-bsky-feed-get-actor-likes
      */
@@ -70,7 +70,7 @@ interface Feed
     /**
      * Get a view of an actor's 'author feed' (post and reposts by the author). Does not require auth.
      *
-     * @return array{cursor: string, feed: array{post: array, reply: array, reason: array, feedContext: string, reqId: string}[]}
+     * @return array{cursor: string, feed: array{post: array, reply: array, opThreadPostIndex: int, opThreadPostCount: int, reason: array, feedContext: string, reqId: string}[]}
      *
      * @link https://docs.bsky.app/docs/api/app-bsky-feed-get-author-feed
      */
@@ -80,7 +80,7 @@ interface Feed
     /**
      * Get a hydrated feed from an actor's selected feed generator. Implemented by App View.
      *
-     * @return array{cursor: string, feed: array{post: array, reply: array, reason: array, feedContext: string, reqId: string}[]}
+     * @return array{cursor: string, feed: array{post: array, reply: array, opThreadPostIndex: int, opThreadPostCount: int, reason: array, feedContext: string, reqId: string}[]}
      *
      * @link https://docs.bsky.app/docs/api/app-bsky-feed-get-feed
      */
@@ -130,7 +130,7 @@ interface Feed
     /**
      * Get a feed of recent posts from a list (posts and reposts from any actors on the list). Does not require auth.
      *
-     * @return array{cursor: string, feed: array{post: array, reply: array, reason: array, feedContext: string, reqId: string}[]}
+     * @return array{cursor: string, feed: array{post: array, reply: array, opThreadPostIndex: int, opThreadPostCount: int, reason: array, feedContext: string, reqId: string}[]}
      *
      * @link https://docs.bsky.app/docs/api/app-bsky-feed-get-list-feed
      */
@@ -190,7 +190,7 @@ interface Feed
     /**
      * Get a view of the requesting account's home timeline. This is expected to be some form of reverse-chronological feed.
      *
-     * @return array{cursor: string, feed: array{post: array, reply: array, reason: array, feedContext: string, reqId: string}[]}
+     * @return array{cursor: string, feed: array{post: array, reply: array, opThreadPostIndex: int, opThreadPostCount: int, reason: array, feedContext: string, reqId: string}[]}
      *
      * @link https://docs.bsky.app/docs/api/app-bsky-feed-get-timeline
      */

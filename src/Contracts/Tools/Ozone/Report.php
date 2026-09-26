@@ -75,7 +75,7 @@ interface Report
     /**
      * Get historical daily report statistics. Returns a paginated list of daily stat snapshots, newest first. Filter by queue, moderator, or report type.
      *
-     * @return array{stats: array{date: string, computedAt: string, pendingCount: int, actionedCount: int, escalatedCount: int, inboundCount: int, actionRate: int, avgHandlingTimeSec: int}[], cursor: string}
+     * @return array{stats: array{date: string, computedAt: string, pendingCount: int, closedCount: int, actionedCount: int, acknowledgedCount: int, escalatedCount: int, inboundCount: int, labelActionCount: int, tagActionCount: int, takedownActionCount: int, ahtDurationSec: int, ahtSampleCount: int, resolutionDurationSec: int, resolutionSampleCount: int, actionRate: int, avgHandlingTimeSec: int, avgResolutionTimeSec: int}[], cursor: string}
      *
      * @link https://docs.bsky.app/docs/api/tools-ozone-report-get-historical-stats
      */
@@ -93,9 +93,9 @@ interface Report
     public function getLatestReport();
 
     /**
-     * Get live report statistics from the past 24 hours. Filter by queue, moderator, or report type. Omit all parameters for aggregate stats.
+     * Get live report statistics for the current UTC calendar day. Filter by queue, moderator, or report type. Omit all parameters for aggregate stats.
      *
-     * @return array{stats: array{pendingCount: int, actionedCount: int, escalatedCount: int, inboundCount: int, actionRate: int, avgHandlingTimeSec: int, lastUpdated: string}}
+     * @return array{stats: array{pendingCount: int, closedCount: int, actionedCount: int, acknowledgedCount: int, escalatedCount: int, inboundCount: int, labelActionCount: int, tagActionCount: int, takedownActionCount: int, ahtDurationSec: int, ahtSampleCount: int, resolutionDurationSec: int, resolutionSampleCount: int, actionRate: int, avgHandlingTimeSec: int, avgResolutionTimeSec: int, lastUpdated: string}}
      *
      * @link https://docs.bsky.app/docs/api/tools-ozone-report-get-live-stats
      */
@@ -153,7 +153,7 @@ interface Report
     public function reassignQueue(int $reportId, int $queueId, ?string $comment = null);
 
     /**
-     * Recompute report statistics for a date range. Useful for backfilling after failures or data corrections.
+     * Recompute report statistics for a date range.
      *
      * @link https://docs.bsky.app/docs/api/tools-ozone-report-refresh-stats
      */
