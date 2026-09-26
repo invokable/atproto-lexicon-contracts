@@ -5,6 +5,36 @@
  */
 
 return array (
+  'app.bsky.actor.contentVisibilityDeclaration' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.actor.contentVisibilityDeclaration',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'record',
+        'description' => 'A declaration of an account\'s preferences for appearing in content discovery surfaces.',
+        'key' => 'literal:self',
+        'record' => 
+        array (
+          'type' => 'object',
+          'required' => 
+          array (
+            0 => 'hideFromAlgorithmicRecommendations',
+          ),
+          'properties' => 
+          array (
+            'hideFromAlgorithmicRecommendations' => 
+            array (
+              'type' => 'boolean',
+              'description' => 'Whether the account requests that its posts be hidden from algorithmic recommendations. Consumers must treat a missing record as false.',
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
   'app.bsky.actor.defs' => 
   array (
     'lexicon' => 1,
@@ -869,6 +899,12 @@ return array (
         ),
         'properties' => 
         array (
+          'updatedAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+            'description' => 'The timestamp when the account owner last updated their interests.',
+          ),
           'tags' => 
           array (
             'type' => 'array',
@@ -2396,6 +2432,11 @@ return array (
               0 => 'app.bsky.video.uploadVideo',
               1 => 'app.bsky.video.getJobStatus',
               2 => 'app.bsky.video.getUploadLimits',
+              3 => 'app.bsky.video.startUpload',
+              4 => 'app.bsky.video.uploadPart',
+              5 => 'app.bsky.video.finishUpload',
+              6 => 'app.bsky.video.abortUpload',
+              7 => 'app.bsky.video.getUploadStatus',
             ),
           ),
           1 => 
@@ -2578,6 +2619,11 @@ return array (
               92 => 'app.bsky.video.getJobStatus',
               93 => 'app.bsky.video.getUploadLimits',
               94 => 'app.bsky.video.uploadVideo',
+              95 => 'app.bsky.video.startUpload',
+              96 => 'app.bsky.video.uploadPart',
+              97 => 'app.bsky.video.finishUpload',
+              98 => 'app.bsky.video.abortUpload',
+              99 => 'app.bsky.video.getUploadStatus',
             ),
           ),
           1 => 
@@ -2604,8 +2650,9 @@ return array (
               9 => 'app.bsky.graph.list',
               10 => 'app.bsky.graph.listblock',
               11 => 'app.bsky.graph.listitem',
-              12 => 'app.bsky.graph.starterpack',
-              13 => 'app.bsky.notification.declaration',
+              12 => 'app.bsky.graph.referencelistoptout',
+              13 => 'app.bsky.graph.starterpack',
+              14 => 'app.bsky.notification.declaration',
             ),
           ),
         ),
@@ -5204,12 +5251,12 @@ return array (
           'video' => 
           array (
             'type' => 'blob',
-            'description' => 'The mp4 video file. May be up to 100mb, formerly limited to 50mb.',
+            'description' => 'The mp4 video file. May be up to 300mb, formerly limited to 100mb.',
             'accept' => 
             array (
               0 => 'video/mp4',
             ),
-            'maxSize' => 100000000,
+            'maxSize' => 300000000,
           ),
           'captions' => 
           array (
@@ -5225,8 +5272,6 @@ return array (
           array (
             'type' => 'string',
             'description' => 'Alt text description of the video, for accessibility.',
-            'maxGraphemes' => 1000,
-            'maxLength' => 10000,
           ),
           'aspectRatio' => 
           array (
@@ -5299,8 +5344,6 @@ return array (
           'alt' => 
           array (
             'type' => 'string',
-            'maxGraphemes' => 1000,
-            'maxLength' => 10000,
           ),
           'aspectRatio' => 
           array (
@@ -5459,6 +5502,40 @@ return array (
           array (
             'type' => 'boolean',
           ),
+          'knownLikers' => 
+          array (
+            'description' => 'This property is present only in selected cases, as an optimization.',
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.feed.defs#knownLikers',
+          ),
+        ),
+      ),
+      'knownLikers' => 
+      array (
+        'type' => 'object',
+        'description' => 'The post\'s likers whom you also follow',
+        'required' => 
+        array (
+          0 => 'count',
+          1 => 'actors',
+        ),
+        'properties' => 
+        array (
+          'count' => 
+          array (
+            'type' => 'integer',
+          ),
+          'actors' => 
+          array (
+            'type' => 'array',
+            'minLength' => 0,
+            'maxLength' => 5,
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:app.bsky.actor.defs#profileViewBasic',
+            ),
+          ),
         ),
       ),
       'threadContext' => 
@@ -5492,6 +5569,16 @@ return array (
           array (
             'type' => 'ref',
             'ref' => 'lex:app.bsky.feed.defs#replyRef',
+          ),
+          'opThreadPostIndex' => 
+          array (
+            'type' => 'integer',
+            'description' => 'The 1-indexed position of this post within the contiguous OP thread. Only present when this post is part of the OP thread.',
+          ),
+          'opThreadPostCount' => 
+          array (
+            'type' => 'integer',
+            'description' => 'The total number of posts in the contiguous OP thread that this post belongs to. Only present when this post is part of the OP thread.',
           ),
           'reason' => 
           array (
@@ -8498,6 +8585,12 @@ return array (
             'type' => 'ref',
             'ref' => 'lex:app.bsky.actor.defs#profileView',
           ),
+          'subjectOptedOut' => 
+          array (
+            'type' => 'boolean',
+            'const' => true,
+            'description' => 'Set to true when the subject has opted out of appearing in the reference list. Only set when the viewer owns the list.',
+          ),
         ),
       ),
       'starterPackView' => 
@@ -8684,6 +8777,12 @@ return array (
           array (
             'type' => 'string',
             'format' => 'at-uri',
+          ),
+          'referenceListOptOut' => 
+          array (
+            'type' => 'string',
+            'format' => 'at-uri',
+            'description' => 'The authenticated viewer\'s app.bsky.graph.referencelistoptout record URI for this reference list. Only set for reference lists. A client can delete this record to undo the opt-out.',
           ),
         ),
       ),
@@ -10231,6 +10330,43 @@ return array (
       ),
     ),
   ),
+  'app.bsky.graph.referencelistoptout' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.graph.referencelistoptout',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'record',
+        'description' => 'Record requesting that its author be omitted from the public presentation of a reference list. This record is only enforced when the subject list\'s current purpose is app.bsky.graph.defs#referencelist. AppView indexes at most one record per actor and list pair, and ignores duplicate records.',
+        'key' => 'tid',
+        'record' => 
+        array (
+          'type' => 'object',
+          'required' => 
+          array (
+            0 => 'subject',
+            1 => 'createdAt',
+          ),
+          'properties' => 
+          array (
+            'subject' => 
+            array (
+              'type' => 'string',
+              'format' => 'at-uri',
+              'description' => 'Canonical, DID-based AT URI of the app.bsky.graph.list record from which the author requests omission.',
+            ),
+            'createdAt' => 
+            array (
+              'type' => 'string',
+              'format' => 'datetime',
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
   'app.bsky.graph.searchStarterPacks' => 
   array (
     'lexicon' => 1,
@@ -11259,6 +11395,7 @@ return array (
             'priority' => 
             array (
               'type' => 'boolean',
+              'description' => 'Deprecated: this parameter is ignored.',
             ),
             'seenAt' => 
             array (
@@ -11383,6 +11520,7 @@ return array (
             'priority' => 
             array (
               'type' => 'boolean',
+              'description' => 'Deprecated: this parameter is ignored.',
             ),
             'cursor' => 
             array (
@@ -11392,6 +11530,7 @@ return array (
             array (
               'type' => 'string',
               'format' => 'datetime',
+              'description' => 'Deprecated: this parameter is unsupported and will cause an error.',
             ),
           ),
         ),
@@ -11423,6 +11562,7 @@ return array (
               'priority' => 
               array (
                 'type' => 'boolean',
+                'description' => 'Deprecated: this field is no longer populated.',
               ),
               'seenAt' => 
               array (
@@ -14460,6 +14600,93 @@ return array (
       ),
     ),
   ),
+  'app.bsky.video.abortUpload' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.video.abortUpload',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'procedure',
+        'description' => 'Abort an upload only while it is created, releasing its quota reservation immediately. Terminal sessions are unchanged and return their terminal outcome. A finishing session returns UploadNotReady.',
+        'input' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'jobId',
+            ),
+            'properties' => 
+            array (
+              'jobId' => 
+              array (
+                'type' => 'string',
+                'minLength' => 1,
+                'maxLength' => 256,
+              ),
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'state',
+            ),
+            'properties' => 
+            array (
+              'state' => 
+              array (
+                'type' => 'string',
+                'maxLength' => 32,
+                'knownValues' => 
+                array (
+                  0 => 'aborted',
+                  1 => 'completed',
+                  2 => 'failed',
+                  3 => 'expired',
+                ),
+              ),
+              'completedJobId' => 
+              array (
+                'type' => 'string',
+                'minLength' => 1,
+                'maxLength' => 256,
+                'description' => 'Present only when state is completed.',
+              ),
+              'failureReason' => 
+              array (
+                'type' => 'string',
+                'maxLength' => 1024,
+                'description' => 'Present only when state is failed.',
+              ),
+            ),
+          ),
+        ),
+        'errors' => 
+        array (
+          0 => 
+          array (
+            'name' => 'UploadNotFound',
+            'description' => 'The job ID is unknown or aged out of retention; known terminal sessions return their outcome and are never reported as not found.',
+          ),
+          1 => 
+          array (
+            'name' => 'UploadNotReady',
+            'description' => 'A finish is in progress; check getUploadStatus and retry.',
+          ),
+        ),
+      ),
+    ),
+  ),
   'app.bsky.video.defs' => 
   array (
     'lexicon' => 1,
@@ -14492,8 +14719,15 @@ return array (
             'description' => 'The state of the video processing job. All values not listed as a known value indicate that the job is in process.',
             'knownValues' => 
             array (
-              0 => 'JOB_STATE_COMPLETED',
-              1 => 'JOB_STATE_FAILED',
+              0 => 'JOB_STATE_CREATED',
+              1 => 'JOB_STATE_ENCODING',
+              2 => 'JOB_STATE_ENCODED',
+              3 => 'JOB_STATE_SCANNING',
+              4 => 'JOB_STATE_SCANNED',
+              5 => 'JOB_STATE_UPLOADING',
+              6 => 'JOB_STATE_UPLOADED',
+              7 => 'JOB_STATE_COMPLETED',
+              8 => 'JOB_STATE_FAILED',
             ),
           ),
           'progress' => 
@@ -14527,6 +14761,111 @@ return array (
           'message' => 
           array (
             'type' => 'string',
+          ),
+        ),
+      ),
+    ),
+  ),
+  'app.bsky.video.finishUpload' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.video.finishUpload',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'procedure',
+        'description' => 'Finish an upload. This call is idempotent and safe to retry. On deduplication completedJobId may differ from the input jobId; poll getJobStatus with completedJobId. Probe-based validation failures surface later as JOB_STATE_FAILED from getJobStatus, not as errors from this call.',
+        'input' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'jobId',
+            ),
+            'properties' => 
+            array (
+              'jobId' => 
+              array (
+                'type' => 'string',
+                'minLength' => 1,
+                'maxLength' => 256,
+              ),
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'completedJobId',
+              1 => 'jobStatus',
+            ),
+            'properties' => 
+            array (
+              'completedJobId' => 
+              array (
+                'type' => 'string',
+                'minLength' => 1,
+                'maxLength' => 256,
+                'description' => 'The processing job to poll with getJobStatus; on deduplication this may differ from the input jobId.',
+              ),
+              'jobStatus' => 
+              array (
+                'type' => 'ref',
+                'ref' => 'lex:app.bsky.video.defs#jobStatus',
+              ),
+            ),
+          ),
+        ),
+        'errors' => 
+        array (
+          0 => 
+          array (
+            'name' => 'UploadNotFound',
+            'description' => 'The job ID is unknown or aged out of retention; known terminal sessions are never reported as not found.',
+          ),
+          1 => 
+          array (
+            'name' => 'UploadExpired',
+            'description' => 'The upload session expired before finalization began.',
+          ),
+          2 => 
+          array (
+            'name' => 'MissingParts',
+            'description' => 'Not all parts are recorded; the error message lists the missing part numbers.',
+          ),
+          3 => 
+          array (
+            'name' => 'UploadNotReady',
+            'description' => 'A finish is in progress; check getUploadStatus and retry.',
+          ),
+          4 => 
+          array (
+            'name' => 'UnsupportedContentType',
+            'description' => 'The assembled object\'s detected content type is not supported.',
+          ),
+          5 => 
+          array (
+            'name' => 'UploadFailed',
+            'description' => 'The session is known to have failed; the error carries its failure reason.',
+          ),
+          6 => 
+          array (
+            'name' => 'UploadAborted',
+            'description' => 'The session is known to have been aborted.',
+          ),
+          7 => 
+          array (
+            'name' => 'ServiceOverloaded',
+            'description' => 'The service is draining or temporarily at capacity; retry later.',
           ),
         ),
       ),
@@ -14623,6 +14962,381 @@ return array (
                 'type' => 'string',
               ),
             ),
+          ),
+        ),
+      ),
+    ),
+  ),
+  'app.bsky.video.getUploadStatus' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.video.getUploadStatus',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'description' => 'Get the authoritative status of the upload phase. Terminal states remain readable. completedJobId and jobStatus are present only for completed sessions; failureReason is present only for failed sessions.',
+        'parameters' => 
+        array (
+          'type' => 'params',
+          'required' => 
+          array (
+            0 => 'jobId',
+          ),
+          'properties' => 
+          array (
+            'jobId' => 
+            array (
+              'type' => 'string',
+              'minLength' => 1,
+              'maxLength' => 256,
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'jobId',
+              1 => 'partSizeBytes',
+              2 => 'partCount',
+              3 => 'receivedParts',
+              4 => 'expiresAt',
+              5 => 'state',
+            ),
+            'properties' => 
+            array (
+              'jobId' => 
+              array (
+                'type' => 'string',
+                'minLength' => 1,
+                'maxLength' => 256,
+              ),
+              'partSizeBytes' => 
+              array (
+                'type' => 'integer',
+              ),
+              'partCount' => 
+              array (
+                'type' => 'integer',
+              ),
+              'receivedParts' => 
+              array (
+                'type' => 'array',
+                'items' => 
+                array (
+                  'type' => 'integer',
+                  'minimum' => 1,
+                ),
+              ),
+              'expiresAt' => 
+              array (
+                'type' => 'string',
+                'format' => 'datetime',
+              ),
+              'state' => 
+              array (
+                'type' => 'string',
+                'maxLength' => 32,
+                'knownValues' => 
+                array (
+                  0 => 'created',
+                  1 => 'finishing',
+                  2 => 'completed',
+                  3 => 'failed',
+                  4 => 'aborted',
+                  5 => 'expired',
+                ),
+              ),
+              'completedJobId' => 
+              array (
+                'type' => 'string',
+                'minLength' => 1,
+                'maxLength' => 256,
+                'description' => 'Present only when state is completed; may differ from jobId on deduplication.',
+              ),
+              'jobStatus' => 
+              array (
+                'type' => 'ref',
+                'ref' => 'lex:app.bsky.video.defs#jobStatus',
+                'description' => 'Present only when state is completed.',
+              ),
+              'failureReason' => 
+              array (
+                'type' => 'string',
+                'maxLength' => 1024,
+                'description' => 'Present only when state is failed.',
+              ),
+            ),
+          ),
+        ),
+        'errors' => 
+        array (
+          0 => 
+          array (
+            'name' => 'UploadNotFound',
+            'description' => 'The job ID is unknown or aged out of retention; known terminal sessions remain readable and are never reported as not found.',
+          ),
+        ),
+      ),
+    ),
+  ),
+  'app.bsky.video.startUpload' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.video.startUpload',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'procedure',
+        'description' => 'Start a multipart video upload. The declared size is exact, while optional media properties are advisory and used only for early failure; the authoritative probe runs asynchronously after upload.',
+        'input' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'sizeBytes',
+              1 => 'mimeType',
+            ),
+            'properties' => 
+            array (
+              'sizeBytes' => 
+              array (
+                'type' => 'integer',
+                'minimum' => 1,
+                'description' => 'Exact byte size of the complete upload-ready video file before it is split into parts.',
+              ),
+              'mimeType' => 
+              array (
+                'type' => 'string',
+                'minLength' => 3,
+                'maxLength' => 255,
+                'description' => 'Declared MIME type of the video.',
+              ),
+              'name' => 
+              array (
+                'type' => 'string',
+                'maxLength' => 256,
+                'description' => 'Optional client-provided file name.',
+              ),
+              'durationMs' => 
+              array (
+                'type' => 'integer',
+                'description' => 'Advisory, non-authoritative duration used only for early failure; the authoritative probe runs asynchronously after upload.',
+              ),
+              'width' => 
+              array (
+                'type' => 'integer',
+                'description' => 'Advisory, non-authoritative width used only for early failure; the authoritative probe runs asynchronously after upload.',
+              ),
+              'height' => 
+              array (
+                'type' => 'integer',
+                'description' => 'Advisory, non-authoritative height used only for early failure; the authoritative probe runs asynchronously after upload.',
+              ),
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'jobId',
+              1 => 'partSizeBytes',
+              2 => 'partCount',
+              3 => 'expiresAt',
+            ),
+            'properties' => 
+            array (
+              'jobId' => 
+              array (
+                'type' => 'string',
+                'minLength' => 1,
+                'maxLength' => 256,
+              ),
+              'partSizeBytes' => 
+              array (
+                'type' => 'integer',
+              ),
+              'partCount' => 
+              array (
+                'type' => 'integer',
+              ),
+              'expiresAt' => 
+              array (
+                'type' => 'string',
+                'format' => 'datetime',
+              ),
+            ),
+          ),
+        ),
+        'errors' => 
+        array (
+          0 => 
+          array (
+            'name' => 'UnsupportedContentType',
+            'description' => 'The declared MIME type is not supported.',
+          ),
+          1 => 
+          array (
+            'name' => 'VideoTooLarge',
+            'description' => 'The exact file size exceeds the per-file cap or remaining daily byte allowance.',
+          ),
+          2 => 
+          array (
+            'name' => 'VideoTooLong',
+            'description' => 'The advisory declared duration exceeds the limit.',
+          ),
+          3 => 
+          array (
+            'name' => 'BadAspectRatio',
+            'description' => 'The advisory declared dimensions have an unsupported aspect ratio.',
+          ),
+          4 => 
+          array (
+            'name' => 'DailyLimitExceeded',
+            'description' => 'The daily video or byte allowance, including active reservations, is exhausted.',
+          ),
+          5 => 
+          array (
+            'name' => 'TooManyOpenUploads',
+            'description' => 'The account has reached its open multipart upload limit.',
+          ),
+          6 => 
+          array (
+            'name' => 'UploadForbidden',
+            'description' => 'The account is not permitted to upload video.',
+          ),
+          7 => 
+          array (
+            'name' => 'ServiceOverloaded',
+            'description' => 'The service is draining, at capacity, or temporarily unable to create the multipart upload.',
+          ),
+        ),
+      ),
+    ),
+  ),
+  'app.bsky.video.uploadPart' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.video.uploadPart',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'procedure',
+        'description' => 'Upload one part. Parts are idempotent and may be retried or re-sent while the session is created. Each expected length is derived from the upload size and part size, and Content-Length must match exactly. ETags are never exposed to clients.',
+        'parameters' => 
+        array (
+          'type' => 'params',
+          'required' => 
+          array (
+            0 => 'jobId',
+            1 => 'partNumber',
+          ),
+          'properties' => 
+          array (
+            'jobId' => 
+            array (
+              'type' => 'string',
+              'minLength' => 1,
+              'maxLength' => 256,
+            ),
+            'partNumber' => 
+            array (
+              'type' => 'integer',
+              'minimum' => 1,
+            ),
+          ),
+        ),
+        'input' => 
+        array (
+          'encoding' => 'application/octet-stream',
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'partNumber',
+              1 => 'sizeBytes',
+            ),
+            'properties' => 
+            array (
+              'partNumber' => 
+              array (
+                'type' => 'integer',
+                'minimum' => 1,
+              ),
+              'sizeBytes' => 
+              array (
+                'type' => 'integer',
+              ),
+            ),
+          ),
+        ),
+        'errors' => 
+        array (
+          0 => 
+          array (
+            'name' => 'UploadNotFound',
+            'description' => 'The job ID is unknown or aged out of retention; known terminal sessions are never reported as not found.',
+          ),
+          1 => 
+          array (
+            'name' => 'UploadExpired',
+            'description' => 'The upload session expired before completion.',
+          ),
+          2 => 
+          array (
+            'name' => 'InvalidPartNumber',
+            'description' => 'The part number is outside the upload\'s valid part range.',
+          ),
+          3 => 
+          array (
+            'name' => 'PartSizeMismatch',
+            'description' => 'Content-Length does not exactly match the expected size for this part.',
+          ),
+          4 => 
+          array (
+            'name' => 'UploadNotReady',
+            'description' => 'A finish is in progress; check getUploadStatus and retry.',
+          ),
+          5 => 
+          array (
+            'name' => 'UploadFailed',
+            'description' => 'The session is known to have failed; the error carries its failure reason.',
+          ),
+          6 => 
+          array (
+            'name' => 'UploadAborted',
+            'description' => 'The session is known to have been aborted.',
+          ),
+          7 => 
+          array (
+            'name' => 'UploadAlreadyCompleted',
+            'description' => 'The session is known to have already completed.',
+          ),
+          8 => 
+          array (
+            'name' => 'ServiceOverloaded',
+            'description' => 'The service is draining or temporarily at capacity; retry on another worker.',
           ),
         ),
       ),
@@ -31151,6 +31865,55 @@ return array (
       ),
     ),
   ),
+  'tools.ozone.moderation.getAccountPreferences' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'tools.ozone.moderation.getAccountPreferences',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'description' => 'Get private preferences for an account. Requires moderator or admin auth.',
+        'parameters' => 
+        array (
+          'type' => 'params',
+          'required' => 
+          array (
+            0 => 'did',
+          ),
+          'properties' => 
+          array (
+            'did' => 
+            array (
+              'type' => 'string',
+              'format' => 'did',
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'preferences',
+            ),
+            'properties' => 
+            array (
+              'preferences' => 
+              array (
+                'type' => 'ref',
+                'ref' => 'lex:app.bsky.actor.defs#preferences',
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
   'tools.ozone.moderation.getAccountTimeline' => 
   array (
     'lexicon' => 1,
@@ -34032,7 +34795,7 @@ return array (
             array (
               'type' => 'integer',
             ),
-            'description' => 'Array of moderation event IDs representing actions taken on this report (sorted DESC, most recent first)',
+            'description' => 'Array of moderation event IDs representing actions taken on this report, in append order (most recently linked event last)',
           ),
           'actions' => 
           array (
@@ -34294,30 +35057,80 @@ return array (
             'type' => 'integer',
             'description' => 'Number of reports currently not closed.',
           ),
+          'closedCount' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Number of close transitions.',
+          ),
           'actionedCount' => 
           array (
             'type' => 'integer',
-            'description' => 'Number of reports closed today.',
+            'description' => 'Number of closures whose last report action is label, tag, or takedown.',
+          ),
+          'acknowledgedCount' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Number of closures whose last report action is not label, tag, or takedown.',
           ),
           'escalatedCount' => 
           array (
             'type' => 'integer',
-            'description' => 'Number of reports escalated today.',
+            'description' => 'Number of reports escalated.',
           ),
           'inboundCount' => 
           array (
             'type' => 'integer',
-            'description' => 'Reports received today.',
+            'description' => 'Reports received.',
+          ),
+          'labelActionCount' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Closures whose last report action is a label event.',
+          ),
+          'tagActionCount' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Closures whose last report action is a tag event.',
+          ),
+          'takedownActionCount' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Closures whose last report action is a takedown event.',
+          ),
+          'ahtDurationSec' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Sum of report assignment-to-close seconds.',
+          ),
+          'ahtSampleCount' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Number of assigned closed-report samples in ahtDurationSec.',
+          ),
+          'resolutionDurationSec' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Sum of report creation-to-close seconds.',
+          ),
+          'resolutionSampleCount' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Number of closed-report samples in resolutionDurationSec.',
           ),
           'actionRate' => 
           array (
             'type' => 'integer',
-            'description' => 'Percentage of reports actioned (actionedCount / inboundCount * 100), rounded to nearest integer.',
+            'description' => 'Percentage of closures actioned (actionedCount / closedCount * 100), rounded to nearest integer.',
           ),
           'avgHandlingTimeSec' => 
           array (
             'type' => 'integer',
-            'description' => 'Average time in seconds from report creation (or moderator assignment) to close.',
+            'description' => 'Average handling time in seconds from report assignment to close.',
+          ),
+          'avgResolutionTimeSec' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Average resolution time in seconds from report creation to close.',
           ),
           'lastUpdated' => 
           array (
@@ -34353,10 +35166,20 @@ return array (
             'type' => 'integer',
             'description' => 'Number of reports not closed at time of computation.',
           ),
+          'closedCount' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Number of close transitions during this day.',
+          ),
           'actionedCount' => 
           array (
             'type' => 'integer',
-            'description' => 'Number of reports closed during this day.',
+            'description' => 'Number of closures whose last report action is label, tag, or takedown during this day.',
+          ),
+          'acknowledgedCount' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Number of closures whose last report action is not label, tag, or takedown during this day.',
           ),
           'escalatedCount' => 
           array (
@@ -34368,15 +35191,55 @@ return array (
             'type' => 'integer',
             'description' => 'Reports received during this day.',
           ),
+          'labelActionCount' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Closures whose last report action is a label event during this day.',
+          ),
+          'tagActionCount' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Closures whose last report action is a tag event during this day.',
+          ),
+          'takedownActionCount' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Closures whose last report action is a takedown event during this day.',
+          ),
+          'ahtDurationSec' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Sum of report assignment-to-close seconds for this day\'s samples.',
+          ),
+          'ahtSampleCount' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Number of assigned closed-report samples in ahtDurationSec.',
+          ),
+          'resolutionDurationSec' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Sum of report creation-to-close seconds for this day\'s samples.',
+          ),
+          'resolutionSampleCount' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Number of closed-report samples in resolutionDurationSec.',
+          ),
           'actionRate' => 
           array (
             'type' => 'integer',
-            'description' => 'Percentage of reports actioned (actionedCount / inboundCount * 100), rounded to nearest integer.',
+            'description' => 'Percentage of closures actioned (actionedCount / closedCount * 100), rounded to nearest integer.',
           ),
           'avgHandlingTimeSec' => 
           array (
             'type' => 'integer',
-            'description' => 'Average time in seconds from report creation (or moderator assignment) to close.',
+            'description' => 'Average handling time in seconds from report assignment to close.',
+          ),
+          'avgResolutionTimeSec' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Average resolution time in seconds from report creation to close.',
           ),
         ),
       ),
@@ -34666,7 +35529,7 @@ return array (
       'main' => 
       array (
         'type' => 'query',
-        'description' => 'Get live report statistics from the past 24 hours. Filter by queue, moderator, or report type. Omit all parameters for aggregate stats.',
+        'description' => 'Get live report statistics for the current UTC calendar day. Filter by queue, moderator, or report type. Omit all parameters for aggregate stats.',
         'parameters' => 
         array (
           'type' => 'params',
@@ -35193,7 +36056,7 @@ return array (
       'main' => 
       array (
         'type' => 'procedure',
-        'description' => 'Recompute report statistics for a date range. Useful for backfilling after failures or data corrections.',
+        'description' => 'Recompute report statistics for a date range.',
         'input' => 
         array (
           'encoding' => 'application/json',
