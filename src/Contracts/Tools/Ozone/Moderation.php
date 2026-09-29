@@ -20,6 +20,7 @@ interface Moderation
 {
     public const cancelScheduledActions = 'tools.ozone.moderation.cancelScheduledActions';
     public const emitEvent = 'tools.ozone.moderation.emitEvent';
+    public const getAccountPreferences = 'tools.ozone.moderation.getAccountPreferences';
     public const getAccountTimeline = 'tools.ozone.moderation.getAccountTimeline';
     public const getEvent = 'tools.ozone.moderation.getEvent';
     public const getRecord = 'tools.ozone.moderation.getRecord';
@@ -53,6 +54,16 @@ interface Moderation
      */
     #[Post, NSID(self::emitEvent)]
     public function emitEvent(#[Union(['tools.ozone.moderation.defs#modEventTakedown', 'tools.ozone.moderation.defs#modEventAcknowledge', 'tools.ozone.moderation.defs#modEventEscalate', 'tools.ozone.moderation.defs#modEventComment', 'tools.ozone.moderation.defs#modEventLabel', 'tools.ozone.moderation.defs#modEventReport', 'tools.ozone.moderation.defs#modEventMute', 'tools.ozone.moderation.defs#modEventUnmute', 'tools.ozone.moderation.defs#modEventMuteReporter', 'tools.ozone.moderation.defs#modEventUnmuteReporter', 'tools.ozone.moderation.defs#modEventReverseTakedown', 'tools.ozone.moderation.defs#modEventResolveAppeal', 'tools.ozone.moderation.defs#modEventEmail', 'tools.ozone.moderation.defs#modEventDivert', 'tools.ozone.moderation.defs#modEventTag', 'tools.ozone.moderation.defs#accountEvent', 'tools.ozone.moderation.defs#identityEvent', 'tools.ozone.moderation.defs#recordEvent', 'tools.ozone.moderation.defs#modEventPriorityScore', 'tools.ozone.moderation.defs#ageAssuranceEvent', 'tools.ozone.moderation.defs#ageAssuranceOverrideEvent', 'tools.ozone.moderation.defs#ageAssurancePurgeEvent', 'tools.ozone.moderation.defs#revokeAccountCredentialsEvent', 'tools.ozone.moderation.defs#scheduleTakedownEvent', 'tools.ozone.moderation.defs#cancelScheduledTakedownEvent'])] array $event, #[Union(['com.atproto.admin.defs#repoRef', 'com.atproto.repo.strongRef'])] array $subject, #[Format('did')] string $createdBy, #[Format('cid')] ?array $subjectBlobCids = null, #[Ref('tools.ozone.moderation.defs#modTool')] ?array $modTool = null, ?string $externalId = null, #[Ref('tools.ozone.moderation.emitEvent#reportAction')] ?array $reportAction = null);
+
+    /**
+     * Get private preferences for an account. Requires moderator or admin auth.
+     *
+     * @return array{preferences: array}
+     *
+     * @link https://docs.bsky.app/docs/api/tools-ozone-moderation-get-account-preferences
+     */
+    #[Get, NSID(self::getAccountPreferences)]
+    public function getAccountPreferences(#[Format('did')] string $did);
 
     /**
      * Get timeline of all available events of an account. This includes moderation events, account history and did history.
