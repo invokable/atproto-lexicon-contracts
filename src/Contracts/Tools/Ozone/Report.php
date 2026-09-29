@@ -35,7 +35,7 @@ interface Report
     /**
      * Assign a report to a user. Defaults to the caller. Admins may assign to any moderator.
      *
-     * @return array{id: int, did: string, moderator: array{did: string, disabled: bool, profile: array, createdAt: string, updatedAt: string, lastUpdatedBy: string, role: string}, queue: array{id: int, name: string, subjectTypes: array, collection: string, reportTypes: array, description: string, recommendedPolicies: array, createdBy: string, createdAt: string, updatedAt: string, enabled: bool, deletedAt: string, stats: array}, reportId: int, startAt: string, endAt: string}
+     * @return array{id: int, did: string, moderator: array{did: string, disabled: bool, profile: array, createdAt: string, updatedAt: string, lastUpdatedBy: string, role: string}, queue: array{id: int, name: string, subjectTypes: array, collection: string, reportTypes: array, description: string, recommendedPolicies: array, recommendedLabels: array, createdBy: string, createdAt: string, updatedAt: string, enabled: bool, deletedAt: string, stats: array}, reportId: int, startAt: string, endAt: string}
      *
      * @link https://docs.bsky.app/docs/api/tools-ozone-report-assign-moderator
      */
@@ -75,7 +75,7 @@ interface Report
     /**
      * Get historical daily report statistics. Returns a paginated list of daily stat snapshots, newest first. Filter by queue, moderator, or report type.
      *
-     * @return array{stats: array{date: string, computedAt: string, pendingCount: int, actionedCount: int, escalatedCount: int, inboundCount: int, actionRate: int, avgHandlingTimeSec: int}[], cursor: string}
+     * @return array{stats: array{date: string, computedAt: string, pendingCount: int, closedCount: int, actionedCount: int, acknowledgedCount: int, escalatedCount: int, inboundCount: int, labelActionCount: int, tagActionCount: int, takedownActionCount: int, ahtDurationSec: int, ahtSampleCount: int, resolutionDurationSec: int, resolutionSampleCount: int, actionRate: int, avgHandlingTimeSec: int, avgResolutionTimeSec: int}[], cursor: string}
      *
      * @link https://docs.bsky.app/docs/api/tools-ozone-report-get-historical-stats
      */
@@ -93,9 +93,9 @@ interface Report
     public function getLatestReport();
 
     /**
-     * Get live report statistics from the past 24 hours. Filter by queue, moderator, or report type. Omit all parameters for aggregate stats.
+     * Get live report statistics for the current UTC calendar day. Filter by queue, moderator, or report type. Omit all parameters for aggregate stats.
      *
-     * @return array{stats: array{pendingCount: int, actionedCount: int, escalatedCount: int, inboundCount: int, actionRate: int, avgHandlingTimeSec: int, lastUpdated: string}}
+     * @return array{stats: array{pendingCount: int, closedCount: int, actionedCount: int, acknowledgedCount: int, escalatedCount: int, inboundCount: int, labelActionCount: int, tagActionCount: int, takedownActionCount: int, ahtDurationSec: int, ahtSampleCount: int, resolutionDurationSec: int, resolutionSampleCount: int, actionRate: int, avgHandlingTimeSec: int, avgResolutionTimeSec: int, lastUpdated: string}}
      *
      * @link https://docs.bsky.app/docs/api/tools-ozone-report-get-live-stats
      */
@@ -105,7 +105,7 @@ interface Report
     /**
      * Get details about a single moderation report by ID.
      *
-     * @return array{id: int, eventId: int, status: string, subject: array{type: array, subject: string, status: array, repo: array, profile: array, record: array}, reportType: string, reportedBy: string, reporter: array{type: array, subject: string, status: array, repo: array, profile: array, record: array}, comment: string, createdAt: string, updatedAt: string, queuedAt: string, actionEventIds: array, actions: array{id: int, event: array, subject: array, subjectBlobCids: array, createdBy: string, createdAt: string, creatorHandle: string, subjectHandle: string, modTool: array}[], actionNote: string, subjectStatus: array{id: int, subject: array, hosting: array, subjectBlobCids: array, subjectRepoHandle: string, updatedAt: string, createdAt: string, reviewState: array, comment: string, priorityScore: int, muteUntil: string, muteReportingUntil: string, lastReviewedBy: string, lastReviewedAt: string, lastReportedAt: string, lastAppealedAt: string, takendown: bool, appealed: bool, suspendUntil: string, tags: array, accountStats: array, recordsStats: array, accountStrike: array, ageAssuranceState: string, ageAssuranceUpdatedBy: string}, relatedReportCount: int, assignment: mixed, queue: array{id: int, name: string, subjectTypes: array, collection: string, reportTypes: array, description: string, recommendedPolicies: array, createdBy: string, createdAt: string, updatedAt: string, enabled: bool, deletedAt: string, stats: array}, isMuted: bool, isAutomated: bool}
+     * @return array{id: int, eventId: int, status: string, subject: array{type: array, subject: string, status: array, repo: array, profile: array, record: array}, reportType: string, reportedBy: string, reporter: array{type: array, subject: string, status: array, repo: array, profile: array, record: array}, comment: string, createdAt: string, updatedAt: string, queuedAt: string, actionEventIds: array, actions: array{id: int, event: array, subject: array, subjectBlobCids: array, createdBy: string, createdAt: string, creatorHandle: string, subjectHandle: string, modTool: array}[], actionNote: string, subjectStatus: array{id: int, subject: array, hosting: array, subjectBlobCids: array, subjectRepoHandle: string, updatedAt: string, createdAt: string, reviewState: array, comment: string, priorityScore: int, muteUntil: string, muteReportingUntil: string, lastReviewedBy: string, lastReviewedAt: string, lastReportedAt: string, lastAppealedAt: string, takendown: bool, appealed: bool, suspendUntil: string, tags: array, accountStats: array, recordsStats: array, accountStrike: array, ageAssuranceState: string, ageAssuranceUpdatedBy: string}, relatedReportCount: int, assignment: mixed, queue: array{id: int, name: string, subjectTypes: array, collection: string, reportTypes: array, description: string, recommendedPolicies: array, recommendedLabels: array, createdBy: string, createdAt: string, updatedAt: string, enabled: bool, deletedAt: string, stats: array}, isMuted: bool, isAutomated: bool}
      *
      * @link https://docs.bsky.app/docs/api/tools-ozone-report-get-report
      */
@@ -153,7 +153,7 @@ interface Report
     public function reassignQueue(int $reportId, int $queueId, ?string $comment = null);
 
     /**
-     * Recompute report statistics for a date range. Useful for backfilling after failures or data corrections.
+     * Recompute report statistics for a date range.
      *
      * @link https://docs.bsky.app/docs/api/tools-ozone-report-refresh-stats
      */
@@ -163,7 +163,7 @@ interface Report
     /**
      * Remove report assignment.
      *
-     * @return array{id: int, did: string, moderator: array{did: string, disabled: bool, profile: array, createdAt: string, updatedAt: string, lastUpdatedBy: string, role: string}, queue: array{id: int, name: string, subjectTypes: array, collection: string, reportTypes: array, description: string, recommendedPolicies: array, createdBy: string, createdAt: string, updatedAt: string, enabled: bool, deletedAt: string, stats: array}, reportId: int, startAt: string, endAt: string}
+     * @return array{id: int, did: string, moderator: array{did: string, disabled: bool, profile: array, createdAt: string, updatedAt: string, lastUpdatedBy: string, role: string}, queue: array{id: int, name: string, subjectTypes: array, collection: string, reportTypes: array, description: string, recommendedPolicies: array, recommendedLabels: array, createdBy: string, createdAt: string, updatedAt: string, enabled: bool, deletedAt: string, stats: array}, reportId: int, startAt: string, endAt: string}
      *
      * @link https://docs.bsky.app/docs/api/tools-ozone-report-unassign-moderator
      */

@@ -5,6 +5,36 @@
  */
 
 return array (
+  'app.bsky.actor.contentVisibilityDeclaration' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.actor.contentVisibilityDeclaration',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'record',
+        'description' => 'A declaration of an account\'s preferences for appearing in content discovery surfaces.',
+        'key' => 'literal:self',
+        'record' => 
+        array (
+          'type' => 'object',
+          'required' => 
+          array (
+            0 => 'hideFromAlgorithmicRecommendations',
+          ),
+          'properties' => 
+          array (
+            'hideFromAlgorithmicRecommendations' => 
+            array (
+              'type' => 'boolean',
+              'description' => 'Whether the account requests that its posts be hidden from algorithmic recommendations. Consumers must treat a missing record as false.',
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
   'app.bsky.actor.defs' => 
   array (
     'lexicon' => 1,
@@ -869,6 +899,12 @@ return array (
         ),
         'properties' => 
         array (
+          'updatedAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+            'description' => 'The timestamp when the account owner last updated their interests.',
+          ),
           'tags' => 
           array (
             'type' => 'array',
@@ -2396,6 +2432,11 @@ return array (
               0 => 'app.bsky.video.uploadVideo',
               1 => 'app.bsky.video.getJobStatus',
               2 => 'app.bsky.video.getUploadLimits',
+              3 => 'app.bsky.video.startUpload',
+              4 => 'app.bsky.video.uploadPart',
+              5 => 'app.bsky.video.finishUpload',
+              6 => 'app.bsky.video.abortUpload',
+              7 => 'app.bsky.video.getUploadStatus',
             ),
           ),
           1 => 
@@ -2500,84 +2541,97 @@ return array (
               14 => 'app.bsky.contact.removeData',
               15 => 'app.bsky.contact.startPhoneVerification',
               16 => 'app.bsky.contact.verifyPhone',
-              17 => 'app.bsky.feed.describeFeedGenerator',
-              18 => 'app.bsky.feed.getActorFeeds',
-              19 => 'app.bsky.feed.getActorLikes',
-              20 => 'app.bsky.feed.getAuthorFeed',
-              21 => 'app.bsky.feed.getFeed',
-              22 => 'app.bsky.feed.getFeedGenerator',
-              23 => 'app.bsky.feed.getFeedGenerators',
-              24 => 'app.bsky.feed.getFeedSkeleton',
-              25 => 'app.bsky.feed.getLikes',
-              26 => 'app.bsky.feed.getListFeed',
-              27 => 'app.bsky.feed.getPostThread',
-              28 => 'app.bsky.feed.getPosts',
-              29 => 'app.bsky.feed.getQuotes',
-              30 => 'app.bsky.feed.getRepostedBy',
-              31 => 'app.bsky.feed.getSuggestedFeeds',
-              32 => 'app.bsky.feed.getTimeline',
-              33 => 'app.bsky.feed.searchPosts',
-              34 => 'app.bsky.feed.searchPostsV2',
-              35 => 'app.bsky.feed.sendInteractions',
-              36 => 'app.bsky.graph.getActorStarterPacks',
-              37 => 'app.bsky.graph.getBlocks',
-              38 => 'app.bsky.graph.getFollowers',
-              39 => 'app.bsky.graph.getFollows',
-              40 => 'app.bsky.graph.getKnownFollowers',
-              41 => 'app.bsky.graph.getList',
-              42 => 'app.bsky.graph.getListBlocks',
-              43 => 'app.bsky.graph.getListMutes',
-              44 => 'app.bsky.graph.getLists',
-              45 => 'app.bsky.graph.getListsWithMembership',
-              46 => 'app.bsky.graph.getMutes',
-              47 => 'app.bsky.graph.getRelationships',
-              48 => 'app.bsky.graph.getStarterPack',
-              49 => 'app.bsky.graph.getStarterPacks',
-              50 => 'app.bsky.graph.getStarterPacksWithMembership',
-              51 => 'app.bsky.graph.getSuggestedFollowsByActor',
-              52 => 'app.bsky.graph.muteActor',
-              53 => 'app.bsky.graph.muteActorList',
-              54 => 'app.bsky.graph.muteThread',
-              55 => 'app.bsky.graph.searchStarterPacks',
-              56 => 'app.bsky.graph.searchStarterPacksV2',
-              57 => 'app.bsky.graph.unmuteActor',
-              58 => 'app.bsky.graph.unmuteActorList',
-              59 => 'app.bsky.graph.unmuteThread',
-              60 => 'app.bsky.labeler.getServices',
-              61 => 'app.bsky.notification.getPreferences',
-              62 => 'app.bsky.notification.getUnreadCount',
-              63 => 'app.bsky.notification.listActivitySubscriptions',
-              64 => 'app.bsky.notification.listNotifications',
-              65 => 'app.bsky.notification.putActivitySubscription',
-              66 => 'app.bsky.notification.putPreferences',
-              67 => 'app.bsky.notification.putPreferencesV2',
-              68 => 'app.bsky.notification.registerPush',
-              69 => 'app.bsky.notification.unregisterPush',
-              70 => 'app.bsky.notification.updateSeen',
-              71 => 'app.bsky.unspecced.getAgeAssuranceState',
-              72 => 'app.bsky.unspecced.getConfig',
-              73 => 'app.bsky.unspecced.getOnboardingSuggestedStarterPacks',
-              74 => 'app.bsky.unspecced.getPopularFeedGenerators',
-              75 => 'app.bsky.unspecced.getPostThreadOtherV2',
-              76 => 'app.bsky.unspecced.getPostThreadV2',
-              77 => 'app.bsky.unspecced.getSuggestedFeeds',
-              78 => 'app.bsky.unspecced.getSuggestedFeedsSkeleton',
-              79 => 'app.bsky.unspecced.getSuggestedStarterPacks',
-              80 => 'app.bsky.unspecced.getSuggestedStarterPacksSkeleton',
-              81 => 'app.bsky.unspecced.getSuggestedUsers',
-              82 => 'app.bsky.unspecced.getSuggestedUsersSkeleton',
-              83 => 'app.bsky.unspecced.getSuggestionsSkeleton',
-              84 => 'app.bsky.unspecced.getTaggedSuggestions',
-              85 => 'app.bsky.unspecced.getTrendingTopics',
-              86 => 'app.bsky.unspecced.getTrends',
-              87 => 'app.bsky.unspecced.getTrendsSkeleton',
-              88 => 'app.bsky.unspecced.initAgeAssurance',
-              89 => 'app.bsky.unspecced.searchActorsSkeleton',
-              90 => 'app.bsky.unspecced.searchPostsSkeleton',
-              91 => 'app.bsky.unspecced.searchStarterPacksSkeleton',
-              92 => 'app.bsky.video.getJobStatus',
-              93 => 'app.bsky.video.getUploadLimits',
-              94 => 'app.bsky.video.uploadVideo',
+              17 => 'app.bsky.draft.createDraft',
+              18 => 'app.bsky.draft.deleteDraft',
+              19 => 'app.bsky.draft.getDrafts',
+              20 => 'app.bsky.draft.updateDraft',
+              21 => 'app.bsky.feed.describeFeedGenerator',
+              22 => 'app.bsky.feed.getActorFeeds',
+              23 => 'app.bsky.feed.getActorLikes',
+              24 => 'app.bsky.feed.getAuthorFeed',
+              25 => 'app.bsky.feed.getFeed',
+              26 => 'app.bsky.feed.getFeedGenerator',
+              27 => 'app.bsky.feed.getFeedGenerators',
+              28 => 'app.bsky.feed.getFeedSkeleton',
+              29 => 'app.bsky.feed.getLikes',
+              30 => 'app.bsky.feed.getListFeed',
+              31 => 'app.bsky.feed.getPostThread',
+              32 => 'app.bsky.feed.getPosts',
+              33 => 'app.bsky.feed.getQuotes',
+              34 => 'app.bsky.feed.getRepostedBy',
+              35 => 'app.bsky.feed.getSuggestedFeeds',
+              36 => 'app.bsky.feed.getTimeline',
+              37 => 'app.bsky.feed.searchPosts',
+              38 => 'app.bsky.feed.searchPostsV2',
+              39 => 'app.bsky.feed.sendInteractions',
+              40 => 'app.bsky.graph.getActorStarterPacks',
+              41 => 'app.bsky.graph.getBlocks',
+              42 => 'app.bsky.graph.getFollowers',
+              43 => 'app.bsky.graph.getFollows',
+              44 => 'app.bsky.graph.getKnownFollowers',
+              45 => 'app.bsky.graph.getList',
+              46 => 'app.bsky.graph.getListBlocks',
+              47 => 'app.bsky.graph.getListMutes',
+              48 => 'app.bsky.graph.getLists',
+              49 => 'app.bsky.graph.getListsWithMembership',
+              50 => 'app.bsky.graph.getMutes',
+              51 => 'app.bsky.graph.getRelationships',
+              52 => 'app.bsky.graph.getStarterPack',
+              53 => 'app.bsky.graph.getStarterPacks',
+              54 => 'app.bsky.graph.getStarterPacksWithMembership',
+              55 => 'app.bsky.graph.getSuggestedFollowsByActor',
+              56 => 'app.bsky.graph.muteActor',
+              57 => 'app.bsky.graph.muteActorList',
+              58 => 'app.bsky.graph.muteThread',
+              59 => 'app.bsky.graph.searchStarterPacks',
+              60 => 'app.bsky.graph.searchStarterPacksV2',
+              61 => 'app.bsky.graph.unmuteActor',
+              62 => 'app.bsky.graph.unmuteActorList',
+              63 => 'app.bsky.graph.unmuteThread',
+              64 => 'app.bsky.labeler.getServices',
+              65 => 'app.bsky.notification.getPreferences',
+              66 => 'app.bsky.notification.getUnreadCount',
+              67 => 'app.bsky.notification.listActivitySubscriptions',
+              68 => 'app.bsky.notification.listNotifications',
+              69 => 'app.bsky.notification.putActivitySubscription',
+              70 => 'app.bsky.notification.putPreferences',
+              71 => 'app.bsky.notification.putPreferencesV2',
+              72 => 'app.bsky.notification.registerPush',
+              73 => 'app.bsky.notification.unregisterPush',
+              74 => 'app.bsky.notification.updateSeen',
+              75 => 'app.bsky.unspecced.getAgeAssuranceState',
+              76 => 'app.bsky.unspecced.getConfig',
+              77 => 'app.bsky.unspecced.getOnboardingSuggestedStarterPacks',
+              78 => 'app.bsky.unspecced.getPopularFeedGenerators',
+              79 => 'app.bsky.unspecced.getPostThreadOtherV2',
+              80 => 'app.bsky.unspecced.getPostThreadV2',
+              81 => 'app.bsky.unspecced.getSuggestedFeeds',
+              82 => 'app.bsky.unspecced.getSuggestedFeedsSkeleton',
+              83 => 'app.bsky.unspecced.getSuggestedOnboardingUsers',
+              84 => 'app.bsky.unspecced.getSuggestedStarterPacks',
+              85 => 'app.bsky.unspecced.getSuggestedStarterPacksSkeleton',
+              86 => 'app.bsky.unspecced.getSuggestedUsers',
+              87 => 'app.bsky.unspecced.getSuggestedUsersForDiscover',
+              88 => 'app.bsky.unspecced.getSuggestedUsersForExplore',
+              89 => 'app.bsky.unspecced.getSuggestedUsersForSeeMore',
+              90 => 'app.bsky.unspecced.getSuggestedUsersSkeleton',
+              91 => 'app.bsky.unspecced.getSuggestionsSkeleton',
+              92 => 'app.bsky.unspecced.getTaggedSuggestions',
+              93 => 'app.bsky.unspecced.getTrendingTopics',
+              94 => 'app.bsky.unspecced.getTrends',
+              95 => 'app.bsky.unspecced.getTrendsSkeleton',
+              96 => 'app.bsky.unspecced.initAgeAssurance',
+              97 => 'app.bsky.unspecced.searchActorsSkeleton',
+              98 => 'app.bsky.unspecced.searchPostsSkeleton',
+              99 => 'app.bsky.unspecced.searchStarterPacksSkeleton',
+              100 => 'app.bsky.video.getJobStatus',
+              101 => 'app.bsky.video.getUploadLimits',
+              102 => 'app.bsky.video.uploadVideo',
+              103 => 'app.bsky.video.startUpload',
+              104 => 'app.bsky.video.uploadPart',
+              105 => 'app.bsky.video.finishUpload',
+              106 => 'app.bsky.video.abortUpload',
+              107 => 'app.bsky.video.getUploadStatus',
             ),
           ),
           1 => 
@@ -2592,20 +2646,23 @@ return array (
             ),
             'collection' => 
             array (
-              0 => 'app.bsky.actor.profile',
-              1 => 'app.bsky.actor.status',
-              2 => 'app.bsky.feed.like',
-              3 => 'app.bsky.feed.post',
-              4 => 'app.bsky.feed.postgate',
-              5 => 'app.bsky.feed.repost',
-              6 => 'app.bsky.feed.threadgate',
-              7 => 'app.bsky.graph.block',
-              8 => 'app.bsky.graph.follow',
-              9 => 'app.bsky.graph.list',
-              10 => 'app.bsky.graph.listblock',
-              11 => 'app.bsky.graph.listitem',
-              12 => 'app.bsky.graph.starterpack',
-              13 => 'app.bsky.notification.declaration',
+              0 => 'app.bsky.actor.contentVisibilityDeclaration',
+              1 => 'app.bsky.actor.profile',
+              2 => 'app.bsky.actor.status',
+              3 => 'app.bsky.feed.like',
+              4 => 'app.bsky.feed.post',
+              5 => 'app.bsky.feed.postgate',
+              6 => 'app.bsky.feed.repost',
+              7 => 'app.bsky.feed.threadgate',
+              8 => 'app.bsky.graph.block',
+              9 => 'app.bsky.graph.follow',
+              10 => 'app.bsky.graph.list',
+              11 => 'app.bsky.graph.listblock',
+              12 => 'app.bsky.graph.listitem',
+              13 => 'app.bsky.graph.referencelistoptout',
+              14 => 'app.bsky.graph.starterpack',
+              15 => 'app.bsky.graph.verification',
+              16 => 'app.bsky.notification.declaration',
             ),
           ),
         ),
@@ -5204,12 +5261,12 @@ return array (
           'video' => 
           array (
             'type' => 'blob',
-            'description' => 'The mp4 video file. May be up to 100mb, formerly limited to 50mb.',
+            'description' => 'The mp4 video file. May be up to 300mb, formerly limited to 100mb.',
             'accept' => 
             array (
               0 => 'video/mp4',
             ),
-            'maxSize' => 100000000,
+            'maxSize' => 300000000,
           ),
           'captions' => 
           array (
@@ -5225,8 +5282,6 @@ return array (
           array (
             'type' => 'string',
             'description' => 'Alt text description of the video, for accessibility.',
-            'maxGraphemes' => 1000,
-            'maxLength' => 10000,
           ),
           'aspectRatio' => 
           array (
@@ -5299,8 +5354,6 @@ return array (
           'alt' => 
           array (
             'type' => 'string',
-            'maxGraphemes' => 1000,
-            'maxLength' => 10000,
           ),
           'aspectRatio' => 
           array (
@@ -5459,6 +5512,40 @@ return array (
           array (
             'type' => 'boolean',
           ),
+          'knownLikers' => 
+          array (
+            'description' => 'This property is present only in selected cases, as an optimization.',
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.feed.defs#knownLikers',
+          ),
+        ),
+      ),
+      'knownLikers' => 
+      array (
+        'type' => 'object',
+        'description' => 'The post\'s likers whom you also follow',
+        'required' => 
+        array (
+          0 => 'count',
+          1 => 'actors',
+        ),
+        'properties' => 
+        array (
+          'count' => 
+          array (
+            'type' => 'integer',
+          ),
+          'actors' => 
+          array (
+            'type' => 'array',
+            'minLength' => 0,
+            'maxLength' => 5,
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:app.bsky.actor.defs#profileViewBasic',
+            ),
+          ),
         ),
       ),
       'threadContext' => 
@@ -5492,6 +5579,16 @@ return array (
           array (
             'type' => 'ref',
             'ref' => 'lex:app.bsky.feed.defs#replyRef',
+          ),
+          'opThreadPostIndex' => 
+          array (
+            'type' => 'integer',
+            'description' => 'The 1-indexed position of this post within the contiguous OP thread. Only present when this post is part of the OP thread.',
+          ),
+          'opThreadPostCount' => 
+          array (
+            'type' => 'integer',
+            'description' => 'The total number of posts in the contiguous OP thread that this post belongs to. Only present when this post is part of the OP thread.',
           ),
           'reason' => 
           array (
@@ -7082,6 +7179,16 @@ return array (
             array (
               'type' => 'string',
             ),
+            'sort' => 
+            array (
+              'type' => 'string',
+              'knownValues' => 
+              array (
+                0 => 'latest',
+                1 => 'top',
+              ),
+              'description' => 'Ordering of results. \'latest\' (default when unset) is newest first; \'top\' orders quotes by their like count.',
+            ),
           ),
         ),
         'output' => 
@@ -8498,6 +8605,12 @@ return array (
             'type' => 'ref',
             'ref' => 'lex:app.bsky.actor.defs#profileView',
           ),
+          'subjectOptedOut' => 
+          array (
+            'type' => 'boolean',
+            'const' => true,
+            'description' => 'Set to true when the subject has opted out of appearing in the reference list. Only set when the viewer owns the list.',
+          ),
         ),
       ),
       'starterPackView' => 
@@ -8684,6 +8797,12 @@ return array (
           array (
             'type' => 'string',
             'format' => 'at-uri',
+          ),
+          'referenceListOptOut' => 
+          array (
+            'type' => 'string',
+            'format' => 'at-uri',
+            'description' => 'The authenticated viewer\'s app.bsky.graph.referencelistoptout record URI for this reference list. Only set for reference lists. A client can delete this record to undo the opt-out.',
           ),
         ),
       ),
@@ -10231,6 +10350,43 @@ return array (
       ),
     ),
   ),
+  'app.bsky.graph.referencelistoptout' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.graph.referencelistoptout',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'record',
+        'description' => 'Record requesting that its author be omitted from the public presentation of a reference list. This record is only enforced when the subject list\'s current purpose is app.bsky.graph.defs#referencelist. AppView indexes at most one record per actor and list pair, and ignores duplicate records.',
+        'key' => 'tid',
+        'record' => 
+        array (
+          'type' => 'object',
+          'required' => 
+          array (
+            0 => 'subject',
+            1 => 'createdAt',
+          ),
+          'properties' => 
+          array (
+            'subject' => 
+            array (
+              'type' => 'string',
+              'format' => 'at-uri',
+              'description' => 'Canonical, DID-based AT URI of the app.bsky.graph.list record from which the author requests omission.',
+            ),
+            'createdAt' => 
+            array (
+              'type' => 'string',
+              'format' => 'datetime',
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
   'app.bsky.graph.searchStarterPacks' => 
   array (
     'lexicon' => 1,
@@ -11259,6 +11415,7 @@ return array (
             'priority' => 
             array (
               'type' => 'boolean',
+              'description' => 'Deprecated: this parameter is ignored.',
             ),
             'seenAt' => 
             array (
@@ -11383,6 +11540,7 @@ return array (
             'priority' => 
             array (
               'type' => 'boolean',
+              'description' => 'Deprecated: this parameter is ignored.',
             ),
             'cursor' => 
             array (
@@ -11392,6 +11550,7 @@ return array (
             array (
               'type' => 'string',
               'format' => 'datetime',
+              'description' => 'Deprecated: this parameter is unsupported and will cause an error.',
             ),
           ),
         ),
@@ -11423,6 +11582,7 @@ return array (
               'priority' => 
               array (
                 'type' => 'boolean',
+                'description' => 'Deprecated: this field is no longer populated.',
               ),
               'seenAt' => 
               array (
@@ -14460,6 +14620,93 @@ return array (
       ),
     ),
   ),
+  'app.bsky.video.abortUpload' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.video.abortUpload',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'procedure',
+        'description' => 'Abort an upload only while it is created, releasing its quota reservation immediately. Terminal sessions are unchanged and return their terminal outcome. A finishing session returns UploadNotReady.',
+        'input' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'jobId',
+            ),
+            'properties' => 
+            array (
+              'jobId' => 
+              array (
+                'type' => 'string',
+                'minLength' => 1,
+                'maxLength' => 256,
+              ),
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'state',
+            ),
+            'properties' => 
+            array (
+              'state' => 
+              array (
+                'type' => 'string',
+                'maxLength' => 32,
+                'knownValues' => 
+                array (
+                  0 => 'aborted',
+                  1 => 'completed',
+                  2 => 'failed',
+                  3 => 'expired',
+                ),
+              ),
+              'completedJobId' => 
+              array (
+                'type' => 'string',
+                'minLength' => 1,
+                'maxLength' => 256,
+                'description' => 'Present only when state is completed.',
+              ),
+              'failureReason' => 
+              array (
+                'type' => 'string',
+                'maxLength' => 1024,
+                'description' => 'Present only when state is failed.',
+              ),
+            ),
+          ),
+        ),
+        'errors' => 
+        array (
+          0 => 
+          array (
+            'name' => 'UploadNotFound',
+            'description' => 'The job ID is unknown or aged out of retention; known terminal sessions return their outcome and are never reported as not found.',
+          ),
+          1 => 
+          array (
+            'name' => 'UploadNotReady',
+            'description' => 'A finish is in progress; check getUploadStatus and retry.',
+          ),
+        ),
+      ),
+    ),
+  ),
   'app.bsky.video.defs' => 
   array (
     'lexicon' => 1,
@@ -14492,8 +14739,15 @@ return array (
             'description' => 'The state of the video processing job. All values not listed as a known value indicate that the job is in process.',
             'knownValues' => 
             array (
-              0 => 'JOB_STATE_COMPLETED',
-              1 => 'JOB_STATE_FAILED',
+              0 => 'JOB_STATE_CREATED',
+              1 => 'JOB_STATE_ENCODING',
+              2 => 'JOB_STATE_ENCODED',
+              3 => 'JOB_STATE_SCANNING',
+              4 => 'JOB_STATE_SCANNED',
+              5 => 'JOB_STATE_UPLOADING',
+              6 => 'JOB_STATE_UPLOADED',
+              7 => 'JOB_STATE_COMPLETED',
+              8 => 'JOB_STATE_FAILED',
             ),
           ),
           'progress' => 
@@ -14527,6 +14781,111 @@ return array (
           'message' => 
           array (
             'type' => 'string',
+          ),
+        ),
+      ),
+    ),
+  ),
+  'app.bsky.video.finishUpload' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.video.finishUpload',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'procedure',
+        'description' => 'Finish an upload. This call is idempotent and safe to retry. On deduplication completedJobId may differ from the input jobId; poll getJobStatus with completedJobId. Probe-based validation failures surface later as JOB_STATE_FAILED from getJobStatus, not as errors from this call.',
+        'input' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'jobId',
+            ),
+            'properties' => 
+            array (
+              'jobId' => 
+              array (
+                'type' => 'string',
+                'minLength' => 1,
+                'maxLength' => 256,
+              ),
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'completedJobId',
+              1 => 'jobStatus',
+            ),
+            'properties' => 
+            array (
+              'completedJobId' => 
+              array (
+                'type' => 'string',
+                'minLength' => 1,
+                'maxLength' => 256,
+                'description' => 'The processing job to poll with getJobStatus; on deduplication this may differ from the input jobId.',
+              ),
+              'jobStatus' => 
+              array (
+                'type' => 'ref',
+                'ref' => 'lex:app.bsky.video.defs#jobStatus',
+              ),
+            ),
+          ),
+        ),
+        'errors' => 
+        array (
+          0 => 
+          array (
+            'name' => 'UploadNotFound',
+            'description' => 'The job ID is unknown or aged out of retention; known terminal sessions are never reported as not found.',
+          ),
+          1 => 
+          array (
+            'name' => 'UploadExpired',
+            'description' => 'The upload session expired before finalization began.',
+          ),
+          2 => 
+          array (
+            'name' => 'MissingParts',
+            'description' => 'Not all parts are recorded; the error message lists the missing part numbers.',
+          ),
+          3 => 
+          array (
+            'name' => 'UploadNotReady',
+            'description' => 'A finish is in progress; check getUploadStatus and retry.',
+          ),
+          4 => 
+          array (
+            'name' => 'UnsupportedContentType',
+            'description' => 'The assembled object\'s detected content type is not supported.',
+          ),
+          5 => 
+          array (
+            'name' => 'UploadFailed',
+            'description' => 'The session is known to have failed; the error carries its failure reason.',
+          ),
+          6 => 
+          array (
+            'name' => 'UploadAborted',
+            'description' => 'The session is known to have been aborted.',
+          ),
+          7 => 
+          array (
+            'name' => 'ServiceOverloaded',
+            'description' => 'The service is draining or temporarily at capacity; retry later.',
           ),
         ),
       ),
@@ -14623,6 +14982,381 @@ return array (
                 'type' => 'string',
               ),
             ),
+          ),
+        ),
+      ),
+    ),
+  ),
+  'app.bsky.video.getUploadStatus' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.video.getUploadStatus',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'description' => 'Get the authoritative status of the upload phase. Terminal states remain readable. completedJobId and jobStatus are present only for completed sessions; failureReason is present only for failed sessions.',
+        'parameters' => 
+        array (
+          'type' => 'params',
+          'required' => 
+          array (
+            0 => 'jobId',
+          ),
+          'properties' => 
+          array (
+            'jobId' => 
+            array (
+              'type' => 'string',
+              'minLength' => 1,
+              'maxLength' => 256,
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'jobId',
+              1 => 'partSizeBytes',
+              2 => 'partCount',
+              3 => 'receivedParts',
+              4 => 'expiresAt',
+              5 => 'state',
+            ),
+            'properties' => 
+            array (
+              'jobId' => 
+              array (
+                'type' => 'string',
+                'minLength' => 1,
+                'maxLength' => 256,
+              ),
+              'partSizeBytes' => 
+              array (
+                'type' => 'integer',
+              ),
+              'partCount' => 
+              array (
+                'type' => 'integer',
+              ),
+              'receivedParts' => 
+              array (
+                'type' => 'array',
+                'items' => 
+                array (
+                  'type' => 'integer',
+                  'minimum' => 1,
+                ),
+              ),
+              'expiresAt' => 
+              array (
+                'type' => 'string',
+                'format' => 'datetime',
+              ),
+              'state' => 
+              array (
+                'type' => 'string',
+                'maxLength' => 32,
+                'knownValues' => 
+                array (
+                  0 => 'created',
+                  1 => 'finishing',
+                  2 => 'completed',
+                  3 => 'failed',
+                  4 => 'aborted',
+                  5 => 'expired',
+                ),
+              ),
+              'completedJobId' => 
+              array (
+                'type' => 'string',
+                'minLength' => 1,
+                'maxLength' => 256,
+                'description' => 'Present only when state is completed; may differ from jobId on deduplication.',
+              ),
+              'jobStatus' => 
+              array (
+                'type' => 'ref',
+                'ref' => 'lex:app.bsky.video.defs#jobStatus',
+                'description' => 'Present only when state is completed.',
+              ),
+              'failureReason' => 
+              array (
+                'type' => 'string',
+                'maxLength' => 1024,
+                'description' => 'Present only when state is failed.',
+              ),
+            ),
+          ),
+        ),
+        'errors' => 
+        array (
+          0 => 
+          array (
+            'name' => 'UploadNotFound',
+            'description' => 'The job ID is unknown or aged out of retention; known terminal sessions remain readable and are never reported as not found.',
+          ),
+        ),
+      ),
+    ),
+  ),
+  'app.bsky.video.startUpload' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.video.startUpload',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'procedure',
+        'description' => 'Start a multipart video upload. The declared size is exact, while optional media properties are advisory and used only for early failure; the authoritative probe runs asynchronously after upload.',
+        'input' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'sizeBytes',
+              1 => 'mimeType',
+            ),
+            'properties' => 
+            array (
+              'sizeBytes' => 
+              array (
+                'type' => 'integer',
+                'minimum' => 1,
+                'description' => 'Exact byte size of the complete upload-ready video file before it is split into parts.',
+              ),
+              'mimeType' => 
+              array (
+                'type' => 'string',
+                'minLength' => 3,
+                'maxLength' => 255,
+                'description' => 'Declared MIME type of the video.',
+              ),
+              'name' => 
+              array (
+                'type' => 'string',
+                'maxLength' => 256,
+                'description' => 'Optional client-provided file name.',
+              ),
+              'durationMs' => 
+              array (
+                'type' => 'integer',
+                'description' => 'Advisory, non-authoritative duration used only for early failure; the authoritative probe runs asynchronously after upload.',
+              ),
+              'width' => 
+              array (
+                'type' => 'integer',
+                'description' => 'Advisory, non-authoritative width used only for early failure; the authoritative probe runs asynchronously after upload.',
+              ),
+              'height' => 
+              array (
+                'type' => 'integer',
+                'description' => 'Advisory, non-authoritative height used only for early failure; the authoritative probe runs asynchronously after upload.',
+              ),
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'jobId',
+              1 => 'partSizeBytes',
+              2 => 'partCount',
+              3 => 'expiresAt',
+            ),
+            'properties' => 
+            array (
+              'jobId' => 
+              array (
+                'type' => 'string',
+                'minLength' => 1,
+                'maxLength' => 256,
+              ),
+              'partSizeBytes' => 
+              array (
+                'type' => 'integer',
+              ),
+              'partCount' => 
+              array (
+                'type' => 'integer',
+              ),
+              'expiresAt' => 
+              array (
+                'type' => 'string',
+                'format' => 'datetime',
+              ),
+            ),
+          ),
+        ),
+        'errors' => 
+        array (
+          0 => 
+          array (
+            'name' => 'UnsupportedContentType',
+            'description' => 'The declared MIME type is not supported.',
+          ),
+          1 => 
+          array (
+            'name' => 'VideoTooLarge',
+            'description' => 'The exact file size exceeds the per-file cap or remaining daily byte allowance.',
+          ),
+          2 => 
+          array (
+            'name' => 'VideoTooLong',
+            'description' => 'The advisory declared duration exceeds the limit.',
+          ),
+          3 => 
+          array (
+            'name' => 'BadAspectRatio',
+            'description' => 'The advisory declared dimensions have an unsupported aspect ratio.',
+          ),
+          4 => 
+          array (
+            'name' => 'DailyLimitExceeded',
+            'description' => 'The daily video or byte allowance, including active reservations, is exhausted.',
+          ),
+          5 => 
+          array (
+            'name' => 'TooManyOpenUploads',
+            'description' => 'The account has reached its open multipart upload limit.',
+          ),
+          6 => 
+          array (
+            'name' => 'UploadForbidden',
+            'description' => 'The account is not permitted to upload video.',
+          ),
+          7 => 
+          array (
+            'name' => 'ServiceOverloaded',
+            'description' => 'The service is draining, at capacity, or temporarily unable to create the multipart upload.',
+          ),
+        ),
+      ),
+    ),
+  ),
+  'app.bsky.video.uploadPart' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.video.uploadPart',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'procedure',
+        'description' => 'Upload one part. Parts are idempotent and may be retried or re-sent while the session is created. Each expected length is derived from the upload size and part size, and Content-Length must match exactly. ETags are never exposed to clients.',
+        'parameters' => 
+        array (
+          'type' => 'params',
+          'required' => 
+          array (
+            0 => 'jobId',
+            1 => 'partNumber',
+          ),
+          'properties' => 
+          array (
+            'jobId' => 
+            array (
+              'type' => 'string',
+              'minLength' => 1,
+              'maxLength' => 256,
+            ),
+            'partNumber' => 
+            array (
+              'type' => 'integer',
+              'minimum' => 1,
+            ),
+          ),
+        ),
+        'input' => 
+        array (
+          'encoding' => 'application/octet-stream',
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'partNumber',
+              1 => 'sizeBytes',
+            ),
+            'properties' => 
+            array (
+              'partNumber' => 
+              array (
+                'type' => 'integer',
+                'minimum' => 1,
+              ),
+              'sizeBytes' => 
+              array (
+                'type' => 'integer',
+              ),
+            ),
+          ),
+        ),
+        'errors' => 
+        array (
+          0 => 
+          array (
+            'name' => 'UploadNotFound',
+            'description' => 'The job ID is unknown or aged out of retention; known terminal sessions are never reported as not found.',
+          ),
+          1 => 
+          array (
+            'name' => 'UploadExpired',
+            'description' => 'The upload session expired before completion.',
+          ),
+          2 => 
+          array (
+            'name' => 'InvalidPartNumber',
+            'description' => 'The part number is outside the upload\'s valid part range.',
+          ),
+          3 => 
+          array (
+            'name' => 'PartSizeMismatch',
+            'description' => 'Content-Length does not exactly match the expected size for this part.',
+          ),
+          4 => 
+          array (
+            'name' => 'UploadNotReady',
+            'description' => 'A finish is in progress; check getUploadStatus and retry.',
+          ),
+          5 => 
+          array (
+            'name' => 'UploadFailed',
+            'description' => 'The session is known to have failed; the error carries its failure reason.',
+          ),
+          6 => 
+          array (
+            'name' => 'UploadAborted',
+            'description' => 'The session is known to have been aborted.',
+          ),
+          7 => 
+          array (
+            'name' => 'UploadAlreadyCompleted',
+            'description' => 'The session is known to have already completed.',
+          ),
+          8 => 
+          array (
+            'name' => 'ServiceOverloaded',
+            'description' => 'The service is draining or temporarily at capacity; retry on another worker.',
           ),
         ),
       ),
@@ -28873,6 +29607,381 @@ return array (
       ),
     ),
   ),
+  'tools.ozone.inbox.appealActionedSubject' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'tools.ozone.inbox.appealActionedSubject',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'procedure',
+        'description' => 'Appeal a moderation action affecting the user\'s account or content.',
+        'input' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'subject',
+            ),
+            'properties' => 
+            array (
+              'action' => 
+              array (
+                'type' => 'union',
+                'refs' => 
+                array (
+                  0 => 'lex:tools.ozone.inbox.appealActionedSubject#actionRef',
+                  1 => 'lex:tools.ozone.inbox.appealActionedSubject#labelRef',
+                  2 => 'lex:tools.ozone.inbox.appealActionedSubject#takedownRef',
+                ),
+                'closed' => true,
+                'description' => 'Moderation action being appealed.',
+              ),
+              'subject' => 
+              array (
+                'type' => 'union',
+                'refs' => 
+                array (
+                  0 => 'lex:com.atproto.admin.defs#repoRef',
+                  1 => 'lex:com.atproto.repo.strongRef',
+                ),
+                'description' => 'Subject being appealed.',
+              ),
+              'reason' => 
+              array (
+                'type' => 'string',
+                'maxGraphemes' => 2000,
+                'maxLength' => 20000,
+                'description' => 'Optional explanation supplied by the user.',
+              ),
+              'modTool' => 
+              array (
+                'type' => 'ref',
+                'ref' => 'lex:com.atproto.moderation.createReport#modTool',
+              ),
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:tools.ozone.inbox.defs#subjectView',
+          ),
+        ),
+        'errors' => 
+        array (
+          0 => 
+          array (
+            'name' => 'InvalidAppealSubject',
+            'description' => 'Invalid appeal subject input.',
+          ),
+          1 => 
+          array (
+            'name' => 'AlreadyAppealed',
+            'description' => 'An active appeal already exists for this action.',
+          ),
+          2 => 
+          array (
+            'name' => 'NotAppealable',
+            'description' => 'The subject cannot be appealed.',
+          ),
+          3 => 
+          array (
+            'name' => 'AppealWindowExpired',
+            'description' => 'The appeal window for this action has closed.',
+          ),
+        ),
+      ),
+      'actionRef' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'id',
+        ),
+        'properties' => 
+        array (
+          'id' => 
+          array (
+            'type' => 'integer',
+            'minimum' => 1,
+            'description' => 'ID of the moderation action being appealed, available via actions in mod inbox.',
+          ),
+        ),
+      ),
+      'labelRef' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'val',
+        ),
+        'properties' => 
+        array (
+          'val' => 
+          array (
+            'type' => 'string',
+            'minLength' => 1,
+            'description' => 'Label being appealed.',
+          ),
+        ),
+      ),
+      'takedownRef' => 
+      array (
+        'type' => 'object',
+        'properties' => 
+        array (
+        ),
+      ),
+    ),
+  ),
+  'tools.ozone.inbox.defs' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'tools.ozone.inbox.defs',
+    'defs' => 
+    array (
+      'subjectView' => 
+      array (
+        'type' => 'object',
+        'description' => 'A subject belonging to the viewer that has moderation actions against it.',
+        'required' => 
+        array (
+          0 => 'src',
+          1 => 'subject',
+          2 => 'enforcement',
+          3 => 'createdAt',
+          4 => 'updatedAt',
+        ),
+        'properties' => 
+        array (
+          'src' => 
+          array (
+            'type' => 'string',
+            'format' => 'did',
+            'description' => 'DID of the moderation service that took the actions.',
+          ),
+          'subject' => 
+          array (
+            'type' => 'union',
+            'refs' => 
+            array (
+              0 => 'lex:com.atproto.admin.defs#repoRef',
+              1 => 'lex:com.atproto.repo.strongRef',
+            ),
+          ),
+          'enforcement' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:tools.ozone.inbox.defs#enforcementView',
+          ),
+          'appeal' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:tools.ozone.inbox.defs#appealView',
+          ),
+          'availableActions' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'string',
+              'knownValues' => 
+              array (
+                0 => 'appeal',
+              ),
+            ),
+          ),
+          'latestAction' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:tools.ozone.inbox.defs#actionView',
+          ),
+          'actionCount' => 
+          array (
+            'type' => 'integer',
+          ),
+          'createdAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+          'updatedAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+        ),
+      ),
+      'enforcementView' => 
+      array (
+        'type' => 'object',
+        'description' => 'The current enforcement state of a subject.',
+        'required' => 
+        array (
+          0 => 'state',
+        ),
+        'properties' => 
+        array (
+          'state' => 
+          array (
+            'type' => 'string',
+            'knownValues' => 
+            array (
+              0 => 'none',
+              1 => 'labeled',
+              2 => 'removed',
+              3 => 'suspended',
+              4 => 'takendown',
+            ),
+          ),
+          'scope' => 
+          array (
+            'type' => 'string',
+            'knownValues' => 
+            array (
+              0 => 'network',
+              1 => 'app',
+              2 => 'labelOnly',
+            ),
+          ),
+          'expiresAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+          'labels' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'string',
+            ),
+            'description' => 'Active label values on the subject, excluding negated and expired labels.',
+          ),
+        ),
+      ),
+      'appealView' => 
+      array (
+        'type' => 'object',
+        'description' => 'The state of the viewer\'s appeal against the actions on a subject.',
+        'required' => 
+        array (
+          0 => 'state',
+        ),
+        'properties' => 
+        array (
+          'state' => 
+          array (
+            'type' => 'string',
+            'knownValues' => 
+            array (
+              0 => 'none',
+              1 => 'pending',
+              2 => 'resolved',
+              3 => 'superseded',
+              4 => 'expired',
+            ),
+          ),
+          'appealedAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+          'resolvedAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+            'description' => 'When the appeal\'s report was closed.',
+          ),
+          'note' => 
+          array (
+            'type' => 'string',
+            'description' => 'Moderator explanation, from the publicNote on the closing activity. Absent if none was written.',
+          ),
+          'appealableUntil' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+        ),
+      ),
+      'actionView' => 
+      array (
+        'type' => 'object',
+        'description' => 'A single moderation action taken against a subject.',
+        'required' => 
+        array (
+          0 => 'id',
+          1 => 'type',
+          2 => 'createdAt',
+        ),
+        'properties' => 
+        array (
+          'id' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Action ID (moderation event ID).',
+          ),
+          'type' => 
+          array (
+            'type' => 'string',
+            'description' => 'Public action type.',
+          ),
+          'scope' => 
+          array (
+            'type' => 'string',
+            'knownValues' => 
+            array (
+              0 => 'network',
+              1 => 'app',
+              2 => 'labelOnly',
+            ),
+          ),
+          'createdAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+          'reversedAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+          'expiresAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+          'labels' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'string',
+            ),
+            'description' => 'Label values, for labelApplied/labelRemoved.',
+          ),
+          'policies' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'string',
+            ),
+            'description' => 'Policies that were applied in this action.',
+          ),
+        ),
+      ),
+    ),
+  ),
   'tools.ozone.moderation.cancelScheduledActions' => 
   array (
     'lexicon' => 1,
@@ -31151,6 +32260,55 @@ return array (
       ),
     ),
   ),
+  'tools.ozone.moderation.getAccountPreferences' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'tools.ozone.moderation.getAccountPreferences',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'description' => 'Get private preferences for an account. Requires moderator or admin auth.',
+        'parameters' => 
+        array (
+          'type' => 'params',
+          'required' => 
+          array (
+            0 => 'did',
+          ),
+          'properties' => 
+          array (
+            'did' => 
+            array (
+              'type' => 'string',
+              'format' => 'did',
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'preferences',
+            ),
+            'properties' => 
+            array (
+              'preferences' => 
+              array (
+                'type' => 'ref',
+                'ref' => 'lex:app.bsky.actor.defs#preferences',
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
   'tools.ozone.moderation.getAccountTimeline' => 
   array (
     'lexicon' => 1,
@@ -32716,6 +33874,15 @@ return array (
                 ),
                 'description' => 'Policy keys to recommend when actioning reports in this queue',
               ),
+              'recommendedLabels' => 
+              array (
+                'type' => 'array',
+                'items' => 
+                array (
+                  'type' => 'string',
+                ),
+                'description' => 'Labels to recommend for this queue and use as fallback appeal routing mappings',
+              ),
             ),
           ),
         ),
@@ -32830,6 +33997,15 @@ return array (
               'type' => 'string',
             ),
             'description' => 'Policy keys recommended when actioning reports in this queue',
+          ),
+          'recommendedLabels' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'string',
+            ),
+            'description' => 'Labels recommended for this queue and used as a fallback when routing label appeals',
           ),
           'createdBy' => 
           array (
@@ -33360,6 +34536,15 @@ return array (
                 ),
                 'description' => 'Policy keys to recommend when actioning reports in this queue',
               ),
+              'recommendedLabels' => 
+              array (
+                'type' => 'array',
+                'items' => 
+                array (
+                  'type' => 'string',
+                ),
+                'description' => 'Labels to recommend for this queue and use as fallback appeal routing mappings',
+              ),
             ),
           ),
         ),
@@ -33389,6 +34574,11 @@ return array (
           array (
             'name' => 'InvalidRecommendedPolicies',
             'description' => 'One or more recommended policy keys do not exist in the configured policy list',
+          ),
+          1 => 
+          array (
+            'name' => 'ConflictingQueue',
+            'description' => 'The queue configuration conflicts with an existing queue',
           ),
         ),
       ),
@@ -34032,7 +35222,7 @@ return array (
             array (
               'type' => 'integer',
             ),
-            'description' => 'Array of moderation event IDs representing actions taken on this report (sorted DESC, most recent first)',
+            'description' => 'Array of moderation event IDs representing actions taken on this report, in append order (most recently linked event last)',
           ),
           'actions' => 
           array (
@@ -34294,30 +35484,80 @@ return array (
             'type' => 'integer',
             'description' => 'Number of reports currently not closed.',
           ),
+          'closedCount' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Number of close transitions.',
+          ),
           'actionedCount' => 
           array (
             'type' => 'integer',
-            'description' => 'Number of reports closed today.',
+            'description' => 'Number of closures whose last report action is label, tag, or takedown.',
+          ),
+          'acknowledgedCount' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Number of closures whose last report action is not label, tag, or takedown.',
           ),
           'escalatedCount' => 
           array (
             'type' => 'integer',
-            'description' => 'Number of reports escalated today.',
+            'description' => 'Number of reports escalated.',
           ),
           'inboundCount' => 
           array (
             'type' => 'integer',
-            'description' => 'Reports received today.',
+            'description' => 'Reports received.',
+          ),
+          'labelActionCount' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Closures whose last report action is a label event.',
+          ),
+          'tagActionCount' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Closures whose last report action is a tag event.',
+          ),
+          'takedownActionCount' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Closures whose last report action is a takedown event.',
+          ),
+          'ahtDurationSec' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Sum of report assignment-to-close seconds.',
+          ),
+          'ahtSampleCount' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Number of assigned closed-report samples in ahtDurationSec.',
+          ),
+          'resolutionDurationSec' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Sum of report creation-to-close seconds.',
+          ),
+          'resolutionSampleCount' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Number of closed-report samples in resolutionDurationSec.',
           ),
           'actionRate' => 
           array (
             'type' => 'integer',
-            'description' => 'Percentage of reports actioned (actionedCount / inboundCount * 100), rounded to nearest integer.',
+            'description' => 'Percentage of closures actioned (actionedCount / closedCount * 100), rounded to nearest integer.',
           ),
           'avgHandlingTimeSec' => 
           array (
             'type' => 'integer',
-            'description' => 'Average time in seconds from report creation (or moderator assignment) to close.',
+            'description' => 'Average handling time in seconds from report assignment to close.',
+          ),
+          'avgResolutionTimeSec' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Average resolution time in seconds from report creation to close.',
           ),
           'lastUpdated' => 
           array (
@@ -34353,10 +35593,20 @@ return array (
             'type' => 'integer',
             'description' => 'Number of reports not closed at time of computation.',
           ),
+          'closedCount' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Number of close transitions during this day.',
+          ),
           'actionedCount' => 
           array (
             'type' => 'integer',
-            'description' => 'Number of reports closed during this day.',
+            'description' => 'Number of closures whose last report action is label, tag, or takedown during this day.',
+          ),
+          'acknowledgedCount' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Number of closures whose last report action is not label, tag, or takedown during this day.',
           ),
           'escalatedCount' => 
           array (
@@ -34368,15 +35618,55 @@ return array (
             'type' => 'integer',
             'description' => 'Reports received during this day.',
           ),
+          'labelActionCount' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Closures whose last report action is a label event during this day.',
+          ),
+          'tagActionCount' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Closures whose last report action is a tag event during this day.',
+          ),
+          'takedownActionCount' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Closures whose last report action is a takedown event during this day.',
+          ),
+          'ahtDurationSec' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Sum of report assignment-to-close seconds for this day\'s samples.',
+          ),
+          'ahtSampleCount' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Number of assigned closed-report samples in ahtDurationSec.',
+          ),
+          'resolutionDurationSec' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Sum of report creation-to-close seconds for this day\'s samples.',
+          ),
+          'resolutionSampleCount' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Number of closed-report samples in resolutionDurationSec.',
+          ),
           'actionRate' => 
           array (
             'type' => 'integer',
-            'description' => 'Percentage of reports actioned (actionedCount / inboundCount * 100), rounded to nearest integer.',
+            'description' => 'Percentage of closures actioned (actionedCount / closedCount * 100), rounded to nearest integer.',
           ),
           'avgHandlingTimeSec' => 
           array (
             'type' => 'integer',
-            'description' => 'Average time in seconds from report creation (or moderator assignment) to close.',
+            'description' => 'Average handling time in seconds from report assignment to close.',
+          ),
+          'avgResolutionTimeSec' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Average resolution time in seconds from report creation to close.',
           ),
         ),
       ),
@@ -34666,7 +35956,7 @@ return array (
       'main' => 
       array (
         'type' => 'query',
-        'description' => 'Get live report statistics from the past 24 hours. Filter by queue, moderator, or report type. Omit all parameters for aggregate stats.',
+        'description' => 'Get live report statistics for the current UTC calendar day. Filter by queue, moderator, or report type. Omit all parameters for aggregate stats.',
         'parameters' => 
         array (
           'type' => 'params',
@@ -35193,7 +36483,7 @@ return array (
       'main' => 
       array (
         'type' => 'procedure',
-        'description' => 'Recompute report statistics for a date range. Useful for backfilling after failures or data corrections.',
+        'description' => 'Recompute report statistics for a date range.',
         'input' => 
         array (
           'encoding' => 'application/json',

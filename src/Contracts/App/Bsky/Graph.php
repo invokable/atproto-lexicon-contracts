@@ -94,7 +94,7 @@ interface Graph
     /**
      * Gets a 'view' (with additional context) of a specified list.
      *
-     * @return array{cursor: string, list: array{uri: string, cid: string, creator: array, name: string, purpose: array, description: string, descriptionFacets: array, avatar: string, listItemCount: int, labels: array, viewer: array, indexedAt: string}, items: array{uri: string, subject: array}[]}
+     * @return array{cursor: string, list: array{uri: string, cid: string, creator: array, name: string, purpose: array, description: string, descriptionFacets: array, avatar: string, listItemCount: int, labels: array, viewer: array, indexedAt: string}, items: array{uri: string, subject: array, subjectOptedOut: bool}[]}
      *
      * @link https://docs.bsky.app/docs/api/app-bsky-graph-get-list
      */
