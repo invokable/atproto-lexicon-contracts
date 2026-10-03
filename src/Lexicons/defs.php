@@ -2828,15 +2828,16 @@ return array (
             'lxm' => 
             array (
               0 => 'app.bsky.notification.getPreferences',
-              1 => 'app.bsky.notification.getUnreadCount',
-              2 => 'app.bsky.notification.listActivitySubscriptions',
-              3 => 'app.bsky.notification.listNotifications',
-              4 => 'app.bsky.notification.putActivitySubscription',
-              5 => 'app.bsky.notification.putPreferences',
-              6 => 'app.bsky.notification.putPreferencesV2',
-              7 => 'app.bsky.notification.registerPush',
-              8 => 'app.bsky.notification.unregisterPush',
-              9 => 'app.bsky.notification.updateSeen',
+              1 => 'app.bsky.notification.getGroupedNotifications',
+              2 => 'app.bsky.notification.getUnreadCount',
+              3 => 'app.bsky.notification.listActivitySubscriptions',
+              4 => 'app.bsky.notification.listNotifications',
+              5 => 'app.bsky.notification.putActivitySubscription',
+              6 => 'app.bsky.notification.putPreferences',
+              7 => 'app.bsky.notification.putPreferencesV2',
+              8 => 'app.bsky.notification.registerPush',
+              9 => 'app.bsky.notification.unregisterPush',
+              10 => 'app.bsky.notification.updateSeen',
             ),
           ),
         ),
@@ -6955,6 +6956,11 @@ return array (
             array (
               'type' => 'string',
             ),
+            'since' => 
+            array (
+              'type' => 'string',
+              'description' => 'Return only items newer than the position identified by this cursor value, newest first. Use the startCursor from a previous response. The item at that position is not returned because the caller already holds it. When the bounded range is exhausted, the returned cursor equals this value so that pagination continues below the boundary.',
+            ),
           ),
         ),
         'output' => 
@@ -6972,6 +6978,11 @@ return array (
               'cursor' => 
               array (
                 'type' => 'string',
+              ),
+              'startCursor' => 
+              array (
+                'type' => 'string',
+                'description' => 'Cursor identifying the newest item in this page. Pass it as since on a later request to fetch only newer content.',
               ),
               'feed' => 
               array (
@@ -7409,6 +7420,11 @@ return array (
             array (
               'type' => 'string',
             ),
+            'since' => 
+            array (
+              'type' => 'string',
+              'description' => 'Return only items newer than the position identified by this cursor value, newest first. Use the startCursor from a previous response. The item at that position is not returned because the caller already holds it. When the bounded range is exhausted, the returned cursor equals this value so that pagination continues below the boundary.',
+            ),
           ),
         ),
         'output' => 
@@ -7426,6 +7442,11 @@ return array (
               'cursor' => 
               array (
                 'type' => 'string',
+              ),
+              'startCursor' => 
+              array (
+                'type' => 'string',
+                'description' => 'Cursor identifying the newest item in this page. Pass it as since on a later request to fetch only newer content.',
               ),
               'feed' => 
               array (
@@ -11352,6 +11373,699 @@ return array (
           array (
             'type' => 'ref',
             'ref' => 'lex:app.bsky.notification.defs#activitySubscription',
+          ),
+        ),
+      ),
+    ),
+  ),
+  'app.bsky.notification.getGroupedNotifications' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.notification.getGroupedNotifications',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'description' => '[UNSTABLE - DO NOT USE THIS ENDPOINT WHILE THIS NOTE IS HERE] Enumerate notifications for the requesting account, pre-grouped for rendering. Supersedes listNotifications. Requires auth.',
+        'parameters' => 
+        array (
+          'type' => 'params',
+          'properties' => 
+          array (
+            'feed' => 
+            array (
+              'type' => 'string',
+              'description' => 'Which notification feed to return. Grouping behavior varies by feed: notifications about follows might be grouped in \'all\' and ungrouped (or rather, in single-item groups) in \'followers\'.',
+              'maxLength' => 32,
+              'knownValues' => 
+              array (
+                0 => 'all',
+                1 => 'people-i-follow',
+                2 => 'conversations',
+                3 => 'followers',
+                4 => 'activity',
+              ),
+              'default' => 'all',
+            ),
+            'limit' => 
+            array (
+              'type' => 'integer',
+              'description' => 'Maximum number of groups to return.',
+              'minimum' => 1,
+              'maximum' => 50,
+              'default' => 30,
+            ),
+            'cursor' => 
+            array (
+              'type' => 'string',
+              'maxLength' => 1024,
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'groups',
+            ),
+            'properties' => 
+            array (
+              'cursor' => 
+              array (
+                'type' => 'string',
+                'maxLength' => 1024,
+              ),
+              'groups' => 
+              array (
+                'type' => 'array',
+                'description' => 'Notification groups or individual notifications, newest first. Clients should ignore kinds they do not recognize. Grouping behavior depends on the kind and selected feed.',
+                'items' => 
+                array (
+                  'type' => 'ref',
+                  'ref' => 'lex:app.bsky.notification.getGroupedNotifications#group',
+                ),
+              ),
+              'seenAt' => 
+              array (
+                'type' => 'string',
+                'format' => 'datetime',
+              ),
+              'relatedViews' => 
+              array (
+                'type' => 'array',
+                'description' => 'Reusable views referenced by notifications. Views shared across notifications appear once to avoid duplication. Each group contributes only its first 10 of each related view to this array. Ex: for a group containing likes in a post, we might have a large number of likeItem (e.g., 50) in a group, but only the profile views for the newest 10 items will be included here.',
+                'items' => 
+                array (
+                  'type' => 'union',
+                  'refs' => 
+                  array (
+                    0 => 'lex:app.bsky.actor.defs#profileViewDetailed',
+                    1 => 'lex:app.bsky.feed.defs#blockedPost',
+                    2 => 'lex:app.bsky.feed.defs#generatorView',
+                    3 => 'lex:app.bsky.feed.defs#notFoundPost',
+                    4 => 'lex:app.bsky.feed.defs#postView',
+                    5 => 'lex:app.bsky.graph.defs#starterPackView',
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+      'group' => 
+      array (
+        'type' => 'object',
+        'description' => 'Contains common metadata and kind-specific data for a notification group or individual notification.',
+        'required' => 
+        array (
+          0 => 'id',
+          1 => 'isRead',
+          2 => 'indexedAt',
+          3 => 'count',
+          4 => 'kind',
+        ),
+        'properties' => 
+        array (
+          'id' => 
+          array (
+            'type' => 'string',
+            'maxLength' => 256,
+          ),
+          'isRead' => 
+          array (
+            'type' => 'boolean',
+          ),
+          'indexedAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+          'count' => 
+          array (
+            'type' => 'integer',
+            'minimum' => 1,
+          ),
+          'kind' => 
+          array (
+            'type' => 'union',
+            'refs' => 
+            array (
+              0 => 'lex:app.bsky.notification.getGroupedNotifications#likeGroup',
+              1 => 'lex:app.bsky.notification.getGroupedNotifications#multiPostLikeGroup',
+              2 => 'lex:app.bsky.notification.getGroupedNotifications#repostGroup',
+              3 => 'lex:app.bsky.notification.getGroupedNotifications#likeViaRepostGroup',
+              4 => 'lex:app.bsky.notification.getGroupedNotifications#repostViaRepostGroup',
+              5 => 'lex:app.bsky.notification.getGroupedNotifications#followGroup',
+              6 => 'lex:app.bsky.notification.getGroupedNotifications#subscribedPostGroup',
+              7 => 'lex:app.bsky.notification.getGroupedNotifications#generatorLikeGroup',
+              8 => 'lex:app.bsky.notification.getGroupedNotifications#replyNotification',
+              9 => 'lex:app.bsky.notification.getGroupedNotifications#quoteNotification',
+              10 => 'lex:app.bsky.notification.getGroupedNotifications#mentionNotification',
+              11 => 'lex:app.bsky.notification.getGroupedNotifications#followBackNotification',
+              12 => 'lex:app.bsky.notification.getGroupedNotifications#verifiedNotification',
+              13 => 'lex:app.bsky.notification.getGroupedNotifications#unverifiedNotification',
+              14 => 'lex:app.bsky.notification.getGroupedNotifications#starterPackJoinedNotification',
+              15 => 'lex:app.bsky.notification.getGroupedNotifications#contactMatchNotification',
+            ),
+          ),
+        ),
+      ),
+      'likeGroup' => 
+      array (
+        'type' => 'object',
+        'description' => 'Group of likes by different actors on the same post.',
+        'required' => 
+        array (
+          0 => 'post',
+          1 => 'items',
+        ),
+        'properties' => 
+        array (
+          'post' => 
+          array (
+            'type' => 'string',
+            'format' => 'at-uri',
+          ),
+          'items' => 
+          array (
+            'type' => 'array',
+            'minLength' => 1,
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:app.bsky.notification.getGroupedNotifications#likeItem',
+            ),
+          ),
+        ),
+      ),
+      'likeItem' => 
+      array (
+        'type' => 'object',
+        'description' => 'One actor who liked the group\'s post.',
+        'required' => 
+        array (
+          0 => 'actor',
+        ),
+        'properties' => 
+        array (
+          'actor' => 
+          array (
+            'type' => 'string',
+            'format' => 'did',
+          ),
+        ),
+      ),
+      'multiPostLikeGroup' => 
+      array (
+        'type' => 'object',
+        'description' => 'Group of likes by the same actor on different posts.',
+        'required' => 
+        array (
+          0 => 'actor',
+          1 => 'items',
+        ),
+        'properties' => 
+        array (
+          'actor' => 
+          array (
+            'type' => 'string',
+            'format' => 'did',
+          ),
+          'items' => 
+          array (
+            'type' => 'array',
+            'minLength' => 2,
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:app.bsky.notification.getGroupedNotifications#multiPostLikeItem',
+            ),
+          ),
+        ),
+      ),
+      'multiPostLikeItem' => 
+      array (
+        'type' => 'object',
+        'description' => 'One post which was liked by the group\'s actor.',
+        'required' => 
+        array (
+          0 => 'post',
+        ),
+        'properties' => 
+        array (
+          'post' => 
+          array (
+            'type' => 'string',
+            'format' => 'at-uri',
+          ),
+        ),
+      ),
+      'repostGroup' => 
+      array (
+        'type' => 'object',
+        'description' => 'Group of reposts by different actors of the same post.',
+        'required' => 
+        array (
+          0 => 'post',
+          1 => 'items',
+        ),
+        'properties' => 
+        array (
+          'post' => 
+          array (
+            'type' => 'string',
+            'format' => 'at-uri',
+          ),
+          'items' => 
+          array (
+            'type' => 'array',
+            'minLength' => 1,
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:app.bsky.notification.getGroupedNotifications#repostItem',
+            ),
+          ),
+        ),
+      ),
+      'repostItem' => 
+      array (
+        'type' => 'object',
+        'description' => 'One actor who reposted the group\'s post.',
+        'required' => 
+        array (
+          0 => 'actor',
+        ),
+        'properties' => 
+        array (
+          'actor' => 
+          array (
+            'type' => 'string',
+            'format' => 'did',
+          ),
+        ),
+      ),
+      'likeViaRepostGroup' => 
+      array (
+        'type' => 'object',
+        'description' => 'Group of likes by different actors on the same post via the requesting account\'s repost.',
+        'required' => 
+        array (
+          0 => 'post',
+          1 => 'viaRepost',
+          2 => 'items',
+        ),
+        'properties' => 
+        array (
+          'post' => 
+          array (
+            'type' => 'string',
+            'format' => 'at-uri',
+          ),
+          'viaRepost' => 
+          array (
+            'type' => 'string',
+            'format' => 'at-uri',
+          ),
+          'items' => 
+          array (
+            'type' => 'array',
+            'minLength' => 1,
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:app.bsky.notification.getGroupedNotifications#likeViaRepostItem',
+            ),
+          ),
+        ),
+      ),
+      'likeViaRepostItem' => 
+      array (
+        'type' => 'object',
+        'description' => 'One actor who liked the group\'s post via the requesting account\'s repost.',
+        'required' => 
+        array (
+          0 => 'actor',
+        ),
+        'properties' => 
+        array (
+          'actor' => 
+          array (
+            'type' => 'string',
+            'format' => 'did',
+          ),
+        ),
+      ),
+      'repostViaRepostGroup' => 
+      array (
+        'type' => 'object',
+        'description' => 'Group of reposts by different actors of the same post via the requesting account\'s repost.',
+        'required' => 
+        array (
+          0 => 'post',
+          1 => 'viaRepost',
+          2 => 'items',
+        ),
+        'properties' => 
+        array (
+          'post' => 
+          array (
+            'type' => 'string',
+            'format' => 'at-uri',
+          ),
+          'viaRepost' => 
+          array (
+            'type' => 'string',
+            'format' => 'at-uri',
+          ),
+          'items' => 
+          array (
+            'type' => 'array',
+            'minLength' => 1,
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:app.bsky.notification.getGroupedNotifications#repostViaRepostItem',
+            ),
+          ),
+        ),
+      ),
+      'repostViaRepostItem' => 
+      array (
+        'type' => 'object',
+        'description' => 'One actor who reposted the group\'s post via the requesting account\'s repost.',
+        'required' => 
+        array (
+          0 => 'actor',
+        ),
+        'properties' => 
+        array (
+          'actor' => 
+          array (
+            'type' => 'string',
+            'format' => 'did',
+          ),
+        ),
+      ),
+      'followGroup' => 
+      array (
+        'type' => 'object',
+        'description' => 'Group of actors who followed the requesting account.',
+        'required' => 
+        array (
+          0 => 'items',
+        ),
+        'properties' => 
+        array (
+          'items' => 
+          array (
+            'type' => 'array',
+            'minLength' => 1,
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:app.bsky.notification.getGroupedNotifications#followItem',
+            ),
+          ),
+        ),
+      ),
+      'followItem' => 
+      array (
+        'type' => 'object',
+        'description' => 'An actor who followed the requesting account, possibly via a starter pack.',
+        'required' => 
+        array (
+          0 => 'actor',
+        ),
+        'properties' => 
+        array (
+          'actor' => 
+          array (
+            'type' => 'string',
+            'format' => 'did',
+          ),
+          'starterPack' => 
+          array (
+            'type' => 'string',
+            'format' => 'at-uri',
+          ),
+        ),
+      ),
+      'subscribedPostGroup' => 
+      array (
+        'type' => 'object',
+        'description' => 'Group of new posts by actors the requesting account subscribes to.',
+        'required' => 
+        array (
+          0 => 'items',
+        ),
+        'properties' => 
+        array (
+          'items' => 
+          array (
+            'type' => 'array',
+            'minLength' => 1,
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:app.bsky.notification.getGroupedNotifications#subscribedPostItem',
+            ),
+          ),
+        ),
+      ),
+      'subscribedPostItem' => 
+      array (
+        'type' => 'object',
+        'description' => 'One new post by an actor the requesting account subscribes to.',
+        'required' => 
+        array (
+          0 => 'actor',
+          1 => 'post',
+        ),
+        'properties' => 
+        array (
+          'actor' => 
+          array (
+            'type' => 'string',
+            'format' => 'did',
+          ),
+          'post' => 
+          array (
+            'type' => 'string',
+            'format' => 'at-uri',
+          ),
+        ),
+      ),
+      'generatorLikeGroup' => 
+      array (
+        'type' => 'object',
+        'description' => 'Group of likes by different actors on the same feed generator.',
+        'required' => 
+        array (
+          0 => 'generator',
+          1 => 'items',
+        ),
+        'properties' => 
+        array (
+          'generator' => 
+          array (
+            'type' => 'string',
+            'format' => 'at-uri',
+          ),
+          'items' => 
+          array (
+            'type' => 'array',
+            'minLength' => 1,
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:app.bsky.notification.getGroupedNotifications#generatorLikeItem',
+            ),
+          ),
+        ),
+      ),
+      'generatorLikeItem' => 
+      array (
+        'type' => 'object',
+        'description' => 'One actor who liked the feed generator in the group.',
+        'required' => 
+        array (
+          0 => 'actor',
+        ),
+        'properties' => 
+        array (
+          'actor' => 
+          array (
+            'type' => 'string',
+            'format' => 'did',
+          ),
+        ),
+      ),
+      'replyNotification' => 
+      array (
+        'type' => 'object',
+        'description' => 'A reply to a post by the requesting account or to a thread they are participating in.',
+        'required' => 
+        array (
+          0 => 'post',
+          1 => 'parent',
+        ),
+        'properties' => 
+        array (
+          'post' => 
+          array (
+            'type' => 'string',
+            'format' => 'at-uri',
+          ),
+          'parent' => 
+          array (
+            'type' => 'string',
+            'format' => 'at-uri',
+          ),
+        ),
+      ),
+      'quoteNotification' => 
+      array (
+        'type' => 'object',
+        'description' => 'A post quoting a post by the requesting account.',
+        'required' => 
+        array (
+          0 => 'post',
+        ),
+        'properties' => 
+        array (
+          'post' => 
+          array (
+            'type' => 'string',
+            'format' => 'at-uri',
+          ),
+          'parent' => 
+          array (
+            'type' => 'string',
+            'format' => 'at-uri',
+          ),
+        ),
+      ),
+      'mentionNotification' => 
+      array (
+        'type' => 'object',
+        'description' => 'A post mentioning the requesting account.',
+        'required' => 
+        array (
+          0 => 'post',
+        ),
+        'properties' => 
+        array (
+          'post' => 
+          array (
+            'type' => 'string',
+            'format' => 'at-uri',
+          ),
+          'parent' => 
+          array (
+            'type' => 'string',
+            'format' => 'at-uri',
+          ),
+        ),
+      ),
+      'followBackNotification' => 
+      array (
+        'type' => 'object',
+        'description' => 'An actor followed the requesting account back, possibly via a starter pack.',
+        'required' => 
+        array (
+          0 => 'actor',
+        ),
+        'properties' => 
+        array (
+          'actor' => 
+          array (
+            'type' => 'string',
+            'format' => 'did',
+          ),
+          'starterPack' => 
+          array (
+            'type' => 'string',
+            'format' => 'at-uri',
+          ),
+        ),
+      ),
+      'verifiedNotification' => 
+      array (
+        'type' => 'object',
+        'description' => 'An actor verified the requesting account.',
+        'required' => 
+        array (
+          0 => 'actor',
+        ),
+        'properties' => 
+        array (
+          'actor' => 
+          array (
+            'type' => 'string',
+            'format' => 'did',
+          ),
+        ),
+      ),
+      'unverifiedNotification' => 
+      array (
+        'type' => 'object',
+        'description' => 'A verification of the requesting account was removed.',
+        'required' => 
+        array (
+          0 => 'actor',
+        ),
+        'properties' => 
+        array (
+          'actor' => 
+          array (
+            'type' => 'string',
+            'format' => 'did',
+          ),
+        ),
+      ),
+      'starterPackJoinedNotification' => 
+      array (
+        'type' => 'object',
+        'description' => 'An actor joined Bluesky via a starter pack created by the requesting account.',
+        'required' => 
+        array (
+          0 => 'actor',
+          1 => 'starterPack',
+        ),
+        'properties' => 
+        array (
+          'actor' => 
+          array (
+            'type' => 'string',
+            'format' => 'did',
+          ),
+          'starterPack' => 
+          array (
+            'type' => 'string',
+            'format' => 'at-uri',
+          ),
+        ),
+      ),
+      'contactMatchNotification' => 
+      array (
+        'type' => 'object',
+        'description' => 'A contact of the requesting account joined Bluesky.',
+        'required' => 
+        array (
+          0 => 'actor',
+        ),
+        'properties' => 
+        array (
+          'actor' => 
+          array (
+            'type' => 'string',
+            'format' => 'did',
           ),
         ),
       ),
