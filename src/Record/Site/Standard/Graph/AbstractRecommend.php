@@ -19,12 +19,12 @@ abstract class AbstractRecommend
 {
     public const NSID = 'site.standard.graph.recommend';
 
-    #[Format('datetime')]
-    protected string $createdAt;
-
     /**
      * AT-URI reference to the document record being recommended (ex: at://did:plc:abc123/site.standard.document/xyz789).
      */
     #[Format('at-uri')]
     protected string $document;
+
+    #[Format('datetime')]
+    protected string $createdAt;
 }

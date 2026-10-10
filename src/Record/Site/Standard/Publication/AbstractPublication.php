@@ -23,6 +23,29 @@ abstract class AbstractPublication
     public const NSID = 'site.standard.publication';
 
     /**
+     * Base publication url (ex: https://standard.site). The canonical document URL is formed by combining this value with the document path.
+     */
+    #[Format('uri')]
+    protected string $url;
+
+    /**
+     * Square image to identify the publication. Should be at least 256x256.
+     */
+    #[Blob(accept: ['image/*'], maxSize: 1000000)]
+    protected ?array $icon = null;
+
+    /**
+     * Name of the publication.
+     */
+    protected string $name;
+
+    /**
+     * Self-label values for this publication. Effectively content warnings.
+     */
+    #[Union(['com.atproto.label.defs#selfLabels'])]
+    protected ?array $labels = null;
+
+    /**
      * Simplified publication theme for tools and apps to utilize when displaying content.
      */
     #[Ref('site.standard.theme.basic')]
@@ -34,31 +57,8 @@ abstract class AbstractPublication
     protected ?string $description = null;
 
     /**
-     * Square image to identify the publication. Should be at least 256x256.
-     */
-    #[Blob(accept: ['image/*'], maxSize: 1000000)]
-    protected ?array $icon = null;
-
-    /**
-     * Self-label values for this publication. Effectively content warnings.
-     */
-    #[Union(['com.atproto.label.defs#selfLabels'])]
-    protected ?array $labels = null;
-
-    /**
-     * Name of the publication.
-     */
-    protected string $name;
-
-    /**
      * Object containing platform specific preferences (with a few shared properties).
      */
     #[Ref('site.standard.publication#preferences')]
     protected ?array $preferences = null;
-
-    /**
-     * Base publication url (ex: https://standard.site). The canonical document URL is formed by combining this value with the document path.
-     */
-    #[Format('uri')]
-    protected string $url;
 }

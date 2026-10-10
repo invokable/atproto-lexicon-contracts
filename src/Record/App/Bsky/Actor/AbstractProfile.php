@@ -61,6 +61,12 @@ abstract class AbstractProfile
     #[Ref('com.atproto.repo.strongRef')]
     protected ?array $pinnedPost = null;
 
+    /**
+     * Links shown on the profile, in display order. Each ref points to an app.bsky.actor.link record in this repo.
+     */
+    #[Ref('com.atproto.repo.strongRef')]
+    protected ?array $links = null;
+
     #[Format('datetime')]
     protected ?string $createdAt = null;
 }

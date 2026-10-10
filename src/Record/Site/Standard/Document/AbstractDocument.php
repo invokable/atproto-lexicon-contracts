@@ -23,51 +23,9 @@ abstract class AbstractDocument
     public const NSID = 'site.standard.document';
 
     /**
-     * Strong reference to a Bluesky post. Useful to keep track of comments off-platform.
-     */
-    #[Ref('com.atproto.repo.strongRef')]
-    protected ?array $bskyPostRef = null;
-
-    /**
-     * Open union used to define the record's content. Each entry must specify a $type and may be extended with other lexicons to support additional content formats.
-     */
-    protected ?array $content = null;
-
-    #[Ref('site.standard.document#contributor')]
-    protected ?array $contributors = null;
-
-    /**
-     * Image to used for thumbnail or cover image. Less than 1MB is size.
-     */
-    #[Blob(accept: ['image/*'], maxSize: 1000000)]
-    protected ?array $coverImage = null;
-
-    /**
-     * A brief description or excerpt from the document.
-     */
-    protected ?string $description = null;
-
-    /**
-     * Self-label values for this post. Effectively content warnings.
-     */
-    #[Union(['com.atproto.label.defs#selfLabels'])]
-    protected ?array $labels = null;
-
-    /**
-     * Array of values describing relationships between this document and external resources.
-     */
-    protected ?array $links = null;
-
-    /**
      * Combine with site or publication url to construct a canonical URL to the document. Prepend with a leading slash.
      */
     protected ?string $path = null;
-
-    /**
-     * Timestamp of the documents publish time.
-     */
-    #[Format('datetime')]
-    protected string $publishedAt;
 
     /**
      * Points to a publication record (at://) or a publication url (https://) for loose documents. Avoid trailing slashes.
@@ -81,9 +39,9 @@ abstract class AbstractDocument
     protected ?array $tags = null;
 
     /**
-     * Plaintext representation of the documents contents. Should not contain markdown or other formatting.
+     * Array of values describing relationships between this document and external resources.
      */
-    protected ?string $textContent = null;
+    protected ?array $links = null;
 
     /**
      * Title of the document.
@@ -91,8 +49,50 @@ abstract class AbstractDocument
     protected string $title;
 
     /**
+     * Self-label values for this post. Effectively content warnings.
+     */
+    #[Union(['com.atproto.label.defs#selfLabels'])]
+    protected ?array $labels = null;
+
+    /**
+     * Open union used to define the record's content. Each entry must specify a $type and may be extended with other lexicons to support additional content formats.
+     */
+    protected ?array $content = null;
+
+    /**
      * Timestamp of the documents last edit.
      */
     #[Format('datetime')]
     protected ?string $updatedAt = null;
+
+    /**
+     * Image to used for thumbnail or cover image. Less than 1MB is size.
+     */
+    #[Blob(accept: ['image/*'], maxSize: 1000000)]
+    protected ?array $coverImage = null;
+
+    /**
+     * Strong reference to a Bluesky post. Useful to keep track of comments off-platform.
+     */
+    #[Ref('com.atproto.repo.strongRef')]
+    protected ?array $bskyPostRef = null;
+
+    /**
+     * A brief description or excerpt from the document.
+     */
+    protected ?string $description = null;
+
+    /**
+     * Timestamp of the documents publish time.
+     */
+    #[Format('datetime')]
+    protected string $publishedAt;
+
+    /**
+     * Plaintext representation of the documents contents. Should not contain markdown or other formatting.
+     */
+    protected ?string $textContent = null;
+
+    #[Ref('site.standard.document#contributor')]
+    protected ?array $contributors = null;
 }
