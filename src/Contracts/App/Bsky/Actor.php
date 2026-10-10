@@ -37,7 +37,7 @@ interface Actor
     /**
      * Get detailed profile view of an actor. Does not require auth, but contains relevant metadata with auth.
      *
-     * @return array{did: string, handle: string, displayName: string, description: string, pronouns: string, website: string, avatar: string, banner: string, followersCount: int, followsCount: int, postsCount: int, associated: mixed, joinedViaStarterPack: array{uri: string, cid: string, record: mixed, creator: array, listItemCount: int, joinedWeekCount: int, joinedAllTimeCount: int, labels: array, indexedAt: string}, indexedAt: string, createdAt: string, viewer: mixed, labels: array{ver: int, src: string, uri: string, cid: string, val: string, neg: bool, cts: string, exp: string, sig: mixed}[], pinnedPost: array{uri: string, cid: string}, verification: mixed, status: mixed, debug: mixed}
+     * @return array{did: string, handle: string, displayName: string, description: string, pronouns: string, website: string, avatar: string, banner: string, followersCount: int, followsCount: int, postsCount: int, associated: mixed, joinedViaStarterPack: array{uri: string, cid: string, record: mixed, creator: array, listItemCount: int, joinedWeekCount: int, joinedAllTimeCount: int, labels: array, indexedAt: string}, indexedAt: string, createdAt: string, viewer: mixed, labels: array{ver: int, src: string, uri: string, cid: string, val: string, neg: bool, cts: string, exp: string, sig: mixed}[], pinnedPost: array{uri: string, cid: string}, links: array{}[], verification: mixed, status: mixed, debug: mixed}
      *
      * @link https://docs.bsky.app/docs/api/app-bsky-actor-get-profile
      */
@@ -47,7 +47,7 @@ interface Actor
     /**
      * Get detailed profile views of multiple actors.
      *
-     * @return array{profiles: array{did: string, handle: string, displayName: string, description: string, pronouns: string, website: string, avatar: string, banner: string, followersCount: int, followsCount: int, postsCount: int, associated: array, joinedViaStarterPack: array, indexedAt: string, createdAt: string, viewer: array, labels: array, pinnedPost: array, verification: array, status: array, debug: mixed}[]}
+     * @return array{profiles: array{did: string, handle: string, displayName: string, description: string, pronouns: string, website: string, avatar: string, banner: string, followersCount: int, followsCount: int, postsCount: int, associated: array, joinedViaStarterPack: array, indexedAt: string, createdAt: string, viewer: array, labels: array, pinnedPost: array, links: array, verification: array, status: array, debug: mixed}[]}
      *
      * @link https://docs.bsky.app/docs/api/app-bsky-actor-get-profiles
      */

@@ -306,6 +306,16 @@ return array (
             'type' => 'ref',
             'ref' => 'lex:com.atproto.repo.strongRef',
           ),
+          'links' => 
+          array (
+            'type' => 'array',
+            'description' => 'The profile\'s links, in display order. Links that were taken down or don\'t resolve are left out.',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:app.bsky.actor.defs#profileLinkView',
+            ),
+          ),
           'verification' => 
           array (
             'type' => 'ref',
@@ -415,6 +425,48 @@ return array (
               0 => 'usersIFollow',
               1 => 'everyone',
             ),
+          ),
+        ),
+      ),
+      'profileLinkView' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'uri',
+          1 => 'cid',
+          2 => 'url',
+        ),
+        'properties' => 
+        array (
+          'uri' => 
+          array (
+            'type' => 'string',
+            'format' => 'at-uri',
+            'description' => 'The app.bsky.actor.link record, e.g. for reporting the link.',
+          ),
+          'cid' => 
+          array (
+            'type' => 'string',
+            'format' => 'cid',
+          ),
+          'url' => 
+          array (
+            'type' => 'string',
+            'format' => 'uri',
+            'description' => 'The link destination.',
+          ),
+          'title' => 
+          array (
+            'type' => 'string',
+            'maxGraphemes' => 40,
+            'maxLength' => 320,
+          ),
+          'icon' => 
+          array (
+            'type' => 'string',
+            'format' => 'uri',
+            'description' => 'Image URL for the destination site\'s icon.',
           ),
         ),
       ),
@@ -1511,6 +1563,62 @@ return array (
       ),
     ),
   ),
+  'app.bsky.actor.link' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.actor.link',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'record',
+        'description' => 'A link shown on the account\'s profile. The profile record\'s links field sets which links are shown, and in what order.',
+        'key' => 'tid',
+        'record' => 
+        array (
+          'type' => 'object',
+          'required' => 
+          array (
+            0 => 'url',
+            1 => 'createdAt',
+          ),
+          'properties' => 
+          array (
+            'url' => 
+            array (
+              'type' => 'string',
+              'format' => 'uri',
+              'description' => 'The link destination, an https URL.',
+            ),
+            'title' => 
+            array (
+              'type' => 'string',
+              'description' => 'Optional label for the link. Clients can fall back to the destination\'s domain.',
+              'maxGraphemes' => 40,
+              'maxLength' => 320,
+            ),
+            'icon' => 
+            array (
+              'type' => 'blob',
+              'description' => 'The destination site\'s icon, uploaded when the link is saved.',
+              'accept' => 
+              array (
+                0 => 'image/png',
+                1 => 'image/jpeg',
+                2 => 'image/webp',
+              ),
+              'maxSize' => 100000,
+            ),
+            'createdAt' => 
+            array (
+              'type' => 'string',
+              'format' => 'datetime',
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
   'app.bsky.actor.profile' => 
   array (
     'lexicon' => 1,
@@ -1592,6 +1700,17 @@ return array (
             array (
               'type' => 'ref',
               'ref' => 'lex:com.atproto.repo.strongRef',
+            ),
+            'links' => 
+            array (
+              'type' => 'array',
+              'description' => 'Links shown on the profile, in display order. Each ref points to an app.bsky.actor.link record in this repo.',
+              'maxLength' => 10,
+              'items' => 
+              array (
+                'type' => 'ref',
+                'ref' => 'lex:com.atproto.repo.strongRef',
+              ),
             ),
             'createdAt' => 
             array (
@@ -2647,22 +2766,23 @@ return array (
             'collection' => 
             array (
               0 => 'app.bsky.actor.contentVisibilityDeclaration',
-              1 => 'app.bsky.actor.profile',
-              2 => 'app.bsky.actor.status',
-              3 => 'app.bsky.feed.like',
-              4 => 'app.bsky.feed.post',
-              5 => 'app.bsky.feed.postgate',
-              6 => 'app.bsky.feed.repost',
-              7 => 'app.bsky.feed.threadgate',
-              8 => 'app.bsky.graph.block',
-              9 => 'app.bsky.graph.follow',
-              10 => 'app.bsky.graph.list',
-              11 => 'app.bsky.graph.listblock',
-              12 => 'app.bsky.graph.listitem',
-              13 => 'app.bsky.graph.referencelistoptout',
-              14 => 'app.bsky.graph.starterpack',
-              15 => 'app.bsky.graph.verification',
-              16 => 'app.bsky.notification.declaration',
+              1 => 'app.bsky.actor.link',
+              2 => 'app.bsky.actor.profile',
+              3 => 'app.bsky.actor.status',
+              4 => 'app.bsky.feed.like',
+              5 => 'app.bsky.feed.post',
+              6 => 'app.bsky.feed.postgate',
+              7 => 'app.bsky.feed.repost',
+              8 => 'app.bsky.feed.threadgate',
+              9 => 'app.bsky.graph.block',
+              10 => 'app.bsky.graph.follow',
+              11 => 'app.bsky.graph.list',
+              12 => 'app.bsky.graph.listblock',
+              13 => 'app.bsky.graph.listitem',
+              14 => 'app.bsky.graph.referencelistoptout',
+              15 => 'app.bsky.graph.starterpack',
+              16 => 'app.bsky.graph.verification',
+              17 => 'app.bsky.notification.declaration',
             ),
           ),
         ),
@@ -2828,15 +2948,16 @@ return array (
             'lxm' => 
             array (
               0 => 'app.bsky.notification.getPreferences',
-              1 => 'app.bsky.notification.getUnreadCount',
-              2 => 'app.bsky.notification.listActivitySubscriptions',
-              3 => 'app.bsky.notification.listNotifications',
-              4 => 'app.bsky.notification.putActivitySubscription',
-              5 => 'app.bsky.notification.putPreferences',
-              6 => 'app.bsky.notification.putPreferencesV2',
-              7 => 'app.bsky.notification.registerPush',
-              8 => 'app.bsky.notification.unregisterPush',
-              9 => 'app.bsky.notification.updateSeen',
+              1 => 'app.bsky.notification.getGroupedNotifications',
+              2 => 'app.bsky.notification.getUnreadCount',
+              3 => 'app.bsky.notification.listActivitySubscriptions',
+              4 => 'app.bsky.notification.listNotifications',
+              5 => 'app.bsky.notification.putActivitySubscription',
+              6 => 'app.bsky.notification.putPreferences',
+              7 => 'app.bsky.notification.putPreferencesV2',
+              8 => 'app.bsky.notification.registerPush',
+              9 => 'app.bsky.notification.unregisterPush',
+              10 => 'app.bsky.notification.updateSeen',
             ),
           ),
         ),
@@ -2874,9 +2995,10 @@ return array (
             ),
             'collection' => 
             array (
-              0 => 'app.bsky.actor.profile',
-              1 => 'app.bsky.actor.status',
-              2 => 'app.bsky.notification.declaration',
+              0 => 'app.bsky.actor.link',
+              1 => 'app.bsky.actor.profile',
+              2 => 'app.bsky.actor.status',
+              3 => 'app.bsky.notification.declaration',
             ),
           ),
         ),
@@ -4648,6 +4770,432 @@ return array (
           ),
         ),
       ),
+      'viewArticle' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'uri',
+          1 => 'title',
+          2 => 'description',
+        ),
+        'properties' => 
+        array (
+          'uri' => 
+          array (
+            'type' => 'string',
+            'format' => 'uri',
+          ),
+          'title' => 
+          array (
+            'type' => 'string',
+          ),
+          'description' => 
+          array (
+            'type' => 'string',
+          ),
+          'createdAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+          'updatedAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+          'labels' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:com.atproto.label.defs#label',
+            ),
+          ),
+          'associatedRefs' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:com.atproto.repo.strongRef',
+            ),
+          ),
+          'associatedProfiles' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:app.bsky.actor.defs#profileViewBasic',
+            ),
+          ),
+          'image' => 
+          array (
+            'type' => 'string',
+            'format' => 'uri',
+          ),
+          'publisher' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.embed.external#viewArticlePublication',
+          ),
+          'readingTime' => 
+          array (
+            'type' => 'integer',
+            'minimum' => 1,
+          ),
+          'likeCount' => 
+          array (
+            'type' => 'integer',
+            'minimum' => 0,
+          ),
+          'likers' => 
+          array (
+            'type' => 'array',
+            'maxLength' => 3,
+            'description' => 'Available profile previews. Selected deterministically by DID; not a ranking.',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:app.bsky.actor.defs#profileViewBasic',
+            ),
+          ),
+        ),
+      ),
+      'viewArticlePublication' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'uri',
+          1 => 'title',
+          2 => 'description',
+        ),
+        'properties' => 
+        array (
+          'uri' => 
+          array (
+            'type' => 'string',
+            'format' => 'uri',
+          ),
+          'title' => 
+          array (
+            'type' => 'string',
+          ),
+          'description' => 
+          array (
+            'type' => 'string',
+          ),
+          'createdAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+          'updatedAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+          'labels' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:com.atproto.label.defs#label',
+            ),
+          ),
+          'associatedRefs' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:com.atproto.repo.strongRef',
+            ),
+          ),
+          'associatedProfiles' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:app.bsky.actor.defs#profileViewBasic',
+            ),
+          ),
+          'logo' => 
+          array (
+            'type' => 'string',
+            'format' => 'uri',
+          ),
+          'image' => 
+          array (
+            'type' => 'string',
+            'format' => 'uri',
+          ),
+          'theme' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.embed.external#viewArticlePublicationTheme',
+          ),
+          'subscriptionCount' => 
+          array (
+            'type' => 'integer',
+            'minimum' => 0,
+          ),
+          'subscribers' => 
+          array (
+            'type' => 'array',
+            'maxLength' => 3,
+            'description' => 'Available profile previews. Selected deterministically by DID; not a ranking.',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:app.bsky.actor.defs#profileViewBasic',
+            ),
+          ),
+        ),
+      ),
+      'viewArticlePublicationTheme' => 
+      array (
+        'type' => 'object',
+        'properties' => 
+        array (
+          'background' => 
+          array (
+            'type' => 'string',
+            'description' => 'Hex color string, if available. Example: \'#ffffff\'.',
+          ),
+          'foreground' => 
+          array (
+            'type' => 'string',
+            'description' => 'Hex color string, if available. Example: \'#ffffff\'.',
+          ),
+          'accent' => 
+          array (
+            'type' => 'string',
+            'description' => 'Hex color string, if available. Example: \'#ffffff\'.',
+          ),
+          'accentForeground' => 
+          array (
+            'type' => 'string',
+            'description' => 'Hex color string, if available. Example: \'#ffffff\'.',
+          ),
+        ),
+      ),
+      'viewGallery' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'uri',
+          1 => 'title',
+          2 => 'description',
+          3 => 'items',
+        ),
+        'properties' => 
+        array (
+          'uri' => 
+          array (
+            'type' => 'string',
+            'format' => 'uri',
+          ),
+          'title' => 
+          array (
+            'type' => 'string',
+          ),
+          'description' => 
+          array (
+            'type' => 'string',
+          ),
+          'createdAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+          'updatedAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+          'labels' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:com.atproto.label.defs#label',
+            ),
+          ),
+          'associatedRefs' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:com.atproto.repo.strongRef',
+            ),
+          ),
+          'associatedProfiles' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:app.bsky.actor.defs#profileViewBasic',
+            ),
+          ),
+          'items' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'union',
+              'refs' => 
+              array (
+                0 => 'lex:app.bsky.embed.external#viewGalleryImage',
+              ),
+            ),
+            'description' => 'The media items in the gallery. Each item may be of a different type, but all types must be supported by the client.',
+          ),
+          'likeCount' => 
+          array (
+            'type' => 'integer',
+            'minimum' => 0,
+          ),
+          'likers' => 
+          array (
+            'type' => 'array',
+            'maxLength' => 3,
+            'description' => 'Available profile previews. Selected deterministically by DID; not a ranking.',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:app.bsky.actor.defs#profileViewBasic',
+            ),
+          ),
+        ),
+      ),
+      'viewGalleryImage' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'thumbnail',
+          1 => 'fullsize',
+        ),
+        'properties' => 
+        array (
+          'thumbnail' => 
+          array (
+            'type' => 'string',
+            'format' => 'uri',
+            'description' => 'Fully-qualified URL where a thumbnail of the image can be fetched. For example, CDN location provided by the App View.',
+          ),
+          'fullsize' => 
+          array (
+            'type' => 'string',
+            'format' => 'uri',
+            'description' => 'Fully-qualified URL where a large version of the image can be fetched. May or may not be the exact original blob. For example, CDN location provided by the App View.',
+          ),
+          'alt' => 
+          array (
+            'type' => 'string',
+            'description' => 'Alt text description of the image, for accessibility.',
+          ),
+          'aspectRatio' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.embed.defs#aspectRatio',
+          ),
+        ),
+      ),
+      'viewLivestream' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'uri',
+          1 => 'title',
+          2 => 'description',
+          3 => 'active',
+        ),
+        'properties' => 
+        array (
+          'uri' => 
+          array (
+            'type' => 'string',
+            'format' => 'uri',
+          ),
+          'title' => 
+          array (
+            'type' => 'string',
+          ),
+          'description' => 
+          array (
+            'type' => 'string',
+          ),
+          'createdAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+          'updatedAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+          'labels' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:com.atproto.label.defs#label',
+            ),
+          ),
+          'associatedRefs' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:com.atproto.repo.strongRef',
+            ),
+          ),
+          'associatedProfiles' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:app.bsky.actor.defs#profileViewBasic',
+            ),
+          ),
+          'image' => 
+          array (
+            'type' => 'string',
+            'format' => 'uri',
+          ),
+          'active' => 
+          array (
+            'type' => 'boolean',
+            'description' => 'True if the livestream is currently active at the time this view is served, false if it has ended.',
+          ),
+          'startedAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+          'endedAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+        ),
+      ),
     ),
   ),
   'app.bsky.embed.gallery' => 
@@ -4828,6 +5376,18 @@ return array (
                 'type' => 'ref',
                 'ref' => 'lex:app.bsky.embed.external#view',
                 'description' => 'Hydrated view of the embed. Present only when the resolved records back the requested URL and supply enough information to populate the required `viewExternal` fields. Omitted alongside the rest of the response when no records resolved or validation failed.',
+              ),
+              'data' => 
+              array (
+                'type' => 'union',
+                'refs' => 
+                array (
+                  0 => 'lex:app.bsky.embed.external#viewArticle',
+                  1 => 'lex:app.bsky.embed.external#viewArticlePublication',
+                  2 => 'lex:app.bsky.embed.external#viewGallery',
+                  3 => 'lex:app.bsky.embed.external#viewLivestream',
+                ),
+                'description' => 'Preferred to #view. Hydrated data of the embed. Present only when the resolved records back the requested URL and supply enough information to populate the required fields. Omitted alongside the rest of the response when no records resolved or validation failed.',
               ),
               'associatedRefs' => 
               array (
@@ -5078,6 +5638,16 @@ return array (
           'quoteCount' => 
           array (
             'type' => 'integer',
+          ),
+          'opThreadPostIndex' => 
+          array (
+            'type' => 'integer',
+            'description' => 'The 1-indexed position of this post within the contiguous OP thread. Only present when this post is part of the OP thread.',
+          ),
+          'opThreadPostCount' => 
+          array (
+            'type' => 'integer',
+            'description' => 'The total number of posts in the contiguous OP thread that this post belongs to. Only present when this post is part of the OP thread.',
           ),
           'embeds' => 
           array (
@@ -6955,6 +7525,11 @@ return array (
             array (
               'type' => 'string',
             ),
+            'since' => 
+            array (
+              'type' => 'string',
+              'description' => 'Return only items newer than the position identified by this cursor value, newest first. Use the startCursor from a previous response. The item at that position is not returned because the caller already holds it. When the bounded range is exhausted, the returned cursor equals this value so that pagination continues below the boundary.',
+            ),
           ),
         ),
         'output' => 
@@ -6972,6 +7547,11 @@ return array (
               'cursor' => 
               array (
                 'type' => 'string',
+              ),
+              'startCursor' => 
+              array (
+                'type' => 'string',
+                'description' => 'Cursor identifying the newest item in this page. Pass it as since on a later request to fetch only newer content.',
               ),
               'feed' => 
               array (
@@ -7409,6 +7989,11 @@ return array (
             array (
               'type' => 'string',
             ),
+            'since' => 
+            array (
+              'type' => 'string',
+              'description' => 'Return only items newer than the position identified by this cursor value, newest first. Use the startCursor from a previous response. The item at that position is not returned because the caller already holds it. When the bounded range is exhausted, the returned cursor equals this value so that pagination continues below the boundary.',
+            ),
           ),
         ),
         'output' => 
@@ -7426,6 +8011,11 @@ return array (
               'cursor' => 
               array (
                 'type' => 'string',
+              ),
+              'startCursor' => 
+              array (
+                'type' => 'string',
+                'description' => 'Cursor identifying the newest item in this page. Pass it as since on a later request to fetch only newer content.',
               ),
               'feed' => 
               array (
@@ -11357,6 +11947,849 @@ return array (
       ),
     ),
   ),
+  'app.bsky.notification.getGroupedNotifications' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.notification.getGroupedNotifications',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'description' => '[UNSTABLE - DO NOT USE THIS ENDPOINT WHILE THIS NOTE IS HERE] Enumerate notifications for the requesting account, pre-grouped for rendering. Supersedes listNotifications. Requires auth.',
+        'parameters' => 
+        array (
+          'type' => 'params',
+          'properties' => 
+          array (
+            'feed' => 
+            array (
+              'type' => 'string',
+              'description' => 'Which notification feed to return. Grouping behavior varies by feed: notifications about follows might be grouped in \'all\' and ungrouped (or rather, in single-item groups) in \'followers\'.',
+              'maxLength' => 32,
+              'knownValues' => 
+              array (
+                0 => 'all',
+                1 => 'people-i-follow',
+                2 => 'conversations',
+                3 => 'followers',
+                4 => 'activity',
+              ),
+              'default' => 'all',
+            ),
+            'limit' => 
+            array (
+              'type' => 'integer',
+              'description' => 'Maximum number of groups to return.',
+              'minimum' => 1,
+              'maximum' => 50,
+              'default' => 30,
+            ),
+            'cursor' => 
+            array (
+              'type' => 'string',
+              'maxLength' => 1024,
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'groups',
+            ),
+            'properties' => 
+            array (
+              'cursor' => 
+              array (
+                'type' => 'string',
+                'maxLength' => 1024,
+              ),
+              'groups' => 
+              array (
+                'type' => 'array',
+                'description' => 'Notification groups or individual notifications, newest first. Clients should ignore kinds they do not recognize. Grouping behavior depends on the kind and selected feed.',
+                'items' => 
+                array (
+                  'type' => 'ref',
+                  'ref' => 'lex:app.bsky.notification.getGroupedNotifications#group',
+                ),
+              ),
+              'seenAt' => 
+              array (
+                'type' => 'string',
+                'format' => 'datetime',
+              ),
+              'relatedViews' => 
+              array (
+                'type' => 'array',
+                'description' => 'Reusable views referenced by notifications. Views shared across notifications appear once to avoid duplication. Each group contributes only its first 10 of each related view to this array. Ex: for a group containing likes in a post, we might have a large number of likeItem (e.g., 50) in a group, but only the profile views for the newest 10 items will be included here.',
+                'items' => 
+                array (
+                  'type' => 'union',
+                  'refs' => 
+                  array (
+                    0 => 'lex:app.bsky.actor.defs#profileViewBasic',
+                    1 => 'lex:app.bsky.feed.defs#blockedPost',
+                    2 => 'lex:app.bsky.feed.defs#generatorView',
+                    3 => 'lex:app.bsky.feed.defs#notFoundPost',
+                    4 => 'lex:app.bsky.feed.defs#postView',
+                    5 => 'lex:app.bsky.graph.defs#starterPackViewBasic',
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+      'group' => 
+      array (
+        'type' => 'object',
+        'description' => 'Contains common metadata and kind-specific data for a notification group or individual notification.',
+        'required' => 
+        array (
+          0 => 'id',
+          1 => 'isRead',
+          2 => 'indexedAt',
+          3 => 'count',
+          4 => 'kind',
+        ),
+        'properties' => 
+        array (
+          'id' => 
+          array (
+            'type' => 'string',
+            'maxLength' => 256,
+          ),
+          'isRead' => 
+          array (
+            'type' => 'boolean',
+          ),
+          'indexedAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+          'count' => 
+          array (
+            'type' => 'integer',
+            'minimum' => 1,
+          ),
+          'kind' => 
+          array (
+            'type' => 'union',
+            'refs' => 
+            array (
+              0 => 'lex:app.bsky.notification.getGroupedNotifications#likeGroup',
+              1 => 'lex:app.bsky.notification.getGroupedNotifications#multiPostLikeGroup',
+              2 => 'lex:app.bsky.notification.getGroupedNotifications#multiPostRepostGroup',
+              3 => 'lex:app.bsky.notification.getGroupedNotifications#multiPostLikeViaRepostGroup',
+              4 => 'lex:app.bsky.notification.getGroupedNotifications#multiPostRepostViaRepostGroup',
+              5 => 'lex:app.bsky.notification.getGroupedNotifications#repostGroup',
+              6 => 'lex:app.bsky.notification.getGroupedNotifications#likeViaRepostGroup',
+              7 => 'lex:app.bsky.notification.getGroupedNotifications#repostViaRepostGroup',
+              8 => 'lex:app.bsky.notification.getGroupedNotifications#followGroup',
+              9 => 'lex:app.bsky.notification.getGroupedNotifications#subscribedPostGroup',
+              10 => 'lex:app.bsky.notification.getGroupedNotifications#generatorLikeGroup',
+              11 => 'lex:app.bsky.notification.getGroupedNotifications#replyNotification',
+              12 => 'lex:app.bsky.notification.getGroupedNotifications#quoteNotification',
+              13 => 'lex:app.bsky.notification.getGroupedNotifications#mentionNotification',
+              14 => 'lex:app.bsky.notification.getGroupedNotifications#followBackNotification',
+              15 => 'lex:app.bsky.notification.getGroupedNotifications#verifiedNotification',
+              16 => 'lex:app.bsky.notification.getGroupedNotifications#unverifiedNotification',
+              17 => 'lex:app.bsky.notification.getGroupedNotifications#starterPackJoinedNotification',
+              18 => 'lex:app.bsky.notification.getGroupedNotifications#contactMatchNotification',
+            ),
+          ),
+        ),
+      ),
+      'likeGroup' => 
+      array (
+        'type' => 'object',
+        'description' => 'Group of likes by different actors on the same post.',
+        'required' => 
+        array (
+          0 => 'post',
+          1 => 'items',
+        ),
+        'properties' => 
+        array (
+          'post' => 
+          array (
+            'type' => 'string',
+            'format' => 'at-uri',
+          ),
+          'items' => 
+          array (
+            'type' => 'array',
+            'minLength' => 1,
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:app.bsky.notification.getGroupedNotifications#likeItem',
+            ),
+          ),
+        ),
+      ),
+      'likeItem' => 
+      array (
+        'type' => 'object',
+        'description' => 'One actor who liked the group\'s post.',
+        'required' => 
+        array (
+          0 => 'actor',
+        ),
+        'properties' => 
+        array (
+          'actor' => 
+          array (
+            'type' => 'string',
+            'format' => 'did',
+          ),
+        ),
+      ),
+      'multiPostLikeGroup' => 
+      array (
+        'type' => 'object',
+        'description' => 'Group of likes by the same actor on different posts.',
+        'required' => 
+        array (
+          0 => 'actor',
+          1 => 'items',
+        ),
+        'properties' => 
+        array (
+          'actor' => 
+          array (
+            'type' => 'string',
+            'format' => 'did',
+          ),
+          'items' => 
+          array (
+            'type' => 'array',
+            'minLength' => 2,
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:app.bsky.notification.getGroupedNotifications#multiPostLikeItem',
+            ),
+          ),
+        ),
+      ),
+      'multiPostLikeItem' => 
+      array (
+        'type' => 'object',
+        'description' => 'One post which was liked by the group\'s actor.',
+        'required' => 
+        array (
+          0 => 'post',
+        ),
+        'properties' => 
+        array (
+          'post' => 
+          array (
+            'type' => 'string',
+            'format' => 'at-uri',
+          ),
+        ),
+      ),
+      'multiPostRepostGroup' => 
+      array (
+        'type' => 'object',
+        'description' => 'Group of reposts by the same actor of different posts.',
+        'required' => 
+        array (
+          0 => 'actor',
+          1 => 'items',
+        ),
+        'properties' => 
+        array (
+          'actor' => 
+          array (
+            'type' => 'string',
+            'format' => 'did',
+          ),
+          'items' => 
+          array (
+            'type' => 'array',
+            'minLength' => 2,
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:app.bsky.notification.getGroupedNotifications#multiPostRepostItem',
+            ),
+          ),
+        ),
+      ),
+      'multiPostRepostItem' => 
+      array (
+        'type' => 'object',
+        'description' => 'One post which was reposted by the group\'s actor.',
+        'required' => 
+        array (
+          0 => 'post',
+        ),
+        'properties' => 
+        array (
+          'post' => 
+          array (
+            'type' => 'string',
+            'format' => 'at-uri',
+          ),
+        ),
+      ),
+      'multiPostLikeViaRepostGroup' => 
+      array (
+        'type' => 'object',
+        'description' => 'Group of likes by the same actor on different posts via the requesting account\'s reposts.',
+        'required' => 
+        array (
+          0 => 'actor',
+          1 => 'items',
+        ),
+        'properties' => 
+        array (
+          'actor' => 
+          array (
+            'type' => 'string',
+            'format' => 'did',
+          ),
+          'items' => 
+          array (
+            'type' => 'array',
+            'minLength' => 2,
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:app.bsky.notification.getGroupedNotifications#multiPostLikeViaRepostItem',
+            ),
+          ),
+        ),
+      ),
+      'multiPostLikeViaRepostItem' => 
+      array (
+        'type' => 'object',
+        'description' => 'One post which was liked by the group\'s actor via the requesting account\'s repost.',
+        'required' => 
+        array (
+          0 => 'post',
+          1 => 'viaRepost',
+        ),
+        'properties' => 
+        array (
+          'post' => 
+          array (
+            'type' => 'string',
+            'format' => 'at-uri',
+          ),
+          'viaRepost' => 
+          array (
+            'type' => 'string',
+            'format' => 'at-uri',
+          ),
+        ),
+      ),
+      'multiPostRepostViaRepostGroup' => 
+      array (
+        'type' => 'object',
+        'description' => 'Group of reposts by the same actor of different posts via the requesting account\'s reposts.',
+        'required' => 
+        array (
+          0 => 'actor',
+          1 => 'items',
+        ),
+        'properties' => 
+        array (
+          'actor' => 
+          array (
+            'type' => 'string',
+            'format' => 'did',
+          ),
+          'items' => 
+          array (
+            'type' => 'array',
+            'minLength' => 2,
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:app.bsky.notification.getGroupedNotifications#multiPostRepostViaRepostItem',
+            ),
+          ),
+        ),
+      ),
+      'multiPostRepostViaRepostItem' => 
+      array (
+        'type' => 'object',
+        'description' => 'One post which was reposted by the group\'s actor via the requesting account\'s repost.',
+        'required' => 
+        array (
+          0 => 'post',
+          1 => 'viaRepost',
+        ),
+        'properties' => 
+        array (
+          'post' => 
+          array (
+            'type' => 'string',
+            'format' => 'at-uri',
+          ),
+          'viaRepost' => 
+          array (
+            'type' => 'string',
+            'format' => 'at-uri',
+          ),
+        ),
+      ),
+      'repostGroup' => 
+      array (
+        'type' => 'object',
+        'description' => 'Group of reposts by different actors of the same post.',
+        'required' => 
+        array (
+          0 => 'post',
+          1 => 'items',
+        ),
+        'properties' => 
+        array (
+          'post' => 
+          array (
+            'type' => 'string',
+            'format' => 'at-uri',
+          ),
+          'items' => 
+          array (
+            'type' => 'array',
+            'minLength' => 1,
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:app.bsky.notification.getGroupedNotifications#repostItem',
+            ),
+          ),
+        ),
+      ),
+      'repostItem' => 
+      array (
+        'type' => 'object',
+        'description' => 'One actor who reposted the group\'s post.',
+        'required' => 
+        array (
+          0 => 'actor',
+        ),
+        'properties' => 
+        array (
+          'actor' => 
+          array (
+            'type' => 'string',
+            'format' => 'did',
+          ),
+        ),
+      ),
+      'likeViaRepostGroup' => 
+      array (
+        'type' => 'object',
+        'description' => 'Group of likes by different actors on the same post via the requesting account\'s repost.',
+        'required' => 
+        array (
+          0 => 'post',
+          1 => 'viaRepost',
+          2 => 'items',
+        ),
+        'properties' => 
+        array (
+          'post' => 
+          array (
+            'type' => 'string',
+            'format' => 'at-uri',
+          ),
+          'viaRepost' => 
+          array (
+            'type' => 'string',
+            'format' => 'at-uri',
+          ),
+          'items' => 
+          array (
+            'type' => 'array',
+            'minLength' => 1,
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:app.bsky.notification.getGroupedNotifications#likeViaRepostItem',
+            ),
+          ),
+        ),
+      ),
+      'likeViaRepostItem' => 
+      array (
+        'type' => 'object',
+        'description' => 'One actor who liked the group\'s post via the requesting account\'s repost.',
+        'required' => 
+        array (
+          0 => 'actor',
+        ),
+        'properties' => 
+        array (
+          'actor' => 
+          array (
+            'type' => 'string',
+            'format' => 'did',
+          ),
+        ),
+      ),
+      'repostViaRepostGroup' => 
+      array (
+        'type' => 'object',
+        'description' => 'Group of reposts by different actors of the same post via the requesting account\'s repost.',
+        'required' => 
+        array (
+          0 => 'post',
+          1 => 'viaRepost',
+          2 => 'items',
+        ),
+        'properties' => 
+        array (
+          'post' => 
+          array (
+            'type' => 'string',
+            'format' => 'at-uri',
+          ),
+          'viaRepost' => 
+          array (
+            'type' => 'string',
+            'format' => 'at-uri',
+          ),
+          'items' => 
+          array (
+            'type' => 'array',
+            'minLength' => 1,
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:app.bsky.notification.getGroupedNotifications#repostViaRepostItem',
+            ),
+          ),
+        ),
+      ),
+      'repostViaRepostItem' => 
+      array (
+        'type' => 'object',
+        'description' => 'One actor who reposted the group\'s post via the requesting account\'s repost.',
+        'required' => 
+        array (
+          0 => 'actor',
+        ),
+        'properties' => 
+        array (
+          'actor' => 
+          array (
+            'type' => 'string',
+            'format' => 'did',
+          ),
+        ),
+      ),
+      'followGroup' => 
+      array (
+        'type' => 'object',
+        'description' => 'Group of actors who followed the requesting account.',
+        'required' => 
+        array (
+          0 => 'items',
+        ),
+        'properties' => 
+        array (
+          'items' => 
+          array (
+            'type' => 'array',
+            'minLength' => 1,
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:app.bsky.notification.getGroupedNotifications#followItem',
+            ),
+          ),
+        ),
+      ),
+      'followItem' => 
+      array (
+        'type' => 'object',
+        'description' => 'An actor who followed the requesting account, possibly via a starter pack.',
+        'required' => 
+        array (
+          0 => 'actor',
+        ),
+        'properties' => 
+        array (
+          'actor' => 
+          array (
+            'type' => 'string',
+            'format' => 'did',
+          ),
+          'starterPack' => 
+          array (
+            'type' => 'string',
+            'format' => 'at-uri',
+          ),
+        ),
+      ),
+      'subscribedPostGroup' => 
+      array (
+        'type' => 'object',
+        'description' => 'Group of new posts by actors the requesting account subscribes to.',
+        'required' => 
+        array (
+          0 => 'items',
+        ),
+        'properties' => 
+        array (
+          'items' => 
+          array (
+            'type' => 'array',
+            'minLength' => 1,
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:app.bsky.notification.getGroupedNotifications#subscribedPostItem',
+            ),
+          ),
+        ),
+      ),
+      'subscribedPostItem' => 
+      array (
+        'type' => 'object',
+        'description' => 'One new post by an actor the requesting account subscribes to.',
+        'required' => 
+        array (
+          0 => 'actor',
+          1 => 'post',
+        ),
+        'properties' => 
+        array (
+          'actor' => 
+          array (
+            'type' => 'string',
+            'format' => 'did',
+          ),
+          'post' => 
+          array (
+            'type' => 'string',
+            'format' => 'at-uri',
+          ),
+        ),
+      ),
+      'generatorLikeGroup' => 
+      array (
+        'type' => 'object',
+        'description' => 'Group of likes by different actors on the same feed generator.',
+        'required' => 
+        array (
+          0 => 'generator',
+          1 => 'items',
+        ),
+        'properties' => 
+        array (
+          'generator' => 
+          array (
+            'type' => 'string',
+            'format' => 'at-uri',
+          ),
+          'items' => 
+          array (
+            'type' => 'array',
+            'minLength' => 1,
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:app.bsky.notification.getGroupedNotifications#generatorLikeItem',
+            ),
+          ),
+        ),
+      ),
+      'generatorLikeItem' => 
+      array (
+        'type' => 'object',
+        'description' => 'One actor who liked the feed generator in the group.',
+        'required' => 
+        array (
+          0 => 'actor',
+        ),
+        'properties' => 
+        array (
+          'actor' => 
+          array (
+            'type' => 'string',
+            'format' => 'did',
+          ),
+        ),
+      ),
+      'replyNotification' => 
+      array (
+        'type' => 'object',
+        'description' => 'A reply to a post by the requesting account or to a thread they are participating in.',
+        'required' => 
+        array (
+          0 => 'post',
+          1 => 'parent',
+        ),
+        'properties' => 
+        array (
+          'post' => 
+          array (
+            'type' => 'string',
+            'format' => 'at-uri',
+          ),
+          'parent' => 
+          array (
+            'type' => 'string',
+            'format' => 'at-uri',
+          ),
+        ),
+      ),
+      'quoteNotification' => 
+      array (
+        'type' => 'object',
+        'description' => 'A post quoting a post by the requesting account.',
+        'required' => 
+        array (
+          0 => 'post',
+        ),
+        'properties' => 
+        array (
+          'post' => 
+          array (
+            'type' => 'string',
+            'format' => 'at-uri',
+          ),
+          'parent' => 
+          array (
+            'type' => 'string',
+            'format' => 'at-uri',
+          ),
+        ),
+      ),
+      'mentionNotification' => 
+      array (
+        'type' => 'object',
+        'description' => 'A post mentioning the requesting account.',
+        'required' => 
+        array (
+          0 => 'post',
+        ),
+        'properties' => 
+        array (
+          'post' => 
+          array (
+            'type' => 'string',
+            'format' => 'at-uri',
+          ),
+          'parent' => 
+          array (
+            'type' => 'string',
+            'format' => 'at-uri',
+          ),
+        ),
+      ),
+      'followBackNotification' => 
+      array (
+        'type' => 'object',
+        'description' => 'An actor followed the requesting account back, possibly via a starter pack.',
+        'required' => 
+        array (
+          0 => 'actor',
+        ),
+        'properties' => 
+        array (
+          'actor' => 
+          array (
+            'type' => 'string',
+            'format' => 'did',
+          ),
+          'starterPack' => 
+          array (
+            'type' => 'string',
+            'format' => 'at-uri',
+          ),
+        ),
+      ),
+      'verifiedNotification' => 
+      array (
+        'type' => 'object',
+        'description' => 'An actor verified the requesting account.',
+        'required' => 
+        array (
+          0 => 'actor',
+        ),
+        'properties' => 
+        array (
+          'actor' => 
+          array (
+            'type' => 'string',
+            'format' => 'did',
+          ),
+        ),
+      ),
+      'unverifiedNotification' => 
+      array (
+        'type' => 'object',
+        'description' => 'A verification of the requesting account was removed.',
+        'required' => 
+        array (
+          0 => 'actor',
+        ),
+        'properties' => 
+        array (
+          'actor' => 
+          array (
+            'type' => 'string',
+            'format' => 'did',
+          ),
+        ),
+      ),
+      'starterPackJoinedNotification' => 
+      array (
+        'type' => 'object',
+        'description' => 'An actor joined Bluesky via a starter pack created by the requesting account.',
+        'required' => 
+        array (
+          0 => 'actor',
+          1 => 'starterPack',
+        ),
+        'properties' => 
+        array (
+          'actor' => 
+          array (
+            'type' => 'string',
+            'format' => 'did',
+          ),
+          'starterPack' => 
+          array (
+            'type' => 'string',
+            'format' => 'at-uri',
+          ),
+        ),
+      ),
+      'contactMatchNotification' => 
+      array (
+        'type' => 'object',
+        'description' => 'A contact of the requesting account joined Bluesky.',
+        'required' => 
+        array (
+          0 => 'actor',
+        ),
+        'properties' => 
+        array (
+          'actor' => 
+          array (
+            'type' => 'string',
+            'format' => 'did',
+          ),
+        ),
+      ),
+    ),
+  ),
   'app.bsky.notification.getPreferences' => 
   array (
     'lexicon' => 1,
@@ -12555,6 +13988,299 @@ return array (
       ),
     ),
   ),
+  'app.bsky.unspecced.getAtmosphereExploreTab' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.unspecced.getAtmosphereExploreTab',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'description' => 'Get curated Atmosphere Explore content. Authentication is optional; authenticated requests include viewer-specific profile state.',
+        'parameters' => 
+        array (
+          'type' => 'params',
+          'properties' => 
+          array (
+            'langs' => 
+            array (
+              'type' => 'array',
+              'description' => 'Preferred languages. Currently ignored.',
+              'items' => 
+              array (
+                'type' => 'string',
+                'format' => 'language',
+              ),
+            ),
+            'countryCode' => 
+            array (
+              'type' => 'string',
+              'description' => 'The ISO 3166-1 alpha-2 country code used to select curated content.',
+            ),
+            'regionCode' => 
+            array (
+              'type' => 'string',
+              'description' => 'The ISO 3166-2 region code used to select curated content.',
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'articles',
+              1 => 'publications',
+              2 => 'photos',
+              3 => 'livestreams',
+              4 => 'apps',
+            ),
+            'properties' => 
+            array (
+              'announcementBanner' => 
+              array (
+                'type' => 'ref',
+                'ref' => 'lex:app.bsky.unspecced.getAtmosphereExploreTab#announcementBanner',
+              ),
+              'articles' => 
+              array (
+                'type' => 'array',
+                'items' => 
+                array (
+                  'type' => 'ref',
+                  'ref' => 'lex:app.bsky.unspecced.getAtmosphereExploreTab#articleItem',
+                ),
+              ),
+              'publications' => 
+              array (
+                'type' => 'array',
+                'items' => 
+                array (
+                  'type' => 'ref',
+                  'ref' => 'lex:app.bsky.unspecced.getAtmosphereExploreTab#publicationItem',
+                ),
+              ),
+              'photos' => 
+              array (
+                'type' => 'array',
+                'items' => 
+                array (
+                  'type' => 'ref',
+                  'ref' => 'lex:app.bsky.unspecced.getAtmosphereExploreTab#galleryItem',
+                ),
+              ),
+              'livestreams' => 
+              array (
+                'type' => 'array',
+                'items' => 
+                array (
+                  'type' => 'ref',
+                  'ref' => 'lex:app.bsky.unspecced.getAtmosphereExploreTab#livestreamItem',
+                ),
+              ),
+              'apps' => 
+              array (
+                'type' => 'array',
+                'maxLength' => 100,
+                'items' => 
+                array (
+                  'type' => 'ref',
+                  'ref' => 'lex:app.bsky.unspecced.getAtmosphereExploreTab#appCard',
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+      'articleItem' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'featured',
+          1 => 'view',
+        ),
+        'properties' => 
+        array (
+          'featured' => 
+          array (
+            'type' => 'boolean',
+          ),
+          'view' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.embed.external#viewArticle',
+          ),
+        ),
+      ),
+      'publicationItem' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'featured',
+          1 => 'view',
+        ),
+        'properties' => 
+        array (
+          'featured' => 
+          array (
+            'type' => 'boolean',
+          ),
+          'view' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.embed.external#viewArticlePublication',
+          ),
+        ),
+      ),
+      'galleryItem' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'featured',
+          1 => 'view',
+        ),
+        'properties' => 
+        array (
+          'featured' => 
+          array (
+            'type' => 'boolean',
+          ),
+          'view' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.embed.external#viewGallery',
+          ),
+        ),
+      ),
+      'livestreamItem' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'featured',
+          1 => 'view',
+        ),
+        'properties' => 
+        array (
+          'featured' => 
+          array (
+            'type' => 'boolean',
+          ),
+          'view' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.embed.external#viewLivestream',
+          ),
+        ),
+      ),
+      'announcementBanner' => 
+      array (
+        'type' => 'object',
+        'properties' => 
+        array (
+          'id' => 
+          array (
+            'type' => 'string',
+            'maxLength' => 4096,
+          ),
+          'title' => 
+          array (
+            'type' => 'string',
+            'maxLength' => 4096,
+          ),
+          'description' => 
+          array (
+            'type' => 'string',
+            'maxLength' => 4096,
+          ),
+          'url' => 
+          array (
+            'type' => 'string',
+            'format' => 'uri',
+            'maxLength' => 4096,
+          ),
+          'image' => 
+          array (
+            'type' => 'string',
+            'format' => 'uri',
+            'maxLength' => 4096,
+          ),
+          'overlayColor' => 
+          array (
+            'type' => 'string',
+            'maxLength' => 4096,
+          ),
+          'textColor' => 
+          array (
+            'type' => 'string',
+            'maxLength' => 4096,
+          ),
+        ),
+      ),
+      'appCard' => 
+      array (
+        'type' => 'object',
+        'properties' => 
+        array (
+          'id' => 
+          array (
+            'type' => 'string',
+            'maxLength' => 4096,
+          ),
+          'title' => 
+          array (
+            'type' => 'string',
+            'maxLength' => 4096,
+          ),
+          'description' => 
+          array (
+            'type' => 'string',
+            'maxLength' => 4096,
+          ),
+          'logo' => 
+          array (
+            'type' => 'string',
+            'format' => 'uri',
+            'maxLength' => 4096,
+          ),
+          'backgroundImage' => 
+          array (
+            'type' => 'string',
+            'format' => 'uri',
+            'maxLength' => 4096,
+          ),
+          'overlayColor' => 
+          array (
+            'type' => 'string',
+            'maxLength' => 4096,
+          ),
+          'textColor' => 
+          array (
+            'type' => 'string',
+            'maxLength' => 4096,
+          ),
+          'url' => 
+          array (
+            'type' => 'string',
+            'format' => 'uri',
+            'maxLength' => 4096,
+          ),
+          'category' => 
+          array (
+            'type' => 'string',
+            'maxLength' => 4096,
+          ),
+        ),
+      ),
+    ),
+  ),
   'app.bsky.unspecced.getConfig' => 
   array (
     'lexicon' => 1,
@@ -12665,6 +14391,11 @@ return array (
                   'ref' => 'lex:app.bsky.graph.defs#starterPackView',
                 ),
               ),
+              'recIdStr' => 
+              array (
+                'type' => 'string',
+                'description' => 'Snowflake for this recommendation, use when submitting recommendation events.',
+              ),
             ),
           ),
         ),
@@ -12721,6 +14452,11 @@ return array (
                   'type' => 'string',
                   'format' => 'at-uri',
                 ),
+              ),
+              'recIdStr' => 
+              array (
+                'type' => 'string',
+                'description' => 'Snowflake for this recommendation, use when submitting recommendation events.',
               ),
             ),
           ),
@@ -13128,6 +14864,11 @@ return array (
                   'ref' => 'lex:app.bsky.feed.defs#generatorView',
                 ),
               ),
+              'recIdStr' => 
+              array (
+                'type' => 'string',
+                'description' => 'Snowflake for this recommendation, use when submitting recommendation events.',
+              ),
             ),
           ),
         ),
@@ -13184,6 +14925,11 @@ return array (
                   'type' => 'string',
                   'format' => 'at-uri',
                 ),
+              ),
+              'recIdStr' => 
+              array (
+                'type' => 'string',
+                'description' => 'Snowflake for this recommendation, use when submitting recommendation events.',
               ),
             ),
           ),
@@ -13302,6 +15048,11 @@ return array (
                   'ref' => 'lex:app.bsky.graph.defs#starterPackView',
                 ),
               ),
+              'recIdStr' => 
+              array (
+                'type' => 'string',
+                'description' => 'Snowflake for this recommendation, use when submitting recommendation events.',
+              ),
             ),
           ),
         ),
@@ -13358,6 +15109,11 @@ return array (
                   'type' => 'string',
                   'format' => 'at-uri',
                 ),
+              ),
+              'recIdStr' => 
+              array (
+                'type' => 'string',
+                'description' => 'Snowflake for this recommendation, use when submitting recommendation events.',
               ),
             ),
           ),
@@ -28659,377 +30415,1257 @@ return array (
       ),
     ),
   ),
-  'site.standard.document' => 
+  'place.stream.badge.defs' => 
   array (
+    'id' => 'place.stream.badge.defs',
     'defs' => 
     array (
-      'contributor' => 
+      'bot' => 
       array (
-        'properties' => 
-        array (
-          'did' => 
-          array (
-            'format' => 'did',
-            'type' => 'string',
-          ),
-          'displayName' => 
-          array (
-            'maxGraphemes' => 100,
-            'maxLength' => 1000,
-            'type' => 'string',
-          ),
-          'role' => 
-          array (
-            'maxGraphemes' => 100,
-            'maxLength' => 1000,
-            'type' => 'string',
-          ),
-        ),
+        'type' => 'token',
+        'description' => 'This user is a bot. Self-applied via place.stream.chat.profile selfLabels.',
+      ),
+      'mod' => 
+      array (
+        'type' => 'token',
+        'description' => 'This user is a moderator. Displayed with a sword icon.',
+      ),
+      'vip' => 
+      array (
+        'type' => 'token',
+        'description' => 'This user is a very important person.',
+      ),
+      'event' => 
+      array (
+        'type' => 'token',
+        'description' => 'This user has won or earned a special event or contest badge.',
+      ),
+      'streamer' => 
+      array (
+        'type' => 'token',
+        'description' => 'This user is the streamer. Displayed with a star icon.',
+      ),
+      'badgeSlot' => 
+      array (
+        'type' => 'object',
         'required' => 
         array (
-          0 => 'did',
+          0 => 'available',
         ),
-        'type' => 'object',
-      ),
-      'main' => 
-      array (
-        'description' => 'A document record representing a published article, blog post, or other content. Documents can belong to a publication or exist independently.',
-        'key' => 'tid',
-        'record' => 
+        'properties' => 
         array (
-          'properties' => 
+          'selected' => 
           array (
-            'bskyPostRef' => 
+            'ref' => 'lex:place.stream.badge.defs#badgeIssuanceView',
+            'type' => 'ref',
+            'description' => 'The currently selected badge in this slot, if any.',
+          ),
+          'available' => 
+          array (
+            'type' => 'array',
+            'items' => 
             array (
-              'description' => 'Strong reference to a Bluesky post. Useful to keep track of comments off-platform.',
-              'ref' => 'lex:com.atproto.repo.strongRef',
+              'ref' => 'lex:place.stream.badge.defs#badgeIssuanceView',
               'type' => 'ref',
             ),
-            'content' => 
+            'description' => 'All badges available for this slot.',
+          ),
+        ),
+        'description' => 'A display slot containing available issuance-based badges and which one (if any) is currently selected.',
+      ),
+      'badgeView' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'badgeType',
+          1 => 'issuer',
+          2 => 'recipient',
+        ),
+        'properties' => 
+        array (
+          'name' => 
+          array (
+            'type' => 'string',
+            'description' => 'Display name from the badge definition.',
+          ),
+          'issuer' => 
+          array (
+            'type' => 'string',
+            'format' => 'did',
+            'description' => 'DID of the badge issuer.',
+          ),
+          'imageUrl' => 
+          array (
+            'type' => 'string',
+            'format' => 'uri',
+            'description' => 'Resolved image URL for the badge icon.',
+          ),
+          'badgeType' => 
+          array (
+            'type' => 'string',
+            'knownValues' => 
             array (
-              'closed' => false,
-              'description' => 'Open union used to define the record\'s content. Each entry must specify a $type and may be extended with other lexicons to support additional content formats.',
-              'refs' => 
-              array (
-              ),
-              'type' => 'union',
+              0 => 'place.stream.badge.defs#mod',
+              1 => 'place.stream.badge.defs#streamer',
+              2 => 'place.stream.badge.defs#vip',
+              3 => 'place.stream.badge.defs#event',
+              4 => 'place.stream.badge.defs#bot',
             ),
-            'contributors' => 
+          ),
+          'recipient' => 
+          array (
+            'type' => 'string',
+            'format' => 'did',
+            'description' => 'DID of the badge recipient.',
+          ),
+          'signature' => 
+          array (
+            'type' => 'string',
+            'description' => 'TODO: Cryptographic signature of the badge (of a place.stream.key).',
+          ),
+          'description' => 
+          array (
+            'type' => 'string',
+            'description' => 'Description from the badge definition.',
+          ),
+        ),
+        'description' => 'View of a badge record, with fields resolved for display. If the DID in issuer is not the current streamplace node, the signature field shall be required.',
+      ),
+      'badgeIssuanceView' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'issuanceUri',
+          1 => 'badgeType',
+          2 => 'issuer',
+        ),
+        'properties' => 
+        array (
+          'name' => 
+          array (
+            'type' => 'string',
+            'description' => 'Display name from the badge definition.',
+          ),
+          'issuer' => 
+          array (
+            'type' => 'string',
+            'format' => 'did',
+            'description' => 'DID of the badge issuer.',
+          ),
+          'imageUrl' => 
+          array (
+            'type' => 'string',
+            'format' => 'uri',
+            'description' => 'Resolved image URL for the badge icon.',
+          ),
+          'selected' => 
+          array (
+            'type' => 'boolean',
+            'description' => 'Whether this badge is currently in the user\'s chat profile selection.',
+          ),
+          'badgeType' => 
+          array (
+            'type' => 'string',
+            'knownValues' => 
             array (
+              0 => 'place.stream.badge.defs#vip',
+              1 => 'place.stream.badge.defs#event',
+            ),
+          ),
+          'description' => 
+          array (
+            'type' => 'string',
+            'description' => 'Description from the badge definition.',
+          ),
+          'issuanceCid' => 
+          array (
+            'type' => 'string',
+            'description' => 'CID of the place.stream.badge.issuance record.',
+          ),
+          'issuanceUri' => 
+          array (
+            'type' => 'string',
+            'format' => 'at-uri',
+            'description' => 'AT URI of the place.stream.badge.issuance record.',
+          ),
+        ),
+        'description' => 'A resolved view of a badge issuance, including def fields for display.',
+      ),
+    ),
+    '$type' => 'com.atproto.lexicon.schema',
+    'lexicon' => 1,
+  ),
+  'place.stream.chat.defs' => 
+  array (
+    'id' => 'place.stream.chat.defs',
+    'defs' => 
+    array (
+      'messageView' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'uri',
+          1 => 'cid',
+          2 => 'author',
+          3 => 'record',
+          4 => 'indexedAt',
+        ),
+        'properties' => 
+        array (
+          'cid' => 
+          array (
+            'type' => 'string',
+            'format' => 'cid',
+          ),
+          'uri' => 
+          array (
+            'type' => 'string',
+            'format' => 'at-uri',
+          ),
+          'author' => 
+          array (
+            'ref' => 'lex:app.bsky.actor.defs#profileViewBasic',
+            'type' => 'ref',
+          ),
+          'badges' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'ref' => 'lex:place.stream.badge.defs#badgeView',
+              'type' => 'ref',
+            ),
+            'maxLength' => 3,
+            'description' => 'Up to 3 badge tokens to display with the message. First badge is server-controlled, remaining badges are user-settable. Tokens are looked up in badges.json for display info.',
+          ),
+          'record' => 
+          array (
+            'type' => 'unknown',
+          ),
+          'deleted' => 
+          array (
+            'type' => 'boolean',
+            'description' => 'If true, this message has been deleted or labeled and should be cleared from the cache',
+          ),
+          'replyTo' => 
+          array (
+            'refs' => 
+            array (
+              0 => 'lex:place.stream.chat.defs#messageView',
+            ),
+            'type' => 'union',
+          ),
+          'indexedAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+          'chatProfile' => 
+          array (
+            'ref' => 'lex:place.stream.chat.profile',
+            'type' => 'ref',
+          ),
+        ),
+      ),
+      'pinnedRecordView' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'uri',
+          1 => 'cid',
+          2 => 'record',
+          3 => 'indexedAt',
+        ),
+        'properties' => 
+        array (
+          'cid' => 
+          array (
+            'type' => 'string',
+            'format' => 'cid',
+          ),
+          'uri' => 
+          array (
+            'type' => 'string',
+            'format' => 'at-uri',
+          ),
+          'record' => 
+          array (
+            'ref' => 'lex:place.stream.chat.pinnedRecord',
+            'type' => 'ref',
+          ),
+          'message' => 
+          array (
+            'ref' => 'lex:place.stream.chat.defs#messageView',
+            'type' => 'ref',
+          ),
+          'pinnedBy' => 
+          array (
+            'ref' => 'lex:place.stream.chat.profile',
+            'type' => 'ref',
+          ),
+          'indexedAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+        ),
+        'description' => 'View of a pinned chat record with hydrated message data.',
+      ),
+    ),
+    '$type' => 'com.atproto.lexicon.schema',
+    'lexicon' => 1,
+  ),
+  'place.stream.chat.pinnedRecord' => 
+  array (
+    'id' => 'place.stream.chat.pinnedRecord',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'key' => 'tid',
+        'type' => 'record',
+        'record' => 
+        array (
+          'type' => 'object',
+          'required' => 
+          array (
+            0 => 'pinnedMessage',
+            1 => 'createdAt',
+          ),
+          'properties' => 
+          array (
+            'pinnedBy' => 
+            array (
+              'type' => 'string',
+              'format' => 'did',
+              'description' => 'DID of the user who pinned the message.',
+            ),
+            'createdAt' => 
+            array (
+              'type' => 'string',
+              'format' => 'datetime',
+              'description' => 'When this pin was created.',
+            ),
+            'expiresAt' => 
+            array (
+              'type' => 'string',
+              'format' => 'datetime',
+              'description' => 'Optional expiration time. If set, the pin is considered inactive after this time.',
+            ),
+            'pinnedMessage' => 
+            array (
+              'type' => 'string',
+              'format' => 'at-uri',
+              'description' => 'AT-URI of the pinned chat message.',
+            ),
+          ),
+        ),
+        'description' => 'Record pinning a chat message for prominent display.',
+      ),
+    ),
+    '$type' => 'com.atproto.lexicon.schema',
+    'lexicon' => 1,
+  ),
+  'place.stream.chat.profile' => 
+  array (
+    'id' => 'place.stream.chat.profile',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'key' => 'literal:self',
+        'type' => 'record',
+        'record' => 
+        array (
+          'type' => 'object',
+          'properties' => 
+          array (
+            'color' => 
+            array (
+              'ref' => 'lex:place.stream.chat.profile#color',
+              'type' => 'ref',
+            ),
+            'badges' => 
+            array (
+              'ref' => 'lex:place.stream.chat.profile#badgeSelections',
+              'type' => 'ref',
+              'description' => 'Badge selections for display in chat.',
+            ),
+            'selfLabels' => 
+            array (
+              'type' => 'array',
               'items' => 
               array (
-                'ref' => 'lex:site.standard.document#contributor',
+                'ref' => 'lex:place.stream.chat.profile#selfLabel',
                 'type' => 'ref',
               ),
-              'type' => 'array',
+              'maxLength' => 10,
+              'description' => 'Self-applied labels for this profile, e.g. \'bot\'.',
             ),
-            'coverImage' => 
+          ),
+        ),
+        'description' => 'Record containing customizations for a user\'s chat profile.',
+      ),
+      'color' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'red',
+          1 => 'green',
+          2 => 'blue',
+        ),
+        'properties' => 
+        array (
+          'red' => 
+          array (
+            'type' => 'integer',
+            'maximum' => 255,
+            'minimum' => 0,
+          ),
+          'blue' => 
+          array (
+            'type' => 'integer',
+            'maximum' => 255,
+            'minimum' => 0,
+          ),
+          'green' => 
+          array (
+            'type' => 'integer',
+            'maximum' => 255,
+            'minimum' => 0,
+          ),
+        ),
+        'description' => 'Customizations for the color of a user\'s name in chat',
+      ),
+      'selfLabel' => 
+      array (
+        'type' => 'string',
+        'description' => 'Label that a user can apply to their own profile.',
+        'knownValues' => 
+        array (
+          0 => 'bot',
+        ),
+      ),
+      'badgeSelections' => 
+      array (
+        'type' => 'object',
+        'properties' => 
+        array (
+          'global' => 
+          array (
+            'ref' => 'lex:com.atproto.repo.strongRef',
+            'type' => 'ref',
+            'description' => 'Selected globally-issued badge (e.g. event badge).',
+          ),
+          'streamer' => 
+          array (
+            'type' => 'array',
+            'items' => 
             array (
+              'ref' => 'lex:place.stream.chat.profile#streamerBadgeSelection',
+              'type' => 'ref',
+            ),
+            'maxLength' => 20,
+            'description' => 'Selected streamer-issued badges, one per streamer channel.',
+          ),
+        ),
+        'description' => 'Selected badges for display in chat, organized by slot.',
+      ),
+      'streamerBadgeSelection' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'streamer',
+          1 => 'badge',
+        ),
+        'properties' => 
+        array (
+          'badge' => 
+          array (
+            'ref' => 'lex:com.atproto.repo.strongRef',
+            'type' => 'ref',
+            'description' => 'Strong reference to the selected place.stream.badge.issuance record.',
+          ),
+          'streamer' => 
+          array (
+            'type' => 'string',
+            'format' => 'did',
+            'description' => 'DID of the streamer whose channel this selection applies to.',
+          ),
+        ),
+        'description' => 'A selected badge for a specific streamer\'s channel.',
+      ),
+    ),
+    '$type' => 'com.atproto.lexicon.schema',
+    'lexicon' => 1,
+  ),
+  'place.stream.defs' => 
+  array (
+    'id' => 'place.stream.defs',
+    'defs' => 
+    array (
+      'blockView' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'uri',
+          1 => 'cid',
+          2 => 'blocker',
+          3 => 'record',
+          4 => 'indexedAt',
+        ),
+        'properties' => 
+        array (
+          'cid' => 
+          array (
+            'type' => 'string',
+            'format' => 'cid',
+          ),
+          'uri' => 
+          array (
+            'type' => 'string',
+            'format' => 'at-uri',
+          ),
+          'record' => 
+          array (
+            'ref' => 'lex:app.bsky.graph.block',
+            'type' => 'ref',
+          ),
+          'blocker' => 
+          array (
+            'ref' => 'lex:app.bsky.actor.defs#profileViewBasic',
+            'type' => 'ref',
+          ),
+          'indexedAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+        ),
+      ),
+      'rendition' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'name',
+        ),
+        'properties' => 
+        array (
+          'name' => 
+          array (
+            'type' => 'string',
+          ),
+        ),
+      ),
+      'renditions' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'renditions',
+        ),
+        'properties' => 
+        array (
+          'renditions' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'ref' => 'lex:place.stream.defs#rendition',
+              'type' => 'ref',
+            ),
+          ),
+        ),
+      ),
+      'activityGame' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'uri',
+        ),
+        'properties' => 
+        array (
+          'uri' => 
+          array (
+            'type' => 'string',
+            'format' => 'at-uri',
+          ),
+          'name' => 
+          array (
+            'type' => 'string',
+            'description' => 'Cached display name of the game.',
+          ),
+        ),
+        'description' => 'A game from the gamesgamesgamesgames catalog, identified by its AT URI.',
+      ),
+      'activityLabel' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'label',
+        ),
+        'properties' => 
+        array (
+          'label' => 
+          array (
+            'type' => 'string',
+            'knownValues' => 
+            array (
+              0 => 'events',
+              1 => 'just_chatting',
+              2 => 'podcasting',
+              3 => 'music',
+              4 => 'art',
+              5 => 'software_dev',
+              6 => 'cooking',
+              7 => 'miniatures',
+              8 => 'makers_crafting',
+              9 => 'fitness',
+              10 => 'sports',
+            ),
+          ),
+        ),
+        'description' => 'A non-game activity with a well-known label.',
+      ),
+    ),
+    '$type' => 'com.atproto.lexicon.schema',
+    'lexicon' => 1,
+  ),
+  'place.stream.livestream' => 
+  array (
+    'id' => 'place.stream.livestream',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'key' => 'tid',
+        'type' => 'record',
+        'record' => 
+        array (
+          'type' => 'object',
+          'required' => 
+          array (
+            0 => 'title',
+            1 => 'createdAt',
+          ),
+          'properties' => 
+          array (
+            'url' => 
+            array (
+              'type' => 'string',
+              'format' => 'uri',
+              'description' => 'The URL where this stream can be found. This is primarily a hint for other Streamplace nodes to locate and replicate the stream.',
+            ),
+            'post' => 
+            array (
+              'ref' => 'lex:com.atproto.repo.strongRef',
+              'type' => 'ref',
+              'description' => 'The post that announced this livestream.',
+            ),
+            'tags' => 
+            array (
+              'type' => 'array',
+              'items' => 
+              array (
+                'type' => 'string',
+                'maxLength' => 640,
+                'maxGraphemes' => 64,
+              ),
+              'maxLength' => 10,
+              'description' => 'Freeform tags for this stream. Each tag must be alphanumeric (a-z, A-Z, 0-9) plus colon. Tags with colons indicate a specific tag group (e.g. \'lang:en\' indicates the stream\'s primary language).',
+            ),
+            'agent' => 
+            array (
+              'type' => 'string',
+              'description' => 'The source of the livestream, if available, in a User Agent format: `<product> / <product-version> <comment>` e.g. Streamplace/0.7.5 iOS',
+            ),
+            'thumb' => 
+            array (
+              'type' => 'blob',
               'accept' => 
               array (
                 0 => 'image/*',
               ),
-              'description' => 'Image to used for thumbnail or cover image. Less than 1MB is size.',
               'maxSize' => 1000000,
-              'type' => 'blob',
-            ),
-            'description' => 
-            array (
-              'description' => 'A brief description or excerpt from the document.',
-              'maxGraphemes' => 3000,
-              'maxLength' => 30000,
-              'type' => 'string',
-            ),
-            'labels' => 
-            array (
-              'description' => 'Self-label values for this post. Effectively content warnings.',
-              'refs' => 
-              array (
-                0 => 'lex:com.atproto.label.defs#selfLabels',
-              ),
-              'type' => 'union',
-            ),
-            'links' => 
-            array (
-              'description' => 'Array of values describing relationships between this document and external resources',
-              'refs' => 
-              array (
-              ),
-              'type' => 'union',
-            ),
-            'path' => 
-            array (
-              'description' => 'Combine with site or publication url to construct a canonical URL to the document. Prepend with a leading slash.',
-              'type' => 'string',
-            ),
-            'publishedAt' => 
-            array (
-              'description' => 'Timestamp of the documents publish time.',
-              'format' => 'datetime',
-              'type' => 'string',
-            ),
-            'site' => 
-            array (
-              'description' => 'Points to a publication record (at://) or a publication url (https://) for loose documents. Avoid trailing slashes.',
-              'format' => 'uri',
-              'type' => 'string',
-            ),
-            'tags' => 
-            array (
-              'description' => 'Array of strings used to tag or categorize the document. Avoid prepending tags with hashtags.',
-              'items' => 
-              array (
-                'maxGraphemes' => 128,
-                'maxLength' => 1280,
-                'type' => 'string',
-              ),
-              'type' => 'array',
-            ),
-            'textContent' => 
-            array (
-              'description' => 'Plaintext representation of the documents contents. Should not contain markdown or other formatting.',
-              'type' => 'string',
             ),
             'title' => 
             array (
-              'description' => 'Title of the document.',
-              'maxGraphemes' => 500,
-              'maxLength' => 5000,
               'type' => 'string',
+              'maxLength' => 1400,
+              'description' => 'The title of the livestream, as it will be announced to followers.',
+              'maxGraphemes' => 140,
             ),
-            'updatedAt' => 
+            'endedAt' => 
             array (
-              'description' => 'Timestamp of the documents last edit.',
-              'format' => 'datetime',
               'type' => 'string',
+              'format' => 'datetime',
+              'description' => 'Client-declared timestamp when this livestream ended. Ended livestreams are not supposed to start up again.',
+            ),
+            'activity' => 
+            array (
+              'refs' => 
+              array (
+                0 => 'lex:place.stream.defs#activityGame',
+                1 => 'lex:place.stream.defs#activityLabel',
+              ),
+              'type' => 'union',
+              'description' => 'The game or activity being streamed.',
+            ),
+            'createdAt' => 
+            array (
+              'type' => 'string',
+              'format' => 'datetime',
+              'description' => 'Client-declared timestamp when this livestream started.',
+            ),
+            'lastSeenAt' => 
+            array (
+              'type' => 'string',
+              'format' => 'datetime',
+              'description' => 'Client-declared timestamp when this livestream was last seen by the Streamplace station.',
+            ),
+            'canonicalUrl' => 
+            array (
+              'type' => 'string',
+              'format' => 'uri',
+              'description' => 'The primary URL where this livestream can be viewed, if available.',
+            ),
+            'idleTimeoutSeconds' => 
+            array (
+              'type' => 'integer',
+              'description' => 'Time in seconds after which this livestream should be automatically ended if idle. Zero means no timeout.',
+            ),
+            'notificationSettings' => 
+            array (
+              'ref' => 'lex:place.stream.livestream#notificationSettings',
+              'type' => 'ref',
             ),
           ),
+        ),
+        'description' => 'Record announcing a livestream is happening',
+      ),
+      'viewerCount' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'count',
+        ),
+        'properties' => 
+        array (
+          'count' => 
+          array (
+            'type' => 'integer',
+          ),
+        ),
+      ),
+      'livestreamView' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'uri',
+          1 => 'cid',
+          2 => 'author',
+          3 => 'record',
+          4 => 'indexedAt',
+        ),
+        'properties' => 
+        array (
+          'cid' => 
+          array (
+            'type' => 'string',
+            'format' => 'cid',
+          ),
+          'uri' => 
+          array (
+            'type' => 'string',
+            'format' => 'at-uri',
+          ),
+          'author' => 
+          array (
+            'ref' => 'lex:app.bsky.actor.defs#profileViewBasic',
+            'type' => 'ref',
+          ),
+          'record' => 
+          array (
+            'type' => 'unknown',
+          ),
+          'indexedAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+          'viewerCount' => 
+          array (
+            'ref' => 'lex:place.stream.livestream#viewerCount',
+            'type' => 'ref',
+            'description' => 'The number of viewers watching this livestream. Use when you can\'t reasonably use #viewerCount directly.',
+          ),
+        ),
+      ),
+      'teleportArrival' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'teleportUri',
+          1 => 'source',
+          2 => 'viewerCount',
+          3 => 'startsAt',
+        ),
+        'properties' => 
+        array (
+          'source' => 
+          array (
+            'ref' => 'lex:app.bsky.actor.defs#profileViewBasic',
+            'type' => 'ref',
+            'description' => 'The streamer who is teleporting their viewers here',
+          ),
+          'startsAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+            'description' => 'When this teleport started',
+          ),
+          'chatProfile' => 
+          array (
+            'ref' => 'lex:place.stream.chat.profile',
+            'type' => 'ref',
+            'description' => 'The chat profile of the source streamer',
+          ),
+          'teleportUri' => 
+          array (
+            'type' => 'string',
+            'format' => 'at-uri',
+            'description' => 'The URI of the teleport record',
+          ),
+          'viewerCount' => 
+          array (
+            'type' => 'integer',
+            'description' => 'How many viewers are arriving from this teleport',
+          ),
+        ),
+      ),
+      'teleportCanceled' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'teleportUri',
+          1 => 'reason',
+        ),
+        'properties' => 
+        array (
+          'reason' => 
+          array (
+            'enum' => 
+            array (
+              0 => 'deleted',
+              1 => 'denied',
+              2 => 'expired',
+            ),
+            'type' => 'string',
+            'description' => 'Why this teleport was canceled',
+          ),
+          'teleportUri' => 
+          array (
+            'type' => 'string',
+            'format' => 'at-uri',
+            'description' => 'The URI of the teleport record that was canceled',
+          ),
+        ),
+      ),
+      'streamplaceAnything' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'livestream',
+        ),
+        'properties' => 
+        array (
+          'livestream' => 
+          array (
+            'refs' => 
+            array (
+              0 => 'lex:place.stream.livestream#livestreamView',
+              1 => 'lex:place.stream.livestream#viewerCount',
+              2 => 'lex:place.stream.livestream#teleportArrival',
+              3 => 'lex:place.stream.livestream#teleportCanceled',
+              4 => 'lex:place.stream.defs#blockView',
+              5 => 'lex:place.stream.defs#renditions',
+              6 => 'lex:place.stream.defs#rendition',
+              7 => 'lex:place.stream.chat.defs#messageView',
+              8 => 'lex:place.stream.chat.defs#pinnedRecordView',
+            ),
+            'type' => 'union',
+          ),
+        ),
+      ),
+      'notificationSettings' => 
+      array (
+        'type' => 'object',
+        'properties' => 
+        array (
+          'pushNotification' => 
+          array (
+            'type' => 'boolean',
+            'description' => 'Whether this livestream should trigger a push notification to followers.',
+          ),
+        ),
+      ),
+    ),
+    '$type' => 'com.atproto.lexicon.schema',
+    'lexicon' => 1,
+  ),
+  'site.standard.document' => 
+  array (
+    'id' => 'site.standard.document',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'key' => 'tid',
+        'type' => 'record',
+        'record' => 
+        array (
+          'type' => 'object',
           'required' => 
           array (
             0 => 'site',
             1 => 'title',
             2 => 'publishedAt',
           ),
-          'type' => 'object',
-        ),
-        'type' => 'record',
-      ),
-    ),
-    'id' => 'site.standard.document',
-    'lexicon' => 1,
-  ),
-  'site.standard.graph.recommend' => 
-  array (
-    'defs' => 
-    array (
-      'main' => 
-      array (
-        'description' => 'Record declaring a recommendation of a document.',
-        'key' => 'tid',
-        'record' => 
-        array (
           'properties' => 
           array (
-            'createdAt' => 
+            'path' => 
             array (
-              'format' => 'datetime',
               'type' => 'string',
+              'description' => 'Combine with site or publication url to construct a canonical URL to the document. Prepend with a leading slash.',
             ),
-            'document' => 
+            'site' => 
             array (
-              'description' => 'AT-URI reference to the document record being recommended (ex: at://did:plc:abc123/site.standard.document/xyz789).',
-              'format' => 'at-uri',
               'type' => 'string',
+              'format' => 'uri',
+              'description' => 'Points to a publication record (at://) or a publication url (https://) for loose documents. Avoid trailing slashes.',
             ),
-          ),
-          'required' => 
-          array (
-            0 => 'document',
-            1 => 'createdAt',
-          ),
-          'type' => 'object',
-        ),
-        'type' => 'record',
-      ),
-    ),
-    'id' => 'site.standard.graph.recommend',
-    'lexicon' => 1,
-  ),
-  'site.standard.graph.subscription' => 
-  array (
-    'defs' => 
-    array (
-      'main' => 
-      array (
-        'description' => 'Record declaring a subscription to a publication.',
-        'key' => 'tid',
-        'record' => 
-        array (
-          'properties' => 
-          array (
-            'createdAt' => 
+            'tags' => 
             array (
-              'format' => 'datetime',
-              'type' => 'string',
-            ),
-            'publication' => 
-            array (
-              'description' => 'AT-URI reference to the publication record being subscribed to (ex: at://did:plc:abc123/site.standard.publication/xyz789).',
-              'format' => 'at-uri',
-              'type' => 'string',
-            ),
-          ),
-          'required' => 
-          array (
-            0 => 'publication',
-          ),
-          'type' => 'object',
-        ),
-        'type' => 'record',
-      ),
-    ),
-    'id' => 'site.standard.graph.subscription',
-    'lexicon' => 1,
-  ),
-  'site.standard.publication' => 
-  array (
-    'defs' => 
-    array (
-      'main' => 
-      array (
-        'description' => 'A publication record representing a blog, website, or content platform. Publications serve as containers for documents and define the overall branding and settings.',
-        'key' => 'tid',
-        'record' => 
-        array (
-          'properties' => 
-          array (
-            'basicTheme' => 
-            array (
-              'description' => 'Simplified publication theme for tools and apps to utilize when displaying content.',
-              'ref' => 'lex:site.standard.theme.basic',
-              'type' => 'ref',
-            ),
-            'description' => 
-            array (
-              'description' => 'Brief description of the publication.',
-              'maxGraphemes' => 3000,
-              'maxLength' => 30000,
-              'type' => 'string',
-            ),
-            'icon' => 
-            array (
-              'accept' => 
+              'type' => 'array',
+              'items' => 
               array (
-                0 => 'image/*',
+                'type' => 'string',
+                'maxLength' => 1280,
+                'maxGraphemes' => 128,
               ),
-              'description' => 'Square image to identify the publication. Should be at least 256x256.',
-              'maxSize' => 1000000,
-              'type' => 'blob',
+              'description' => 'Array of strings used to tag or categorize the document. Avoid prepending tags with hashtags.',
+            ),
+            'links' => 
+            array (
+              'refs' => 
+              array (
+              ),
+              'type' => 'union',
+              'description' => 'Array of values describing relationships between this document and external resources',
+            ),
+            'title' => 
+            array (
+              'type' => 'string',
+              'maxLength' => 5000,
+              'description' => 'Title of the document.',
+              'maxGraphemes' => 500,
             ),
             'labels' => 
             array (
-              'description' => 'Self-label values for this publication. Effectively content warnings.',
               'refs' => 
               array (
                 0 => 'lex:com.atproto.label.defs#selfLabels',
               ),
               'type' => 'union',
+              'description' => 'Self-label values for this post. Effectively content warnings.',
             ),
-            'name' => 
+            'content' => 
             array (
-              'description' => 'Name of the publication.',
-              'maxGraphemes' => 500,
-              'maxLength' => 5000,
+              'refs' => 
+              array (
+              ),
+              'type' => 'union',
+              'closed' => false,
+              'description' => 'Open union used to define the record\'s content. Each entry must specify a $type and may be extended with other lexicons to support additional content formats.',
+            ),
+            'updatedAt' => 
+            array (
               'type' => 'string',
+              'format' => 'datetime',
+              'description' => 'Timestamp of the documents last edit.',
             ),
-            'preferences' => 
+            'coverImage' => 
             array (
-              'description' => 'Object containing platform specific preferences (with a few shared properties).',
-              'ref' => 'lex:site.standard.publication#preferences',
+              'type' => 'blob',
+              'accept' => 
+              array (
+                0 => 'image/*',
+              ),
+              'maxSize' => 1000000,
+              'description' => 'Image to used for thumbnail or cover image. Less than 1MB is size.',
+            ),
+            'bskyPostRef' => 
+            array (
+              'ref' => 'lex:com.atproto.repo.strongRef',
               'type' => 'ref',
+              'description' => 'Strong reference to a Bluesky post. Useful to keep track of comments off-platform.',
             ),
-            'url' => 
+            'description' => 
             array (
-              'description' => 'Base publication url (ex: https://standard.site). The canonical document URL is formed by combining this value with the document path.',
-              'format' => 'uri',
               'type' => 'string',
+              'maxLength' => 30000,
+              'description' => 'A brief description or excerpt from the document.',
+              'maxGraphemes' => 3000,
+            ),
+            'publishedAt' => 
+            array (
+              'type' => 'string',
+              'format' => 'datetime',
+              'description' => 'Timestamp of the documents publish time.',
+            ),
+            'textContent' => 
+            array (
+              'type' => 'string',
+              'description' => 'Plaintext representation of the documents contents. Should not contain markdown or other formatting.',
+            ),
+            'contributors' => 
+            array (
+              'type' => 'array',
+              'items' => 
+              array (
+                'ref' => 'lex:site.standard.document#contributor',
+                'type' => 'ref',
+              ),
             ),
           ),
+        ),
+        'description' => 'A document record representing a published article, blog post, or other content. Documents can belong to a publication or exist independently.',
+      ),
+      'contributor' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'did',
+        ),
+        'properties' => 
+        array (
+          'did' => 
+          array (
+            'type' => 'string',
+            'format' => 'did',
+          ),
+          'role' => 
+          array (
+            'type' => 'string',
+            'maxLength' => 1000,
+            'maxGraphemes' => 100,
+          ),
+          'displayName' => 
+          array (
+            'type' => 'string',
+            'maxLength' => 1000,
+            'maxGraphemes' => 100,
+          ),
+        ),
+      ),
+    ),
+    '$type' => 'com.atproto.lexicon.schema',
+    'lexicon' => 1,
+  ),
+  'site.standard.graph.recommend' => 
+  array (
+    'id' => 'site.standard.graph.recommend',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'key' => 'tid',
+        'type' => 'record',
+        'record' => 
+        array (
+          'type' => 'object',
+          'required' => 
+          array (
+            0 => 'document',
+            1 => 'createdAt',
+          ),
+          'properties' => 
+          array (
+            'document' => 
+            array (
+              'type' => 'string',
+              'format' => 'at-uri',
+              'description' => 'AT-URI reference to the document record being recommended (ex: at://did:plc:abc123/site.standard.document/xyz789).',
+            ),
+            'createdAt' => 
+            array (
+              'type' => 'string',
+              'format' => 'datetime',
+            ),
+          ),
+        ),
+        'description' => 'Record declaring a recommendation of a document.',
+      ),
+    ),
+    '$type' => 'com.atproto.lexicon.schema',
+    'lexicon' => 1,
+  ),
+  'site.standard.graph.subscription' => 
+  array (
+    'id' => 'site.standard.graph.subscription',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'key' => 'tid',
+        'type' => 'record',
+        'record' => 
+        array (
+          'type' => 'object',
+          'required' => 
+          array (
+            0 => 'publication',
+          ),
+          'properties' => 
+          array (
+            'createdAt' => 
+            array (
+              'type' => 'string',
+              'format' => 'datetime',
+            ),
+            'publication' => 
+            array (
+              'type' => 'string',
+              'format' => 'at-uri',
+              'description' => 'AT-URI reference to the publication record being subscribed to (ex: at://did:plc:abc123/site.standard.publication/xyz789).',
+            ),
+          ),
+        ),
+        'description' => 'Record declaring a subscription to a publication.',
+      ),
+    ),
+    '$type' => 'com.atproto.lexicon.schema',
+    'lexicon' => 1,
+  ),
+  'site.standard.publication' => 
+  array (
+    'id' => 'site.standard.publication',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'key' => 'tid',
+        'type' => 'record',
+        'record' => 
+        array (
+          'type' => 'object',
           'required' => 
           array (
             0 => 'url',
             1 => 'name',
           ),
-          'type' => 'object',
+          'properties' => 
+          array (
+            'url' => 
+            array (
+              'type' => 'string',
+              'format' => 'uri',
+              'description' => 'Base publication url (ex: https://standard.site). The canonical document URL is formed by combining this value with the document path.',
+            ),
+            'icon' => 
+            array (
+              'type' => 'blob',
+              'accept' => 
+              array (
+                0 => 'image/*',
+              ),
+              'maxSize' => 1000000,
+              'description' => 'Square image to identify the publication. Should be at least 256x256.',
+            ),
+            'name' => 
+            array (
+              'type' => 'string',
+              'maxLength' => 5000,
+              'description' => 'Name of the publication.',
+              'maxGraphemes' => 500,
+            ),
+            'labels' => 
+            array (
+              'refs' => 
+              array (
+                0 => 'lex:com.atproto.label.defs#selfLabels',
+              ),
+              'type' => 'union',
+              'description' => 'Self-label values for this publication. Effectively content warnings.',
+            ),
+            'basicTheme' => 
+            array (
+              'ref' => 'lex:site.standard.theme.basic',
+              'type' => 'ref',
+              'description' => 'Simplified publication theme for tools and apps to utilize when displaying content.',
+            ),
+            'description' => 
+            array (
+              'type' => 'string',
+              'maxLength' => 30000,
+              'description' => 'Brief description of the publication.',
+              'maxGraphemes' => 3000,
+            ),
+            'preferences' => 
+            array (
+              'ref' => 'lex:site.standard.publication#preferences',
+              'type' => 'ref',
+              'description' => 'Object containing platform specific preferences (with a few shared properties).',
+            ),
+          ),
         ),
-        'type' => 'record',
+        'description' => 'A publication record representing a blog, website, or content platform. Publications serve as containers for documents and define the overall branding and settings.',
       ),
       'preferences' => 
       array (
+        'type' => 'object',
         'properties' => 
         array (
           'showInDiscover' => 
           array (
+            'type' => 'boolean',
             'default' => true,
             'description' => 'Boolean which decides whether the publication should appear in discovery feeds.',
-            'type' => 'boolean',
           ),
         ),
-        'type' => 'object',
       ),
     ),
-    'id' => 'site.standard.publication',
+    '$type' => 'com.atproto.lexicon.schema',
     'lexicon' => 1,
   ),
   'site.standard.theme.basic' => 
   array (
+    'id' => 'site.standard.theme.basic',
     'defs' => 
     array (
       'main' => 
       array (
-        'description' => 'A simplified theme definition for publications, providing basic color customization for content display across different platforms and applications.',
         'key' => 'tid',
+        'type' => 'record',
         'record' => 
         array (
-          'properties' => 
-          array (
-            'accent' => 
-            array (
-              'description' => 'Color used for links and button backgrounds.',
-              'refs' => 
-              array (
-                0 => 'lex:site.standard.theme.color#rgb',
-              ),
-              'type' => 'union',
-            ),
-            'accentForeground' => 
-            array (
-              'description' => 'Color used for button text.',
-              'refs' => 
-              array (
-                0 => 'lex:site.standard.theme.color#rgb',
-              ),
-              'type' => 'union',
-            ),
-            'background' => 
-            array (
-              'description' => 'Color used for content background.',
-              'refs' => 
-              array (
-                0 => 'lex:site.standard.theme.color#rgb',
-              ),
-              'type' => 'union',
-            ),
-            'foreground' => 
-            array (
-              'description' => 'Color used for content text.',
-              'refs' => 
-              array (
-                0 => 'lex:site.standard.theme.color#rgb',
-              ),
-              'type' => 'union',
-            ),
-          ),
+          'type' => 'object',
           'required' => 
           array (
             0 => 'background',
@@ -29037,78 +31673,91 @@ return array (
             2 => 'accent',
             3 => 'accentForeground',
           ),
-          'type' => 'object',
+          'properties' => 
+          array (
+            'accent' => 
+            array (
+              'refs' => 
+              array (
+                0 => 'lex:site.standard.theme.color#rgb',
+              ),
+              'type' => 'union',
+              'description' => 'Color used for links and button backgrounds.',
+            ),
+            'background' => 
+            array (
+              'refs' => 
+              array (
+                0 => 'lex:site.standard.theme.color#rgb',
+              ),
+              'type' => 'union',
+              'description' => 'Color used for content background.',
+            ),
+            'foreground' => 
+            array (
+              'refs' => 
+              array (
+                0 => 'lex:site.standard.theme.color#rgb',
+              ),
+              'type' => 'union',
+              'description' => 'Color used for content text.',
+            ),
+            'accentForeground' => 
+            array (
+              'refs' => 
+              array (
+                0 => 'lex:site.standard.theme.color#rgb',
+              ),
+              'type' => 'union',
+              'description' => 'Color used for button text.',
+            ),
+          ),
         ),
-        'type' => 'record',
+        'description' => 'A simplified theme definition for publications, providing basic color customization for content display across different platforms and applications.',
       ),
     ),
-    'id' => 'site.standard.theme.basic',
+    '$type' => 'com.atproto.lexicon.schema',
     'lexicon' => 1,
   ),
   'site.standard.theme.color' => 
   array (
+    'id' => 'site.standard.theme.color',
     'defs' => 
     array (
       'rgb' => 
       array (
-        'properties' => 
-        array (
-          'b' => 
-          array (
-            'maximum' => 255,
-            'minimum' => 0,
-            'type' => 'integer',
-          ),
-          'g' => 
-          array (
-            'maximum' => 255,
-            'minimum' => 0,
-            'type' => 'integer',
-          ),
-          'r' => 
-          array (
-            'maximum' => 255,
-            'minimum' => 0,
-            'type' => 'integer',
-          ),
-        ),
+        'type' => 'object',
         'required' => 
         array (
           0 => 'r',
           1 => 'g',
           2 => 'b',
         ),
-        'type' => 'object',
-      ),
-      'rgba' => 
-      array (
         'properties' => 
         array (
-          'a' => 
-          array (
-            'maximum' => 100,
-            'minimum' => 0,
-            'type' => 'integer',
-          ),
           'b' => 
           array (
+            'type' => 'integer',
             'maximum' => 255,
             'minimum' => 0,
-            'type' => 'integer',
           ),
           'g' => 
           array (
+            'type' => 'integer',
             'maximum' => 255,
             'minimum' => 0,
-            'type' => 'integer',
           ),
           'r' => 
           array (
+            'type' => 'integer',
             'maximum' => 255,
             'minimum' => 0,
-            'type' => 'integer',
           ),
         ),
+      ),
+      'rgba' => 
+      array (
+        'type' => 'object',
         'required' => 
         array (
           0 => 'r',
@@ -29116,10 +31765,251 @@ return array (
           2 => 'b',
           3 => 'a',
         ),
-        'type' => 'object',
+        'properties' => 
+        array (
+          'a' => 
+          array (
+            'type' => 'integer',
+            'maximum' => 100,
+            'minimum' => 0,
+          ),
+          'b' => 
+          array (
+            'type' => 'integer',
+            'maximum' => 255,
+            'minimum' => 0,
+          ),
+          'g' => 
+          array (
+            'type' => 'integer',
+            'maximum' => 255,
+            'minimum' => 0,
+          ),
+          'r' => 
+          array (
+            'type' => 'integer',
+            'maximum' => 255,
+            'minimum' => 0,
+          ),
+        ),
       ),
     ),
-    'id' => 'site.standard.theme.color',
+    '$type' => 'com.atproto.lexicon.schema',
+    'lexicon' => 1,
+  ),
+  'social.grain.defs' => 
+  array (
+    'id' => 'social.grain.defs',
+    'defs' => 
+    array (
+      'aspectRatio' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'width',
+          1 => 'height',
+        ),
+        'properties' => 
+        array (
+          'width' => 
+          array (
+            'type' => 'integer',
+            'minimum' => 1,
+          ),
+          'height' => 
+          array (
+            'type' => 'integer',
+            'minimum' => 1,
+          ),
+        ),
+        'description' => 'width:height represents an aspect ratio. It may be approximate, and may not correspond to absolute dimensions in any given unit.',
+      ),
+    ),
+    '$type' => 'com.atproto.lexicon.schema',
+    'lexicon' => 1,
+  ),
+  'social.grain.favorite' => 
+  array (
+    'id' => 'social.grain.favorite',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'key' => 'tid',
+        'type' => 'record',
+        'record' => 
+        array (
+          'type' => 'object',
+          'required' => 
+          array (
+            0 => 'createdAt',
+            1 => 'subject',
+          ),
+          'properties' => 
+          array (
+            'subject' => 
+            array (
+              'type' => 'string',
+              'format' => 'at-uri',
+            ),
+            'createdAt' => 
+            array (
+              'type' => 'string',
+              'format' => 'datetime',
+            ),
+          ),
+        ),
+      ),
+    ),
+    '$type' => 'com.atproto.lexicon.schema',
+    'lexicon' => 1,
+  ),
+  'social.grain.gallery' => 
+  array (
+    'id' => 'social.grain.gallery',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'key' => 'tid',
+        'type' => 'record',
+        'record' => 
+        array (
+          'type' => 'object',
+          'required' => 
+          array (
+            0 => 'title',
+            1 => 'createdAt',
+          ),
+          'properties' => 
+          array (
+            'title' => 
+            array (
+              'type' => 'string',
+              'maxLength' => 100,
+            ),
+            'labels' => 
+            array (
+              'refs' => 
+              array (
+                0 => 'lex:com.atproto.label.defs#selfLabels',
+              ),
+              'type' => 'union',
+              'description' => 'Self-label values for this post. Effectively content warnings.',
+            ),
+            'createdAt' => 
+            array (
+              'type' => 'string',
+              'format' => 'datetime',
+            ),
+            'description' => 
+            array (
+              'type' => 'string',
+              'maxLength' => 1000,
+            ),
+          ),
+        ),
+      ),
+    ),
+    '$type' => 'com.atproto.lexicon.schema',
+    'lexicon' => 1,
+  ),
+  'social.grain.gallery.item' => 
+  array (
+    'id' => 'social.grain.gallery.item',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'key' => 'tid',
+        'type' => 'record',
+        'record' => 
+        array (
+          'type' => 'object',
+          'required' => 
+          array (
+            0 => 'createdAt',
+            1 => 'gallery',
+            2 => 'item',
+          ),
+          'properties' => 
+          array (
+            'item' => 
+            array (
+              'type' => 'string',
+              'format' => 'at-uri',
+            ),
+            'gallery' => 
+            array (
+              'type' => 'string',
+              'format' => 'at-uri',
+            ),
+            'position' => 
+            array (
+              'type' => 'integer',
+              'default' => 0,
+            ),
+            'createdAt' => 
+            array (
+              'type' => 'string',
+              'format' => 'datetime',
+            ),
+          ),
+        ),
+      ),
+    ),
+    '$type' => 'com.atproto.lexicon.schema',
+    'lexicon' => 1,
+  ),
+  'social.grain.photo' => 
+  array (
+    'id' => 'social.grain.photo',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'key' => 'tid',
+        'type' => 'record',
+        'record' => 
+        array (
+          'type' => 'object',
+          'required' => 
+          array (
+            0 => 'photo',
+            1 => 'alt',
+          ),
+          'properties' => 
+          array (
+            'alt' => 
+            array (
+              'type' => 'string',
+              'description' => 'Alt text description of the image, for accessibility.',
+            ),
+            'photo' => 
+            array (
+              'type' => 'blob',
+              'accept' => 
+              array (
+                0 => 'image/*',
+              ),
+              'maxSize' => 1000000,
+            ),
+            'createdAt' => 
+            array (
+              'type' => 'string',
+              'format' => 'datetime',
+            ),
+            'aspectRatio' => 
+            array (
+              'ref' => 'lex:social.grain.defs#aspectRatio',
+              'type' => 'ref',
+            ),
+          ),
+        ),
+      ),
+    ),
+    '$type' => 'com.atproto.lexicon.schema',
     'lexicon' => 1,
   ),
   'tools.ozone.communication.createTemplate' => 
@@ -29757,8 +32647,9 @@ return array (
           0 => 'src',
           1 => 'subject',
           2 => 'enforcement',
-          3 => 'createdAt',
-          4 => 'updatedAt',
+          3 => 'isRead',
+          4 => 'createdAt',
+          5 => 'updatedAt',
         ),
         'properties' => 
         array (
@@ -29817,6 +32708,10 @@ return array (
           array (
             'type' => 'string',
             'format' => 'datetime',
+          ),
+          'isRead' => 
+          array (
+            'type' => 'boolean',
           ),
         ),
       ),
@@ -29901,11 +32796,6 @@ return array (
             'format' => 'datetime',
             'description' => 'When the appeal\'s report was closed.',
           ),
-          'note' => 
-          array (
-            'type' => 'string',
-            'description' => 'Moderator explanation, from the publicNote on the closing activity. Absent if none was written.',
-          ),
           'appealableUntil' => 
           array (
             'type' => 'string',
@@ -29974,9 +32864,1282 @@ return array (
             'type' => 'array',
             'items' => 
             array (
+              'type' => 'ref',
+              'ref' => 'lex:tools.ozone.inbox.defs#policyView',
+            ),
+            'description' => 'Policies applied by a takedown action.',
+          ),
+        ),
+      ),
+      'policyView' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'key',
+          1 => 'displayName',
+          2 => 'link',
+        ),
+        'properties' => 
+        array (
+          'key' => 
+          array (
+            'type' => 'string',
+          ),
+          'displayName' => 
+          array (
+            'type' => 'string',
+          ),
+          'link' => 
+          array (
+            'type' => 'string',
+            'format' => 'uri',
+          ),
+        ),
+      ),
+      'subjectViewDetail' => 
+      array (
+        'type' => 'object',
+        'description' => 'A subject with a page of its action history and an aggregate report summary. Follow cursor to retrieve older actions; enforcement and appeal describe the current subject state on every page.',
+        'required' => 
+        array (
+          0 => 'src',
+          1 => 'subject',
+          2 => 'enforcement',
+          3 => 'isRead',
+          4 => 'actions',
+          5 => 'createdAt',
+          6 => 'updatedAt',
+        ),
+        'properties' => 
+        array (
+          'src' => 
+          array (
+            'type' => 'string',
+            'format' => 'did',
+          ),
+          'isRead' => 
+          array (
+            'type' => 'boolean',
+          ),
+          'subject' => 
+          array (
+            'type' => 'union',
+            'refs' => 
+            array (
+              0 => 'lex:com.atproto.admin.defs#repoRef',
+              1 => 'lex:com.atproto.repo.strongRef',
+            ),
+          ),
+          'record' => 
+          array (
+            'type' => 'unknown',
+            'description' => 'Raw record JSON for the subject, when the subject is a record and the record is available.',
+          ),
+          'enforcement' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:tools.ozone.inbox.defs#enforcementView',
+          ),
+          'appeal' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:tools.ozone.inbox.defs#appealView',
+          ),
+          'availableActions' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'string',
+              'knownValues' => 
+              array (
+                0 => 'appeal',
+              ),
+            ),
+          ),
+          'actions' => 
+          array (
+            'type' => 'array',
+            'description' => 'A page of action history, most recent first. Reversal timestamps include changes outside this page.',
+            'maxLength' => 100,
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:tools.ozone.inbox.defs#actionView',
+            ),
+          ),
+          'cursor' => 
+          array (
+            'type' => 'string',
+            'description' => 'Cursor for the next page of action history. Omitted when no older actions remain.',
+          ),
+          'reports' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:tools.ozone.inbox.defs#reportsSummary',
+            'description' => 'Omitted when the subject has never been reported, e.g. proactive enforcement.',
+          ),
+          'createdAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+          'updatedAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+        ),
+      ),
+      'reportsSummary' => 
+      array (
+        'type' => 'object',
+        'description' => 'Aggregate view of reports filed against this subject. Deliberately carries no report IDs, no count, and no reporter identities.',
+        'required' => 
+        array (
+          0 => 'reasonTypes',
+          1 => 'firstReportedOn',
+          2 => 'lastReportedOn',
+        ),
+        'properties' => 
+        array (
+          'reasonTypes' => 
+          array (
+            'type' => 'array',
+            'description' => 'Distinct reason types reported, deduplicated and unordered. Excludes reasonAppeal.',
+            'items' => 
+            array (
               'type' => 'string',
             ),
-            'description' => 'Policies that were applied in this action.',
+          ),
+          'firstReportedOn' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+            'description' => 'Day of the earliest report, truncated to midnight UTC. Render as a date; the time component is not meaningful.',
+          ),
+          'lastReportedOn' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+            'description' => 'Day of the most recent report, truncated to midnight UTC. Render as a date; the time component is not meaningful.',
+          ),
+        ),
+      ),
+      'notification' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'id',
+          1 => 'reason',
+          2 => 'target',
+          3 => 'isRead',
+          4 => 'createdAt',
+        ),
+        'properties' => 
+        array (
+          'id' => 
+          array (
+            'type' => 'integer',
+          ),
+          'reason' => 
+          array (
+            'type' => 'string',
+            'knownValues' => 
+            array (
+              0 => 'reportResolved',
+              1 => 'reportReopened',
+              2 => 'actionTaken',
+              3 => 'actionReversed',
+              4 => 'appealResolved',
+              5 => 'standingChanged',
+            ),
+          ),
+          'target' => 
+          array (
+            'type' => 'union',
+            'refs' => 
+            array (
+              0 => 'lex:tools.ozone.inbox.defs#reportRef',
+              1 => 'lex:tools.ozone.inbox.defs#subjectRef',
+              2 => 'lex:tools.ozone.inbox.defs#standingRef',
+            ),
+          ),
+          'isRead' => 
+          array (
+            'type' => 'boolean',
+          ),
+          'createdAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+        ),
+      ),
+      'notificationPreferences' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'push',
+        ),
+        'properties' => 
+        array (
+          'push' => 
+          array (
+            'type' => 'boolean',
+          ),
+        ),
+      ),
+      'reportRef' => 
+      array (
+        'type' => 'object',
+        'description' => 'Reference to a report by its report table ID, as used by getReport and Ozone\'s report detail page.',
+        'required' => 
+        array (
+          0 => 'reportId',
+        ),
+        'properties' => 
+        array (
+          'reportId' => 
+          array (
+            'type' => 'integer',
+          ),
+          'subject' => 
+          array (
+            'type' => 'union',
+            'refs' => 
+            array (
+              0 => 'lex:com.atproto.admin.defs#repoRef',
+              1 => 'lex:com.atproto.repo.strongRef',
+            ),
+          ),
+          'status' => 
+          array (
+            'type' => 'string',
+            'knownValues' => 
+            array (
+              0 => 'pending',
+              1 => 'resolved',
+            ),
+          ),
+        ),
+      ),
+      'subjectRef' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'subject',
+        ),
+        'properties' => 
+        array (
+          'subject' => 
+          array (
+            'type' => 'union',
+            'refs' => 
+            array (
+              0 => 'lex:com.atproto.admin.defs#repoRef',
+              1 => 'lex:com.atproto.repo.strongRef',
+            ),
+          ),
+          'actionType' => 
+          array (
+            'type' => 'string',
+          ),
+          'actionId' => 
+          array (
+            'type' => 'integer',
+          ),
+        ),
+      ),
+      'standingRef' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'standing',
+        ),
+        'properties' => 
+        array (
+          'standing' => 
+          array (
+            'type' => 'string',
+            'knownValues' => 
+            array (
+              0 => 'good',
+              1 => 'warning',
+              2 => 'atRisk',
+            ),
+          ),
+          'previousStanding' => 
+          array (
+            'type' => 'string',
+            'knownValues' => 
+            array (
+              0 => 'good',
+              1 => 'warning',
+              2 => 'atRisk',
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
+  'tools.ozone.inbox.getAccountStatus' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'tools.ozone.inbox.getAccountStatus',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'description' => 'Get the authenticated account\'s current standing with this moderation service.',
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'src',
+              1 => 'standing',
+              2 => 'updatedAt',
+            ),
+            'properties' => 
+            array (
+              'src' => 
+              array (
+                'type' => 'string',
+                'format' => 'did',
+                'description' => 'DID of the moderation service returning this status.',
+              ),
+              'standing' => 
+              array (
+                'type' => 'string',
+                'knownValues' => 
+                array (
+                  0 => 'good',
+                  1 => 'warning',
+                  2 => 'atRisk',
+                ),
+              ),
+              'updatedAt' => 
+              array (
+                'type' => 'string',
+                'format' => 'datetime',
+                'description' => 'Newest account-status update or strike timestamp used to derive this standing, or the Unix epoch when neither exists. This is not a standing-transition timestamp; expiry can change standing without changing this value.',
+              ),
+              'expiresAt' => 
+              array (
+                'type' => 'string',
+                'format' => 'datetime',
+                'description' => 'Time at which the current suspension expires. Present only for a temporary suspension.',
+              ),
+            ),
+          ),
+        ),
+        'parameters' => 
+        array (
+          'type' => 'params',
+          'properties' => 
+          array (
+            'did' => 
+            array (
+              'type' => 'string',
+              'format' => 'did',
+              'description' => 'Account to preview. Only Ozone staff can read another account; this does not change its read state.',
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
+  'tools.ozone.inbox.getActionedSubject' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'tools.ozone.inbox.getActionedSubject',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'description' => 'Get a subject belonging to the authenticated account, including its moderation action history from this moderation service.',
+        'parameters' => 
+        array (
+          'type' => 'params',
+          'required' => 
+          array (
+            0 => 'subject',
+          ),
+          'properties' => 
+          array (
+            'did' => 
+            array (
+              'type' => 'string',
+              'format' => 'did',
+              'description' => 'Account to preview. Defaults to the authenticated account; another account requires an active moderator, triage, or admin credential.',
+            ),
+            'subject' => 
+            array (
+              'type' => 'string',
+              'format' => 'uri',
+              'description' => 'DID or AT-URI of the subject to retrieve.',
+            ),
+            'limit' => 
+            array (
+              'type' => 'integer',
+              'minimum' => 1,
+              'maximum' => 100,
+              'default' => 50,
+              'description' => 'Maximum number of actions to return.',
+            ),
+            'cursor' => 
+            array (
+              'type' => 'string',
+              'description' => 'Opaque cursor for the next page of this subject\'s action history.',
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:tools.ozone.inbox.defs#subjectViewDetail',
+          ),
+        ),
+        'errors' => 
+        array (
+          0 => 
+          array (
+            'name' => 'NotFound',
+            'description' => 'No subject was found, or the authenticated account does not own the subject.',
+          ),
+        ),
+      ),
+    ),
+  ),
+  'tools.ozone.inbox.getNotificationPreferences' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'tools.ozone.inbox.getNotificationPreferences',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'parameters' => 
+        array (
+          'type' => 'params',
+          'properties' => 
+          array (
+            'did' => 
+            array (
+              'type' => 'string',
+              'format' => 'did',
+              'description' => 'Account to preview. Only Ozone staff can read another account; this does not change its read state.',
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'preferences',
+            ),
+            'properties' => 
+            array (
+              'preferences' => 
+              array (
+                'type' => 'ref',
+                'ref' => 'lex:tools.ozone.inbox.defs#notificationPreferences',
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
+  'tools.ozone.inbox.getReport' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'tools.ozone.inbox.getReport',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'description' => 'Get a moderation report submitted by the authenticated account to this moderation service.',
+        'parameters' => 
+        array (
+          'type' => 'params',
+          'required' => 
+          array (
+            0 => 'id',
+          ),
+          'properties' => 
+          array (
+            'did' => 
+            array (
+              'type' => 'string',
+              'format' => 'did',
+              'description' => 'Reporter to preview. Defaults to the authenticated account; another account requires an active moderator, triage, or admin credential.',
+            ),
+            'id' => 
+            array (
+              'type' => 'integer',
+              'description' => 'Report ID (report table ID), as returned by listReports.',
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'report',
+            ),
+            'properties' => 
+            array (
+              'report' => 
+              array (
+                'type' => 'ref',
+                'ref' => 'lex:tools.ozone.inbox.getReport#reportView',
+              ),
+              'resolution' => 
+              array (
+                'type' => 'ref',
+                'ref' => 'lex:tools.ozone.inbox.getReport#resolutionView',
+                'description' => 'Present only when the report is resolved.',
+              ),
+            ),
+          ),
+        ),
+        'errors' => 
+        array (
+          0 => 
+          array (
+            'name' => 'NotFound',
+            'description' => 'No report was found, or the authenticated account did not submit it.',
+          ),
+        ),
+      ),
+      'reportView' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'src',
+          1 => 'id',
+          2 => 'reasonType',
+          3 => 'subject',
+          4 => 'status',
+          5 => 'createdAt',
+          6 => 'updatedAt',
+        ),
+        'properties' => 
+        array (
+          'src' => 
+          array (
+            'type' => 'string',
+            'format' => 'did',
+            'description' => 'DID of the moderation service that received the report.',
+          ),
+          'id' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Report ID (report table ID), used by Ozone\'s report detail page.',
+          ),
+          'reasonType' => 
+          array (
+            'type' => 'string',
+            'description' => 'The exact fully-qualified reason NSID submitted with and stored on the report.',
+          ),
+          'reason' => 
+          array (
+            'type' => 'string',
+            'maxGraphemes' => 2000,
+            'maxLength' => 20000,
+          ),
+          'subject' => 
+          array (
+            'type' => 'union',
+            'refs' => 
+            array (
+              0 => 'lex:com.atproto.admin.defs#repoRef',
+              1 => 'lex:com.atproto.repo.strongRef',
+              2 => 'lex:chat.bsky.convo.defs#messageRef',
+              3 => 'lex:chat.bsky.convo.defs#convoRef',
+            ),
+          ),
+          'record' => 
+          array (
+            'type' => 'unknown',
+            'description' => 'Raw record JSON for the subject, when the subject is a record and the record is available.',
+          ),
+          'status' => 
+          array (
+            'type' => 'string',
+            'knownValues' => 
+            array (
+              0 => 'pending',
+              1 => 'resolved',
+            ),
+          ),
+          'createdAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+          'updatedAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+        ),
+      ),
+      'resolutionView' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'outcome',
+          1 => 'resolvedAt',
+        ),
+        'properties' => 
+        array (
+          'outcome' => 
+          array (
+            'type' => 'string',
+            'knownValues' => 
+            array (
+              0 => 'actionTaken',
+              1 => 'noAction',
+              2 => 'other',
+            ),
+          ),
+          'actionTaken' => 
+          array (
+            'type' => 'string',
+            'description' => 'Public action associated with this report\'s resolution. See the public action vocabulary table.',
+          ),
+          'scope' => 
+          array (
+            'type' => 'string',
+            'knownValues' => 
+            array (
+              0 => 'network',
+              1 => 'app',
+              2 => 'labelOnly',
+            ),
+          ),
+          'resolvedAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+        ),
+      ),
+    ),
+  ),
+  'tools.ozone.inbox.getUnreadCount' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'tools.ozone.inbox.getUnreadCount',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'parameters' => 
+        array (
+          'type' => 'params',
+          'properties' => 
+          array (
+            'section' => 
+            array (
+              'type' => 'string',
+              'knownValues' => 
+              array (
+                0 => 'reports',
+                1 => 'subjects',
+                2 => 'accountStatus',
+              ),
+            ),
+            'did' => 
+            array (
+              'type' => 'string',
+              'format' => 'did',
+              'description' => 'Account to preview. Only Ozone staff can read another account; this does not change its read state.',
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'unreadCounts',
+            ),
+            'properties' => 
+            array (
+              'unreadCounts' => 
+              array (
+                'type' => 'ref',
+                'ref' => 'lex:tools.ozone.inbox.getUnreadCount#unreadCounts',
+              ),
+            ),
+          ),
+        ),
+      ),
+      'unreadCounts' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'total',
+        ),
+        'properties' => 
+        array (
+          'total' => 
+          array (
+            'type' => 'integer',
+            'minimum' => 0,
+          ),
+          'reports' => 
+          array (
+            'type' => 'integer',
+            'minimum' => 0,
+          ),
+          'subjects' => 
+          array (
+            'type' => 'integer',
+            'minimum' => 0,
+          ),
+          'accountStatus' => 
+          array (
+            'type' => 'integer',
+            'minimum' => 0,
+            'maximum' => 1,
+          ),
+        ),
+      ),
+    ),
+  ),
+  'tools.ozone.inbox.listActionedSubjects' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'tools.ozone.inbox.listActionedSubjects',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'description' => 'List subjects belonging to the authenticated account that have moderation actions from this moderation service.',
+        'parameters' => 
+        array (
+          'type' => 'params',
+          'properties' => 
+          array (
+            'did' => 
+            array (
+              'type' => 'string',
+              'format' => 'did',
+              'description' => 'Account to preview. Defaults to the authenticated account; another account requires an active moderator, triage, or admin credential.',
+            ),
+            'filter' => 
+            array (
+              'type' => 'string',
+              'default' => 'all',
+              'enum' => 
+              array (
+                0 => 'all',
+                1 => 'pending',
+                2 => 'resolved',
+                3 => 'unread',
+              ),
+              'description' => 'Filter subject activity. pending includes subjects whose latest appeal report is not closed; resolved includes subjects whose latest appeal report is closed. unread includes subjects whose public updatedAt is after the subjects section\'s seenAt watermark.',
+            ),
+            'sortField' => 
+            array (
+              'type' => 'string',
+              'default' => 'updatedAt',
+              'enum' => 
+              array (
+                0 => 'createdAt',
+                1 => 'updatedAt',
+              ),
+            ),
+            'sortDirection' => 
+            array (
+              'type' => 'string',
+              'default' => 'desc',
+              'enum' => 
+              array (
+                0 => 'asc',
+                1 => 'desc',
+              ),
+            ),
+            'limit' => 
+            array (
+              'type' => 'integer',
+              'minimum' => 1,
+              'maximum' => 100,
+              'default' => 50,
+            ),
+            'cursor' => 
+            array (
+              'type' => 'string',
+              'description' => 'An opaque cursor for pagination.',
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'subjects',
+            ),
+            'properties' => 
+            array (
+              'cursor' => 
+              array (
+                'type' => 'string',
+              ),
+              'subjects' => 
+              array (
+                'type' => 'array',
+                'items' => 
+                array (
+                  'type' => 'ref',
+                  'ref' => 'lex:tools.ozone.inbox.defs#subjectView',
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
+  'tools.ozone.inbox.listNotifications' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'tools.ozone.inbox.listNotifications',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'parameters' => 
+        array (
+          'type' => 'params',
+          'properties' => 
+          array (
+            'section' => 
+            array (
+              'type' => 'string',
+              'knownValues' => 
+              array (
+                0 => 'reports',
+                1 => 'subjects',
+                2 => 'accountStatus',
+              ),
+            ),
+            'reasons' => 
+            array (
+              'type' => 'array',
+              'items' => 
+              array (
+                'type' => 'string',
+                'knownValues' => 
+                array (
+                  0 => 'reportResolved',
+                  1 => 'reportReopened',
+                  2 => 'actionTaken',
+                  3 => 'actionReversed',
+                  4 => 'appealResolved',
+                  5 => 'standingChanged',
+                ),
+              ),
+            ),
+            'unreadOnly' => 
+            array (
+              'type' => 'boolean',
+              'default' => false,
+            ),
+            'limit' => 
+            array (
+              'type' => 'integer',
+              'minimum' => 1,
+              'maximum' => 100,
+              'default' => 50,
+            ),
+            'cursor' => 
+            array (
+              'type' => 'string',
+            ),
+            'did' => 
+            array (
+              'type' => 'string',
+              'format' => 'did',
+              'description' => 'Account to preview. Only Ozone staff can read another account; this does not change its read state.',
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'notifications',
+            ),
+            'properties' => 
+            array (
+              'cursor' => 
+              array (
+                'type' => 'string',
+              ),
+              'notifications' => 
+              array (
+                'type' => 'array',
+                'items' => 
+                array (
+                  'type' => 'ref',
+                  'ref' => 'lex:tools.ozone.inbox.defs#notification',
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
+  'tools.ozone.inbox.listReports' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'tools.ozone.inbox.listReports',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'description' => 'List moderation reports submitted by the authenticated account to this moderation service.',
+        'parameters' => 
+        array (
+          'type' => 'params',
+          'properties' => 
+          array (
+            'did' => 
+            array (
+              'type' => 'string',
+              'format' => 'did',
+              'description' => 'Account to preview. Defaults to the authenticated account; another account requires an active moderator, triage, or admin credential.',
+            ),
+            'filter' => 
+            array (
+              'type' => 'string',
+              'default' => 'all',
+              'enum' => 
+              array (
+                0 => 'all',
+                1 => 'pending',
+                2 => 'resolved',
+                3 => 'unread',
+              ),
+              'description' => 'Filter report activity. unread includes reports whose updatedAt is after the reports section\'s seenAt watermark.',
+            ),
+            'sortField' => 
+            array (
+              'type' => 'string',
+              'default' => 'updatedAt',
+              'enum' => 
+              array (
+                0 => 'createdAt',
+                1 => 'updatedAt',
+              ),
+            ),
+            'sortDirection' => 
+            array (
+              'type' => 'string',
+              'default' => 'desc',
+              'enum' => 
+              array (
+                0 => 'asc',
+                1 => 'desc',
+              ),
+            ),
+            'limit' => 
+            array (
+              'type' => 'integer',
+              'minimum' => 1,
+              'maximum' => 100,
+              'default' => 50,
+            ),
+            'cursor' => 
+            array (
+              'type' => 'string',
+              'description' => 'An opaque cursor for pagination.',
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'reports',
+            ),
+            'properties' => 
+            array (
+              'cursor' => 
+              array (
+                'type' => 'string',
+              ),
+              'reports' => 
+              array (
+                'type' => 'array',
+                'items' => 
+                array (
+                  'type' => 'ref',
+                  'ref' => 'lex:tools.ozone.inbox.listReports#reportView',
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+      'reportView' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'src',
+          1 => 'id',
+          2 => 'isRead',
+          3 => 'reasonType',
+          4 => 'subject',
+          5 => 'status',
+          6 => 'createdAt',
+          7 => 'updatedAt',
+        ),
+        'properties' => 
+        array (
+          'src' => 
+          array (
+            'type' => 'string',
+            'format' => 'did',
+            'description' => 'DID of the moderation service that received the report.',
+          ),
+          'id' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Report ID (report table ID), used by getReport and Ozone\'s report detail page.',
+          ),
+          'isRead' => 
+          array (
+            'type' => 'boolean',
+          ),
+          'reasonType' => 
+          array (
+            'type' => 'string',
+            'description' => 'The exact fully-qualified reason NSID submitted with and stored on the report.',
+          ),
+          'reason' => 
+          array (
+            'type' => 'string',
+            'maxGraphemes' => 2000,
+            'maxLength' => 20000,
+          ),
+          'lastActionTaken' => 
+          array (
+            'type' => 'string',
+            'description' => 'Public action associated with this report\'s transition to resolved. See the public action vocabulary table.',
+          ),
+          'scope' => 
+          array (
+            'type' => 'string',
+            'knownValues' => 
+            array (
+              0 => 'network',
+              1 => 'app',
+              2 => 'labelOnly',
+            ),
+          ),
+          'subject' => 
+          array (
+            'type' => 'union',
+            'refs' => 
+            array (
+              0 => 'lex:com.atproto.admin.defs#repoRef',
+              1 => 'lex:com.atproto.repo.strongRef',
+              2 => 'lex:chat.bsky.convo.defs#messageRef',
+              3 => 'lex:chat.bsky.convo.defs#convoRef',
+            ),
+          ),
+          'status' => 
+          array (
+            'type' => 'string',
+            'knownValues' => 
+            array (
+              0 => 'pending',
+              1 => 'resolved',
+            ),
+          ),
+          'createdAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+          'updatedAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+        ),
+      ),
+    ),
+  ),
+  'tools.ozone.inbox.putNotificationPreferences' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'tools.ozone.inbox.putNotificationPreferences',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'procedure',
+        'input' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'push',
+            ),
+            'properties' => 
+            array (
+              'push' => 
+              array (
+                'type' => 'boolean',
+              ),
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'preferences',
+            ),
+            'properties' => 
+            array (
+              'preferences' => 
+              array (
+                'type' => 'ref',
+                'ref' => 'lex:tools.ozone.inbox.defs#notificationPreferences',
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
+  'tools.ozone.inbox.updateSeen' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'tools.ozone.inbox.updateSeen',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'procedure',
+        'input' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'sections',
+            ),
+            'properties' => 
+            array (
+              'sections' => 
+              array (
+                'type' => 'array',
+                'minLength' => 1,
+                'items' => 
+                array (
+                  'type' => 'string',
+                  'knownValues' => 
+                  array (
+                    0 => 'reports',
+                    1 => 'subjects',
+                    2 => 'accountStatus',
+                  ),
+                ),
+              ),
+              'seenAt' => 
+              array (
+                'type' => 'string',
+                'format' => 'datetime',
+                'description' => 'Mark each requested section read up to this instant. Defaults to server time and is clamped to server time when in the future. Newer existing watermarks are preserved independently for each section.',
+              ),
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'seenAt',
+            ),
+            'properties' => 
+            array (
+              'seenAt' => 
+              array (
+                'type' => 'string',
+                'format' => 'datetime',
+                'description' => 'The earliest resulting watermark across the requested sections, in UTC. Every requested section is read through this instant; individual sections may already have newer watermarks.',
+              ),
+            ),
           ),
         ),
       ),
@@ -30776,6 +34939,25 @@ return array (
         ),
         'properties' => 
         array (
+          'appealSubmittedBy' => 
+          array (
+            'type' => 'string',
+            'format' => 'did',
+            'description' => 'Moderator who submitted this appeal on behalf of the affected account. Returned by moderator event APIs.',
+          ),
+          'appealActionType' => 
+          array (
+            'type' => 'string',
+            'description' => 'Action reference type recorded when this appeal was submitted.',
+          ),
+          'appealActionId' => 
+          array (
+            'type' => 'integer',
+          ),
+          'appealLabel' => 
+          array (
+            'type' => 'string',
+          ),
           'comment' => 
           array (
             'type' => 'string',
@@ -34053,7 +38235,32 @@ return array (
           'pendingCount' => 
           array (
             'type' => 'integer',
-            'description' => 'Number of reports in \'open\' status',
+            'description' => 'Number of unmuted reports currently not closed.',
+          ),
+          'closureTargetOverdueCount' => 
+          array (
+            'type' => 'integer',
+            'minimum' => 0,
+            'description' => 'Unmuted pending reports past their closure target.',
+          ),
+          'closureTargetMetCount' => 
+          array (
+            'type' => 'integer',
+            'minimum' => 0,
+            'description' => 'Reports whose closure meets their closure target.',
+          ),
+          'closureTargetMissedCount' => 
+          array (
+            'type' => 'integer',
+            'minimum' => 0,
+            'description' => 'Reports whose closure exceeds their closure target.',
+          ),
+          'closureTargetMetRate' => 
+          array (
+            'type' => 'integer',
+            'minimum' => 0,
+            'maximum' => 100,
+            'description' => 'Percent of reports meeting their closure target.',
           ),
           'actionedCount' => 
           array (
@@ -35180,6 +39387,36 @@ return array (
             'ref' => 'lex:com.atproto.moderation.defs#reasonType',
             'description' => 'Type of report',
           ),
+          'priorityLevel' => 
+          array (
+            'type' => 'string',
+            'description' => 'Priority level assigned to the report.',
+          ),
+          'priorityScore' => 
+          array (
+            'type' => 'integer',
+            'minimum' => 0,
+            'maximum' => 100,
+            'description' => 'Report priority score. Higher scores have higher priority.',
+          ),
+          'priorityTargetMinutes' => 
+          array (
+            'type' => 'integer',
+            'minimum' => 1,
+            'maximum' => 2147483647,
+            'description' => 'Target resolution duration in minutes.',
+          ),
+          'resolutionTimeSec' => 
+          array (
+            'type' => 'integer',
+            'minimum' => 0,
+            'description' => 'Time from report creation to its last closure.',
+          ),
+          'priorityTargetMet' => 
+          array (
+            'type' => 'boolean',
+            'description' => 'Whether the current closure occurred within the report\'s snapshotted target.',
+          ),
           'reportedBy' => 
           array (
             'type' => 'string',
@@ -35317,6 +39554,40 @@ return array (
           ),
         ),
       ),
+      'unassignmentActivity' => 
+      array (
+        'type' => 'object',
+        'description' => 'Activity recording a moderator being unassigned from a report.',
+        'properties' => 
+        array (
+          'previousStatus' => 
+          array (
+            'type' => 'string',
+            'knownValues' => 
+            array (
+              0 => 'open',
+              1 => 'closed',
+              2 => 'escalated',
+              3 => 'queued',
+              4 => 'assigned',
+            ),
+            'description' => 'The report\'s status immediately before the moderator was unassigned. May be absent on older activities.',
+          ),
+          'nextStatus' => 
+          array (
+            'type' => 'string',
+            'knownValues' => 
+            array (
+              0 => 'open',
+              1 => 'closed',
+              2 => 'escalated',
+              3 => 'queued',
+              4 => 'assigned',
+            ),
+            'description' => 'The report\'s status immediately after the moderator was unassigned. May equal previousStatus if unassignment did not change the report\'s status, or be absent on older activities.',
+          ),
+        ),
+      ),
       'escalationActivity' => 
       array (
         'type' => 'object',
@@ -35420,10 +39691,11 @@ return array (
             array (
               0 => 'lex:tools.ozone.report.defs#queueActivity',
               1 => 'lex:tools.ozone.report.defs#assignmentActivity',
-              2 => 'lex:tools.ozone.report.defs#escalationActivity',
-              3 => 'lex:tools.ozone.report.defs#closeActivity',
-              4 => 'lex:tools.ozone.report.defs#reopenActivity',
-              5 => 'lex:tools.ozone.report.defs#noteActivity',
+              2 => 'lex:tools.ozone.report.defs#unassignmentActivity',
+              3 => 'lex:tools.ozone.report.defs#escalationActivity',
+              4 => 'lex:tools.ozone.report.defs#closeActivity',
+              5 => 'lex:tools.ozone.report.defs#reopenActivity',
+              6 => 'lex:tools.ozone.report.defs#noteActivity',
             ),
             'description' => 'The typed activity object describing what occurred.',
           ),
@@ -35482,7 +39754,32 @@ return array (
           'pendingCount' => 
           array (
             'type' => 'integer',
-            'description' => 'Number of reports currently not closed.',
+            'description' => 'Number of unmuted reports currently not closed.',
+          ),
+          'closureTargetOverdueCount' => 
+          array (
+            'type' => 'integer',
+            'minimum' => 0,
+            'description' => 'Unmuted pending reports past their closure target.',
+          ),
+          'closureTargetMetCount' => 
+          array (
+            'type' => 'integer',
+            'minimum' => 0,
+            'description' => 'Reports whose closure meets their closure target.',
+          ),
+          'closureTargetMissedCount' => 
+          array (
+            'type' => 'integer',
+            'minimum' => 0,
+            'description' => 'Reports whose closure exceeds their closure target.',
+          ),
+          'closureTargetMetRate' => 
+          array (
+            'type' => 'integer',
+            'minimum' => 0,
+            'maximum' => 100,
+            'description' => 'Percent of reports meeting their closure target.',
           ),
           'closedCount' => 
           array (
@@ -35591,7 +39888,32 @@ return array (
           'pendingCount' => 
           array (
             'type' => 'integer',
-            'description' => 'Number of reports not closed at time of computation.',
+            'description' => 'Number of unmuted reports not closed at the end of this UTC day, or at computation time for the current day.',
+          ),
+          'closureTargetOverdueCount' => 
+          array (
+            'type' => 'integer',
+            'minimum' => 0,
+            'description' => 'Unmuted pending reports past their closure target at the snapshot time.',
+          ),
+          'closureTargetMetCount' => 
+          array (
+            'type' => 'integer',
+            'minimum' => 0,
+            'description' => 'Reports whose closure meets their closure target.',
+          ),
+          'closureTargetMissedCount' => 
+          array (
+            'type' => 'integer',
+            'minimum' => 0,
+            'description' => 'Reports whose closure exceeds their closure target.',
+          ),
+          'closureTargetMetRate' => 
+          array (
+            'type' => 'integer',
+            'minimum' => 0,
+            'maximum' => 100,
+            'description' => 'Percent of reports meeting their closure target.',
           ),
           'closedCount' => 
           array (
@@ -37184,6 +41506,59 @@ return array (
           array (
             'name' => 'RuleNotFound',
             'description' => 'No active rule found for this URL/domain',
+          ),
+        ),
+      ),
+    ),
+  ),
+  'tools.ozone.server.getCapabilities' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'tools.ozone.server.getCapabilities',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'properties' => 
+            array (
+              'notifications' => 
+              array (
+                'type' => 'ref',
+                'ref' => 'lex:tools.ozone.server.getCapabilities#notificationConfig',
+              ),
+            ),
+          ),
+        ),
+      ),
+      'notificationConfig' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'channels',
+        ),
+        'properties' => 
+        array (
+          'channels' => 
+          array (
+            'type' => 'array',
+            'minLength' => 1,
+            'items' => 
+            array (
+              'type' => 'string',
+              'knownValues' => 
+              array (
+                0 => 'inApp',
+                1 => 'push',
+              ),
+            ),
           ),
         ),
       ),

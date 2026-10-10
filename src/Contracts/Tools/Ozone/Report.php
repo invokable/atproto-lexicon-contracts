@@ -75,7 +75,7 @@ interface Report
     /**
      * Get historical daily report statistics. Returns a paginated list of daily stat snapshots, newest first. Filter by queue, moderator, or report type.
      *
-     * @return array{stats: array{date: string, computedAt: string, pendingCount: int, closedCount: int, actionedCount: int, acknowledgedCount: int, escalatedCount: int, inboundCount: int, labelActionCount: int, tagActionCount: int, takedownActionCount: int, ahtDurationSec: int, ahtSampleCount: int, resolutionDurationSec: int, resolutionSampleCount: int, actionRate: int, avgHandlingTimeSec: int, avgResolutionTimeSec: int}[], cursor: string}
+     * @return array{stats: array{date: string, computedAt: string, pendingCount: int, closureTargetOverdueCount: int, closureTargetMetCount: int, closureTargetMissedCount: int, closureTargetMetRate: int, closedCount: int, actionedCount: int, acknowledgedCount: int, escalatedCount: int, inboundCount: int, labelActionCount: int, tagActionCount: int, takedownActionCount: int, ahtDurationSec: int, ahtSampleCount: int, resolutionDurationSec: int, resolutionSampleCount: int, actionRate: int, avgHandlingTimeSec: int, avgResolutionTimeSec: int}[], cursor: string}
      *
      * @link https://docs.bsky.app/docs/api/tools-ozone-report-get-historical-stats
      */
@@ -85,7 +85,7 @@ interface Report
     /**
      * Get the most recent report.
      *
-     * @return array{report: array{id: int, eventId: int, status: string, subject: array, reportType: array, reportedBy: string, reporter: array, comment: string, createdAt: string, updatedAt: string, queuedAt: string, actionEventIds: array, actions: array, actionNote: string, subjectStatus: array, relatedReportCount: int, assignment: array, queue: array, isMuted: bool, isAutomated: bool}}
+     * @return array{report: array{id: int, eventId: int, status: string, subject: array, reportType: array, priorityLevel: string, priorityScore: int, priorityTargetMinutes: int, resolutionTimeSec: int, priorityTargetMet: bool, reportedBy: string, reporter: array, comment: string, createdAt: string, updatedAt: string, queuedAt: string, actionEventIds: array, actions: array, actionNote: string, subjectStatus: array, relatedReportCount: int, assignment: array, queue: array, isMuted: bool, isAutomated: bool}}
      *
      * @link https://docs.bsky.app/docs/api/tools-ozone-report-get-latest-report
      */
@@ -95,7 +95,7 @@ interface Report
     /**
      * Get live report statistics for the current UTC calendar day. Filter by queue, moderator, or report type. Omit all parameters for aggregate stats.
      *
-     * @return array{stats: array{pendingCount: int, closedCount: int, actionedCount: int, acknowledgedCount: int, escalatedCount: int, inboundCount: int, labelActionCount: int, tagActionCount: int, takedownActionCount: int, ahtDurationSec: int, ahtSampleCount: int, resolutionDurationSec: int, resolutionSampleCount: int, actionRate: int, avgHandlingTimeSec: int, avgResolutionTimeSec: int, lastUpdated: string}}
+     * @return array{stats: array{pendingCount: int, closureTargetOverdueCount: int, closureTargetMetCount: int, closureTargetMissedCount: int, closureTargetMetRate: int, closedCount: int, actionedCount: int, acknowledgedCount: int, escalatedCount: int, inboundCount: int, labelActionCount: int, tagActionCount: int, takedownActionCount: int, ahtDurationSec: int, ahtSampleCount: int, resolutionDurationSec: int, resolutionSampleCount: int, actionRate: int, avgHandlingTimeSec: int, avgResolutionTimeSec: int, lastUpdated: string}}
      *
      * @link https://docs.bsky.app/docs/api/tools-ozone-report-get-live-stats
      */
@@ -105,7 +105,7 @@ interface Report
     /**
      * Get details about a single moderation report by ID.
      *
-     * @return array{id: int, eventId: int, status: string, subject: array{type: array, subject: string, status: array, repo: array, profile: array, record: array}, reportType: string, reportedBy: string, reporter: array{type: array, subject: string, status: array, repo: array, profile: array, record: array}, comment: string, createdAt: string, updatedAt: string, queuedAt: string, actionEventIds: array, actions: array{id: int, event: array, subject: array, subjectBlobCids: array, createdBy: string, createdAt: string, creatorHandle: string, subjectHandle: string, modTool: array}[], actionNote: string, subjectStatus: array{id: int, subject: array, hosting: array, subjectBlobCids: array, subjectRepoHandle: string, updatedAt: string, createdAt: string, reviewState: array, comment: string, priorityScore: int, muteUntil: string, muteReportingUntil: string, lastReviewedBy: string, lastReviewedAt: string, lastReportedAt: string, lastAppealedAt: string, takendown: bool, appealed: bool, suspendUntil: string, tags: array, accountStats: array, recordsStats: array, accountStrike: array, ageAssuranceState: string, ageAssuranceUpdatedBy: string}, relatedReportCount: int, assignment: mixed, queue: array{id: int, name: string, subjectTypes: array, collection: string, reportTypes: array, description: string, recommendedPolicies: array, recommendedLabels: array, createdBy: string, createdAt: string, updatedAt: string, enabled: bool, deletedAt: string, stats: array}, isMuted: bool, isAutomated: bool}
+     * @return array{id: int, eventId: int, status: string, subject: array{type: array, subject: string, status: array, repo: array, profile: array, record: array}, reportType: string, priorityLevel: string, priorityScore: int, priorityTargetMinutes: int, resolutionTimeSec: int, priorityTargetMet: bool, reportedBy: string, reporter: array{type: array, subject: string, status: array, repo: array, profile: array, record: array}, comment: string, createdAt: string, updatedAt: string, queuedAt: string, actionEventIds: array, actions: array{id: int, event: array, subject: array, subjectBlobCids: array, createdBy: string, createdAt: string, creatorHandle: string, subjectHandle: string, modTool: array}[], actionNote: string, subjectStatus: array{id: int, subject: array, hosting: array, subjectBlobCids: array, subjectRepoHandle: string, updatedAt: string, createdAt: string, reviewState: array, comment: string, priorityScore: int, muteUntil: string, muteReportingUntil: string, lastReviewedBy: string, lastReviewedAt: string, lastReportedAt: string, lastAppealedAt: string, takendown: bool, appealed: bool, suspendUntil: string, tags: array, accountStats: array, recordsStats: array, accountStrike: array, ageAssuranceState: string, ageAssuranceUpdatedBy: string}, relatedReportCount: int, assignment: mixed, queue: array{id: int, name: string, subjectTypes: array, collection: string, reportTypes: array, description: string, recommendedPolicies: array, recommendedLabels: array, createdBy: string, createdAt: string, updatedAt: string, enabled: bool, deletedAt: string, stats: array}, isMuted: bool, isAutomated: bool}
      *
      * @link https://docs.bsky.app/docs/api/tools-ozone-report-get-report
      */
@@ -135,7 +135,7 @@ interface Report
     /**
      * View moderation reports. Reports are individual instances of content being reported, as opposed to subject statuses which aggregate reports at the subject level.
      *
-     * @return array{cursor: string, reports: array{id: int, eventId: int, status: string, subject: array, reportType: array, reportedBy: string, reporter: array, comment: string, createdAt: string, updatedAt: string, queuedAt: string, actionEventIds: array, actions: array, actionNote: string, subjectStatus: array, relatedReportCount: int, assignment: array, queue: array, isMuted: bool, isAutomated: bool}[]}
+     * @return array{cursor: string, reports: array{id: int, eventId: int, status: string, subject: array, reportType: array, priorityLevel: string, priorityScore: int, priorityTargetMinutes: int, resolutionTimeSec: int, priorityTargetMet: bool, reportedBy: string, reporter: array, comment: string, createdAt: string, updatedAt: string, queuedAt: string, actionEventIds: array, actions: array, actionNote: string, subjectStatus: array, relatedReportCount: int, assignment: array, queue: array, isMuted: bool, isAutomated: bool}[]}
      *
      * @link https://docs.bsky.app/docs/api/tools-ozone-report-query-reports
      */
@@ -145,7 +145,7 @@ interface Report
     /**
      * Manually reassign a report to a different queue (or unassign it). Records a queueActivity entry on the report.
      *
-     * @return array{report: array{id: int, eventId: int, status: string, subject: array, reportType: array, reportedBy: string, reporter: array, comment: string, createdAt: string, updatedAt: string, queuedAt: string, actionEventIds: array, actions: array, actionNote: string, subjectStatus: array, relatedReportCount: int, assignment: array, queue: array, isMuted: bool, isAutomated: bool}}
+     * @return array{report: array{id: int, eventId: int, status: string, subject: array, reportType: array, priorityLevel: string, priorityScore: int, priorityTargetMinutes: int, resolutionTimeSec: int, priorityTargetMet: bool, reportedBy: string, reporter: array, comment: string, createdAt: string, updatedAt: string, queuedAt: string, actionEventIds: array, actions: array, actionNote: string, subjectStatus: array, relatedReportCount: int, assignment: array, queue: array, isMuted: bool, isAutomated: bool}}
      *
      * @link https://docs.bsky.app/docs/api/tools-ozone-report-reassign-queue
      */

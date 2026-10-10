@@ -26,12 +26,6 @@ abstract class AbstractBasic
     protected array $accent;
 
     /**
-     * Color used for button text.
-     */
-    #[Union(['site.standard.theme.color#rgb'])]
-    protected array $accentForeground;
-
-    /**
      * Color used for content background.
      */
     #[Union(['site.standard.theme.color#rgb'])]
@@ -42,4 +36,10 @@ abstract class AbstractBasic
      */
     #[Union(['site.standard.theme.color#rgb'])]
     protected array $foreground;
+
+    /**
+     * Color used for button text.
+     */
+    #[Union(['site.standard.theme.color#rgb'])]
+    protected array $accentForeground;
 }
