@@ -163,7 +163,7 @@ class PublicClient implements Actor, Feed
     }
 
     #[Get, NSID(self::getListFeed)]
-    public function getListFeed(#[Format('at-uri')] string $list, ?int $limit = 50, ?string $cursor = null)
+    public function getListFeed(string $list, ?int $limit = 50, ?string $cursor = null, ?string $since = null)
     {
         // TODO: Implement getListFeed() method.
     }
@@ -181,7 +181,7 @@ class PublicClient implements Actor, Feed
     }
 
     #[Get, NSID(self::getQuotes)]
-    public function getQuotes(#[Format('at-uri')] string $uri, #[Format('cid')] ?string $cid = null, ?int $limit = 50, ?string $cursor = null)
+    public function getQuotes(string $uri, ?string $cid = null, ?int $limit = 50, ?string $cursor = null, ?string $sort = null)
     {
         // TODO: Implement getQuotes() method.
     }
@@ -199,14 +199,20 @@ class PublicClient implements Actor, Feed
     }
 
     #[Get, NSID(self::getTimeline)]
-    public function getTimeline(?string $algorithm = null, ?int $limit = 50, ?string $cursor = null)
+    public function getTimeline(?string $algorithm = null, ?int $limit = 50, ?string $cursor = null, ?string $since = null)
     {
         // TODO: Implement getTimeline() method.
     }
 
     #[Post, NSID(self::sendInteractions)]
-    public function sendInteractions(#[Ref('app.bsky.feed.defs#interaction')] array $interactions)
+    public function sendInteractions(array $interactions, ?string $feed = null)
     {
         // TODO: Implement sendInteractions() method.
+    }
+
+    #[Get, NSID(self::searchPostsV2)]
+    public function searchPostsV2(?string $cursor = null, ?int $limit = 25, ?string $query = null, #[KnownValues(['recent', 'top'])] ?string $sort = null, #[Format('at-identifier')] ?array $authors = null, #[Format('at-identifier')] ?array $mentions = null, ?array $domains = null, #[Format('uri')] ?array $urls = null, #[Format('at-uri')] ?array $embeddedAtUris = null, ?array $hashtags = null, #[Format('at-identifier')] ?array $excludeAuthors = null, #[Format('at-identifier')] ?array $excludeMentions = null, ?array $excludeDomains = null, #[Format('uri')] ?array $excludeUrls = null, #[Format('at-uri')] ?array $excludeEmbeddedAtUris = null, ?array $excludeHashtags = null, ?string $since = null, ?string $until = null, ?bool $allTime = null, #[Format('language')] ?array $languages = null, #[Format('language')] ?array $excludeLanguages = null, ?bool $hasMedia = null, ?bool $hasVideo = null, #[Format('at-uri')] ?string $replyParentUri = null, #[Format('at-uri')] ?string $threadRootUri = null, ?bool $excludeReplies = null, ?bool $repliesOnly = null, ?bool $following = null, #[KnownValues(['ja', 'zh', 'ko', 'th', 'ar'])] ?string $queryLanguage = null)
+    {
+        // TODO: Implement searchPostsV2() method.
     }
 }
