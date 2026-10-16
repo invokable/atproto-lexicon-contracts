@@ -12846,36 +12846,86 @@ return array (
             'maximum' => 100,
             'description' => 'Percent of reports meeting their closure target.',
           ),
+          'closedCount' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Number of reports whose current closure falls within this UTC calendar day.',
+          ),
           'actionedCount' => 
           array (
             'type' => 'integer',
-            'description' => 'Number of reports in \'closed\' status',
+            'description' => 'Number of closures whose last report action is label, tag, or takedown.',
+          ),
+          'acknowledgedCount' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Number of closures whose last report action is not label, tag, or takedown.',
           ),
           'escalatedCount' => 
           array (
             'type' => 'integer',
-            'description' => 'Number of reports in \'escalated\' status',
+            'description' => 'Number of report escalation events during this UTC calendar day.',
           ),
           'inboundCount' => 
           array (
             'type' => 'integer',
-            'description' => 'Reports received in this queue in the last 24 hours.',
+            'description' => 'Reports received in this queue during this UTC calendar day.',
+          ),
+          'labelActionCount' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Closures whose last report action is a label event.',
+          ),
+          'tagActionCount' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Closures whose last report action is a tag event.',
+          ),
+          'takedownActionCount' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Closures whose last report action is a takedown event.',
+          ),
+          'ahtDurationSec' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Sum of report assignment-to-close seconds.',
+          ),
+          'ahtSampleCount' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Number of assigned closed-report samples in ahtDurationSec.',
+          ),
+          'resolutionDurationSec' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Sum of report creation-to-close seconds.',
+          ),
+          'resolutionSampleCount' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Number of closed-report samples in resolutionDurationSec.',
           ),
           'actionRate' => 
           array (
             'type' => 'integer',
-            'description' => 'Percentage of reports actioned (actionedCount / inboundCount * 100), rounded to nearest integer. Absent when inboundCount is 0.',
+            'description' => 'Percentage of closures actioned (actionedCount / closedCount * 100), rounded to nearest integer.',
           ),
           'avgHandlingTimeSec' => 
           array (
             'type' => 'integer',
-            'description' => 'Average time in seconds from report creation to close, for reports closed in this period.',
+            'description' => 'Average handling time in seconds from report assignment to close.',
+          ),
+          'avgResolutionTimeSec' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Average resolution time in seconds from report creation to close.',
           ),
           'lastUpdated' => 
           array (
             'type' => 'string',
             'format' => 'datetime',
-            'description' => 'When these statistics were last computed',
+            'description' => 'When these statistics were last computed.',
           ),
         ),
       ),
