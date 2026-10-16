@@ -49,12 +49,11 @@ class LexiconEnumCommand extends Command
     public function handle(): int
     {
         $this->php_path = realpath(__DIR__.'/../../../../src/Enum/');
-        $this->json_path = realpath(__DIR__.'/../../../../atproto/lexicons/');
 
         File::cleanDirectory($this->php_path);
 
+        $this->json_path = realpath(__DIR__.'/../../../../atproto/packages/api/lexicons/');
         $this->files = File::allFiles($this->json_path);
-
         $this->embed();
         $this->facet();
         $this->feed();

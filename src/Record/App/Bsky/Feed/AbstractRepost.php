@@ -21,11 +21,11 @@ abstract class AbstractRepost
     public const NSID = 'app.bsky.feed.repost';
 
     #[Ref('com.atproto.repo.strongRef')]
-    protected array $subject;
+    protected $subject;
 
     #[Format('datetime')]
     protected string $createdAt;
 
     #[Ref('com.atproto.repo.strongRef')]
-    protected ?array $via = null;
+    protected $via = null;
 }

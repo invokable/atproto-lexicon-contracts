@@ -16,19 +16,20 @@ use Revolution\AtProto\Lexicon\Attributes\Post;
 
 interface Unspecced
 {
-    public const getAgeAssuranceState = 'app.bsky.unspecced.getAgeAssuranceState';
-    public const getConfig = 'app.bsky.unspecced.getConfig';
+    public const getAtmosphereExploreTab = 'app.bsky.unspecced.getAtmosphereExploreTab';
     public const getOnboardingSuggestedStarterPacks = 'app.bsky.unspecced.getOnboardingSuggestedStarterPacks';
     public const getOnboardingSuggestedStarterPacksSkeleton = 'app.bsky.unspecced.getOnboardingSuggestedStarterPacksSkeleton';
+    public const getSuggestedFeeds = 'app.bsky.unspecced.getSuggestedFeeds';
+    public const getSuggestedFeedsSkeleton = 'app.bsky.unspecced.getSuggestedFeedsSkeleton';
+    public const getSuggestedStarterPacks = 'app.bsky.unspecced.getSuggestedStarterPacks';
+    public const getSuggestedStarterPacksSkeleton = 'app.bsky.unspecced.getSuggestedStarterPacksSkeleton';
+    public const getAgeAssuranceState = 'app.bsky.unspecced.getAgeAssuranceState';
+    public const getConfig = 'app.bsky.unspecced.getConfig';
     public const getOnboardingSuggestedUsersSkeleton = 'app.bsky.unspecced.getOnboardingSuggestedUsersSkeleton';
     public const getPopularFeedGenerators = 'app.bsky.unspecced.getPopularFeedGenerators';
     public const getPostThreadOtherV2 = 'app.bsky.unspecced.getPostThreadOtherV2';
     public const getPostThreadV2 = 'app.bsky.unspecced.getPostThreadV2';
-    public const getSuggestedFeeds = 'app.bsky.unspecced.getSuggestedFeeds';
-    public const getSuggestedFeedsSkeleton = 'app.bsky.unspecced.getSuggestedFeedsSkeleton';
     public const getSuggestedOnboardingUsers = 'app.bsky.unspecced.getSuggestedOnboardingUsers';
-    public const getSuggestedStarterPacks = 'app.bsky.unspecced.getSuggestedStarterPacks';
-    public const getSuggestedStarterPacksSkeleton = 'app.bsky.unspecced.getSuggestedStarterPacksSkeleton';
     public const getSuggestedUsers = 'app.bsky.unspecced.getSuggestedUsers';
     public const getSuggestedUsersForDiscover = 'app.bsky.unspecced.getSuggestedUsersForDiscover';
     public const getSuggestedUsersForDiscoverSkeleton = 'app.bsky.unspecced.getSuggestedUsersForDiscoverSkeleton';
@@ -46,6 +47,76 @@ interface Unspecced
     public const searchActorsSkeleton = 'app.bsky.unspecced.searchActorsSkeleton';
     public const searchPostsSkeleton = 'app.bsky.unspecced.searchPostsSkeleton';
     public const searchStarterPacksSkeleton = 'app.bsky.unspecced.searchStarterPacksSkeleton';
+
+    /**
+     * Get curated Atmosphere Explore content. Authentication is optional; authenticated requests include viewer-specific profile state.
+     *
+     * @return array{announcementBanner: array{id: string, title: string, description: string, url: string, image: string, overlayColor: string, textColor: string}, articles: array{featured: bool, view: array}[], publications: array{featured: bool, view: array}[], photos: array{featured: bool, view: array}[], livestreams: array{featured: bool, view: array}[], apps: array{id: string, title: string, description: string, logo: string, backgroundImage: string, overlayColor: string, textColor: string, url: string, category: string}[]}
+     *
+     * @link https://docs.bsky.app/docs/api/app-bsky-unspecced-get-atmosphere-explore-tab
+     */
+    #[Get, NSID(self::getAtmosphereExploreTab)]
+    public function getAtmosphereExploreTab(#[Format('language')] ?array $langs = null, ?string $countryCode = null, ?string $regionCode = null);
+
+    /**
+     * Get a list of suggested starterpacks for onboarding.
+     *
+     * @return array{starterPacks: array{uri: string, cid: string, record: mixed, creator: array, list: array, listItemsSample: array, feeds: array, joinedWeekCount: int, joinedAllTimeCount: int, labels: array, indexedAt: string}[], recIdStr: string}
+     *
+     * @link https://docs.bsky.app/docs/api/app-bsky-unspecced-get-onboarding-suggested-starter-packs
+     */
+    #[Get, NSID(self::getOnboardingSuggestedStarterPacks)]
+    public function getOnboardingSuggestedStarterPacks(?int $limit = 10);
+
+    /**
+     * Get a skeleton of suggested starterpacks for onboarding. Intended to be called and hydrated by app.bsky.unspecced.getOnboardingSuggestedStarterPacks.
+     *
+     * @return array{starterPacks: array, recIdStr: string}
+     *
+     * @link https://docs.bsky.app/docs/api/app-bsky-unspecced-get-onboarding-suggested-starter-packs-skeleton
+     */
+    #[Get, NSID(self::getOnboardingSuggestedStarterPacksSkeleton)]
+    public function getOnboardingSuggestedStarterPacksSkeleton(#[Format('did')] ?string $viewer = null, ?int $limit = 10);
+
+    /**
+     * Get a list of suggested feeds.
+     *
+     * @return array{feeds: array{uri: string, cid: string, did: string, creator: array, displayName: string, description: string, descriptionFacets: array, avatar: string, likeCount: int, acceptsInteractions: bool, labels: array, viewer: array, contentMode: string, indexedAt: string}[], recIdStr: string}
+     *
+     * @link https://docs.bsky.app/docs/api/app-bsky-unspecced-get-suggested-feeds
+     */
+    #[Get, NSID(self::getSuggestedFeeds)]
+    public function getSuggestedFeeds(?int $limit = 10);
+
+    /**
+     * Get a skeleton of suggested feeds. Intended to be called and hydrated by app.bsky.unspecced.getSuggestedFeeds.
+     *
+     * @return array{feeds: array, recIdStr: string}
+     *
+     * @link https://docs.bsky.app/docs/api/app-bsky-unspecced-get-suggested-feeds-skeleton
+     */
+    #[Get, NSID(self::getSuggestedFeedsSkeleton)]
+    public function getSuggestedFeedsSkeleton(#[Format('did')] ?string $viewer = null, ?int $limit = 10);
+
+    /**
+     * Get a list of suggested starterpacks.
+     *
+     * @return array{starterPacks: array{uri: string, cid: string, record: mixed, creator: array, list: array, listItemsSample: array, feeds: array, joinedWeekCount: int, joinedAllTimeCount: int, labels: array, indexedAt: string}[], recIdStr: string}
+     *
+     * @link https://docs.bsky.app/docs/api/app-bsky-unspecced-get-suggested-starter-packs
+     */
+    #[Get, NSID(self::getSuggestedStarterPacks)]
+    public function getSuggestedStarterPacks(?int $limit = 10);
+
+    /**
+     * Get a skeleton of suggested starterpacks. Intended to be called and hydrated by app.bsky.unspecced.getSuggestedStarterpacks.
+     *
+     * @return array{starterPacks: array, recIdStr: string}
+     *
+     * @link https://docs.bsky.app/docs/api/app-bsky-unspecced-get-suggested-starter-packs-skeleton
+     */
+    #[Get, NSID(self::getSuggestedStarterPacksSkeleton)]
+    public function getSuggestedStarterPacksSkeleton(#[Format('did')] ?string $viewer = null, ?int $limit = 10);
 
     /**
      * Returns the current state of the age assurance process for an account. This is used to check if the user has completed age assurance or if further action is required.
@@ -66,26 +137,6 @@ interface Unspecced
      */
     #[Get, NSID(self::getConfig)]
     public function getConfig();
-
-    /**
-     * Get a list of suggested starterpacks for onboarding.
-     *
-     * @return array{starterPacks: array{uri: string, cid: string, record: mixed, creator: array, list: array, listItemsSample: array, feeds: array, joinedWeekCount: int, joinedAllTimeCount: int, labels: array, indexedAt: string}[]}
-     *
-     * @link https://docs.bsky.app/docs/api/app-bsky-unspecced-get-onboarding-suggested-starter-packs
-     */
-    #[Get, NSID(self::getOnboardingSuggestedStarterPacks)]
-    public function getOnboardingSuggestedStarterPacks(?int $limit = 10);
-
-    /**
-     * Get a skeleton of suggested starterpacks for onboarding. Intended to be called and hydrated by app.bsky.unspecced.getOnboardingSuggestedStarterPacks.
-     *
-     * @return array{starterPacks: array}
-     *
-     * @link https://docs.bsky.app/docs/api/app-bsky-unspecced-get-onboarding-suggested-starter-packs-skeleton
-     */
-    #[Get, NSID(self::getOnboardingSuggestedStarterPacksSkeleton)]
-    public function getOnboardingSuggestedStarterPacksSkeleton(#[Format('did')] ?string $viewer = null, ?int $limit = 10);
 
     /**
      * Get a skeleton of suggested users for onboarding. Intended to be called and hydrated by app.bsky.unspecced.getSuggestedOnboardingUsers.
@@ -128,26 +179,6 @@ interface Unspecced
     public function getPostThreadV2(#[Format('at-uri')] string $anchor, ?bool $above = null, ?int $below = 6, ?int $branchingFactor = 10, #[KnownValues(['newest', 'oldest', 'top'])] ?string $sort = 'oldest');
 
     /**
-     * Get a list of suggested feeds.
-     *
-     * @return array{feeds: array{uri: string, cid: string, did: string, creator: array, displayName: string, description: string, descriptionFacets: array, avatar: string, likeCount: int, acceptsInteractions: bool, labels: array, viewer: array, contentMode: string, indexedAt: string}[]}
-     *
-     * @link https://docs.bsky.app/docs/api/app-bsky-unspecced-get-suggested-feeds
-     */
-    #[Get, NSID(self::getSuggestedFeeds)]
-    public function getSuggestedFeeds(?int $limit = 10);
-
-    /**
-     * Get a skeleton of suggested feeds. Intended to be called and hydrated by app.bsky.unspecced.getSuggestedFeeds.
-     *
-     * @return array{feeds: array}
-     *
-     * @link https://docs.bsky.app/docs/api/app-bsky-unspecced-get-suggested-feeds-skeleton
-     */
-    #[Get, NSID(self::getSuggestedFeedsSkeleton)]
-    public function getSuggestedFeedsSkeleton(#[Format('did')] ?string $viewer = null, ?int $limit = 10);
-
-    /**
      * Get a list of suggested users for onboarding.
      *
      * @return array{actors: array{did: string, handle: string, displayName: string, pronouns: string, description: string, avatar: string, associated: array, indexedAt: string, createdAt: string, viewer: array, labels: array, verification: array, status: array, debug: mixed}[], recId: string, recIdStr: string}
@@ -156,26 +187,6 @@ interface Unspecced
      */
     #[Get, NSID(self::getSuggestedOnboardingUsers)]
     public function getSuggestedOnboardingUsers(?string $category = null, ?int $limit = 25);
-
-    /**
-     * Get a list of suggested starterpacks.
-     *
-     * @return array{starterPacks: array{uri: string, cid: string, record: mixed, creator: array, list: array, listItemsSample: array, feeds: array, joinedWeekCount: int, joinedAllTimeCount: int, labels: array, indexedAt: string}[]}
-     *
-     * @link https://docs.bsky.app/docs/api/app-bsky-unspecced-get-suggested-starter-packs
-     */
-    #[Get, NSID(self::getSuggestedStarterPacks)]
-    public function getSuggestedStarterPacks(?int $limit = 10);
-
-    /**
-     * Get a skeleton of suggested starterpacks. Intended to be called and hydrated by app.bsky.unspecced.getSuggestedStarterpacks.
-     *
-     * @return array{starterPacks: array}
-     *
-     * @link https://docs.bsky.app/docs/api/app-bsky-unspecced-get-suggested-starter-packs-skeleton
-     */
-    #[Get, NSID(self::getSuggestedStarterPacksSkeleton)]
-    public function getSuggestedStarterPacksSkeleton(#[Format('did')] ?string $viewer = null, ?int $limit = 10);
 
     /**
      * Get a list of suggested users.

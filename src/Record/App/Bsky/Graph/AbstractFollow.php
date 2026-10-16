@@ -27,5 +27,5 @@ abstract class AbstractFollow
     protected string $createdAt;
 
     #[Ref('com.atproto.repo.strongRef')]
-    protected ?array $via = null;
+    protected $via = null;
 }

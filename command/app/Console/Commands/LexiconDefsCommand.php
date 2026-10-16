@@ -49,10 +49,13 @@ class LexiconDefsCommand extends Command
     {
         $this->php_path = realpath(__DIR__.'/../../../../src/Lexicons/');
         $this->json_path = realpath(__DIR__.'/../../../../atproto/lexicons/');
+        $api_json_path = realpath(__DIR__.'/../../../../atproto/packages/api/lexicons/');
 
         $files = File::allFiles($this->json_path);
+        $api_files = File::allFiles($api_json_path);
 
         $defs = collect($files)
+            ->merge($api_files)
             ->filter(fn (string $file) => Str::endsWith($file, '.json'))
             ->mapWithKeys(function (string $file) {
                 $json = File::json($file);

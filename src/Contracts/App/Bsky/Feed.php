@@ -130,12 +130,12 @@ interface Feed
     /**
      * Get a feed of recent posts from a list (posts and reposts from any actors on the list). Does not require auth.
      *
-     * @return array{cursor: string, feed: array{post: array, reply: array, opThreadPostIndex: int, opThreadPostCount: int, reason: array, feedContext: string, reqId: string}[]}
+     * @return array{cursor: string, startCursor: string, feed: array{post: array, reply: array, opThreadPostIndex: int, opThreadPostCount: int, reason: array, feedContext: string, reqId: string}[]}
      *
      * @link https://docs.bsky.app/docs/api/app-bsky-feed-get-list-feed
      */
     #[Get, NSID(self::getListFeed)]
-    public function getListFeed(#[Format('at-uri')] string $list, ?int $limit = 50, ?string $cursor = null);
+    public function getListFeed(#[Format('at-uri')] string $list, ?int $limit = 50, ?string $cursor = null, ?string $since = null);
 
     /**
      * Get posts in a thread. Does not require auth, but additional metadata and filtering will be applied for authed requests.
@@ -190,12 +190,12 @@ interface Feed
     /**
      * Get a view of the requesting account's home timeline. This is expected to be some form of reverse-chronological feed.
      *
-     * @return array{cursor: string, feed: array{post: array, reply: array, opThreadPostIndex: int, opThreadPostCount: int, reason: array, feedContext: string, reqId: string}[]}
+     * @return array{cursor: string, startCursor: string, feed: array{post: array, reply: array, opThreadPostIndex: int, opThreadPostCount: int, reason: array, feedContext: string, reqId: string}[]}
      *
      * @link https://docs.bsky.app/docs/api/app-bsky-feed-get-timeline
      */
     #[Get, NSID(self::getTimeline)]
-    public function getTimeline(?string $algorithm = null, ?int $limit = 50, ?string $cursor = null);
+    public function getTimeline(?string $algorithm = null, ?int $limit = 50, ?string $cursor = null, ?string $since = null);
 
     /**
      * Find posts matching search criteria, returning views of those posts. Note that this API endpoint may require authentication (eg, not public) for some service providers and implementations.

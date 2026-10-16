@@ -16,10 +16,10 @@ use Revolution\AtProto\Lexicon\Attributes\Post;
 
 interface Graph
 {
-    public const getActorStarterPacks = 'app.bsky.graph.getActorStarterPacks';
-    public const getBlocks = 'app.bsky.graph.getBlocks';
     public const getFollowers = 'app.bsky.graph.getFollowers';
     public const getFollows = 'app.bsky.graph.getFollows';
+    public const getActorStarterPacks = 'app.bsky.graph.getActorStarterPacks';
+    public const getBlocks = 'app.bsky.graph.getBlocks';
     public const getKnownFollowers = 'app.bsky.graph.getKnownFollowers';
     public const getList = 'app.bsky.graph.getList';
     public const getListBlocks = 'app.bsky.graph.getListBlocks';
@@ -42,26 +42,6 @@ interface Graph
     public const unmuteThread = 'app.bsky.graph.unmuteThread';
 
     /**
-     * Get a list of starter packs created by the actor.
-     *
-     * @return array{cursor: string, starterPacks: array{uri: string, cid: string, record: mixed, creator: array, listItemCount: int, joinedWeekCount: int, joinedAllTimeCount: int, labels: array, indexedAt: string}[]}
-     *
-     * @link https://docs.bsky.app/docs/api/app-bsky-graph-get-actor-starter-packs
-     */
-    #[Get, NSID(self::getActorStarterPacks)]
-    public function getActorStarterPacks(#[Format('at-identifier')] string $actor, ?int $limit = 50, ?string $cursor = null);
-
-    /**
-     * Enumerates which accounts the requesting account is currently blocking. Requires auth.
-     *
-     * @return array{cursor: string, blocks: array{did: string, handle: string, displayName: string, pronouns: string, description: string, avatar: string, associated: array, indexedAt: string, createdAt: string, viewer: array, labels: array, verification: array, status: array, debug: mixed}[]}
-     *
-     * @link https://docs.bsky.app/docs/api/app-bsky-graph-get-blocks
-     */
-    #[Get, NSID(self::getBlocks)]
-    public function getBlocks(?int $limit = 50, ?string $cursor = null);
-
-    /**
      * Enumerates accounts which follow a specified account (actor).
      *
      * @return array{subject: array{did: string, handle: string, displayName: string, pronouns: string, description: string, avatar: string, associated: array, indexedAt: string, createdAt: string, viewer: array, labels: array, verification: array, status: array, debug: mixed}, cursor: string, followers: array{did: string, handle: string, displayName: string, pronouns: string, description: string, avatar: string, associated: array, indexedAt: string, createdAt: string, viewer: array, labels: array, verification: array, status: array, debug: mixed}[]}
@@ -80,6 +60,26 @@ interface Graph
      */
     #[Get, NSID(self::getFollows)]
     public function getFollows(#[Format('at-identifier')] string $actor, ?int $limit = 50, ?string $cursor = null, #[KnownValues(['latest', 'top'])] ?string $sort = null);
+
+    /**
+     * Get a list of starter packs created by the actor.
+     *
+     * @return array{cursor: string, starterPacks: array{uri: string, cid: string, record: mixed, creator: array, listItemCount: int, joinedWeekCount: int, joinedAllTimeCount: int, labels: array, indexedAt: string}[]}
+     *
+     * @link https://docs.bsky.app/docs/api/app-bsky-graph-get-actor-starter-packs
+     */
+    #[Get, NSID(self::getActorStarterPacks)]
+    public function getActorStarterPacks(#[Format('at-identifier')] string $actor, ?int $limit = 50, ?string $cursor = null);
+
+    /**
+     * Enumerates which accounts the requesting account is currently blocking. Requires auth.
+     *
+     * @return array{cursor: string, blocks: array{did: string, handle: string, displayName: string, pronouns: string, description: string, avatar: string, associated: array, indexedAt: string, createdAt: string, viewer: array, labels: array, verification: array, status: array, debug: mixed}[]}
+     *
+     * @link https://docs.bsky.app/docs/api/app-bsky-graph-get-blocks
+     */
+    #[Get, NSID(self::getBlocks)]
+    public function getBlocks(?int $limit = 50, ?string $cursor = null);
 
     /**
      * Enumerates accounts which follow a specified account (actor) and are followed by the viewer.

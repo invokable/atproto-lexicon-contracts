@@ -17,6 +17,7 @@ use Revolution\AtProto\Lexicon\Attributes\Ref;
 
 interface Convo
 {
+    public const leaveConvo = 'chat.bsky.convo.leaveConvo';
     public const acceptConvo = 'chat.bsky.convo.acceptConvo';
     public const addReaction = 'chat.bsky.convo.addReaction';
     public const deleteMessageForSelf = 'chat.bsky.convo.deleteMessageForSelf';
@@ -27,7 +28,6 @@ interface Convo
     public const getLog = 'chat.bsky.convo.getLog';
     public const getMessages = 'chat.bsky.convo.getMessages';
     public const getUnreadCounts = 'chat.bsky.convo.getUnreadCounts';
-    public const leaveConvo = 'chat.bsky.convo.leaveConvo';
     public const listConvoRequests = 'chat.bsky.convo.listConvoRequests';
     public const listConvos = 'chat.bsky.convo.listConvos';
     public const lockConvo = 'chat.bsky.convo.lockConvo';
@@ -39,6 +39,16 @@ interface Convo
     public const unmuteConvo = 'chat.bsky.convo.unmuteConvo';
     public const updateAllRead = 'chat.bsky.convo.updateAllRead';
     public const updateRead = 'chat.bsky.convo.updateRead';
+
+    /**
+     * Leaves a conversation (direct or group). For group, this effectively removes membership. For direct, membership is never removed, only changed to remove from enumerations by the user who left.
+     *
+     * @return array{convoId: string, rev: string}
+     *
+     * @link https://docs.bsky.app/docs/api/chat-bsky-convo-leave-convo
+     */
+    #[Post, NSID(self::leaveConvo)]
+    public function leaveConvo(string $convoId);
 
     /**
      * Marks a conversation as accepted, so it is shown in the list of accepted convos instead on the request convos.
@@ -139,16 +149,6 @@ interface Convo
      */
     #[Get, NSID(self::getUnreadCounts)]
     public function getUnreadCounts(?bool $includeGroupChats = null);
-
-    /**
-     * Leaves a conversation (direct or group). For group, this effectively removes membership. For direct, membership is never removed, only changed to remove from enumerations by the user who left.
-     *
-     * @return array{convoId: string, rev: string}
-     *
-     * @link https://docs.bsky.app/docs/api/chat-bsky-convo-leave-convo
-     */
-    #[Post, NSID(self::leaveConvo)]
-    public function leaveConvo(string $convoId);
 
     /**
      * Returns a page of incoming conversation requests for the user. Direct convo requests are returned as convoView; group join requests made by the user are returned as joinRequestConvoView.

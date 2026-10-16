@@ -20,5 +20,5 @@ abstract class AbstractRecord
     public const NSID = 'app.bsky.embed.record';
 
     #[Ref('com.atproto.repo.strongRef')]
-    protected array $record;
+    protected $record;
 }

@@ -58,7 +58,7 @@ interface Moderation
     /**
      * Get private preferences for an account. Requires moderator or admin auth.
      *
-     * @return array{preferences: array}
+     * @return array{preferences: mixed}
      *
      * @link https://docs.bsky.app/docs/api/tools-ozone-moderation-get-account-preferences
      */

@@ -13,7 +13,18 @@ use Revolution\AtProto\Lexicon\Attributes\NSID;
 
 interface Server
 {
+    public const getCapabilities = 'tools.ozone.server.getCapabilities';
     public const getConfig = 'tools.ozone.server.getConfig';
+
+    /**
+     * tools.ozone.server.getCapabilities.
+     *
+     * @return array{notifications: array{channels: array}}
+     *
+     * @link https://docs.bsky.app/docs/api/tools-ozone-server-get-capabilities
+     */
+    #[Get, NSID(self::getCapabilities)]
+    public function getCapabilities();
 
     /**
      * Get details about ozone's server configuration.

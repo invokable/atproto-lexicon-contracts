@@ -17,6 +17,7 @@ use Revolution\AtProto\Lexicon\Attributes\Ref;
 
 interface Notification
 {
+    public const getGroupedNotifications = 'app.bsky.notification.getGroupedNotifications';
     public const getPreferences = 'app.bsky.notification.getPreferences';
     public const getUnreadCount = 'app.bsky.notification.getUnreadCount';
     public const listActivitySubscriptions = 'app.bsky.notification.listActivitySubscriptions';
@@ -27,6 +28,16 @@ interface Notification
     public const registerPush = 'app.bsky.notification.registerPush';
     public const unregisterPush = 'app.bsky.notification.unregisterPush';
     public const updateSeen = 'app.bsky.notification.updateSeen';
+
+    /**
+     * [UNSTABLE - DO NOT USE THIS ENDPOINT WHILE THIS NOTE IS HERE] Enumerate notifications for the requesting account, pre-grouped for rendering. Supersedes listNotifications. Requires auth.
+     *
+     * @return array{cursor: string, groups: array{id: string, isRead: bool, indexedAt: string, count: int, kind: array}[], seenAt: string, relatedViews: array}
+     *
+     * @link https://docs.bsky.app/docs/api/app-bsky-notification-get-grouped-notifications
+     */
+    #[Get, NSID(self::getGroupedNotifications)]
+    public function getGroupedNotifications(#[KnownValues(['all', 'people-i-follow', 'conversations', 'followers', 'activity'])] ?string $feed = 'all', ?int $limit = 30, ?string $cursor = null);
 
     /**
      * Get notification-related preferences for an account. Requires auth.
