@@ -16,6 +16,7 @@ use Revolution\AtProto\Lexicon\Attributes\Post;
 
 interface Unspecced
 {
+    public const getAtmosphereExploreArticleRecommendations = 'app.bsky.unspecced.getAtmosphereExploreArticleRecommendations';
     public const getAtmosphereExploreTab = 'app.bsky.unspecced.getAtmosphereExploreTab';
     public const getOnboardingSuggestedStarterPacks = 'app.bsky.unspecced.getOnboardingSuggestedStarterPacks';
     public const getOnboardingSuggestedStarterPacksSkeleton = 'app.bsky.unspecced.getOnboardingSuggestedStarterPacksSkeleton';
@@ -49,9 +50,19 @@ interface Unspecced
     public const searchStarterPacksSkeleton = 'app.bsky.unspecced.searchStarterPacksSkeleton';
 
     /**
-     * Get curated Atmosphere Explore content. Authentication is optional; authenticated requests include viewer-specific profile state.
+     * Get a skeleton of recommended Atmosphere Explore articles. Intended to be called and hydrated by app.bsky.unspecced.getAtmosphereExploreTab.
      *
-     * @return array{announcementBanner: array{id: string, title: string, description: string, url: string, image: string, overlayColor: string, textColor: string}, articles: array{featured: bool, view: array}[], publications: array{featured: bool, view: array}[], photos: array{featured: bool, view: array}[], livestreams: array{featured: bool, view: array}[], apps: array{id: string, title: string, description: string, logo: string, backgroundImage: string, overlayColor: string, textColor: string, url: string, category: string}[]}
+     * @return array{articles: array{uri: string}[], recIdStr: string}
+     *
+     * @link https://docs.bsky.app/docs/api/app-bsky-unspecced-get-atmosphere-explore-article-recommendations
+     */
+    #[Get, NSID(self::getAtmosphereExploreArticleRecommendations)]
+    public function getAtmosphereExploreArticleRecommendations(#[Format('did')] ?string $viewer = null, ?int $limit = 25);
+
+    /**
+     * Get Atmosphere Explore content. Articles are recommended when algorithmic recommendations are enabled for the request, and curated otherwise; other sections are curated. Authentication is optional; authenticated requests include viewer-specific profile state.
+     *
+     * @return array{announcementBanner: array{id: string, title: string, description: string, url: string, image: string, overlayColor: string, textColor: string}, articles: array{items: array, recIdStr: string}, publications: array{items: array, recIdStr: string}, photos: array{items: array, recIdStr: string}, livestreams: array{items: array, recIdStr: string}, apps: array{id: string, title: string, description: string, logo: string, backgroundImage: string, overlayColor: string, textColor: string, url: string, category: string}[]}
      *
      * @link https://docs.bsky.app/docs/api/app-bsky-unspecced-get-atmosphere-explore-tab
      */
