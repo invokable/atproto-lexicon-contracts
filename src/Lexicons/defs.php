@@ -19191,6 +19191,86 @@ return array (
       ),
     ),
   ),
+  'app.bsky.unspecced.getAtmosphereExploreArticleRecommendations' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.unspecced.getAtmosphereExploreArticleRecommendations',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'description' => 'Get a skeleton of recommended Atmosphere Explore articles. Intended to be called and hydrated by app.bsky.unspecced.getAtmosphereExploreTab',
+        'parameters' => 
+        array (
+          'type' => 'params',
+          'properties' => 
+          array (
+            'viewer' => 
+            array (
+              'type' => 'string',
+              'format' => 'did',
+              'description' => 'DID of the account making the request (not included for public/unauthenticated queries).',
+            ),
+            'limit' => 
+            array (
+              'type' => 'integer',
+              'minimum' => 1,
+              'maximum' => 100,
+              'default' => 25,
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'articles',
+              1 => 'recIdStr',
+            ),
+            'properties' => 
+            array (
+              'articles' => 
+              array (
+                'type' => 'array',
+                'maxLength' => 100,
+                'items' => 
+                array (
+                  'type' => 'ref',
+                  'ref' => 'lex:app.bsky.unspecced.getAtmosphereExploreArticleRecommendations#article',
+                ),
+              ),
+              'recIdStr' => 
+              array (
+                'type' => 'string',
+                'description' => 'Snowflake for this recommendation, use when submitting recommendation events.',
+              ),
+            ),
+          ),
+        ),
+      ),
+      'article' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'uri',
+        ),
+        'properties' => 
+        array (
+          'uri' => 
+          array (
+            'type' => 'string',
+            'format' => 'at-uri',
+          ),
+        ),
+      ),
+    ),
+  ),
   'app.bsky.unspecced.getAtmosphereExploreTab' => 
   array (
     'lexicon' => 1,
@@ -19200,7 +19280,7 @@ return array (
       'main' => 
       array (
         'type' => 'query',
-        'description' => 'Get curated Atmosphere Explore content. Authentication is optional; authenticated requests include viewer-specific profile state.',
+        'description' => 'Get Atmosphere Explore content. Articles are recommended when algorithmic recommendations are enabled for the request, and curated otherwise; other sections are curated. Authentication is optional; authenticated requests include viewer-specific profile state.',
         'parameters' => 
         array (
           'type' => 'params',
@@ -19209,7 +19289,7 @@ return array (
             'langs' => 
             array (
               'type' => 'array',
-              'description' => 'Preferred languages. Currently ignored.',
+              'description' => 'Preferred languages for article recommendations when algorithmic recommendations are enabled. Ignored otherwise.',
               'items' => 
               array (
                 'type' => 'string',
@@ -19251,39 +19331,23 @@ return array (
               ),
               'articles' => 
               array (
-                'type' => 'array',
-                'items' => 
-                array (
-                  'type' => 'ref',
-                  'ref' => 'lex:app.bsky.unspecced.getAtmosphereExploreTab#articleItem',
-                ),
+                'type' => 'ref',
+                'ref' => 'lex:app.bsky.unspecced.getAtmosphereExploreTab#articleList',
               ),
               'publications' => 
               array (
-                'type' => 'array',
-                'items' => 
-                array (
-                  'type' => 'ref',
-                  'ref' => 'lex:app.bsky.unspecced.getAtmosphereExploreTab#publicationItem',
-                ),
+                'type' => 'ref',
+                'ref' => 'lex:app.bsky.unspecced.getAtmosphereExploreTab#publicationList',
               ),
               'photos' => 
               array (
-                'type' => 'array',
-                'items' => 
-                array (
-                  'type' => 'ref',
-                  'ref' => 'lex:app.bsky.unspecced.getAtmosphereExploreTab#galleryItem',
-                ),
+                'type' => 'ref',
+                'ref' => 'lex:app.bsky.unspecced.getAtmosphereExploreTab#galleryList',
               ),
               'livestreams' => 
               array (
-                'type' => 'array',
-                'items' => 
-                array (
-                  'type' => 'ref',
-                  'ref' => 'lex:app.bsky.unspecced.getAtmosphereExploreTab#livestreamItem',
-                ),
+                'type' => 'ref',
+                'ref' => 'lex:app.bsky.unspecced.getAtmosphereExploreTab#livestreamList',
               ),
               'apps' => 
               array (
@@ -19296,6 +19360,106 @@ return array (
                 ),
               ),
             ),
+          ),
+        ),
+      ),
+      'articleList' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'items',
+        ),
+        'properties' => 
+        array (
+          'items' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:app.bsky.unspecced.getAtmosphereExploreTab#articleItem',
+            ),
+          ),
+          'recIdStr' => 
+          array (
+            'type' => 'string',
+            'description' => 'Snowflake for this list\'s recommendation, use when submitting recommendation events. Omitted when the list is not algorithmically recommended.',
+          ),
+        ),
+      ),
+      'publicationList' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'items',
+        ),
+        'properties' => 
+        array (
+          'items' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:app.bsky.unspecced.getAtmosphereExploreTab#publicationItem',
+            ),
+          ),
+          'recIdStr' => 
+          array (
+            'type' => 'string',
+            'description' => 'Snowflake for this list\'s recommendation, use when submitting recommendation events. Omitted when the list is not algorithmically recommended.',
+          ),
+        ),
+      ),
+      'galleryList' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'items',
+        ),
+        'properties' => 
+        array (
+          'items' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:app.bsky.unspecced.getAtmosphereExploreTab#galleryItem',
+            ),
+          ),
+          'recIdStr' => 
+          array (
+            'type' => 'string',
+            'description' => 'Snowflake for this list\'s recommendation, use when submitting recommendation events. Omitted when the list is not algorithmically recommended.',
+          ),
+        ),
+      ),
+      'livestreamList' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'items',
+        ),
+        'properties' => 
+        array (
+          'items' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:app.bsky.unspecced.getAtmosphereExploreTab#livestreamItem',
+            ),
+          ),
+          'recIdStr' => 
+          array (
+            'type' => 'string',
+            'description' => 'Snowflake for this list\'s recommendation, use when submitting recommendation events. Omitted when the list is not algorithmically recommended.',
           ),
         ),
       ),
