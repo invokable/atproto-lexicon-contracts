@@ -21,22 +21,23 @@ interface Safelink
     public const queryEvents = 'tools.ozone.safelink.queryEvents';
     public const queryRules = 'tools.ozone.safelink.queryRules';
     public const removeRule = 'tools.ozone.safelink.removeRule';
+    public const syncSource = 'tools.ozone.safelink.syncSource';
     public const updateRule = 'tools.ozone.safelink.updateRule';
 
     /**
      * Add a new URL safety rule.
      *
-     * @return array{id: int, eventType: mixed, url: string, pattern: mixed, action: mixed, reason: mixed, createdBy: string, createdAt: string, comment: string}
+     * @return array{id: int, eventType: mixed, url: string, pattern: mixed, action: mixed, reason: mixed, source: string, createdBy: string, createdAt: string, comment: string}
      *
      * @link https://docs.bsky.app/docs/api/tools-ozone-safelink-add-rule
      */
     #[Post, NSID(self::addRule)]
-    public function addRule(string $url, #[Ref('tools.ozone.safelink.defs#patternType')] string $pattern, #[Ref('tools.ozone.safelink.defs#actionType')] string $action, #[Ref('tools.ozone.safelink.defs#reasonType')] string $reason, ?string $comment = null, #[Format('did')] ?string $createdBy = null);
+    public function addRule(string $url, #[Ref('tools.ozone.safelink.defs#patternType')] string $pattern, #[Ref('tools.ozone.safelink.defs#actionType')] string $action, #[Ref('tools.ozone.safelink.defs#reasonType')] string $reason, ?string $source = 'ozone/default', ?string $comment = null, #[Format('did')] ?string $createdBy = null);
 
     /**
      * Query URL safety audit events.
      *
-     * @return array{cursor: string, events: array{id: int, eventType: array, url: string, pattern: array, action: array, reason: array, createdBy: string, createdAt: string, comment: string}[]}
+     * @return array{cursor: string, events: array{id: int, eventType: array, url: string, pattern: array, action: array, reason: array, source: string, createdBy: string, createdAt: string, comment: string}[]}
      *
      * @link https://docs.bsky.app/docs/api/tools-ozone-safelink-query-events
      */
@@ -46,30 +47,40 @@ interface Safelink
     /**
      * Query URL safety rules.
      *
-     * @return array{cursor: string, rules: array{url: string, pattern: array, action: array, reason: array, comment: string, createdBy: string, createdAt: string, updatedAt: string}[]}
+     * @return array{cursor: string, rules: array{url: string, pattern: array, action: array, reason: array, source: string, comment: string, createdBy: string, createdAt: string, updatedAt: string}[]}
      *
      * @link https://docs.bsky.app/docs/api/tools-ozone-safelink-query-rules
      */
     #[Post, NSID(self::queryRules)]
-    public function queryRules(?string $cursor = null, ?int $limit = 50, ?array $urls = null, ?string $patternType = null, ?array $actions = null, ?string $reason = null, #[Format('did')] ?string $createdBy = null, #[KnownValues(['asc', 'desc'])] ?string $sortDirection = 'desc');
+    public function queryRules(?string $cursor = null, ?int $limit = 50, ?array $urls = null, ?string $patternType = null, ?array $actions = null, ?string $reason = null, ?string $source = null, #[Format('did')] ?string $createdBy = null, #[KnownValues(['asc', 'desc'])] ?string $sortDirection = 'desc');
 
     /**
      * Remove an existing URL safety rule.
      *
-     * @return array{id: int, eventType: mixed, url: string, pattern: mixed, action: mixed, reason: mixed, createdBy: string, createdAt: string, comment: string}
+     * @return array{id: int, eventType: mixed, url: string, pattern: mixed, action: mixed, reason: mixed, source: string, createdBy: string, createdAt: string, comment: string}
      *
      * @link https://docs.bsky.app/docs/api/tools-ozone-safelink-remove-rule
      */
     #[Post, NSID(self::removeRule)]
-    public function removeRule(string $url, #[Ref('tools.ozone.safelink.defs#patternType')] string $pattern, ?string $comment = null, #[Format('did')] ?string $createdBy = null);
+    public function removeRule(string $url, #[Ref('tools.ozone.safelink.defs#patternType')] string $pattern, ?string $source = 'ozone/default', ?string $comment = null, #[Format('did')] ?string $createdBy = null);
+
+    /**
+     * Replace stored rules for one source from a complete snapshot. Existing rules owned by another source remain unchanged.
+     *
+     * @return array{added: int, updated: int, removed: int, events: int}
+     *
+     * @link https://docs.bsky.app/docs/api/tools-ozone-safelink-sync-source
+     */
+    #[Post, NSID(self::syncSource)]
+    public function syncSource(string $source, #[Ref('tools.ozone.safelink.syncSource#sourceRule')] array $rules);
 
     /**
      * Update an existing URL safety rule.
      *
-     * @return array{id: int, eventType: mixed, url: string, pattern: mixed, action: mixed, reason: mixed, createdBy: string, createdAt: string, comment: string}
+     * @return array{id: int, eventType: mixed, url: string, pattern: mixed, action: mixed, reason: mixed, source: string, createdBy: string, createdAt: string, comment: string}
      *
      * @link https://docs.bsky.app/docs/api/tools-ozone-safelink-update-rule
      */
     #[Post, NSID(self::updateRule)]
-    public function updateRule(string $url, #[Ref('tools.ozone.safelink.defs#patternType')] string $pattern, #[Ref('tools.ozone.safelink.defs#actionType')] string $action, #[Ref('tools.ozone.safelink.defs#reasonType')] string $reason, ?string $comment = null, #[Format('did')] ?string $createdBy = null);
+    public function updateRule(string $url, #[Ref('tools.ozone.safelink.defs#patternType')] string $pattern, #[Ref('tools.ozone.safelink.defs#actionType')] string $action, #[Ref('tools.ozone.safelink.defs#reasonType')] string $reason, ?string $source = 'ozone/default', ?string $comment = null, #[Format('did')] ?string $createdBy = null);
 }

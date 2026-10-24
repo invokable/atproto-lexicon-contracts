@@ -34,6 +34,9 @@ abstract class AbstractProfile
      */
     protected ?string $pronouns = null;
 
+    /**
+     * Deprecated: use links instead.
+     */
     #[Format('uri')]
     protected ?string $website = null;
 

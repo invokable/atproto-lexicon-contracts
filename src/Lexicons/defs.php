@@ -9481,6 +9481,12 @@ return array (
             'type' => 'integer',
             'description' => 'Number of strikes to subtract from the user\'s strike count. Usually set from the last policy infraction\'s severity.',
           ),
+          'strikeExpiresAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+            'description' => 'When the strike should expire. If not provided, the strike never expires.',
+          ),
         ),
       ),
       'modEventResolveAppeal' => 
@@ -11021,6 +11027,11 @@ return array (
           array (
             'type' => 'string',
             'description' => 'Note to send to reporter(s) when actioning their report',
+          ),
+          'isAutomated' => 
+          array (
+            'type' => 'boolean',
+            'description' => 'Set true when the report activities are created by an automated process.',
           ),
         ),
       ),
@@ -12576,7 +12587,7 @@ return array (
       'main' => 
       array (
         'type' => 'procedure',
-        'description' => 'Create a new moderation queue. A queue can have optional matching criteria that ozone\'s queue router will use to match reports. A queue with no criteria must have reports assigned to it manually via (1) `modTool.meta.queueId` in `tools.ozone.moderation.emitEvent` or (2) `tools.ozone.report.reassignQueue`.',
+        'description' => 'Create a new moderation queue. A queue with omitted or empty subjectTypes or reportTypes must have reports assigned to it manually via (1) `modTool.meta.queueId` in `tools.ozone.moderation.emitEvent` or (2) `tools.ozone.report.reassignQueue`.',
         'input' => 
         array (
           'encoding' => 'application/json',
@@ -12614,7 +12625,7 @@ return array (
               array (
                 'type' => 'string',
                 'format' => 'nsid',
-                'description' => 'Collection name for record subjects. Required if subjectTypes includes \'record\'.',
+                'description' => 'Collection name for record subjects. Omit to accept every collection.',
               ),
               'reportTypes' => 
               array (
@@ -12623,8 +12634,29 @@ return array (
                 array (
                   'type' => 'string',
                 ),
-                'maxLength' => 25,
                 'description' => 'Report reason types (fully qualified NSIDs)',
+              ),
+              'reporterTags' => 
+              array (
+                'type' => 'array',
+                'maxLength' => 25,
+                'items' => 
+                array (
+                  'type' => 'string',
+                  'minLength' => 1,
+                ),
+                'description' => 'Match any listed tag on the account submitting the report.',
+              ),
+              'accountTags' => 
+              array (
+                'type' => 'array',
+                'maxLength' => 25,
+                'items' => 
+                array (
+                  'type' => 'string',
+                  'minLength' => 1,
+                ),
+                'description' => 'Match any of these tags on the account that is being reported against.',
               ),
               'description' => 
               array (
@@ -12648,6 +12680,11 @@ return array (
                   'type' => 'string',
                 ),
                 'description' => 'Labels to recommend for this queue and use as fallback appeal routing mappings',
+              ),
+              'strictAccess' => 
+              array (
+                'type' => 'boolean',
+                'description' => 'Admins can always list this queue and browse its reports. Other roles require an active queue assignment. Individual report and moderation event access is unchanged.',
               ),
             ),
           ),
@@ -12739,7 +12776,7 @@ return array (
           array (
             'type' => 'string',
             'format' => 'nsid',
-            'description' => 'Collection name for record subjects (e.g., \'app.bsky.feed.post\')',
+            'description' => 'Collection name for record subjects. Omit to accept every collection.',
           ),
           'reportTypes' => 
           array (
@@ -12749,6 +12786,28 @@ return array (
               'type' => 'string',
             ),
             'description' => 'Report reason types this queue accepts (fully qualified NSIDs)',
+          ),
+          'reporterTags' => 
+          array (
+            'type' => 'array',
+            'maxLength' => 25,
+            'items' => 
+            array (
+              'type' => 'string',
+              'minLength' => 1,
+            ),
+            'description' => 'Match any listed tag on the account submitting the report.',
+          ),
+          'accountTags' => 
+          array (
+            'type' => 'array',
+            'maxLength' => 25,
+            'items' => 
+            array (
+              'type' => 'string',
+              'minLength' => 1,
+            ),
+            'description' => 'Match tags on the account that is being reported against. For record subjects, use the author account. Match any listed tag.',
           ),
           'description' => 
           array (
@@ -12805,6 +12864,11 @@ return array (
             'type' => 'ref',
             'ref' => 'lex:tools.ozone.queue.defs#queueStats',
             'description' => 'Statistics about this queue',
+          ),
+          'strictAccess' => 
+          array (
+            'type' => 'boolean',
+            'description' => 'Admins can always list this queue and browse its reports. Other roles require an active queue assignment. Individual report and moderation event access is unchanged.',
           ),
         ),
       ),
@@ -13386,6 +13450,11 @@ return array (
                 ),
                 'description' => 'Labels to recommend for this queue and use as fallback appeal routing mappings',
               ),
+              'strictAccess' => 
+              array (
+                'type' => 'boolean',
+                'description' => 'Admins can always list this queue and browse its reports. Other roles require an active queue assignment. Individual report and moderation event access is unchanged.',
+              ),
             ),
           ),
         ),
@@ -13524,6 +13593,12 @@ return array (
                 'format' => 'uri',
                 'description' => 'Subject DID (account-level reports) or AT-URI (record-level reports) whose reports should be closed.',
               ),
+              'includeAllOwned' => 
+              array (
+                'type' => 'boolean',
+                'default' => false,
+                'description' => 'If true, also close reports on all subjects owned by the account, including records, messages, and conversations. Only valid when subject is an account DID.',
+              ),
               'reportTypes' => 
               array (
                 'type' => 'array',
@@ -13531,7 +13606,16 @@ return array (
                 array (
                   'type' => 'string',
                 ),
-                'description' => 'If specified, only reports of the given report types (fully qualified reason NSIDs) are closed. When omitted, all non-closed reports on the subject are targeted.',
+                'description' => 'If nonempty, only reports of the given report types (fully qualified reason NSIDs) are closed. When omitted or empty, all non-closed reports in the requested subject scope are targeted, except excludedReportTypes.',
+              ),
+              'excludedReportTypes' => 
+              array (
+                'type' => 'array',
+                'items' => 
+                array (
+                  'type' => 'string',
+                ),
+                'description' => 'Reports of these types (fully qualified reason NSIDs) are excluded from closure and left unchanged. When omitted or empty, no report types are excluded.',
               ),
               'internalNote' => 
               array (
@@ -13543,6 +13627,11 @@ return array (
                 'type' => 'boolean',
                 'description' => 'Set true when this action is triggered by an automated process. Defaults to false.',
                 'default' => false,
+              ),
+              'meta' => 
+              array (
+                'type' => 'unknown',
+                'description' => 'Optional metadata for the report activities. Lifecycle and resolution fields are controlled by the service.',
               ),
             ),
           ),
@@ -13641,6 +13730,11 @@ return array (
                 'type' => 'boolean',
                 'description' => 'Set true when this activity is triggered by an automated process. Defaults to false.',
                 'default' => false,
+              ),
+              'meta' => 
+              array (
+                'type' => 'unknown',
+                'description' => 'Optional metadata for the report activities. Lifecycle and resolution fields are controlled by the service.',
               ),
             ),
           ),
@@ -15584,6 +15678,13 @@ return array (
                 'type' => 'ref',
                 'ref' => 'lex:tools.ozone.safelink.defs#reasonType',
               ),
+              'source' => 
+              array (
+                'type' => 'string',
+                'maxLength' => 128,
+                'default' => 'ozone/default',
+                'description' => 'Source of the rule',
+              ),
               'comment' => 
               array (
                 'type' => 'string',
@@ -15618,6 +15719,11 @@ return array (
           array (
             'name' => 'RuleAlreadyExists',
             'description' => 'A rule for this URL/domain already exists',
+          ),
+          2 => 
+          array (
+            'name' => 'RuleSourceConflict',
+            'description' => 'A rule for this URL/domain is owned by another source',
           ),
         ),
       ),
@@ -15675,6 +15781,12 @@ return array (
           array (
             'type' => 'ref',
             'ref' => 'lex:tools.ozone.safelink.defs#reasonType',
+          ),
+          'source' => 
+          array (
+            'type' => 'string',
+            'default' => 'ozone/default',
+            'description' => 'Source of the decision',
           ),
           'createdBy' => 
           array (
@@ -15737,7 +15849,7 @@ return array (
       'urlRule' => 
       array (
         'type' => 'object',
-        'description' => 'Input for creating a URL safety rule',
+        'description' => 'An active URL safety rule',
         'required' => 
         array (
           0 => 'url',
@@ -15769,6 +15881,12 @@ return array (
           array (
             'type' => 'ref',
             'ref' => 'lex:tools.ozone.safelink.defs#reasonType',
+          ),
+          'source' => 
+          array (
+            'type' => 'string',
+            'default' => 'ozone/default',
+            'description' => 'Source of the rule',
           ),
           'comment' => 
           array (
@@ -15947,6 +16065,12 @@ return array (
                 'type' => 'string',
                 'description' => 'Filter by reason type',
               ),
+              'source' => 
+              array (
+                'type' => 'string',
+                'maxLength' => 128,
+                'description' => 'Filter by exact rule source. Omit to include all sources.',
+              ),
               'createdBy' => 
               array (
                 'type' => 'string',
@@ -16032,6 +16156,13 @@ return array (
                 'type' => 'ref',
                 'ref' => 'lex:tools.ozone.safelink.defs#patternType',
               ),
+              'source' => 
+              array (
+                'type' => 'string',
+                'maxLength' => 128,
+                'default' => 'ozone/default',
+                'description' => 'Source of the rule to remove',
+              ),
               'comment' => 
               array (
                 'type' => 'string',
@@ -16061,6 +16192,117 @@ return array (
           array (
             'name' => 'RuleNotFound',
             'description' => 'No active rule found for this URL/domain',
+          ),
+        ),
+      ),
+    ),
+  ),
+  'tools.ozone.safelink.syncSource' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'tools.ozone.safelink.syncSource',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'procedure',
+        'description' => 'Replace stored rules for one source from a complete snapshot. Existing rules owned by another source remain unchanged.',
+        'input' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'source',
+              1 => 'rules',
+            ),
+            'properties' => 
+            array (
+              'source' => 
+              array (
+                'type' => 'string',
+                'maxLength' => 128,
+                'description' => 'Source whose rules are being synchronized',
+              ),
+              'rules' => 
+              array (
+                'type' => 'array',
+                'items' => 
+                array (
+                  'type' => 'ref',
+                  'ref' => 'lex:tools.ozone.safelink.syncSource#sourceRule',
+                ),
+              ),
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'added',
+              1 => 'updated',
+              2 => 'removed',
+              3 => 'events',
+            ),
+            'properties' => 
+            array (
+              'added' => 
+              array (
+                'type' => 'integer',
+              ),
+              'updated' => 
+              array (
+                'type' => 'integer',
+              ),
+              'removed' => 
+              array (
+                'type' => 'integer',
+              ),
+              'events' => 
+              array (
+                'type' => 'integer',
+              ),
+            ),
+          ),
+        ),
+      ),
+      'sourceRule' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'url',
+          1 => 'pattern',
+          2 => 'action',
+          3 => 'reason',
+        ),
+        'properties' => 
+        array (
+          'url' => 
+          array (
+            'type' => 'string',
+          ),
+          'pattern' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:tools.ozone.safelink.defs#patternType',
+          ),
+          'action' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:tools.ozone.safelink.defs#actionType',
+          ),
+          'reason' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:tools.ozone.safelink.defs#reasonType',
           ),
         ),
       ),
@@ -16111,6 +16353,13 @@ return array (
                 'type' => 'ref',
                 'ref' => 'lex:tools.ozone.safelink.defs#reasonType',
               ),
+              'source' => 
+              array (
+                'type' => 'string',
+                'maxLength' => 128,
+                'default' => 'ozone/default',
+                'description' => 'Source of the rule to update',
+              ),
               'comment' => 
               array (
                 'type' => 'string',
@@ -16140,6 +16389,11 @@ return array (
           array (
             'name' => 'RuleNotFound',
             'description' => 'No active rule found for this URL/domain',
+          ),
+          1 => 
+          array (
+            'name' => 'RuleSourceConflict',
+            'description' => 'A rule for this URL/domain is owned by another source',
           ),
         ),
       ),
@@ -18219,812 +18473,6 @@ return array (
       ),
     ),
   ),
-  'app.bsky.embed.external' => 
-  array (
-    'lexicon' => 1,
-    'id' => 'app.bsky.embed.external',
-    'defs' => 
-    array (
-      'main' => 
-      array (
-        'type' => 'object',
-        'description' => 'A representation of some externally linked content (eg, a URL and \'card\'), embedded in a Bluesky record (eg, a post).',
-        'required' => 
-        array (
-          0 => 'external',
-        ),
-        'properties' => 
-        array (
-          'external' => 
-          array (
-            'type' => 'ref',
-            'ref' => 'lex:app.bsky.embed.external#external',
-          ),
-        ),
-      ),
-      'external' => 
-      array (
-        'type' => 'object',
-        'required' => 
-        array (
-          0 => 'uri',
-          1 => 'title',
-          2 => 'description',
-        ),
-        'properties' => 
-        array (
-          'uri' => 
-          array (
-            'type' => 'string',
-            'format' => 'uri',
-          ),
-          'title' => 
-          array (
-            'type' => 'string',
-          ),
-          'description' => 
-          array (
-            'type' => 'string',
-          ),
-          'thumb' => 
-          array (
-            'type' => 'blob',
-            'accept' => 
-            array (
-              0 => 'image/*',
-            ),
-            'maxSize' => 1000000,
-          ),
-          'associatedRefs' => 
-          array (
-            'type' => 'array',
-            'items' => 
-            array (
-              'type' => 'ref',
-              'ref' => 'lex:com.atproto.repo.strongRef',
-            ),
-            'description' => 'StrongRefs (uri+cid) of the Atmosphere records that backed this view.',
-          ),
-        ),
-      ),
-      'view' => 
-      array (
-        'type' => 'object',
-        'required' => 
-        array (
-          0 => 'external',
-        ),
-        'properties' => 
-        array (
-          'external' => 
-          array (
-            'type' => 'ref',
-            'ref' => 'lex:app.bsky.embed.external#viewExternal',
-          ),
-        ),
-      ),
-      'viewExternal' => 
-      array (
-        'type' => 'object',
-        'required' => 
-        array (
-          0 => 'uri',
-          1 => 'title',
-          2 => 'description',
-        ),
-        'properties' => 
-        array (
-          'uri' => 
-          array (
-            'type' => 'string',
-            'format' => 'uri',
-          ),
-          'title' => 
-          array (
-            'type' => 'string',
-          ),
-          'description' => 
-          array (
-            'type' => 'string',
-          ),
-          'thumb' => 
-          array (
-            'type' => 'string',
-            'format' => 'uri',
-          ),
-          'createdAt' => 
-          array (
-            'type' => 'string',
-            'format' => 'datetime',
-            'description' => 'When the external content was created, if available. Example: a publication date, for an article.',
-          ),
-          'updatedAt' => 
-          array (
-            'type' => 'string',
-            'format' => 'datetime',
-            'description' => 'When the external content was updated, if available.',
-          ),
-          'readingTime' => 
-          array (
-            'type' => 'integer',
-            'description' => 'Estimated reading time in minutes, if applicable and available.',
-          ),
-          'labels' => 
-          array (
-            'type' => 'array',
-            'items' => 
-            array (
-              'type' => 'ref',
-              'ref' => 'lex:com.atproto.label.defs#label',
-            ),
-          ),
-          'source' => 
-          array (
-            'type' => 'ref',
-            'ref' => 'lex:app.bsky.embed.external#viewExternalSource',
-          ),
-          'associatedRefs' => 
-          array (
-            'type' => 'array',
-            'items' => 
-            array (
-              'type' => 'ref',
-              'ref' => 'lex:com.atproto.repo.strongRef',
-            ),
-            'description' => 'StrongRefs (uri+cid) of the Atmosphere records that backed this view.',
-          ),
-          'associatedProfiles' => 
-          array (
-            'type' => 'array',
-            'items' => 
-            array (
-              'type' => 'ref',
-              'ref' => 'lex:app.bsky.actor.defs#profileViewBasic',
-            ),
-            'description' => 'Profiles of the owners of the Atmosphere records that backed this view.',
-          ),
-        ),
-      ),
-      'viewExternalSource' => 
-      array (
-        'type' => 'object',
-        'description' => 'The source of an external embed, such as a standard.site publication.',
-        'required' => 
-        array (
-          0 => 'uri',
-          1 => 'title',
-        ),
-        'properties' => 
-        array (
-          'uri' => 
-          array (
-            'type' => 'string',
-            'format' => 'uri',
-            'description' => 'URI of the source, if available. Example: the https:// URL of a site.standard.publication record.',
-          ),
-          'icon' => 
-          array (
-            'type' => 'string',
-            'format' => 'uri',
-            'description' => 'Fully-qualified URL where an icon representing the source can be fetched. For example, CDN location provided by the App View.',
-          ),
-          'title' => 
-          array (
-            'type' => 'string',
-          ),
-          'description' => 
-          array (
-            'type' => 'string',
-          ),
-          'theme' => 
-          array (
-            'type' => 'ref',
-            'ref' => 'lex:app.bsky.embed.external#viewExternalSourceTheme',
-          ),
-        ),
-      ),
-      'viewExternalSourceTheme' => 
-      array (
-        'type' => 'object',
-        'description' => 'The theme colors of an external source, such as a site.standard.publication. These colors may be used when rendering an embed from that source.',
-        'properties' => 
-        array (
-          'backgroundRGB' => 
-          array (
-            'type' => 'ref',
-            'ref' => 'lex:app.bsky.embed.external#colorRGB',
-          ),
-          'foregroundRGB' => 
-          array (
-            'type' => 'ref',
-            'ref' => 'lex:app.bsky.embed.external#colorRGB',
-          ),
-          'accentRGB' => 
-          array (
-            'type' => 'ref',
-            'ref' => 'lex:app.bsky.embed.external#colorRGB',
-          ),
-          'accentForegroundRGB' => 
-          array (
-            'type' => 'ref',
-            'ref' => 'lex:app.bsky.embed.external#colorRGB',
-          ),
-        ),
-      ),
-      'colorRGB' => 
-      array (
-        'type' => 'object',
-        'description' => 'RGB color definition, inspired by site.standard.theme.color#rgb',
-        'required' => 
-        array (
-          0 => 'r',
-          1 => 'g',
-          2 => 'b',
-        ),
-        'properties' => 
-        array (
-          'r' => 
-          array (
-            'type' => 'integer',
-            'minimum' => 0,
-            'maximum' => 255,
-          ),
-          'g' => 
-          array (
-            'type' => 'integer',
-            'minimum' => 0,
-            'maximum' => 255,
-          ),
-          'b' => 
-          array (
-            'type' => 'integer',
-            'minimum' => 0,
-            'maximum' => 255,
-          ),
-        ),
-      ),
-      'viewArticle' => 
-      array (
-        'type' => 'object',
-        'required' => 
-        array (
-          0 => 'uri',
-          1 => 'title',
-          2 => 'description',
-        ),
-        'properties' => 
-        array (
-          'uri' => 
-          array (
-            'type' => 'string',
-            'format' => 'uri',
-          ),
-          'title' => 
-          array (
-            'type' => 'string',
-          ),
-          'description' => 
-          array (
-            'type' => 'string',
-          ),
-          'createdAt' => 
-          array (
-            'type' => 'string',
-            'format' => 'datetime',
-          ),
-          'updatedAt' => 
-          array (
-            'type' => 'string',
-            'format' => 'datetime',
-          ),
-          'labels' => 
-          array (
-            'type' => 'array',
-            'items' => 
-            array (
-              'type' => 'ref',
-              'ref' => 'lex:com.atproto.label.defs#label',
-            ),
-          ),
-          'associatedRefs' => 
-          array (
-            'type' => 'array',
-            'items' => 
-            array (
-              'type' => 'ref',
-              'ref' => 'lex:com.atproto.repo.strongRef',
-            ),
-          ),
-          'associatedProfiles' => 
-          array (
-            'type' => 'array',
-            'items' => 
-            array (
-              'type' => 'ref',
-              'ref' => 'lex:app.bsky.actor.defs#profileViewBasic',
-            ),
-          ),
-          'image' => 
-          array (
-            'type' => 'string',
-            'format' => 'uri',
-          ),
-          'publisher' => 
-          array (
-            'type' => 'ref',
-            'ref' => 'lex:app.bsky.embed.external#viewArticlePublication',
-          ),
-          'readingTime' => 
-          array (
-            'type' => 'integer',
-            'minimum' => 1,
-          ),
-          'likeCount' => 
-          array (
-            'type' => 'integer',
-            'minimum' => 0,
-          ),
-          'likers' => 
-          array (
-            'type' => 'array',
-            'maxLength' => 3,
-            'description' => 'Available profile previews. Selected deterministically by DID; not a ranking.',
-            'items' => 
-            array (
-              'type' => 'ref',
-              'ref' => 'lex:app.bsky.actor.defs#profileViewBasic',
-            ),
-          ),
-        ),
-      ),
-      'viewArticlePublication' => 
-      array (
-        'type' => 'object',
-        'required' => 
-        array (
-          0 => 'uri',
-          1 => 'title',
-          2 => 'description',
-        ),
-        'properties' => 
-        array (
-          'uri' => 
-          array (
-            'type' => 'string',
-            'format' => 'uri',
-          ),
-          'title' => 
-          array (
-            'type' => 'string',
-          ),
-          'description' => 
-          array (
-            'type' => 'string',
-          ),
-          'createdAt' => 
-          array (
-            'type' => 'string',
-            'format' => 'datetime',
-          ),
-          'updatedAt' => 
-          array (
-            'type' => 'string',
-            'format' => 'datetime',
-          ),
-          'labels' => 
-          array (
-            'type' => 'array',
-            'items' => 
-            array (
-              'type' => 'ref',
-              'ref' => 'lex:com.atproto.label.defs#label',
-            ),
-          ),
-          'associatedRefs' => 
-          array (
-            'type' => 'array',
-            'items' => 
-            array (
-              'type' => 'ref',
-              'ref' => 'lex:com.atproto.repo.strongRef',
-            ),
-          ),
-          'associatedProfiles' => 
-          array (
-            'type' => 'array',
-            'items' => 
-            array (
-              'type' => 'ref',
-              'ref' => 'lex:app.bsky.actor.defs#profileViewBasic',
-            ),
-          ),
-          'logo' => 
-          array (
-            'type' => 'string',
-            'format' => 'uri',
-          ),
-          'image' => 
-          array (
-            'type' => 'string',
-            'format' => 'uri',
-          ),
-          'theme' => 
-          array (
-            'type' => 'ref',
-            'ref' => 'lex:app.bsky.embed.external#viewArticlePublicationTheme',
-          ),
-          'subscriptionCount' => 
-          array (
-            'type' => 'integer',
-            'minimum' => 0,
-          ),
-          'subscribers' => 
-          array (
-            'type' => 'array',
-            'maxLength' => 3,
-            'description' => 'Available profile previews. Selected deterministically by DID; not a ranking.',
-            'items' => 
-            array (
-              'type' => 'ref',
-              'ref' => 'lex:app.bsky.actor.defs#profileViewBasic',
-            ),
-          ),
-        ),
-      ),
-      'viewArticlePublicationTheme' => 
-      array (
-        'type' => 'object',
-        'properties' => 
-        array (
-          'background' => 
-          array (
-            'type' => 'string',
-            'description' => 'Hex color string, if available. Example: \'#ffffff\'.',
-          ),
-          'foreground' => 
-          array (
-            'type' => 'string',
-            'description' => 'Hex color string, if available. Example: \'#ffffff\'.',
-          ),
-          'accent' => 
-          array (
-            'type' => 'string',
-            'description' => 'Hex color string, if available. Example: \'#ffffff\'.',
-          ),
-          'accentForeground' => 
-          array (
-            'type' => 'string',
-            'description' => 'Hex color string, if available. Example: \'#ffffff\'.',
-          ),
-        ),
-      ),
-      'viewGallery' => 
-      array (
-        'type' => 'object',
-        'required' => 
-        array (
-          0 => 'uri',
-          1 => 'title',
-          2 => 'description',
-          3 => 'items',
-        ),
-        'properties' => 
-        array (
-          'uri' => 
-          array (
-            'type' => 'string',
-            'format' => 'uri',
-          ),
-          'title' => 
-          array (
-            'type' => 'string',
-          ),
-          'description' => 
-          array (
-            'type' => 'string',
-          ),
-          'createdAt' => 
-          array (
-            'type' => 'string',
-            'format' => 'datetime',
-          ),
-          'updatedAt' => 
-          array (
-            'type' => 'string',
-            'format' => 'datetime',
-          ),
-          'labels' => 
-          array (
-            'type' => 'array',
-            'items' => 
-            array (
-              'type' => 'ref',
-              'ref' => 'lex:com.atproto.label.defs#label',
-            ),
-          ),
-          'associatedRefs' => 
-          array (
-            'type' => 'array',
-            'items' => 
-            array (
-              'type' => 'ref',
-              'ref' => 'lex:com.atproto.repo.strongRef',
-            ),
-          ),
-          'associatedProfiles' => 
-          array (
-            'type' => 'array',
-            'items' => 
-            array (
-              'type' => 'ref',
-              'ref' => 'lex:app.bsky.actor.defs#profileViewBasic',
-            ),
-          ),
-          'items' => 
-          array (
-            'type' => 'array',
-            'items' => 
-            array (
-              'type' => 'union',
-              'refs' => 
-              array (
-                0 => 'lex:app.bsky.embed.external#viewGalleryImage',
-              ),
-            ),
-            'description' => 'The media items in the gallery. Each item may be of a different type, but all types must be supported by the client.',
-          ),
-          'likeCount' => 
-          array (
-            'type' => 'integer',
-            'minimum' => 0,
-          ),
-          'likers' => 
-          array (
-            'type' => 'array',
-            'maxLength' => 3,
-            'description' => 'Available profile previews. Selected deterministically by DID; not a ranking.',
-            'items' => 
-            array (
-              'type' => 'ref',
-              'ref' => 'lex:app.bsky.actor.defs#profileViewBasic',
-            ),
-          ),
-        ),
-      ),
-      'viewGalleryImage' => 
-      array (
-        'type' => 'object',
-        'required' => 
-        array (
-          0 => 'thumbnail',
-          1 => 'fullsize',
-        ),
-        'properties' => 
-        array (
-          'thumbnail' => 
-          array (
-            'type' => 'string',
-            'format' => 'uri',
-            'description' => 'Fully-qualified URL where a thumbnail of the image can be fetched. For example, CDN location provided by the App View.',
-          ),
-          'fullsize' => 
-          array (
-            'type' => 'string',
-            'format' => 'uri',
-            'description' => 'Fully-qualified URL where a large version of the image can be fetched. May or may not be the exact original blob. For example, CDN location provided by the App View.',
-          ),
-          'alt' => 
-          array (
-            'type' => 'string',
-            'description' => 'Alt text description of the image, for accessibility.',
-          ),
-          'aspectRatio' => 
-          array (
-            'type' => 'ref',
-            'ref' => 'lex:app.bsky.embed.defs#aspectRatio',
-          ),
-        ),
-      ),
-      'viewLivestream' => 
-      array (
-        'type' => 'object',
-        'required' => 
-        array (
-          0 => 'uri',
-          1 => 'title',
-          2 => 'description',
-          3 => 'active',
-        ),
-        'properties' => 
-        array (
-          'uri' => 
-          array (
-            'type' => 'string',
-            'format' => 'uri',
-          ),
-          'title' => 
-          array (
-            'type' => 'string',
-          ),
-          'description' => 
-          array (
-            'type' => 'string',
-          ),
-          'createdAt' => 
-          array (
-            'type' => 'string',
-            'format' => 'datetime',
-          ),
-          'updatedAt' => 
-          array (
-            'type' => 'string',
-            'format' => 'datetime',
-          ),
-          'labels' => 
-          array (
-            'type' => 'array',
-            'items' => 
-            array (
-              'type' => 'ref',
-              'ref' => 'lex:com.atproto.label.defs#label',
-            ),
-          ),
-          'associatedRefs' => 
-          array (
-            'type' => 'array',
-            'items' => 
-            array (
-              'type' => 'ref',
-              'ref' => 'lex:com.atproto.repo.strongRef',
-            ),
-          ),
-          'associatedProfiles' => 
-          array (
-            'type' => 'array',
-            'items' => 
-            array (
-              'type' => 'ref',
-              'ref' => 'lex:app.bsky.actor.defs#profileViewBasic',
-            ),
-          ),
-          'image' => 
-          array (
-            'type' => 'string',
-            'format' => 'uri',
-          ),
-          'active' => 
-          array (
-            'type' => 'boolean',
-            'description' => 'True if the livestream is currently active at the time this view is served, false if it has ended.',
-          ),
-          'startedAt' => 
-          array (
-            'type' => 'string',
-            'format' => 'datetime',
-          ),
-          'endedAt' => 
-          array (
-            'type' => 'string',
-            'format' => 'datetime',
-          ),
-        ),
-      ),
-    ),
-  ),
-  'app.bsky.embed.getEmbedExternalView' => 
-  array (
-    'lexicon' => 1,
-    'id' => 'app.bsky.embed.getEmbedExternalView',
-    'defs' => 
-    array (
-      'main' => 
-      array (
-        'type' => 'query',
-        'description' => 'Resolve one AT-URI record into the data needed to render an enhanced external embed. The records are validated against the requested `url` before any view is built. When validation passes, returns `data`, `associatedRefs` (strongRefs to embed into a post\'s external.associatedRefs) and the raw `associatedRecords`, plus a legacy `view` for Standard.site records only. When validation fails, only `unverifiedAssociatedRefs` and `unverifiedAssociatedRecords` are returned and no view or data is built. The response is empty (`{}`) when no record URI was usable or the record could not be resolved; clients should fall back to their own link-card rendering in that case and skip writing strongRefs to the post.',
-        'parameters' => 
-        array (
-          'type' => 'params',
-          'required' => 
-          array (
-            0 => 'url',
-          ),
-          'properties' => 
-          array (
-            'url' => 
-            array (
-              'type' => 'string',
-              'format' => 'uri',
-              'description' => 'The canonical web URL the embed represents (typically the URL the user pasted into the composer). Used as the returned view\'s `uri`, and validated against the resolved records.',
-            ),
-            'canonicalUri' => 
-            array (
-              'type' => 'string',
-              'format' => 'at-uri',
-              'description' => 'The canonical AT URI of the atproto record found on the webpage. When provided, takes precedence over `uris`, which is then ignored.',
-            ),
-            'uris' => 
-            array (
-              'type' => 'array',
-              'description' => 'Legacy input for Standard.site callers, ignored when `canonicalUri` is provided. A single record is selected from it: the first site.standard.document URI, otherwise the first site.standard.publication URI. Other entries are ignored; a document\'s publication is discovered from the document itself.',
-              'items' => 
-              array (
-                'type' => 'string',
-                'format' => 'at-uri',
-              ),
-              'maxLength' => 4,
-            ),
-          ),
-        ),
-        'output' => 
-        array (
-          'encoding' => 'application/json',
-          'schema' => 
-          array (
-            'type' => 'object',
-            'properties' => 
-            array (
-              'view' => 
-              array (
-                'type' => 'ref',
-                'ref' => 'lex:app.bsky.embed.external#view',
-                'description' => 'Legacy hydrated view of the embed, returned for Standard.site records only. Present only when validation passed and the records supply enough information to populate the required `viewExternal` fields.',
-              ),
-              'data' => 
-              array (
-                'type' => 'union',
-                'refs' => 
-                array (
-                  0 => 'lex:app.bsky.embed.external#viewArticle',
-                  1 => 'lex:app.bsky.embed.external#viewArticlePublication',
-                  2 => 'lex:app.bsky.embed.external#viewGallery',
-                  3 => 'lex:app.bsky.embed.external#viewLivestream',
-                ),
-                'description' => 'Preferred to #view. Hydrated data of the embed. Present only when validation passed and the records supply enough information to populate the required fields.',
-              ),
-              'associatedRefs' => 
-              array (
-                'type' => 'array',
-                'items' => 
-                array (
-                  'type' => 'ref',
-                  'ref' => 'lex:com.atproto.repo.strongRef',
-                ),
-                'description' => 'StrongRefs (URI+CID) of the Atmosphere records selected for persistence in a post, suitable for embedding into its external.associatedRefs: the canonical record, plus only the additional records the service chooses to persist for its collection. This can be a subset of the records used to render `data`, which may also draw on other hydrated records such as recommendations, subscriptions, or favorites. Present only when validation passed. Index-aligned with `associatedRecords`.',
-              ),
-              'associatedRecords' => 
-              array (
-                'type' => 'array',
-                'items' => 
-                array (
-                  'type' => 'unknown',
-                  'description' => 'The raw record data of the Atmosphere records selected for persistence, index-aligned with `associatedRefs`. Returned for convenience, to avoid the client separately fetching them. Present only when validation passed.',
-                ),
-              ),
-              'unverifiedAssociatedRefs' => 
-              array (
-                'type' => 'array',
-                'items' => 
-                array (
-                  'type' => 'ref',
-                  'ref' => 'lex:com.atproto.repo.strongRef',
-                ),
-                'description' => 'StrongRefs (URI+CID) of the same persistence-selected Atmosphere records (the canonical record plus chosen additional records) when validation of the requested `url` failed. These must not be written to a post. Index-aligned with `unverifiedAssociatedRecords`.',
-              ),
-              'unverifiedAssociatedRecords' => 
-              array (
-                'type' => 'array',
-                'items' => 
-                array (
-                  'type' => 'unknown',
-                  'description' => 'The raw record data of the persistence-selected Atmosphere records, index-aligned with `unverifiedAssociatedRefs`. Present only when validation failed.',
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-    ),
-  ),
   'app.bsky.graph.getFollowers' => 
   array (
     'lexicon' => 1,
@@ -19186,299 +18634,6 @@ return array (
                 ),
               ),
             ),
-          ),
-        ),
-      ),
-    ),
-  ),
-  'app.bsky.unspecced.getAtmosphereExploreTab' => 
-  array (
-    'lexicon' => 1,
-    'id' => 'app.bsky.unspecced.getAtmosphereExploreTab',
-    'defs' => 
-    array (
-      'main' => 
-      array (
-        'type' => 'query',
-        'description' => 'Get curated Atmosphere Explore content. Authentication is optional; authenticated requests include viewer-specific profile state.',
-        'parameters' => 
-        array (
-          'type' => 'params',
-          'properties' => 
-          array (
-            'langs' => 
-            array (
-              'type' => 'array',
-              'description' => 'Preferred languages. Currently ignored.',
-              'items' => 
-              array (
-                'type' => 'string',
-                'format' => 'language',
-              ),
-            ),
-            'countryCode' => 
-            array (
-              'type' => 'string',
-              'description' => 'The ISO 3166-1 alpha-2 country code used to select curated content.',
-            ),
-            'regionCode' => 
-            array (
-              'type' => 'string',
-              'description' => 'The ISO 3166-2 region code used to select curated content.',
-            ),
-          ),
-        ),
-        'output' => 
-        array (
-          'encoding' => 'application/json',
-          'schema' => 
-          array (
-            'type' => 'object',
-            'required' => 
-            array (
-              0 => 'articles',
-              1 => 'publications',
-              2 => 'photos',
-              3 => 'livestreams',
-              4 => 'apps',
-            ),
-            'properties' => 
-            array (
-              'announcementBanner' => 
-              array (
-                'type' => 'ref',
-                'ref' => 'lex:app.bsky.unspecced.getAtmosphereExploreTab#announcementBanner',
-              ),
-              'articles' => 
-              array (
-                'type' => 'array',
-                'items' => 
-                array (
-                  'type' => 'ref',
-                  'ref' => 'lex:app.bsky.unspecced.getAtmosphereExploreTab#articleItem',
-                ),
-              ),
-              'publications' => 
-              array (
-                'type' => 'array',
-                'items' => 
-                array (
-                  'type' => 'ref',
-                  'ref' => 'lex:app.bsky.unspecced.getAtmosphereExploreTab#publicationItem',
-                ),
-              ),
-              'photos' => 
-              array (
-                'type' => 'array',
-                'items' => 
-                array (
-                  'type' => 'ref',
-                  'ref' => 'lex:app.bsky.unspecced.getAtmosphereExploreTab#galleryItem',
-                ),
-              ),
-              'livestreams' => 
-              array (
-                'type' => 'array',
-                'items' => 
-                array (
-                  'type' => 'ref',
-                  'ref' => 'lex:app.bsky.unspecced.getAtmosphereExploreTab#livestreamItem',
-                ),
-              ),
-              'apps' => 
-              array (
-                'type' => 'array',
-                'maxLength' => 100,
-                'items' => 
-                array (
-                  'type' => 'ref',
-                  'ref' => 'lex:app.bsky.unspecced.getAtmosphereExploreTab#appCard',
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-      'articleItem' => 
-      array (
-        'type' => 'object',
-        'required' => 
-        array (
-          0 => 'featured',
-          1 => 'view',
-        ),
-        'properties' => 
-        array (
-          'featured' => 
-          array (
-            'type' => 'boolean',
-          ),
-          'view' => 
-          array (
-            'type' => 'ref',
-            'ref' => 'lex:app.bsky.embed.external#viewArticle',
-          ),
-        ),
-      ),
-      'publicationItem' => 
-      array (
-        'type' => 'object',
-        'required' => 
-        array (
-          0 => 'featured',
-          1 => 'view',
-        ),
-        'properties' => 
-        array (
-          'featured' => 
-          array (
-            'type' => 'boolean',
-          ),
-          'view' => 
-          array (
-            'type' => 'ref',
-            'ref' => 'lex:app.bsky.embed.external#viewArticlePublication',
-          ),
-        ),
-      ),
-      'galleryItem' => 
-      array (
-        'type' => 'object',
-        'required' => 
-        array (
-          0 => 'featured',
-          1 => 'view',
-        ),
-        'properties' => 
-        array (
-          'featured' => 
-          array (
-            'type' => 'boolean',
-          ),
-          'view' => 
-          array (
-            'type' => 'ref',
-            'ref' => 'lex:app.bsky.embed.external#viewGallery',
-          ),
-        ),
-      ),
-      'livestreamItem' => 
-      array (
-        'type' => 'object',
-        'required' => 
-        array (
-          0 => 'featured',
-          1 => 'view',
-        ),
-        'properties' => 
-        array (
-          'featured' => 
-          array (
-            'type' => 'boolean',
-          ),
-          'view' => 
-          array (
-            'type' => 'ref',
-            'ref' => 'lex:app.bsky.embed.external#viewLivestream',
-          ),
-        ),
-      ),
-      'announcementBanner' => 
-      array (
-        'type' => 'object',
-        'properties' => 
-        array (
-          'id' => 
-          array (
-            'type' => 'string',
-            'maxLength' => 4096,
-          ),
-          'title' => 
-          array (
-            'type' => 'string',
-            'maxLength' => 4096,
-          ),
-          'description' => 
-          array (
-            'type' => 'string',
-            'maxLength' => 4096,
-          ),
-          'url' => 
-          array (
-            'type' => 'string',
-            'format' => 'uri',
-            'maxLength' => 4096,
-          ),
-          'image' => 
-          array (
-            'type' => 'string',
-            'format' => 'uri',
-            'maxLength' => 4096,
-          ),
-          'overlayColor' => 
-          array (
-            'type' => 'string',
-            'maxLength' => 4096,
-          ),
-          'textColor' => 
-          array (
-            'type' => 'string',
-            'maxLength' => 4096,
-          ),
-        ),
-      ),
-      'appCard' => 
-      array (
-        'type' => 'object',
-        'properties' => 
-        array (
-          'id' => 
-          array (
-            'type' => 'string',
-            'maxLength' => 4096,
-          ),
-          'title' => 
-          array (
-            'type' => 'string',
-            'maxLength' => 4096,
-          ),
-          'description' => 
-          array (
-            'type' => 'string',
-            'maxLength' => 4096,
-          ),
-          'logo' => 
-          array (
-            'type' => 'string',
-            'format' => 'uri',
-            'maxLength' => 4096,
-          ),
-          'backgroundImage' => 
-          array (
-            'type' => 'string',
-            'format' => 'uri',
-            'maxLength' => 4096,
-          ),
-          'overlayColor' => 
-          array (
-            'type' => 'string',
-            'maxLength' => 4096,
-          ),
-          'textColor' => 
-          array (
-            'type' => 'string',
-            'maxLength' => 4096,
-          ),
-          'url' => 
-          array (
-            'type' => 'string',
-            'format' => 'uri',
-            'maxLength' => 4096,
-          ),
-          'category' => 
-          array (
-            'type' => 'string',
-            'maxLength' => 4096,
           ),
         ),
       ),
@@ -20324,6 +19479,7 @@ return array (
           array (
             'type' => 'string',
             'format' => 'uri',
+            'description' => 'Deprecated: use links instead.',
           ),
           'avatar' => 
           array (
@@ -21757,6 +20913,7 @@ return array (
             array (
               'type' => 'string',
               'format' => 'uri',
+              'description' => 'Deprecated: use links instead.',
             ),
             'avatar' => 
             array (
@@ -24441,6 +23598,698 @@ return array (
       ),
     ),
   ),
+  'app.bsky.embed.external' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.embed.external',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'object',
+        'description' => 'A representation of some externally linked content (eg, a URL and \'card\'), embedded in a Bluesky record (eg, a post).',
+        'required' => 
+        array (
+          0 => 'external',
+        ),
+        'properties' => 
+        array (
+          'external' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.embed.external#external',
+          ),
+        ),
+      ),
+      'external' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'uri',
+          1 => 'title',
+          2 => 'description',
+        ),
+        'properties' => 
+        array (
+          'uri' => 
+          array (
+            'type' => 'string',
+            'format' => 'uri',
+          ),
+          'title' => 
+          array (
+            'type' => 'string',
+          ),
+          'description' => 
+          array (
+            'type' => 'string',
+          ),
+          'thumb' => 
+          array (
+            'type' => 'blob',
+            'accept' => 
+            array (
+              0 => 'image/*',
+            ),
+            'maxSize' => 1000000,
+          ),
+          'associatedRefs' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:com.atproto.repo.strongRef',
+            ),
+            'description' => 'StrongRefs (uri+cid) of the Atmosphere records that backed this view.',
+          ),
+        ),
+      ),
+      'view' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'external',
+        ),
+        'properties' => 
+        array (
+          'external' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.embed.external#viewExternal',
+          ),
+        ),
+      ),
+      'viewExternal' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'uri',
+          1 => 'title',
+          2 => 'description',
+        ),
+        'properties' => 
+        array (
+          'uri' => 
+          array (
+            'type' => 'string',
+            'format' => 'uri',
+          ),
+          'title' => 
+          array (
+            'type' => 'string',
+          ),
+          'description' => 
+          array (
+            'type' => 'string',
+          ),
+          'thumb' => 
+          array (
+            'type' => 'string',
+            'format' => 'uri',
+          ),
+          'createdAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+            'description' => 'When the external content was created, if available. Example: a publication date, for an article.',
+          ),
+          'updatedAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+            'description' => 'When the external content was updated, if available.',
+          ),
+          'readingTime' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Estimated reading time in minutes, if applicable and available.',
+          ),
+          'labels' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:com.atproto.label.defs#label',
+            ),
+          ),
+          'source' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.embed.external#viewExternalSource',
+          ),
+          'associatedRefs' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:com.atproto.repo.strongRef',
+            ),
+            'description' => 'StrongRefs (uri+cid) of the Atmosphere records that backed this view.',
+          ),
+          'associatedProfiles' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:app.bsky.actor.defs#profileViewBasic',
+            ),
+            'description' => 'Profiles of the owners of the Atmosphere records that backed this view.',
+          ),
+        ),
+      ),
+      'viewExternalSource' => 
+      array (
+        'type' => 'object',
+        'description' => 'The source of an external embed, such as a standard.site publication.',
+        'required' => 
+        array (
+          0 => 'uri',
+          1 => 'title',
+        ),
+        'properties' => 
+        array (
+          'uri' => 
+          array (
+            'type' => 'string',
+            'format' => 'uri',
+            'description' => 'URI of the source, if available. Example: the https:// URL of a site.standard.publication record.',
+          ),
+          'icon' => 
+          array (
+            'type' => 'string',
+            'format' => 'uri',
+            'description' => 'Fully-qualified URL where an icon representing the source can be fetched. For example, CDN location provided by the App View.',
+          ),
+          'title' => 
+          array (
+            'type' => 'string',
+          ),
+          'description' => 
+          array (
+            'type' => 'string',
+          ),
+          'theme' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.embed.external#viewExternalSourceTheme',
+          ),
+        ),
+      ),
+      'viewExternalSourceTheme' => 
+      array (
+        'type' => 'object',
+        'description' => 'The theme colors of an external source, such as a site.standard.publication. These colors may be used when rendering an embed from that source.',
+        'properties' => 
+        array (
+          'backgroundRGB' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.embed.external#colorRGB',
+          ),
+          'foregroundRGB' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.embed.external#colorRGB',
+          ),
+          'accentRGB' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.embed.external#colorRGB',
+          ),
+          'accentForegroundRGB' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.embed.external#colorRGB',
+          ),
+        ),
+      ),
+      'colorRGB' => 
+      array (
+        'type' => 'object',
+        'description' => 'RGB color definition, inspired by site.standard.theme.color#rgb',
+        'required' => 
+        array (
+          0 => 'r',
+          1 => 'g',
+          2 => 'b',
+        ),
+        'properties' => 
+        array (
+          'r' => 
+          array (
+            'type' => 'integer',
+            'minimum' => 0,
+            'maximum' => 255,
+          ),
+          'g' => 
+          array (
+            'type' => 'integer',
+            'minimum' => 0,
+            'maximum' => 255,
+          ),
+          'b' => 
+          array (
+            'type' => 'integer',
+            'minimum' => 0,
+            'maximum' => 255,
+          ),
+        ),
+      ),
+      'viewArticle' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'uri',
+          1 => 'title',
+          2 => 'description',
+        ),
+        'properties' => 
+        array (
+          'uri' => 
+          array (
+            'type' => 'string',
+            'format' => 'uri',
+          ),
+          'title' => 
+          array (
+            'type' => 'string',
+          ),
+          'description' => 
+          array (
+            'type' => 'string',
+          ),
+          'createdAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+          'updatedAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+          'labels' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:com.atproto.label.defs#label',
+            ),
+          ),
+          'associatedRefs' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:com.atproto.repo.strongRef',
+            ),
+          ),
+          'associatedProfiles' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:app.bsky.actor.defs#profileViewBasic',
+            ),
+          ),
+          'image' => 
+          array (
+            'type' => 'string',
+            'format' => 'uri',
+          ),
+          'publisher' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.embed.external#viewArticlePublication',
+          ),
+          'readingTime' => 
+          array (
+            'type' => 'integer',
+            'minimum' => 1,
+          ),
+          'likeCount' => 
+          array (
+            'type' => 'integer',
+            'minimum' => 0,
+          ),
+          'likers' => 
+          array (
+            'type' => 'array',
+            'maxLength' => 3,
+            'description' => 'Available profile previews. Selected deterministically by DID; not a ranking.',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:app.bsky.actor.defs#profileViewBasic',
+            ),
+          ),
+        ),
+      ),
+      'viewArticlePublication' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'uri',
+          1 => 'title',
+          2 => 'description',
+        ),
+        'properties' => 
+        array (
+          'uri' => 
+          array (
+            'type' => 'string',
+            'format' => 'uri',
+          ),
+          'title' => 
+          array (
+            'type' => 'string',
+          ),
+          'description' => 
+          array (
+            'type' => 'string',
+          ),
+          'createdAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+          'updatedAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+          'labels' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:com.atproto.label.defs#label',
+            ),
+          ),
+          'associatedRefs' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:com.atproto.repo.strongRef',
+            ),
+          ),
+          'associatedProfiles' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:app.bsky.actor.defs#profileViewBasic',
+            ),
+          ),
+          'logo' => 
+          array (
+            'type' => 'string',
+            'format' => 'uri',
+          ),
+          'image' => 
+          array (
+            'type' => 'string',
+            'format' => 'uri',
+          ),
+          'theme' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.embed.external#viewArticlePublicationTheme',
+          ),
+          'subscriptionCount' => 
+          array (
+            'type' => 'integer',
+            'minimum' => 0,
+          ),
+          'subscribers' => 
+          array (
+            'type' => 'array',
+            'maxLength' => 3,
+            'description' => 'Available profile previews. Selected deterministically by DID; not a ranking.',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:app.bsky.actor.defs#profileViewBasic',
+            ),
+          ),
+        ),
+      ),
+      'viewArticlePublicationTheme' => 
+      array (
+        'type' => 'object',
+        'properties' => 
+        array (
+          'background' => 
+          array (
+            'type' => 'string',
+            'description' => 'Hex color string, if available. Example: \'#ffffff\'.',
+          ),
+          'foreground' => 
+          array (
+            'type' => 'string',
+            'description' => 'Hex color string, if available. Example: \'#ffffff\'.',
+          ),
+          'accent' => 
+          array (
+            'type' => 'string',
+            'description' => 'Hex color string, if available. Example: \'#ffffff\'.',
+          ),
+          'accentForeground' => 
+          array (
+            'type' => 'string',
+            'description' => 'Hex color string, if available. Example: \'#ffffff\'.',
+          ),
+        ),
+      ),
+      'viewGallery' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'uri',
+          1 => 'title',
+          2 => 'description',
+          3 => 'items',
+        ),
+        'properties' => 
+        array (
+          'uri' => 
+          array (
+            'type' => 'string',
+            'format' => 'uri',
+          ),
+          'title' => 
+          array (
+            'type' => 'string',
+          ),
+          'description' => 
+          array (
+            'type' => 'string',
+          ),
+          'createdAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+          'updatedAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+          'labels' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:com.atproto.label.defs#label',
+            ),
+          ),
+          'associatedRefs' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:com.atproto.repo.strongRef',
+            ),
+          ),
+          'associatedProfiles' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:app.bsky.actor.defs#profileViewBasic',
+            ),
+          ),
+          'items' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'union',
+              'refs' => 
+              array (
+                0 => 'lex:app.bsky.embed.external#viewGalleryImage',
+              ),
+            ),
+            'description' => 'The media items in the gallery. Each item may be of a different type, but all types must be supported by the client.',
+          ),
+          'likeCount' => 
+          array (
+            'type' => 'integer',
+            'minimum' => 0,
+          ),
+          'likers' => 
+          array (
+            'type' => 'array',
+            'maxLength' => 3,
+            'description' => 'Available profile previews. Selected deterministically by DID; not a ranking.',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:app.bsky.actor.defs#profileViewBasic',
+            ),
+          ),
+        ),
+      ),
+      'viewGalleryImage' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'thumbnail',
+          1 => 'fullsize',
+        ),
+        'properties' => 
+        array (
+          'thumbnail' => 
+          array (
+            'type' => 'string',
+            'format' => 'uri',
+            'description' => 'Fully-qualified URL where a thumbnail of the image can be fetched. For example, CDN location provided by the App View.',
+          ),
+          'fullsize' => 
+          array (
+            'type' => 'string',
+            'format' => 'uri',
+            'description' => 'Fully-qualified URL where a large version of the image can be fetched. May or may not be the exact original blob. For example, CDN location provided by the App View.',
+          ),
+          'alt' => 
+          array (
+            'type' => 'string',
+            'description' => 'Alt text description of the image, for accessibility.',
+          ),
+          'aspectRatio' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.embed.defs#aspectRatio',
+          ),
+        ),
+      ),
+      'viewLivestream' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'uri',
+          1 => 'title',
+          2 => 'description',
+          3 => 'active',
+        ),
+        'properties' => 
+        array (
+          'uri' => 
+          array (
+            'type' => 'string',
+            'format' => 'uri',
+          ),
+          'title' => 
+          array (
+            'type' => 'string',
+          ),
+          'description' => 
+          array (
+            'type' => 'string',
+          ),
+          'createdAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+          'updatedAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+          'labels' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:com.atproto.label.defs#label',
+            ),
+          ),
+          'associatedRefs' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:com.atproto.repo.strongRef',
+            ),
+          ),
+          'associatedProfiles' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:app.bsky.actor.defs#profileViewBasic',
+            ),
+          ),
+          'image' => 
+          array (
+            'type' => 'string',
+            'format' => 'uri',
+          ),
+          'active' => 
+          array (
+            'type' => 'boolean',
+            'description' => 'True if the livestream is currently active at the time this view is served, false if it has ended.',
+          ),
+          'startedAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+          'endedAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+        ),
+      ),
+    ),
+  ),
   'app.bsky.embed.gallery' => 
   array (
     'lexicon' => 1,
@@ -24562,6 +24411,120 @@ return array (
           array (
             'type' => 'ref',
             'ref' => 'lex:app.bsky.embed.defs#aspectRatio',
+          ),
+        ),
+      ),
+    ),
+  ),
+  'app.bsky.embed.getEmbedExternalView' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.embed.getEmbedExternalView',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'description' => 'Resolve one AT-URI record into the data needed to render an enhanced external embed. The records are validated against the requested `url` before any view is built. When validation passes, returns `data`, `associatedRefs` (strongRefs to embed into a post\'s external.associatedRefs) and the raw `associatedRecords`, plus a legacy `view` for Standard.site records only. When validation fails, only `unverifiedAssociatedRefs` and `unverifiedAssociatedRecords` are returned and no view or data is built. The response is empty (`{}`) when no record URI was usable or the record could not be resolved; clients should fall back to their own link-card rendering in that case and skip writing strongRefs to the post.',
+        'parameters' => 
+        array (
+          'type' => 'params',
+          'required' => 
+          array (
+            0 => 'url',
+          ),
+          'properties' => 
+          array (
+            'url' => 
+            array (
+              'type' => 'string',
+              'format' => 'uri',
+              'description' => 'The canonical web URL the embed represents (typically the URL the user pasted into the composer). Used as the returned view\'s `uri`, and validated against the resolved records.',
+            ),
+            'canonicalUri' => 
+            array (
+              'type' => 'string',
+              'format' => 'at-uri',
+              'description' => 'The canonical AT URI of the atproto record found on the webpage. When provided, takes precedence over `uris`, which is then ignored.',
+            ),
+            'uris' => 
+            array (
+              'type' => 'array',
+              'description' => 'Legacy input for Standard.site callers, ignored when `canonicalUri` is provided. A single record is selected from it: the first site.standard.document URI, otherwise the first site.standard.publication URI. Other entries are ignored; a document\'s publication is discovered from the document itself.',
+              'items' => 
+              array (
+                'type' => 'string',
+                'format' => 'at-uri',
+              ),
+              'maxLength' => 4,
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'properties' => 
+            array (
+              'view' => 
+              array (
+                'type' => 'ref',
+                'ref' => 'lex:app.bsky.embed.external#view',
+                'description' => 'Legacy hydrated view of the embed, returned for Standard.site records only. Present only when validation passed and the records supply enough information to populate the required `viewExternal` fields.',
+              ),
+              'data' => 
+              array (
+                'type' => 'union',
+                'refs' => 
+                array (
+                  0 => 'lex:app.bsky.embed.external#viewArticle',
+                  1 => 'lex:app.bsky.embed.external#viewArticlePublication',
+                  2 => 'lex:app.bsky.embed.external#viewGallery',
+                  3 => 'lex:app.bsky.embed.external#viewLivestream',
+                ),
+                'description' => 'Preferred to #view. Hydrated data of the embed. Present only when validation passed and the records supply enough information to populate the required fields.',
+              ),
+              'associatedRefs' => 
+              array (
+                'type' => 'array',
+                'items' => 
+                array (
+                  'type' => 'ref',
+                  'ref' => 'lex:com.atproto.repo.strongRef',
+                ),
+                'description' => 'StrongRefs (URI+CID) of the Atmosphere records selected for persistence in a post, suitable for embedding into its external.associatedRefs: the canonical record, plus only the additional records the service chooses to persist for its collection. This can be a subset of the records used to render `data`, which may also draw on other hydrated records such as recommendations, subscriptions, or favorites. Present only when validation passed. Index-aligned with `associatedRecords`.',
+              ),
+              'associatedRecords' => 
+              array (
+                'type' => 'array',
+                'items' => 
+                array (
+                  'type' => 'unknown',
+                  'description' => 'The raw record data of the Atmosphere records selected for persistence, index-aligned with `associatedRefs`. Returned for convenience, to avoid the client separately fetching them. Present only when validation passed.',
+                ),
+              ),
+              'unverifiedAssociatedRefs' => 
+              array (
+                'type' => 'array',
+                'items' => 
+                array (
+                  'type' => 'ref',
+                  'ref' => 'lex:com.atproto.repo.strongRef',
+                ),
+                'description' => 'StrongRefs (URI+CID) of the same persistence-selected Atmosphere records (the canonical record plus chosen additional records) when validation of the requested `url` failed. These must not be written to a post. Index-aligned with `unverifiedAssociatedRecords`.',
+              ),
+              'unverifiedAssociatedRecords' => 
+              array (
+                'type' => 'array',
+                'items' => 
+                array (
+                  'type' => 'unknown',
+                  'description' => 'The raw record data of the persistence-selected Atmosphere records, index-aligned with `unverifiedAssociatedRefs`. Present only when validation failed.',
+                ),
+              ),
+            ),
           ),
         ),
       ),
@@ -32976,6 +32939,463 @@ return array (
           array (
             'type' => 'ref',
             'ref' => 'lex:app.bsky.unspecced.defs#ageAssuranceState',
+          ),
+        ),
+      ),
+    ),
+  ),
+  'app.bsky.unspecced.getAtmosphereExploreArticleRecommendations' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.unspecced.getAtmosphereExploreArticleRecommendations',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'description' => 'Get a skeleton of recommended Atmosphere Explore articles. Intended to be called and hydrated by app.bsky.unspecced.getAtmosphereExploreTab',
+        'parameters' => 
+        array (
+          'type' => 'params',
+          'properties' => 
+          array (
+            'viewer' => 
+            array (
+              'type' => 'string',
+              'format' => 'did',
+              'description' => 'DID of the account making the request (not included for public/unauthenticated queries).',
+            ),
+            'limit' => 
+            array (
+              'type' => 'integer',
+              'minimum' => 1,
+              'maximum' => 100,
+              'default' => 25,
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'articles',
+              1 => 'recIdStr',
+            ),
+            'properties' => 
+            array (
+              'articles' => 
+              array (
+                'type' => 'array',
+                'maxLength' => 100,
+                'items' => 
+                array (
+                  'type' => 'ref',
+                  'ref' => 'lex:app.bsky.unspecced.getAtmosphereExploreArticleRecommendations#article',
+                ),
+              ),
+              'recIdStr' => 
+              array (
+                'type' => 'string',
+                'description' => 'Snowflake for this recommendation, use when submitting recommendation events.',
+              ),
+            ),
+          ),
+        ),
+      ),
+      'article' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'uri',
+        ),
+        'properties' => 
+        array (
+          'uri' => 
+          array (
+            'type' => 'string',
+            'format' => 'at-uri',
+          ),
+        ),
+      ),
+    ),
+  ),
+  'app.bsky.unspecced.getAtmosphereExploreTab' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.unspecced.getAtmosphereExploreTab',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'description' => 'Get Atmosphere Explore content. Articles are recommended when algorithmic recommendations are enabled for the request, and curated otherwise; other sections are curated. Authentication is optional; authenticated requests include viewer-specific profile state.',
+        'parameters' => 
+        array (
+          'type' => 'params',
+          'properties' => 
+          array (
+            'langs' => 
+            array (
+              'type' => 'array',
+              'description' => 'Preferred languages for article recommendations when algorithmic recommendations are enabled. Ignored otherwise.',
+              'items' => 
+              array (
+                'type' => 'string',
+                'format' => 'language',
+              ),
+            ),
+            'countryCode' => 
+            array (
+              'type' => 'string',
+              'description' => 'The ISO 3166-1 alpha-2 country code used to select curated content.',
+            ),
+            'regionCode' => 
+            array (
+              'type' => 'string',
+              'description' => 'The ISO 3166-2 region code used to select curated content.',
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'articles',
+              1 => 'publications',
+              2 => 'photos',
+              3 => 'livestreams',
+              4 => 'apps',
+            ),
+            'properties' => 
+            array (
+              'announcementBanner' => 
+              array (
+                'type' => 'ref',
+                'ref' => 'lex:app.bsky.unspecced.getAtmosphereExploreTab#announcementBanner',
+              ),
+              'articles' => 
+              array (
+                'type' => 'ref',
+                'ref' => 'lex:app.bsky.unspecced.getAtmosphereExploreTab#articleList',
+              ),
+              'publications' => 
+              array (
+                'type' => 'ref',
+                'ref' => 'lex:app.bsky.unspecced.getAtmosphereExploreTab#publicationList',
+              ),
+              'photos' => 
+              array (
+                'type' => 'ref',
+                'ref' => 'lex:app.bsky.unspecced.getAtmosphereExploreTab#galleryList',
+              ),
+              'livestreams' => 
+              array (
+                'type' => 'ref',
+                'ref' => 'lex:app.bsky.unspecced.getAtmosphereExploreTab#livestreamList',
+              ),
+              'apps' => 
+              array (
+                'type' => 'array',
+                'maxLength' => 100,
+                'items' => 
+                array (
+                  'type' => 'ref',
+                  'ref' => 'lex:app.bsky.unspecced.getAtmosphereExploreTab#appCard',
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+      'articleList' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'items',
+        ),
+        'properties' => 
+        array (
+          'items' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:app.bsky.unspecced.getAtmosphereExploreTab#articleItem',
+            ),
+          ),
+          'recIdStr' => 
+          array (
+            'type' => 'string',
+            'description' => 'Snowflake for this list\'s recommendation, use when submitting recommendation events. Omitted when the list is not algorithmically recommended.',
+          ),
+        ),
+      ),
+      'publicationList' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'items',
+        ),
+        'properties' => 
+        array (
+          'items' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:app.bsky.unspecced.getAtmosphereExploreTab#publicationItem',
+            ),
+          ),
+          'recIdStr' => 
+          array (
+            'type' => 'string',
+            'description' => 'Snowflake for this list\'s recommendation, use when submitting recommendation events. Omitted when the list is not algorithmically recommended.',
+          ),
+        ),
+      ),
+      'galleryList' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'items',
+        ),
+        'properties' => 
+        array (
+          'items' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:app.bsky.unspecced.getAtmosphereExploreTab#galleryItem',
+            ),
+          ),
+          'recIdStr' => 
+          array (
+            'type' => 'string',
+            'description' => 'Snowflake for this list\'s recommendation, use when submitting recommendation events. Omitted when the list is not algorithmically recommended.',
+          ),
+        ),
+      ),
+      'livestreamList' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'items',
+        ),
+        'properties' => 
+        array (
+          'items' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:app.bsky.unspecced.getAtmosphereExploreTab#livestreamItem',
+            ),
+          ),
+          'recIdStr' => 
+          array (
+            'type' => 'string',
+            'description' => 'Snowflake for this list\'s recommendation, use when submitting recommendation events. Omitted when the list is not algorithmically recommended.',
+          ),
+        ),
+      ),
+      'articleItem' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'featured',
+          1 => 'view',
+        ),
+        'properties' => 
+        array (
+          'featured' => 
+          array (
+            'type' => 'boolean',
+          ),
+          'view' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.embed.external#viewArticle',
+          ),
+        ),
+      ),
+      'publicationItem' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'featured',
+          1 => 'view',
+        ),
+        'properties' => 
+        array (
+          'featured' => 
+          array (
+            'type' => 'boolean',
+          ),
+          'view' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.embed.external#viewArticlePublication',
+          ),
+        ),
+      ),
+      'galleryItem' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'featured',
+          1 => 'view',
+        ),
+        'properties' => 
+        array (
+          'featured' => 
+          array (
+            'type' => 'boolean',
+          ),
+          'view' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.embed.external#viewGallery',
+          ),
+        ),
+      ),
+      'livestreamItem' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'featured',
+          1 => 'view',
+        ),
+        'properties' => 
+        array (
+          'featured' => 
+          array (
+            'type' => 'boolean',
+          ),
+          'view' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.embed.external#viewLivestream',
+          ),
+        ),
+      ),
+      'announcementBanner' => 
+      array (
+        'type' => 'object',
+        'properties' => 
+        array (
+          'id' => 
+          array (
+            'type' => 'string',
+            'maxLength' => 4096,
+          ),
+          'title' => 
+          array (
+            'type' => 'string',
+            'maxLength' => 4096,
+          ),
+          'description' => 
+          array (
+            'type' => 'string',
+            'maxLength' => 4096,
+          ),
+          'url' => 
+          array (
+            'type' => 'string',
+            'format' => 'uri',
+            'maxLength' => 4096,
+          ),
+          'image' => 
+          array (
+            'type' => 'string',
+            'format' => 'uri',
+            'maxLength' => 4096,
+          ),
+          'overlayColor' => 
+          array (
+            'type' => 'string',
+            'maxLength' => 4096,
+          ),
+          'textColor' => 
+          array (
+            'type' => 'string',
+            'maxLength' => 4096,
+          ),
+        ),
+      ),
+      'appCard' => 
+      array (
+        'type' => 'object',
+        'properties' => 
+        array (
+          'id' => 
+          array (
+            'type' => 'string',
+            'maxLength' => 4096,
+          ),
+          'title' => 
+          array (
+            'type' => 'string',
+            'maxLength' => 4096,
+          ),
+          'description' => 
+          array (
+            'type' => 'string',
+            'maxLength' => 4096,
+          ),
+          'logo' => 
+          array (
+            'type' => 'string',
+            'format' => 'uri',
+            'maxLength' => 4096,
+          ),
+          'backgroundImage' => 
+          array (
+            'type' => 'string',
+            'format' => 'uri',
+            'maxLength' => 4096,
+          ),
+          'overlayColor' => 
+          array (
+            'type' => 'string',
+            'maxLength' => 4096,
+          ),
+          'textColor' => 
+          array (
+            'type' => 'string',
+            'maxLength' => 4096,
+          ),
+          'url' => 
+          array (
+            'type' => 'string',
+            'format' => 'uri',
+            'maxLength' => 4096,
+          ),
+          'category' => 
+          array (
+            'type' => 'string',
+            'maxLength' => 4096,
           ),
         ),
       ),
