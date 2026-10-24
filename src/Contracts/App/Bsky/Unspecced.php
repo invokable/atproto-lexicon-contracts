@@ -16,7 +16,6 @@ use Revolution\AtProto\Lexicon\Attributes\Post;
 
 interface Unspecced
 {
-    public const getAtmosphereExploreTab = 'app.bsky.unspecced.getAtmosphereExploreTab';
     public const getOnboardingSuggestedStarterPacks = 'app.bsky.unspecced.getOnboardingSuggestedStarterPacks';
     public const getOnboardingSuggestedStarterPacksSkeleton = 'app.bsky.unspecced.getOnboardingSuggestedStarterPacksSkeleton';
     public const getSuggestedFeeds = 'app.bsky.unspecced.getSuggestedFeeds';
@@ -24,6 +23,8 @@ interface Unspecced
     public const getSuggestedStarterPacks = 'app.bsky.unspecced.getSuggestedStarterPacks';
     public const getSuggestedStarterPacksSkeleton = 'app.bsky.unspecced.getSuggestedStarterPacksSkeleton';
     public const getAgeAssuranceState = 'app.bsky.unspecced.getAgeAssuranceState';
+    public const getAtmosphereExploreArticleRecommendations = 'app.bsky.unspecced.getAtmosphereExploreArticleRecommendations';
+    public const getAtmosphereExploreTab = 'app.bsky.unspecced.getAtmosphereExploreTab';
     public const getConfig = 'app.bsky.unspecced.getConfig';
     public const getOnboardingSuggestedUsersSkeleton = 'app.bsky.unspecced.getOnboardingSuggestedUsersSkeleton';
     public const getPopularFeedGenerators = 'app.bsky.unspecced.getPopularFeedGenerators';
@@ -47,16 +48,6 @@ interface Unspecced
     public const searchActorsSkeleton = 'app.bsky.unspecced.searchActorsSkeleton';
     public const searchPostsSkeleton = 'app.bsky.unspecced.searchPostsSkeleton';
     public const searchStarterPacksSkeleton = 'app.bsky.unspecced.searchStarterPacksSkeleton';
-
-    /**
-     * Get curated Atmosphere Explore content. Authentication is optional; authenticated requests include viewer-specific profile state.
-     *
-     * @return array{announcementBanner: array{id: string, title: string, description: string, url: string, image: string, overlayColor: string, textColor: string}, articles: array{featured: bool, view: array}[], publications: array{featured: bool, view: array}[], photos: array{featured: bool, view: array}[], livestreams: array{featured: bool, view: array}[], apps: array{id: string, title: string, description: string, logo: string, backgroundImage: string, overlayColor: string, textColor: string, url: string, category: string}[]}
-     *
-     * @link https://docs.bsky.app/docs/api/app-bsky-unspecced-get-atmosphere-explore-tab
-     */
-    #[Get, NSID(self::getAtmosphereExploreTab)]
-    public function getAtmosphereExploreTab(#[Format('language')] ?array $langs = null, ?string $countryCode = null, ?string $regionCode = null);
 
     /**
      * Get a list of suggested starterpacks for onboarding.
@@ -127,6 +118,26 @@ interface Unspecced
      */
     #[Get, NSID(self::getAgeAssuranceState)]
     public function getAgeAssuranceState();
+
+    /**
+     * Get a skeleton of recommended Atmosphere Explore articles. Intended to be called and hydrated by app.bsky.unspecced.getAtmosphereExploreTab.
+     *
+     * @return array{articles: array{uri: string}[], recIdStr: string}
+     *
+     * @link https://docs.bsky.app/docs/api/app-bsky-unspecced-get-atmosphere-explore-article-recommendations
+     */
+    #[Get, NSID(self::getAtmosphereExploreArticleRecommendations)]
+    public function getAtmosphereExploreArticleRecommendations(#[Format('did')] ?string $viewer = null, ?int $limit = 25);
+
+    /**
+     * Get Atmosphere Explore content. Articles are recommended when algorithmic recommendations are enabled for the request, and curated otherwise; other sections are curated. Authentication is optional; authenticated requests include viewer-specific profile state.
+     *
+     * @return array{announcementBanner: array{id: string, title: string, description: string, url: string, image: string, overlayColor: string, textColor: string}, articles: array{items: array, recIdStr: string}, publications: array{items: array, recIdStr: string}, photos: array{items: array, recIdStr: string}, livestreams: array{items: array, recIdStr: string}, apps: array{id: string, title: string, description: string, logo: string, backgroundImage: string, overlayColor: string, textColor: string, url: string, category: string}[]}
+     *
+     * @link https://docs.bsky.app/docs/api/app-bsky-unspecced-get-atmosphere-explore-tab
+     */
+    #[Get, NSID(self::getAtmosphereExploreTab)]
+    public function getAtmosphereExploreTab(#[Format('language')] ?array $langs = null, ?string $countryCode = null, ?string $regionCode = null);
 
     /**
      * Get miscellaneous runtime configuration.
