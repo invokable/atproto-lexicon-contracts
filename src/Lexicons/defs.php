@@ -1719,6 +1719,63 @@ return array (
       ),
     ),
   ),
+  'com.atproto.label.record' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'com.atproto.label.record',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'record',
+        'description' => 'Metadata tag on an atproto resource (eg, repo or record), published as a record in the labeler\'s repository. Currently ONLY intended to be used in atproto space repos, not the public broadcast repository. For public data, continue to use signed label objects. This guidance may be updated in the future.',
+        'key' => 'tid',
+        'record' => 
+        array (
+          'type' => 'object',
+          'required' => 
+          array (
+            0 => 'uri',
+            1 => 'val',
+            2 => 'cts',
+          ),
+          'properties' => 
+          array (
+            'uri' => 
+            array (
+              'type' => 'string',
+              'format' => 'uri',
+              'description' => 'URI of the record, repository (account), or other resource that this label applies to. Currently only intended for use in the context of atproto spaces.',
+            ),
+            'cid' => 
+            array (
+              'type' => 'string',
+              'format' => 'cid',
+              'description' => 'Optionally, CID specifying the specific version of \'uri\' resource this label applies to.',
+            ),
+            'val' => 
+            array (
+              'type' => 'string',
+              'maxLength' => 128,
+              'description' => 'The short string name of the value or type of this label.',
+            ),
+            'cts' => 
+            array (
+              'type' => 'string',
+              'format' => 'datetime',
+              'description' => 'Timestamp when this label was created.',
+            ),
+            'exp' => 
+            array (
+              'type' => 'string',
+              'format' => 'datetime',
+              'description' => 'Timestamp at which this label expires (no longer applies).',
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
   'com.atproto.label.subscribeLabels' => 
   array (
     'lexicon' => 1,
@@ -7487,6 +7544,12 @@ return array (
             'type' => 'unknown',
             'description' => 'Raw record JSON for the subject, when the subject is a record and the record is available.',
           ),
+          'account' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:tools.ozone.inbox.defs#accountPreview',
+            'description' => 'Best-effort current profile information for an account subject.',
+          ),
           'enforcement' => 
           array (
             'type' => 'ref',
@@ -7540,6 +7603,24 @@ return array (
           array (
             'type' => 'string',
             'format' => 'datetime',
+          ),
+        ),
+      ),
+      'accountPreview' => 
+      array (
+        'type' => 'object',
+        'description' => 'Current account information, when available; this is not a snapshot of the account at the time of the action.',
+        'properties' => 
+        array (
+          'handle' => 
+          array (
+            'type' => 'string',
+            'format' => 'handle',
+          ),
+          'profile' => 
+          array (
+            'type' => 'unknown',
+            'description' => 'Raw app.bsky.actor.profile record, when available.',
           ),
         ),
       ),
@@ -7802,6 +7883,17 @@ return array (
                   1 => 'warning',
                   2 => 'atRisk',
                 ),
+              ),
+              'hasActiveStrikes' => 
+              array (
+                'type' => 'boolean',
+                'description' => 'Whether the account currently has any active strikes.',
+              ),
+              'enforcement' => 
+              array (
+                'type' => 'ref',
+                'ref' => 'lex:tools.ozone.inbox.defs#enforcementView',
+                'description' => 'Current account takedown or suspension, independent of strike standing.',
               ),
               'updatedAt' => 
               array (
@@ -11016,12 +11108,17 @@ return array (
             array (
               'type' => 'string',
             ),
-            'description' => 'Target reports matching these report types on the subject (fully qualified NSIDs)',
+            'description' => 'Target reports matching these report types on the subject (fully qualified NSIDs). Excludes assigned and escalated reports.',
           ),
           'all' => 
           array (
             'type' => 'boolean',
-            'description' => 'Target ALL reports on the subject',
+            'description' => 'Target ALL reports on the subject. Excludes assigned and escalated reports.',
+          ),
+          'allOwned' => 
+          array (
+            'type' => 'boolean',
+            'description' => 'Target all eligible reports on the account and its owned subjects, including records, messages, and conversations. Only valid for account subjects and events that close reports. Excludes assigned, escalated, and actively assigned reports unless explicitly targeted by ID.',
           ),
           'note' => 
           array (
@@ -13574,7 +13671,7 @@ return array (
       'main' => 
       array (
         'type' => 'procedure',
-        'description' => 'Close all reports on a subject matching the given criteria. Reports whose current status does not permit a transition to closed are skipped silently. Intended for automated flows that resolve reports without taking action on the subject.',
+        'description' => 'Close eligible reports on a subject matching the given criteria, optionally linking an existing moderation action. Assigned, escalated, and actively assigned reports are excluded. Reports whose current status does not permit a transition to closed are skipped silently.',
         'input' => 
         array (
           'encoding' => 'application/json',
@@ -13606,7 +13703,7 @@ return array (
                 array (
                   'type' => 'string',
                 ),
-                'description' => 'If nonempty, only reports of the given report types (fully qualified reason NSIDs) are closed. When omitted or empty, all non-closed reports in the requested subject scope are targeted, except excludedReportTypes.',
+                'description' => 'If nonempty, only reports of the given report types (fully qualified reason NSIDs) are closed. When omitted or empty, all eligible reports in the requested subject scope are targeted, except excludedReportTypes. Assigned and escalated reports are always excluded.',
               ),
               'excludedReportTypes' => 
               array (
@@ -13616,6 +13713,12 @@ return array (
                   'type' => 'string',
                 ),
                 'description' => 'Reports of these types (fully qualified reason NSIDs) are excluded from closure and left unchanged. When omitted or empty, no report types are excluded.',
+              ),
+              'actionEventId' => 
+              array (
+                'type' => 'integer',
+                'minimum' => 1,
+                'description' => 'Optional existing moderation event that closes reports. It must target the exact subject or its owning account; account-wide closure requires an account event. The event is linked to each closed report and may predate the report. The link does not imply the action is still in effect.',
               ),
               'internalNote' => 
               array (
@@ -17777,6 +17880,80 @@ return array (
       ),
     ),
   ),
+  'tools.ozone.team.listOnlineMembers' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'tools.ozone.team.listOnlineMembers',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'description' => 'List recent active team members, ordered by latest activity.',
+        'parameters' => 
+        array (
+          'type' => 'params',
+          'properties' => 
+          array (
+            'limit' => 
+            array (
+              'type' => 'integer',
+              'minimum' => 1,
+              'maximum' => 100,
+              'default' => 50,
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'members',
+            ),
+            'properties' => 
+            array (
+              'members' => 
+              array (
+                'type' => 'array',
+                'maxLength' => 100,
+                'items' => 
+                array (
+                  'type' => 'ref',
+                  'ref' => 'lex:tools.ozone.team.listOnlineMembers#onlineMember',
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+      'onlineMember' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'did',
+          1 => 'lastActive',
+        ),
+        'properties' => 
+        array (
+          'did' => 
+          array (
+            'type' => 'string',
+            'format' => 'did',
+          ),
+          'lastActive' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+        ),
+      ),
+    ),
+  ),
   'tools.ozone.team.updateMember' => 
   array (
     'lexicon' => 1,
@@ -18634,6 +18811,751 @@ return array (
                 ),
               ),
             ),
+          ),
+        ),
+      ),
+    ),
+  ),
+  'app.bsky.unspecced.getAtmosphereApps' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.unspecced.getAtmosphereApps',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'description' => 'Get curated Atmosphere apps. Authentication is optional; authenticated requests include viewer-specific profile state and known followers.',
+        'parameters' => 
+        array (
+          'type' => 'params',
+          'properties' => 
+          array (
+            'category' => 
+            array (
+              'type' => 'string',
+              'maxLength' => 100,
+              'description' => 'Only return apps with this category (exact match). Omit to return all apps.',
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'apps',
+            ),
+            'properties' => 
+            array (
+              'apps' => 
+              array (
+                'type' => 'array',
+                'maxLength' => 100,
+                'items' => 
+                array (
+                  'type' => 'ref',
+                  'ref' => 'lex:app.bsky.unspecced.getAtmosphereApps#appCard',
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+      'appCard' => 
+      array (
+        'type' => 'object',
+        'properties' => 
+        array (
+          'id' => 
+          array (
+            'type' => 'string',
+            'maxLength' => 4096,
+          ),
+          'title' => 
+          array (
+            'type' => 'string',
+            'maxLength' => 4096,
+          ),
+          'description' => 
+          array (
+            'type' => 'string',
+            'maxLength' => 4096,
+          ),
+          'logo' => 
+          array (
+            'type' => 'string',
+            'format' => 'uri',
+            'maxLength' => 4096,
+            'description' => 'The app\'s logo, using its account avatar when available.',
+          ),
+          'banner' => 
+          array (
+            'type' => 'string',
+            'format' => 'uri',
+            'maxLength' => 4096,
+            'description' => 'The app\'s banner, using its account banner when available.',
+          ),
+          'url' => 
+          array (
+            'type' => 'string',
+            'format' => 'uri',
+            'maxLength' => 4096,
+          ),
+          'category' => 
+          array (
+            'type' => 'string',
+            'maxLength' => 100,
+          ),
+          'profile' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.actor.defs#profileViewDetailed',
+            'description' => 'The app\'s account profile, when available.',
+          ),
+        ),
+      ),
+    ),
+  ),
+  'app.bsky.unspecced.getAtmosphereExploreTab' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.unspecced.getAtmosphereExploreTab',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'description' => 'Get Atmosphere Explore content. Articles are recommended when algorithmic recommendations are enabled for the request, and curated otherwise; other sections are curated. Curated content is selected using the x-atproto-bsky-geo-country, x-atproto-bsky-geo-region, and x-atproto-bsky-topics request headers. Authentication is optional; authenticated requests include viewer-specific profile state.',
+        'parameters' => 
+        array (
+          'type' => 'params',
+          'properties' => 
+          array (
+            'langs' => 
+            array (
+              'type' => 'array',
+              'description' => 'Preferred languages for article recommendations when algorithmic recommendations are enabled. Ignored otherwise.',
+              'items' => 
+              array (
+                'type' => 'string',
+                'format' => 'language',
+              ),
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'articles',
+              1 => 'publications',
+              2 => 'photos',
+              3 => 'livestreams',
+              4 => 'apps',
+            ),
+            'properties' => 
+            array (
+              'announcementBanner' => 
+              array (
+                'type' => 'ref',
+                'ref' => 'lex:app.bsky.unspecced.getAtmosphereExploreTab#announcementBanner',
+              ),
+              'articles' => 
+              array (
+                'type' => 'ref',
+                'ref' => 'lex:app.bsky.unspecced.getAtmosphereExploreTab#articleList',
+              ),
+              'publications' => 
+              array (
+                'type' => 'ref',
+                'ref' => 'lex:app.bsky.unspecced.getAtmosphereExploreTab#publicationList',
+              ),
+              'photos' => 
+              array (
+                'type' => 'ref',
+                'ref' => 'lex:app.bsky.unspecced.getAtmosphereExploreTab#galleryList',
+              ),
+              'livestreams' => 
+              array (
+                'type' => 'ref',
+                'ref' => 'lex:app.bsky.unspecced.getAtmosphereExploreTab#livestreamList',
+              ),
+              'apps' => 
+              array (
+                'type' => 'array',
+                'maxLength' => 100,
+                'items' => 
+                array (
+                  'type' => 'ref',
+                  'ref' => 'lex:app.bsky.unspecced.getAtmosphereExploreTab#appCard',
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+      'articleList' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'items',
+        ),
+        'properties' => 
+        array (
+          'items' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:app.bsky.unspecced.getAtmosphereExploreTab#articleItem',
+            ),
+          ),
+          'recIdStr' => 
+          array (
+            'type' => 'string',
+            'description' => 'Snowflake for this list\'s recommendation, use when submitting recommendation events. Omitted when the list is not algorithmically recommended.',
+          ),
+        ),
+      ),
+      'publicationList' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'items',
+        ),
+        'properties' => 
+        array (
+          'items' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:app.bsky.unspecced.getAtmosphereExploreTab#publicationItem',
+            ),
+          ),
+          'recIdStr' => 
+          array (
+            'type' => 'string',
+            'description' => 'Snowflake for this list\'s recommendation, use when submitting recommendation events. Omitted when the list is not algorithmically recommended.',
+          ),
+        ),
+      ),
+      'galleryList' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'items',
+        ),
+        'properties' => 
+        array (
+          'items' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:app.bsky.unspecced.getAtmosphereExploreTab#galleryItem',
+            ),
+          ),
+          'recIdStr' => 
+          array (
+            'type' => 'string',
+            'description' => 'Snowflake for this list\'s recommendation, use when submitting recommendation events. Omitted when the list is not algorithmically recommended.',
+          ),
+        ),
+      ),
+      'livestreamList' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'items',
+        ),
+        'properties' => 
+        array (
+          'items' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:app.bsky.unspecced.getAtmosphereExploreTab#livestreamItem',
+            ),
+          ),
+          'recIdStr' => 
+          array (
+            'type' => 'string',
+            'description' => 'Snowflake for this list\'s recommendation, use when submitting recommendation events. Omitted when the list is not algorithmically recommended.',
+          ),
+        ),
+      ),
+      'articleItem' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'featured',
+          1 => 'view',
+        ),
+        'properties' => 
+        array (
+          'featured' => 
+          array (
+            'type' => 'boolean',
+            'description' => 'Deprecated. Retained for compatibility; always false.',
+          ),
+          'bskyPostRef' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:com.atproto.repo.strongRef',
+            'description' => 'The Bluesky post associated with the article, as declared by its author. The referenced post may not be available.',
+          ),
+          'view' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.embed.external#viewArticle',
+          ),
+        ),
+      ),
+      'publicationItem' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'featured',
+          1 => 'view',
+        ),
+        'properties' => 
+        array (
+          'featured' => 
+          array (
+            'type' => 'boolean',
+            'description' => 'Deprecated. Retained for compatibility; always false.',
+          ),
+          'view' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.embed.external#viewArticlePublication',
+          ),
+        ),
+      ),
+      'galleryItem' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'featured',
+          1 => 'view',
+        ),
+        'properties' => 
+        array (
+          'featured' => 
+          array (
+            'type' => 'boolean',
+            'description' => 'Deprecated. Retained for compatibility; always false.',
+          ),
+          'view' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.embed.external#viewGallery',
+          ),
+        ),
+      ),
+      'livestreamItem' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'featured',
+          1 => 'view',
+        ),
+        'properties' => 
+        array (
+          'featured' => 
+          array (
+            'type' => 'boolean',
+            'description' => 'Deprecated. Retained for compatibility; always false.',
+          ),
+          'bskyPostRef' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:com.atproto.repo.strongRef',
+            'description' => 'The Bluesky post that announced the livestream, as declared by its author. The referenced post may not be available.',
+          ),
+          'view' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.embed.external#viewLivestream',
+          ),
+        ),
+      ),
+      'announcementBanner' => 
+      array (
+        'type' => 'object',
+        'properties' => 
+        array (
+          'id' => 
+          array (
+            'type' => 'string',
+            'maxLength' => 4096,
+          ),
+          'title' => 
+          array (
+            'type' => 'string',
+            'maxLength' => 4096,
+          ),
+          'description' => 
+          array (
+            'type' => 'string',
+            'maxLength' => 4096,
+          ),
+          'url' => 
+          array (
+            'type' => 'string',
+            'format' => 'uri',
+            'maxLength' => 4096,
+          ),
+          'image' => 
+          array (
+            'type' => 'string',
+            'format' => 'uri',
+            'maxLength' => 4096,
+          ),
+          'overlayColor' => 
+          array (
+            'type' => 'string',
+            'maxLength' => 4096,
+          ),
+          'textColor' => 
+          array (
+            'type' => 'string',
+            'maxLength' => 4096,
+          ),
+        ),
+      ),
+      'appCard' => 
+      array (
+        'type' => 'object',
+        'properties' => 
+        array (
+          'id' => 
+          array (
+            'type' => 'string',
+            'maxLength' => 4096,
+          ),
+          'title' => 
+          array (
+            'type' => 'string',
+            'maxLength' => 4096,
+          ),
+          'description' => 
+          array (
+            'type' => 'string',
+            'maxLength' => 4096,
+          ),
+          'logo' => 
+          array (
+            'type' => 'string',
+            'format' => 'uri',
+            'maxLength' => 4096,
+            'description' => 'Compatibility field. The profile avatar when available, otherwise the editorial logo.',
+          ),
+          'backgroundImage' => 
+          array (
+            'type' => 'string',
+            'format' => 'uri',
+            'maxLength' => 4096,
+            'description' => 'Compatibility field. The profile banner when available, otherwise the editorial background image.',
+          ),
+          'overlayColor' => 
+          array (
+            'type' => 'string',
+            'maxLength' => 4096,
+            'description' => 'Deprecated. Retained for compatibility.',
+          ),
+          'textColor' => 
+          array (
+            'type' => 'string',
+            'maxLength' => 4096,
+            'description' => 'Deprecated. Retained for compatibility.',
+          ),
+          'url' => 
+          array (
+            'type' => 'string',
+            'format' => 'uri',
+            'maxLength' => 4096,
+          ),
+          'category' => 
+          array (
+            'type' => 'string',
+            'maxLength' => 4096,
+          ),
+          'profile' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.actor.defs#profileViewDetailed',
+            'description' => 'The app\'s account profile, when available.',
+          ),
+        ),
+      ),
+    ),
+  ),
+  'app.bsky.unspecced.getAtmosphereTimeline' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.unspecced.getAtmosphereTimeline',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'description' => 'Get the authenticated viewer\'s Atmosphere activity timeline. Grouping and related activity are limited to the returned page.',
+        'parameters' => 
+        array (
+          'type' => 'params',
+          'properties' => 
+          array (
+            'cursor' => 
+            array (
+              'type' => 'string',
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'feed',
+            ),
+            'properties' => 
+            array (
+              'cursor' => 
+              array (
+                'type' => 'string',
+              ),
+              'feed' => 
+              array (
+                'type' => 'array',
+                'items' => 
+                array (
+                  'type' => 'union',
+                  'refs' => 
+                  array (
+                    0 => 'lex:app.bsky.unspecced.getAtmosphereTimeline#activityItem',
+                    1 => 'lex:app.bsky.unspecced.getAtmosphereTimeline#activityItemOverflow',
+                    2 => 'lex:app.bsky.unspecced.getAtmosphereTimeline#activityGroup',
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+      'activityRecord' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'uri',
+          1 => 'cid',
+          2 => 'indexedAt',
+        ),
+        'properties' => 
+        array (
+          'uri' => 
+          array (
+            'type' => 'string',
+            'format' => 'at-uri',
+          ),
+          'cid' => 
+          array (
+            'type' => 'string',
+            'format' => 'cid',
+          ),
+          'indexedAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+        ),
+      ),
+      'viewerState' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'subscribed',
+        ),
+        'properties' => 
+        array (
+          'subscribed' => 
+          array (
+            'type' => 'boolean',
+          ),
+        ),
+      ),
+      'activityItem' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'record',
+          1 => 'collection',
+          2 => 'viewerState',
+        ),
+        'properties' => 
+        array (
+          'record' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.unspecced.getAtmosphereTimeline#activityRecord',
+          ),
+          'collection' => 
+          array (
+            'type' => 'string',
+            'format' => 'nsid',
+          ),
+          'viewerState' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.unspecced.getAtmosphereTimeline#viewerState',
+          ),
+          'bskyPostRef' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:com.atproto.repo.strongRef',
+            'description' => 'The Bluesky post associated with the rendered article or livestream, as declared by its author. The referenced post may not be available.',
+          ),
+          'view' => 
+          array (
+            'type' => 'union',
+            'refs' => 
+            array (
+              0 => 'lex:app.bsky.embed.external#viewArticle',
+              1 => 'lex:app.bsky.embed.external#viewArticlePublication',
+              2 => 'lex:app.bsky.embed.external#viewGallery',
+              3 => 'lex:app.bsky.embed.external#viewLivestream',
+              4 => 'lex:app.bsky.feed.defs#postView',
+            ),
+          ),
+          'relatedActivity' => 
+          array (
+            'type' => 'array',
+            'description' => 'Recommendations and shares attached to this article. Attached activities do not themselves contain related activity.',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:app.bsky.unspecced.getAtmosphereTimeline#activityItem',
+            ),
+          ),
+        ),
+      ),
+      'activityItemOverflow' => 
+      array (
+        'type' => 'object',
+        'description' => 'Distinct additional activities omitted from this page for an author and collection, without hydrating the omitted records.',
+        'required' => 
+        array (
+          0 => 'count',
+          1 => 'collection',
+          2 => 'associatedProfiles',
+        ),
+        'properties' => 
+        array (
+          'count' => 
+          array (
+            'type' => 'integer',
+            'minimum' => 1,
+          ),
+          'collection' => 
+          array (
+            'type' => 'string',
+            'format' => 'nsid',
+          ),
+          'associatedProfiles' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:app.bsky.actor.defs#profileViewBasic',
+            ),
+          ),
+        ),
+      ),
+      'activityGroup' => 
+      array (
+        'type' => 'object',
+        'description' => 'Two or more activities of the same collection, within a fixed window anchored at the newest member. The group occupies the newest member\'s position.',
+        'required' => 
+        array (
+          0 => 'id',
+          1 => 'groupBy',
+          2 => 'collection',
+          3 => 'indexedAt',
+          4 => 'items',
+        ),
+        'properties' => 
+        array (
+          'id' => 
+          array (
+            'type' => 'string',
+          ),
+          'groupBy' => 
+          array (
+            'type' => 'string',
+            'knownValues' => 
+            array (
+              0 => 'subject',
+              1 => 'actor',
+            ),
+          ),
+          'collection' => 
+          array (
+            'type' => 'string',
+            'format' => 'nsid',
+          ),
+          'indexedAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+          'items' => 
+          array (
+            'type' => 'array',
+            'minLength' => 2,
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:app.bsky.unspecced.getAtmosphereTimeline#activityItem',
+            ),
+          ),
+          'subject' => 
+          array (
+            'type' => 'string',
+            'format' => 'at-uri',
+          ),
+          'actor' => 
+          array (
+            'type' => 'string',
+            'format' => 'did',
           ),
         ),
       ),
@@ -33019,383 +33941,6 @@ return array (
           array (
             'type' => 'string',
             'format' => 'at-uri',
-          ),
-        ),
-      ),
-    ),
-  ),
-  'app.bsky.unspecced.getAtmosphereExploreTab' => 
-  array (
-    'lexicon' => 1,
-    'id' => 'app.bsky.unspecced.getAtmosphereExploreTab',
-    'defs' => 
-    array (
-      'main' => 
-      array (
-        'type' => 'query',
-        'description' => 'Get Atmosphere Explore content. Articles are recommended when algorithmic recommendations are enabled for the request, and curated otherwise; other sections are curated. Authentication is optional; authenticated requests include viewer-specific profile state.',
-        'parameters' => 
-        array (
-          'type' => 'params',
-          'properties' => 
-          array (
-            'langs' => 
-            array (
-              'type' => 'array',
-              'description' => 'Preferred languages for article recommendations when algorithmic recommendations are enabled. Ignored otherwise.',
-              'items' => 
-              array (
-                'type' => 'string',
-                'format' => 'language',
-              ),
-            ),
-            'countryCode' => 
-            array (
-              'type' => 'string',
-              'description' => 'The ISO 3166-1 alpha-2 country code used to select curated content.',
-            ),
-            'regionCode' => 
-            array (
-              'type' => 'string',
-              'description' => 'The ISO 3166-2 region code used to select curated content.',
-            ),
-          ),
-        ),
-        'output' => 
-        array (
-          'encoding' => 'application/json',
-          'schema' => 
-          array (
-            'type' => 'object',
-            'required' => 
-            array (
-              0 => 'articles',
-              1 => 'publications',
-              2 => 'photos',
-              3 => 'livestreams',
-              4 => 'apps',
-            ),
-            'properties' => 
-            array (
-              'announcementBanner' => 
-              array (
-                'type' => 'ref',
-                'ref' => 'lex:app.bsky.unspecced.getAtmosphereExploreTab#announcementBanner',
-              ),
-              'articles' => 
-              array (
-                'type' => 'ref',
-                'ref' => 'lex:app.bsky.unspecced.getAtmosphereExploreTab#articleList',
-              ),
-              'publications' => 
-              array (
-                'type' => 'ref',
-                'ref' => 'lex:app.bsky.unspecced.getAtmosphereExploreTab#publicationList',
-              ),
-              'photos' => 
-              array (
-                'type' => 'ref',
-                'ref' => 'lex:app.bsky.unspecced.getAtmosphereExploreTab#galleryList',
-              ),
-              'livestreams' => 
-              array (
-                'type' => 'ref',
-                'ref' => 'lex:app.bsky.unspecced.getAtmosphereExploreTab#livestreamList',
-              ),
-              'apps' => 
-              array (
-                'type' => 'array',
-                'maxLength' => 100,
-                'items' => 
-                array (
-                  'type' => 'ref',
-                  'ref' => 'lex:app.bsky.unspecced.getAtmosphereExploreTab#appCard',
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-      'articleList' => 
-      array (
-        'type' => 'object',
-        'required' => 
-        array (
-          0 => 'items',
-        ),
-        'properties' => 
-        array (
-          'items' => 
-          array (
-            'type' => 'array',
-            'items' => 
-            array (
-              'type' => 'ref',
-              'ref' => 'lex:app.bsky.unspecced.getAtmosphereExploreTab#articleItem',
-            ),
-          ),
-          'recIdStr' => 
-          array (
-            'type' => 'string',
-            'description' => 'Snowflake for this list\'s recommendation, use when submitting recommendation events. Omitted when the list is not algorithmically recommended.',
-          ),
-        ),
-      ),
-      'publicationList' => 
-      array (
-        'type' => 'object',
-        'required' => 
-        array (
-          0 => 'items',
-        ),
-        'properties' => 
-        array (
-          'items' => 
-          array (
-            'type' => 'array',
-            'items' => 
-            array (
-              'type' => 'ref',
-              'ref' => 'lex:app.bsky.unspecced.getAtmosphereExploreTab#publicationItem',
-            ),
-          ),
-          'recIdStr' => 
-          array (
-            'type' => 'string',
-            'description' => 'Snowflake for this list\'s recommendation, use when submitting recommendation events. Omitted when the list is not algorithmically recommended.',
-          ),
-        ),
-      ),
-      'galleryList' => 
-      array (
-        'type' => 'object',
-        'required' => 
-        array (
-          0 => 'items',
-        ),
-        'properties' => 
-        array (
-          'items' => 
-          array (
-            'type' => 'array',
-            'items' => 
-            array (
-              'type' => 'ref',
-              'ref' => 'lex:app.bsky.unspecced.getAtmosphereExploreTab#galleryItem',
-            ),
-          ),
-          'recIdStr' => 
-          array (
-            'type' => 'string',
-            'description' => 'Snowflake for this list\'s recommendation, use when submitting recommendation events. Omitted when the list is not algorithmically recommended.',
-          ),
-        ),
-      ),
-      'livestreamList' => 
-      array (
-        'type' => 'object',
-        'required' => 
-        array (
-          0 => 'items',
-        ),
-        'properties' => 
-        array (
-          'items' => 
-          array (
-            'type' => 'array',
-            'items' => 
-            array (
-              'type' => 'ref',
-              'ref' => 'lex:app.bsky.unspecced.getAtmosphereExploreTab#livestreamItem',
-            ),
-          ),
-          'recIdStr' => 
-          array (
-            'type' => 'string',
-            'description' => 'Snowflake for this list\'s recommendation, use when submitting recommendation events. Omitted when the list is not algorithmically recommended.',
-          ),
-        ),
-      ),
-      'articleItem' => 
-      array (
-        'type' => 'object',
-        'required' => 
-        array (
-          0 => 'featured',
-          1 => 'view',
-        ),
-        'properties' => 
-        array (
-          'featured' => 
-          array (
-            'type' => 'boolean',
-          ),
-          'view' => 
-          array (
-            'type' => 'ref',
-            'ref' => 'lex:app.bsky.embed.external#viewArticle',
-          ),
-        ),
-      ),
-      'publicationItem' => 
-      array (
-        'type' => 'object',
-        'required' => 
-        array (
-          0 => 'featured',
-          1 => 'view',
-        ),
-        'properties' => 
-        array (
-          'featured' => 
-          array (
-            'type' => 'boolean',
-          ),
-          'view' => 
-          array (
-            'type' => 'ref',
-            'ref' => 'lex:app.bsky.embed.external#viewArticlePublication',
-          ),
-        ),
-      ),
-      'galleryItem' => 
-      array (
-        'type' => 'object',
-        'required' => 
-        array (
-          0 => 'featured',
-          1 => 'view',
-        ),
-        'properties' => 
-        array (
-          'featured' => 
-          array (
-            'type' => 'boolean',
-          ),
-          'view' => 
-          array (
-            'type' => 'ref',
-            'ref' => 'lex:app.bsky.embed.external#viewGallery',
-          ),
-        ),
-      ),
-      'livestreamItem' => 
-      array (
-        'type' => 'object',
-        'required' => 
-        array (
-          0 => 'featured',
-          1 => 'view',
-        ),
-        'properties' => 
-        array (
-          'featured' => 
-          array (
-            'type' => 'boolean',
-          ),
-          'view' => 
-          array (
-            'type' => 'ref',
-            'ref' => 'lex:app.bsky.embed.external#viewLivestream',
-          ),
-        ),
-      ),
-      'announcementBanner' => 
-      array (
-        'type' => 'object',
-        'properties' => 
-        array (
-          'id' => 
-          array (
-            'type' => 'string',
-            'maxLength' => 4096,
-          ),
-          'title' => 
-          array (
-            'type' => 'string',
-            'maxLength' => 4096,
-          ),
-          'description' => 
-          array (
-            'type' => 'string',
-            'maxLength' => 4096,
-          ),
-          'url' => 
-          array (
-            'type' => 'string',
-            'format' => 'uri',
-            'maxLength' => 4096,
-          ),
-          'image' => 
-          array (
-            'type' => 'string',
-            'format' => 'uri',
-            'maxLength' => 4096,
-          ),
-          'overlayColor' => 
-          array (
-            'type' => 'string',
-            'maxLength' => 4096,
-          ),
-          'textColor' => 
-          array (
-            'type' => 'string',
-            'maxLength' => 4096,
-          ),
-        ),
-      ),
-      'appCard' => 
-      array (
-        'type' => 'object',
-        'properties' => 
-        array (
-          'id' => 
-          array (
-            'type' => 'string',
-            'maxLength' => 4096,
-          ),
-          'title' => 
-          array (
-            'type' => 'string',
-            'maxLength' => 4096,
-          ),
-          'description' => 
-          array (
-            'type' => 'string',
-            'maxLength' => 4096,
-          ),
-          'logo' => 
-          array (
-            'type' => 'string',
-            'format' => 'uri',
-            'maxLength' => 4096,
-          ),
-          'backgroundImage' => 
-          array (
-            'type' => 'string',
-            'format' => 'uri',
-            'maxLength' => 4096,
-          ),
-          'overlayColor' => 
-          array (
-            'type' => 'string',
-            'maxLength' => 4096,
-          ),
-          'textColor' => 
-          array (
-            'type' => 'string',
-            'maxLength' => 4096,
-          ),
-          'url' => 
-          array (
-            'type' => 'string',
-            'format' => 'uri',
-            'maxLength' => 4096,
-          ),
-          'category' => 
-          array (
-            'type' => 'string',
-            'maxLength' => 4096,
           ),
         ),
       ),

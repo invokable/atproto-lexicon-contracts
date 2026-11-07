@@ -19,6 +19,7 @@ interface Team
     public const addMember = 'tools.ozone.team.addMember';
     public const deleteMember = 'tools.ozone.team.deleteMember';
     public const listMembers = 'tools.ozone.team.listMembers';
+    public const listOnlineMembers = 'tools.ozone.team.listOnlineMembers';
     public const updateMember = 'tools.ozone.team.updateMember';
 
     /**
@@ -48,6 +49,16 @@ interface Team
      */
     #[Get, NSID(self::listMembers)]
     public function listMembers(?string $q = null, ?bool $disabled = null, ?array $roles = null, ?int $limit = 50, ?string $cursor = null);
+
+    /**
+     * List recent active team members, ordered by latest activity.
+     *
+     * @return array{members: array{did: string, lastActive: string}[]}
+     *
+     * @link https://docs.bsky.app/docs/api/tools-ozone-team-list-online-members
+     */
+    #[Get, NSID(self::listOnlineMembers)]
+    public function listOnlineMembers(?int $limit = 50);
 
     /**
      * Update a member in the ozone service. Requires admin role.
