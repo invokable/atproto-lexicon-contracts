@@ -43,14 +43,14 @@ interface Report
     public function assignModerator(int $reportId, ?int $queueId = null, #[Format('did')] ?string $did = null, ?bool $isPermanent = null);
 
     /**
-     * Close all reports on a subject matching the given criteria. Reports whose current status does not permit a transition to closed are skipped silently. Intended for automated flows that resolve reports without taking action on the subject.
+     * Close eligible reports on a subject matching the given criteria, optionally linking an existing moderation action. Assigned, escalated, and actively assigned reports are excluded. Reports whose current status does not permit a transition to closed are skipped silently.
      *
      * @return array{closedCount: int, reportIds: array}
      *
      * @link https://docs.bsky.app/docs/api/tools-ozone-report-close-reports
      */
     #[Post, NSID(self::closeReports)]
-    public function closeReports(#[Format('uri')] string $subject, ?bool $includeAllOwned = null, ?array $reportTypes = null, ?array $excludedReportTypes = null, ?string $internalNote = null, ?bool $isAutomated = null, mixed $meta = null);
+    public function closeReports(#[Format('uri')] string $subject, ?bool $includeAllOwned = null, ?array $reportTypes = null, ?array $excludedReportTypes = null, ?int $actionEventId = null, ?string $internalNote = null, ?bool $isAutomated = null, mixed $meta = null);
 
     /**
      * Register an activity on a report. For state-change activity types, validates the transition and updates report.status atomically.

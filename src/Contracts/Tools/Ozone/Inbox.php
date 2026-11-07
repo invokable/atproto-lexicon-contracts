@@ -43,7 +43,7 @@ interface Inbox
     /**
      * Get the authenticated account's current standing with this moderation service.
      *
-     * @return array{src: string, standing: string, updatedAt: string, expiresAt: string}
+     * @return array{src: string, standing: string, hasActiveStrikes: bool, enforcement: array{state: string, scope: string, expiresAt: string, labels: array}, updatedAt: string, expiresAt: string}
      *
      * @link https://docs.bsky.app/docs/api/tools-ozone-inbox-get-account-status
      */
@@ -53,7 +53,7 @@ interface Inbox
     /**
      * Get a subject belonging to the authenticated account, including its moderation action history from this moderation service.
      *
-     * @return array{src: string, isRead: bool, subject: array, record: mixed, enforcement: mixed, appeal: mixed, availableActions: array, actions: array{}[], cursor: string, reports: mixed, createdAt: string, updatedAt: string}
+     * @return array{src: string, isRead: bool, subject: array, record: mixed, account: mixed, enforcement: mixed, appeal: mixed, availableActions: array, actions: array{}[], cursor: string, reports: mixed, createdAt: string, updatedAt: string}
      *
      * @link https://docs.bsky.app/docs/api/tools-ozone-inbox-get-actioned-subject
      */
