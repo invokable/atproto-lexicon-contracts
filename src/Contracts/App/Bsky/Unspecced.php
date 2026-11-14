@@ -19,6 +19,7 @@ interface Unspecced
     public const getAtmosphereApps = 'app.bsky.unspecced.getAtmosphereApps';
     public const getAtmosphereExploreTab = 'app.bsky.unspecced.getAtmosphereExploreTab';
     public const getAtmosphereTimeline = 'app.bsky.unspecced.getAtmosphereTimeline';
+    public const getAtmosphereTimelineV2 = 'app.bsky.unspecced.getAtmosphereTimelineV2';
     public const getOnboardingSuggestedStarterPacks = 'app.bsky.unspecced.getOnboardingSuggestedStarterPacks';
     public const getOnboardingSuggestedStarterPacksSkeleton = 'app.bsky.unspecced.getOnboardingSuggestedStarterPacksSkeleton';
     public const getSuggestedFeeds = 'app.bsky.unspecced.getSuggestedFeeds';
@@ -54,7 +55,7 @@ interface Unspecced
     /**
      * Get curated Atmosphere apps. Authentication is optional; authenticated requests include viewer-specific profile state and known followers.
      *
-     * @return array{apps: array{id: string, title: string, description: string, logo: string, banner: string, url: string, category: string, profile: array}[]}
+     * @return array{apps: array{id: string, title: string, description: string, logo: string, banner: string, url: string, appStoreUrl: string, googlePlayUrl: string, category: string, profile: array}[]}
      *
      * @link https://docs.bsky.app/docs/api/app-bsky-unspecced-get-atmosphere-apps
      */
@@ -62,9 +63,9 @@ interface Unspecced
     public function getAtmosphereApps(?string $category = null);
 
     /**
-     * Get Atmosphere Explore content. Articles are recommended when algorithmic recommendations are enabled for the request, and curated otherwise; other sections are curated. Curated content is selected using the x-atproto-bsky-geo-country, x-atproto-bsky-geo-region, and x-atproto-bsky-topics request headers. Authentication is optional; authenticated requests include viewer-specific profile state.
+     * Get Atmosphere Explore content. Articles and photo galleries are recommended when their algorithmic recommendations are enabled for the request, and curated otherwise; other sections are curated. Curated content is selected using the x-atproto-bsky-geo-country, x-atproto-bsky-geo-region, and x-atproto-bsky-topics request headers. Authentication is optional; authenticated requests include viewer-specific profile state.
      *
-     * @return array{announcementBanner: array{id: string, title: string, description: string, url: string, image: string, overlayColor: string, textColor: string}, articles: array{items: array, recIdStr: string}, publications: array{items: array, recIdStr: string}, photos: array{items: array, recIdStr: string}, livestreams: array{items: array, recIdStr: string}, apps: array{id: string, title: string, description: string, logo: string, backgroundImage: string, overlayColor: string, textColor: string, url: string, category: string, profile: array}[]}
+     * @return array{announcementBanner: array{id: string, title: string, description: string, url: string, image: string, overlayColor: string, textColor: string}, articles: array{items: array, recIdStr: string}, publications: array{items: array, recIdStr: string}, photos: array{items: array, recIdStr: string}, livestreams: array{items: array, recIdStr: string}, apps: array{id: string, title: string, description: string, logo: string, backgroundImage: string, overlayColor: string, textColor: string, url: string, appStoreUrl: string, googlePlayUrl: string, category: string, profile: array}[]}
      *
      * @link https://docs.bsky.app/docs/api/app-bsky-unspecced-get-atmosphere-explore-tab
      */
@@ -72,7 +73,7 @@ interface Unspecced
     public function getAtmosphereExploreTab(#[Format('language')] ?array $langs = null);
 
     /**
-     * Get the authenticated viewer's Atmosphere activity timeline. Grouping and related activity are limited to the returned page.
+     * Get the authenticated viewer's Atmosphere activity timeline. Groups contain visible activities from the returned page.
      *
      * @return array{cursor: string, feed: array}
      *
@@ -80,6 +81,16 @@ interface Unspecced
      */
     #[Get, NSID(self::getAtmosphereTimeline)]
     public function getAtmosphereTimeline(?string $cursor = null);
+
+    /**
+     * Get the requesting account's Atmosphere activity timeline, pre-grouped for rendering. Requires auth.
+     *
+     * @return array{cursor: string, feed: array, relatedViews: array}
+     *
+     * @link https://docs.bsky.app/docs/api/app-bsky-unspecced-get-atmosphere-timeline-v2
+     */
+    #[Get, NSID(self::getAtmosphereTimelineV2)]
+    public function getAtmosphereTimelineV2(?string $cursor = null);
 
     /**
      * Get a list of suggested starterpacks for onboarding.
