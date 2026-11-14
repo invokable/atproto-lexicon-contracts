@@ -9251,18 +9251,6 @@ return array (
               'type' => 'string',
             ),
           ),
-          'accountStats' => 
-          array (
-            'description' => 'Statistics related to the account subject',
-            'type' => 'ref',
-            'ref' => 'lex:tools.ozone.moderation.defs#accountStats',
-          ),
-          'recordsStats' => 
-          array (
-            'description' => 'Statistics related to the record subjects authored by the subject\'s account',
-            'type' => 'ref',
-            'ref' => 'lex:tools.ozone.moderation.defs#recordsStats',
-          ),
           'accountStrike' => 
           array (
             'description' => 'Strike information for the account (account-level only)',
@@ -9335,87 +9323,6 @@ return array (
           array (
             'type' => 'ref',
             'ref' => 'lex:tools.ozone.moderation.defs#recordViewDetail',
-          ),
-        ),
-      ),
-      'accountStats' => 
-      array (
-        'description' => 'Statistics about a particular account subject',
-        'type' => 'object',
-        'properties' => 
-        array (
-          'reportCount' => 
-          array (
-            'description' => 'Total number of reports on the account',
-            'type' => 'integer',
-          ),
-          'appealCount' => 
-          array (
-            'description' => 'Total number of appeals against a moderation action on the account',
-            'type' => 'integer',
-          ),
-          'suspendCount' => 
-          array (
-            'description' => 'Number of times the account was suspended',
-            'type' => 'integer',
-          ),
-          'escalateCount' => 
-          array (
-            'description' => 'Number of times the account was escalated',
-            'type' => 'integer',
-          ),
-          'takedownCount' => 
-          array (
-            'description' => 'Number of times the account was taken down',
-            'type' => 'integer',
-          ),
-        ),
-      ),
-      'recordsStats' => 
-      array (
-        'description' => 'Statistics about a set of record subject items',
-        'type' => 'object',
-        'properties' => 
-        array (
-          'totalReports' => 
-          array (
-            'description' => 'Cumulative sum of the number of reports on the items in the set',
-            'type' => 'integer',
-          ),
-          'reportedCount' => 
-          array (
-            'description' => 'Number of items that were reported at least once',
-            'type' => 'integer',
-          ),
-          'escalatedCount' => 
-          array (
-            'description' => 'Number of items that were escalated at least once',
-            'type' => 'integer',
-          ),
-          'appealedCount' => 
-          array (
-            'description' => 'Number of items that were appealed at least once',
-            'type' => 'integer',
-          ),
-          'subjectCount' => 
-          array (
-            'description' => 'Total number of item in the set',
-            'type' => 'integer',
-          ),
-          'pendingCount' => 
-          array (
-            'description' => 'Number of item currently in "reviewOpen" or "reviewEscalated" state',
-            'type' => 'integer',
-          ),
-          'processedCount' => 
-          array (
-            'description' => 'Number of item currently in "reviewNone" or "reviewClosed" state',
-            'type' => 'integer',
-          ),
-          'takendownCount' => 
-          array (
-            'description' => 'Number of item currently taken down',
-            'type' => 'integer',
           ),
         ),
       ),
@@ -11120,6 +11027,38 @@ return array (
             'type' => 'boolean',
             'description' => 'Target all eligible reports on the account and its owned subjects, including records, messages, and conversations. Only valid for account subjects and events that close reports. Excludes assigned, escalated, and actively assigned reports unless explicitly targeted by ID.',
           ),
+          'subjects' => 
+          array (
+            'type' => 'array',
+            'maxLength' => 100,
+            'items' => 
+            array (
+              'type' => 'union',
+              'refs' => 
+              array (
+                0 => 'lex:com.atproto.admin.defs#repoRef',
+                1 => 'lex:com.atproto.repo.strongRef',
+              ),
+            ),
+            'description' => 'Expands report targeting to include additional subjects. Requires event subject to be an account. Mutually exclusive with `subjectTypes`.',
+          ),
+          'subjectTypes' => 
+          array (
+            'type' => 'array',
+            'maxLength' => 4,
+            'items' => 
+            array (
+              'type' => 'string',
+              'enum' => 
+              array (
+                0 => 'account',
+                1 => 'record',
+                2 => 'message',
+                3 => 'conversation',
+              ),
+            ),
+            'description' => 'Expands report targeting to include owned subjects of these types. Requires event subject to be an account. Mutually exclusive with `subjects`.',
+          ),
           'note' => 
           array (
             'type' => 'string',
@@ -12182,14 +12121,15 @@ return array (
             'sortField' => 
             array (
               'type' => 'string',
+              'description' => 'The reportedRecordsCount and takendownRecordsCount values are deprecated and use lastReportedAt instead.',
               'default' => 'lastReportedAt',
               'enum' => 
               array (
                 0 => 'lastReviewedAt',
                 1 => 'lastReportedAt',
-                2 => 'reportedRecordsCount',
-                3 => 'takendownRecordsCount',
-                4 => 'priorityScore',
+                2 => 'priorityScore',
+                3 => 'reportedRecordsCount',
+                4 => 'takendownRecordsCount',
               ),
             ),
             'sortDirection' => 
@@ -12262,21 +12202,6 @@ return array (
                 1 => 'record',
                 2 => 'conversation',
               ),
-            ),
-            'minAccountSuspendCount' => 
-            array (
-              'type' => 'integer',
-              'description' => 'If specified, only subjects that belong to an account that has at least this many suspensions will be returned.',
-            ),
-            'minReportedRecordsCount' => 
-            array (
-              'type' => 'integer',
-              'description' => 'If specified, only subjects that belong to an account that has at least this many reported records will be returned.',
-            ),
-            'minTakendownRecordsCount' => 
-            array (
-              'type' => 'integer',
-              'description' => 'If specified, only subjects that belong to an account that has at least this many taken down records will be returned.',
             ),
             'minPriorityScore' => 
             array (
@@ -15361,6 +15286,162 @@ return array (
                 'type' => 'string',
               ),
             ),
+          ),
+        ),
+      ),
+    ),
+  ),
+  'tools.ozone.report.queryModeratorActivity' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'tools.ozone.report.queryModeratorActivity',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'description' => 'Read authorized moderator events and report activity in one chronological history.',
+        'parameters' => 
+        array (
+          'type' => 'params',
+          'required' => 
+          array (
+            0 => 'moderator',
+            1 => 'createdAfter',
+            2 => 'createdBefore',
+          ),
+          'properties' => 
+          array (
+            'moderator' => 
+            array (
+              'type' => 'string',
+              'format' => 'did',
+            ),
+            'createdAfter' => 
+            array (
+              'type' => 'string',
+              'format' => 'datetime',
+              'description' => 'Inclusive UTC lower bound.',
+            ),
+            'createdBefore' => 
+            array (
+              'type' => 'string',
+              'format' => 'datetime',
+              'description' => 'Exclusive UTC upper bound.',
+            ),
+            'types' => 
+            array (
+              'type' => 'array',
+              'maxLength' => 40,
+              'items' => 
+              array (
+                'type' => 'string',
+              ),
+            ),
+            'limit' => 
+            array (
+              'type' => 'integer',
+              'minimum' => 1,
+              'maximum' => 100,
+              'default' => 50,
+            ),
+            'cursor' => 
+            array (
+              'type' => 'string',
+              'maxLength' => 512,
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'rows',
+            ),
+            'properties' => 
+            array (
+              'rows' => 
+              array (
+                'type' => 'array',
+                'items' => 
+                array (
+                  'type' => 'ref',
+                  'ref' => 'lex:tools.ozone.report.queryModeratorActivity#activityRow',
+                ),
+              ),
+              'cursor' => 
+              array (
+                'type' => 'string',
+              ),
+            ),
+          ),
+        ),
+      ),
+      'activityRow' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'source',
+          1 => 'id',
+          2 => 'createdAt',
+          3 => 'createdBy',
+          4 => 'type',
+        ),
+        'properties' => 
+        array (
+          'source' => 
+          array (
+            'type' => 'string',
+            'enum' => 
+            array (
+              0 => 'event',
+              1 => 'activity',
+            ),
+          ),
+          'id' => 
+          array (
+            'type' => 'integer',
+          ),
+          'createdAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+          'createdBy' => 
+          array (
+            'type' => 'string',
+            'format' => 'did',
+          ),
+          'type' => 
+          array (
+            'type' => 'string',
+          ),
+          'subject' => 
+          array (
+            'type' => 'string',
+          ),
+          'reportId' => 
+          array (
+            'type' => 'integer',
+          ),
+          'actionEventId' => 
+          array (
+            'type' => 'integer',
+          ),
+          'event' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:tools.ozone.moderation.defs#modEventView',
+          ),
+          'activity' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:tools.ozone.report.defs#reportActivityView',
           ),
         ),
       ),
@@ -18650,6 +18731,729 @@ return array (
       ),
     ),
   ),
+  'app.bsky.embed.external' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.embed.external',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'object',
+        'description' => 'A representation of some externally linked content (eg, a URL and \'card\'), embedded in a Bluesky record (eg, a post).',
+        'required' => 
+        array (
+          0 => 'external',
+        ),
+        'properties' => 
+        array (
+          'external' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.embed.external#external',
+          ),
+        ),
+      ),
+      'external' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'uri',
+          1 => 'title',
+          2 => 'description',
+        ),
+        'properties' => 
+        array (
+          'uri' => 
+          array (
+            'type' => 'string',
+            'format' => 'uri',
+          ),
+          'title' => 
+          array (
+            'type' => 'string',
+          ),
+          'description' => 
+          array (
+            'type' => 'string',
+          ),
+          'thumb' => 
+          array (
+            'type' => 'blob',
+            'accept' => 
+            array (
+              0 => 'image/*',
+            ),
+            'maxSize' => 1000000,
+          ),
+          'associatedRefs' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:com.atproto.repo.strongRef',
+            ),
+            'description' => 'StrongRefs (uri+cid) of the Atmosphere records that backed this view.',
+          ),
+        ),
+      ),
+      'view' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'external',
+        ),
+        'properties' => 
+        array (
+          'external' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.embed.external#viewExternal',
+          ),
+        ),
+      ),
+      'viewExternal' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'uri',
+          1 => 'title',
+          2 => 'description',
+        ),
+        'properties' => 
+        array (
+          'uri' => 
+          array (
+            'type' => 'string',
+            'format' => 'uri',
+          ),
+          'title' => 
+          array (
+            'type' => 'string',
+          ),
+          'description' => 
+          array (
+            'type' => 'string',
+          ),
+          'thumb' => 
+          array (
+            'type' => 'string',
+            'format' => 'uri',
+          ),
+          'createdAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+            'description' => 'When the external content was created, if available. Example: a publication date, for an article.',
+          ),
+          'updatedAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+            'description' => 'When the external content was updated, if available.',
+          ),
+          'readingTime' => 
+          array (
+            'type' => 'integer',
+            'description' => 'Estimated reading time in minutes, if applicable and available.',
+          ),
+          'labels' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:com.atproto.label.defs#label',
+            ),
+          ),
+          'source' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.embed.external#viewExternalSource',
+          ),
+          'associatedRefs' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:com.atproto.repo.strongRef',
+            ),
+            'description' => 'StrongRefs (uri+cid) of the Atmosphere records that backed this view.',
+          ),
+          'associatedProfiles' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:app.bsky.actor.defs#profileViewBasic',
+            ),
+            'description' => 'Profiles of the owners of the Atmosphere records that backed this view.',
+          ),
+        ),
+      ),
+      'viewExternalSource' => 
+      array (
+        'type' => 'object',
+        'description' => 'The source of an external embed, such as a standard.site publication.',
+        'required' => 
+        array (
+          0 => 'uri',
+          1 => 'title',
+        ),
+        'properties' => 
+        array (
+          'uri' => 
+          array (
+            'type' => 'string',
+            'format' => 'uri',
+            'description' => 'URI of the source, if available. Example: the https:// URL of a site.standard.publication record.',
+          ),
+          'icon' => 
+          array (
+            'type' => 'string',
+            'format' => 'uri',
+            'description' => 'Fully-qualified URL where an icon representing the source can be fetched. For example, CDN location provided by the App View.',
+          ),
+          'title' => 
+          array (
+            'type' => 'string',
+          ),
+          'description' => 
+          array (
+            'type' => 'string',
+          ),
+          'theme' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.embed.external#viewExternalSourceTheme',
+          ),
+        ),
+      ),
+      'viewExternalSourceTheme' => 
+      array (
+        'type' => 'object',
+        'description' => 'The theme colors of an external source, such as a standard.site publication. These colors may be used when rendering an embed from that source.',
+        'properties' => 
+        array (
+          'backgroundRGB' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.embed.external#colorRGB',
+          ),
+          'foregroundRGB' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.embed.external#colorRGB',
+          ),
+          'accentRGB' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.embed.external#colorRGB',
+          ),
+          'accentForegroundRGB' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.embed.external#colorRGB',
+          ),
+        ),
+      ),
+      'colorRGB' => 
+      array (
+        'type' => 'object',
+        'description' => 'RGB color definition, inspired by site.standard.theme.color#rgb',
+        'required' => 
+        array (
+          0 => 'r',
+          1 => 'g',
+          2 => 'b',
+        ),
+        'properties' => 
+        array (
+          'r' => 
+          array (
+            'type' => 'integer',
+            'minimum' => 0,
+            'maximum' => 255,
+          ),
+          'g' => 
+          array (
+            'type' => 'integer',
+            'minimum' => 0,
+            'maximum' => 255,
+          ),
+          'b' => 
+          array (
+            'type' => 'integer',
+            'minimum' => 0,
+            'maximum' => 255,
+          ),
+        ),
+      ),
+      'viewArticle' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'uri',
+          1 => 'title',
+          2 => 'description',
+        ),
+        'properties' => 
+        array (
+          'uri' => 
+          array (
+            'type' => 'string',
+            'format' => 'uri',
+          ),
+          'title' => 
+          array (
+            'type' => 'string',
+          ),
+          'description' => 
+          array (
+            'type' => 'string',
+          ),
+          'createdAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+          'updatedAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+          'labels' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:com.atproto.label.defs#label',
+            ),
+          ),
+          'associatedRefs' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:com.atproto.repo.strongRef',
+            ),
+          ),
+          'associatedProfiles' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:app.bsky.actor.defs#profileViewBasic',
+            ),
+          ),
+          'image' => 
+          array (
+            'type' => 'string',
+            'format' => 'uri',
+          ),
+          'publisher' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.embed.external#viewArticlePublication',
+          ),
+          'readingTime' => 
+          array (
+            'type' => 'integer',
+            'minimum' => 1,
+          ),
+          'likeCount' => 
+          array (
+            'type' => 'integer',
+            'minimum' => 0,
+          ),
+          'likers' => 
+          array (
+            'type' => 'array',
+            'maxLength' => 3,
+            'description' => 'Available profile previews. Selected deterministically by DID; not a ranking.',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:app.bsky.actor.defs#profileViewBasic',
+            ),
+          ),
+        ),
+      ),
+      'viewArticlePublication' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'uri',
+          1 => 'title',
+          2 => 'description',
+        ),
+        'properties' => 
+        array (
+          'uri' => 
+          array (
+            'type' => 'string',
+            'format' => 'uri',
+          ),
+          'title' => 
+          array (
+            'type' => 'string',
+          ),
+          'description' => 
+          array (
+            'type' => 'string',
+          ),
+          'createdAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+          'updatedAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+          'labels' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:com.atproto.label.defs#label',
+            ),
+          ),
+          'associatedRefs' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:com.atproto.repo.strongRef',
+            ),
+          ),
+          'associatedProfiles' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:app.bsky.actor.defs#profileViewBasic',
+            ),
+          ),
+          'logo' => 
+          array (
+            'type' => 'string',
+            'format' => 'uri',
+          ),
+          'image' => 
+          array (
+            'type' => 'string',
+            'format' => 'uri',
+          ),
+          'theme' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.embed.external#viewArticlePublicationTheme',
+          ),
+          'subscriptionCount' => 
+          array (
+            'type' => 'integer',
+            'minimum' => 0,
+          ),
+          'subscribers' => 
+          array (
+            'type' => 'array',
+            'maxLength' => 3,
+            'description' => 'Available profile previews. Selected deterministically by DID; not a ranking.',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:app.bsky.actor.defs#profileViewBasic',
+            ),
+          ),
+          'viewer' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.embed.external#viewArticlePublicationViewerState',
+          ),
+        ),
+      ),
+      'viewArticlePublicationViewerState' => 
+      array (
+        'type' => 'object',
+        'description' => 'Metadata about the requesting account\'s relationship with the subject publication. Only has meaningful content for authed requests.',
+        'properties' => 
+        array (
+          'subscription' => 
+          array (
+            'type' => 'string',
+            'format' => 'at-uri',
+            'description' => 'The requesting account\'s site.standard.graph.subscription record for this publication, if subscribed.',
+          ),
+        ),
+      ),
+      'viewArticlePublicationTheme' => 
+      array (
+        'type' => 'object',
+        'properties' => 
+        array (
+          'background' => 
+          array (
+            'type' => 'string',
+            'description' => 'Hex color string, if available. Example: \'#ffffff\'.',
+          ),
+          'foreground' => 
+          array (
+            'type' => 'string',
+            'description' => 'Hex color string, if available. Example: \'#ffffff\'.',
+          ),
+          'accent' => 
+          array (
+            'type' => 'string',
+            'description' => 'Hex color string, if available. Example: \'#ffffff\'.',
+          ),
+          'accentForeground' => 
+          array (
+            'type' => 'string',
+            'description' => 'Hex color string, if available. Example: \'#ffffff\'.',
+          ),
+        ),
+      ),
+      'viewGallery' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'uri',
+          1 => 'title',
+          2 => 'description',
+          3 => 'items',
+        ),
+        'properties' => 
+        array (
+          'uri' => 
+          array (
+            'type' => 'string',
+            'format' => 'uri',
+          ),
+          'title' => 
+          array (
+            'type' => 'string',
+          ),
+          'description' => 
+          array (
+            'type' => 'string',
+          ),
+          'createdAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+          'updatedAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+          'labels' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:com.atproto.label.defs#label',
+            ),
+          ),
+          'associatedRefs' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:com.atproto.repo.strongRef',
+            ),
+          ),
+          'associatedProfiles' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:app.bsky.actor.defs#profileViewBasic',
+            ),
+          ),
+          'items' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'union',
+              'refs' => 
+              array (
+                0 => 'lex:app.bsky.embed.external#viewGalleryImage',
+              ),
+            ),
+            'description' => 'The media items in the gallery. Each item may be of a different type, but all types must be supported by the client.',
+          ),
+          'photoCount' => 
+          array (
+            'type' => 'integer',
+            'minimum' => 0,
+            'description' => 'Total number of gallery item backlinks, independent of the items included in this view.',
+          ),
+          'likeCount' => 
+          array (
+            'type' => 'integer',
+            'minimum' => 0,
+          ),
+          'likers' => 
+          array (
+            'type' => 'array',
+            'maxLength' => 3,
+            'description' => 'Available profile previews. Selected deterministically by DID; not a ranking.',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:app.bsky.actor.defs#profileViewBasic',
+            ),
+          ),
+        ),
+      ),
+      'viewGalleryImage' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'thumbnail',
+          1 => 'fullsize',
+        ),
+        'properties' => 
+        array (
+          'thumbnail' => 
+          array (
+            'type' => 'string',
+            'format' => 'uri',
+            'description' => 'Fully-qualified URL where a thumbnail of the image can be fetched. For example, CDN location provided by the App View.',
+          ),
+          'fullsize' => 
+          array (
+            'type' => 'string',
+            'format' => 'uri',
+            'description' => 'Fully-qualified URL where a large version of the image can be fetched. May or may not be the exact original blob. For example, CDN location provided by the App View.',
+          ),
+          'alt' => 
+          array (
+            'type' => 'string',
+            'description' => 'Alt text description of the image, for accessibility.',
+          ),
+          'aspectRatio' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.embed.defs#aspectRatio',
+          ),
+        ),
+      ),
+      'viewLivestream' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'uri',
+          1 => 'title',
+          2 => 'description',
+          3 => 'active',
+        ),
+        'properties' => 
+        array (
+          'uri' => 
+          array (
+            'type' => 'string',
+            'format' => 'uri',
+          ),
+          'title' => 
+          array (
+            'type' => 'string',
+          ),
+          'description' => 
+          array (
+            'type' => 'string',
+          ),
+          'createdAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+          'updatedAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+          'labels' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:com.atproto.label.defs#label',
+            ),
+          ),
+          'associatedRefs' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:com.atproto.repo.strongRef',
+            ),
+          ),
+          'associatedProfiles' => 
+          array (
+            'type' => 'array',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:app.bsky.actor.defs#profileViewBasic',
+            ),
+          ),
+          'image' => 
+          array (
+            'type' => 'string',
+            'format' => 'uri',
+          ),
+          'active' => 
+          array (
+            'type' => 'boolean',
+            'description' => 'True if the livestream is currently active at the time this view is served, false if it has ended.',
+          ),
+          'startedAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+          'endedAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+          'lastSeenAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+            'description' => 'When the livestream last reported that it was live. A livestream without endedAt is considered active until two minutes after its last heartbeat; clients can apply the same window to tell whether a cached view is still live.',
+          ),
+        ),
+      ),
+    ),
+  ),
   'app.bsky.graph.getFollowers' => 
   array (
     'lexicon' => 1,
@@ -18905,6 +19709,20 @@ return array (
             'format' => 'uri',
             'maxLength' => 4096,
           ),
+          'appStoreUrl' => 
+          array (
+            'type' => 'string',
+            'format' => 'uri',
+            'maxLength' => 4096,
+            'description' => 'Optional link to the app on the Apple App Store.',
+          ),
+          'googlePlayUrl' => 
+          array (
+            'type' => 'string',
+            'format' => 'uri',
+            'maxLength' => 4096,
+            'description' => 'Optional link to the app on Google Play.',
+          ),
           'category' => 
           array (
             'type' => 'string',
@@ -18914,7 +19732,7 @@ return array (
           array (
             'type' => 'ref',
             'ref' => 'lex:app.bsky.actor.defs#profileViewDetailed',
-            'description' => 'The app\'s account profile, when available.',
+            'description' => 'The app\'s optional Bluesky account profile. Omitted when no profile is configured or the profile is unavailable.',
           ),
         ),
       ),
@@ -18929,7 +19747,7 @@ return array (
       'main' => 
       array (
         'type' => 'query',
-        'description' => 'Get Atmosphere Explore content. Articles are recommended when algorithmic recommendations are enabled for the request, and curated otherwise; other sections are curated. Curated content is selected using the x-atproto-bsky-geo-country, x-atproto-bsky-geo-region, and x-atproto-bsky-topics request headers. Authentication is optional; authenticated requests include viewer-specific profile state.',
+        'description' => 'Get Atmosphere Explore content. Articles and photo galleries are recommended when their algorithmic recommendations are enabled for the request, and curated otherwise; other sections are curated. Curated content is selected using the x-atproto-bsky-geo-country, x-atproto-bsky-geo-region, and x-atproto-bsky-topics request headers. Authentication is optional; authenticated requests include viewer-specific profile state.',
         'parameters' => 
         array (
           'type' => 'params',
@@ -18938,7 +19756,7 @@ return array (
             'langs' => 
             array (
               'type' => 'array',
-              'description' => 'Preferred languages for article recommendations when algorithmic recommendations are enabled. Ignored otherwise.',
+              'description' => 'Preferred languages for article and photo gallery recommendations when their algorithmic recommendations are enabled. Ignored otherwise.',
               'items' => 
               array (
                 'type' => 'string',
@@ -19123,6 +19941,12 @@ return array (
             'ref' => 'lex:com.atproto.repo.strongRef',
             'description' => 'The Bluesky post associated with the article, as declared by its author. The referenced post may not be available.',
           ),
+          'viewBskyPost' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.feed.defs#postView',
+            'description' => 'The hydrated Bluesky post associated with the article, as declared by its author. Omitted when the post is unavailable to the viewer.',
+          ),
           'view' => 
           array (
             'type' => 'ref',
@@ -19194,6 +20018,12 @@ return array (
             'type' => 'ref',
             'ref' => 'lex:com.atproto.repo.strongRef',
             'description' => 'The Bluesky post that announced the livestream, as declared by its author. The referenced post may not be available.',
+          ),
+          'viewBskyPost' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.feed.defs#postView',
+            'description' => 'The hydrated Bluesky post that announced the livestream, as declared by its author. Omitted when the post is unavailable to the viewer.',
           ),
           'view' => 
           array (
@@ -19271,14 +20101,14 @@ return array (
             'type' => 'string',
             'format' => 'uri',
             'maxLength' => 4096,
-            'description' => 'Compatibility field. The profile avatar when available, otherwise the editorial logo.',
+            'description' => 'The profile avatar when available, otherwise the editorial logo.',
           ),
           'backgroundImage' => 
           array (
             'type' => 'string',
             'format' => 'uri',
             'maxLength' => 4096,
-            'description' => 'Compatibility field. The profile banner when available, otherwise the editorial background image.',
+            'description' => 'The profile banner when available, otherwise the editorial background image.',
           ),
           'overlayColor' => 
           array (
@@ -19298,6 +20128,20 @@ return array (
             'format' => 'uri',
             'maxLength' => 4096,
           ),
+          'appStoreUrl' => 
+          array (
+            'type' => 'string',
+            'format' => 'uri',
+            'maxLength' => 4096,
+            'description' => 'Optional link to the app on the Apple App Store.',
+          ),
+          'googlePlayUrl' => 
+          array (
+            'type' => 'string',
+            'format' => 'uri',
+            'maxLength' => 4096,
+            'description' => 'Optional link to the app on Google Play.',
+          ),
           'category' => 
           array (
             'type' => 'string',
@@ -19307,7 +20151,7 @@ return array (
           array (
             'type' => 'ref',
             'ref' => 'lex:app.bsky.actor.defs#profileViewDetailed',
-            'description' => 'The app\'s account profile, when available.',
+            'description' => 'The app\'s optional Bluesky account profile. Omitted when no profile is configured or the profile is unavailable.',
           ),
         ),
       ),
@@ -19322,7 +20166,7 @@ return array (
       'main' => 
       array (
         'type' => 'query',
-        'description' => 'Get the authenticated viewer\'s Atmosphere activity timeline. Grouping and related activity are limited to the returned page.',
+        'description' => 'Get the authenticated viewer\'s Atmosphere activity timeline. Groups contain visible activities from the returned page.',
         'parameters' => 
         array (
           'type' => 'params',
@@ -19359,8 +20203,8 @@ return array (
                   'refs' => 
                   array (
                     0 => 'lex:app.bsky.unspecced.getAtmosphereTimeline#activityItem',
-                    1 => 'lex:app.bsky.unspecced.getAtmosphereTimeline#activityItemOverflow',
-                    2 => 'lex:app.bsky.unspecced.getAtmosphereTimeline#activityGroup',
+                    1 => 'lex:app.bsky.unspecced.getAtmosphereTimeline#activityActorGroup',
+                    2 => 'lex:app.bsky.unspecced.getAtmosphereTimeline#activitySubjectGroup',
                   ),
                 ),
               ),
@@ -19437,11 +20281,27 @@ return array (
             'type' => 'ref',
             'ref' => 'lex:app.bsky.unspecced.getAtmosphereTimeline#viewerState',
           ),
+          'relatedActivity' => 
+          array (
+            'type' => 'array',
+            'description' => 'Collection-specific activity references targeting this item\'s record. Article creations with related activity remain standalone; only the parent item\'s view is hydrated.',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:app.bsky.unspecced.getAtmosphereTimeline#activityRelatedGroup',
+            ),
+          ),
           'bskyPostRef' => 
           array (
             'type' => 'ref',
             'ref' => 'lex:com.atproto.repo.strongRef',
             'description' => 'The Bluesky post associated with the rendered article or livestream, as declared by its author. The referenced post may not be available.',
+          ),
+          'viewBskyPost' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.feed.defs#postView',
+            'description' => 'The hydrated Bluesky post associated with the rendered article or livestream, as declared by its author. Omitted when the post is unavailable to the viewer.',
           ),
           'view' => 
           array (
@@ -19455,77 +20315,26 @@ return array (
               4 => 'lex:app.bsky.feed.defs#postView',
             ),
           ),
-          'relatedActivity' => 
-          array (
-            'type' => 'array',
-            'description' => 'Recommendations and shares attached to this article. Attached activities do not themselves contain related activity.',
-            'items' => 
-            array (
-              'type' => 'ref',
-              'ref' => 'lex:app.bsky.unspecced.getAtmosphereTimeline#activityItem',
-            ),
-          ),
         ),
       ),
-      'activityItemOverflow' => 
+      'activityActorGroup' => 
       array (
         'type' => 'object',
-        'description' => 'Distinct additional activities omitted from this page for an author and collection, without hydrating the omitted records.',
-        'required' => 
-        array (
-          0 => 'count',
-          1 => 'collection',
-          2 => 'associatedProfiles',
-        ),
-        'properties' => 
-        array (
-          'count' => 
-          array (
-            'type' => 'integer',
-            'minimum' => 1,
-          ),
-          'collection' => 
-          array (
-            'type' => 'string',
-            'format' => 'nsid',
-          ),
-          'associatedProfiles' => 
-          array (
-            'type' => 'array',
-            'items' => 
-            array (
-              'type' => 'ref',
-              'ref' => 'lex:app.bsky.actor.defs#profileViewBasic',
-            ),
-          ),
-        ),
-      ),
-      'activityGroup' => 
-      array (
-        'type' => 'object',
-        'description' => 'Two or more activities of the same collection, within a fixed window anchored at the newest member. The group occupies the newest member\'s position.',
+        'description' => 'Activities by one actor in one collection, positioned at the newest group item. Only the newest item is hydrated. Article creations with related activity remain standalone.',
         'required' => 
         array (
           0 => 'id',
-          1 => 'groupBy',
-          2 => 'collection',
-          3 => 'indexedAt',
-          4 => 'items',
+          1 => 'collection',
+          2 => 'indexedAt',
+          3 => 'actor',
+          4 => 'item',
+          5 => 'uris',
         ),
         'properties' => 
         array (
           'id' => 
           array (
             'type' => 'string',
-          ),
-          'groupBy' => 
-          array (
-            'type' => 'string',
-            'knownValues' => 
-            array (
-              0 => 'subject',
-              1 => 'actor',
-            ),
           ),
           'collection' => 
           array (
@@ -19537,20 +20346,543 @@ return array (
             'type' => 'string',
             'format' => 'datetime',
           ),
-          'items' => 
+          'actor' => 
+          array (
+            'type' => 'string',
+            'format' => 'did',
+          ),
+          'item' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.unspecced.getAtmosphereTimeline#activityItem',
+          ),
+          'uris' => 
           array (
             'type' => 'array',
+            'description' => 'All visible group item URIs, including the hydrated item, in newest-first timeline order.',
+            'minLength' => 2,
+            'items' => 
+            array (
+              'type' => 'string',
+              'format' => 'at-uri',
+            ),
+          ),
+        ),
+      ),
+      'activitySubject' => 
+      array (
+        'type' => 'object',
+        'description' => 'The shared target of grouped activities, not an activity itself.',
+        'required' => 
+        array (
+          0 => 'uri',
+          1 => 'viewerState',
+          2 => 'view',
+        ),
+        'properties' => 
+        array (
+          'uri' => 
+          array (
+            'type' => 'string',
+            'format' => 'at-uri',
+          ),
+          'viewerState' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.unspecced.getAtmosphereTimeline#viewerState',
+          ),
+          'bskyPostRef' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:com.atproto.repo.strongRef',
+            'description' => 'The author\'s declared Bluesky post for the target. The post may be unavailable.',
+          ),
+          'viewBskyPost' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.feed.defs#postView',
+            'description' => 'The hydrated Bluesky post declared by the target\'s author. Omitted when the post is unavailable to the viewer.',
+          ),
+          'view' => 
+          array (
+            'type' => 'union',
+            'refs' => 
+            array (
+              0 => 'lex:app.bsky.embed.external#viewArticle',
+              1 => 'lex:app.bsky.embed.external#viewArticlePublication',
+              2 => 'lex:app.bsky.embed.external#viewGallery',
+            ),
+          ),
+        ),
+      ),
+      'activityGroupItem' => 
+      array (
+        'type' => 'object',
+        'description' => 'An unhydrated group item. Its actor DID is the authority of its record URI.',
+        'required' => 
+        array (
+          0 => 'record',
+          1 => 'collection',
+        ),
+        'properties' => 
+        array (
+          'record' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.unspecced.getAtmosphereTimeline#activityRecord',
+          ),
+          'collection' => 
+          array (
+            'type' => 'string',
+            'format' => 'nsid',
+          ),
+        ),
+      ),
+      'activityRelatedGroup' => 
+      array (
+        'type' => 'object',
+        'description' => 'Visible activities in one collection targeting the parent item\'s record, without a time window. Contains references and profiles only, not a shared subject or hydrated action views. Buckets follow newest-first first appearance.',
+        'required' => 
+        array (
+          0 => 'collection',
+          1 => 'activities',
+          2 => 'actors',
+        ),
+        'properties' => 
+        array (
+          'collection' => 
+          array (
+            'type' => 'string',
+            'format' => 'nsid',
+          ),
+          'activities' => 
+          array (
+            'type' => 'array',
+            'description' => 'Visible activity references in newest-first timeline order. Every activity has the bucket\'s collection.',
+            'minLength' => 1,
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:app.bsky.unspecced.getAtmosphereTimeline#activityGroupItem',
+            ),
+          ),
+          'actors' => 
+          array (
+            'type' => 'array',
+            'description' => 'Unique actors in first-appearance order among the bucket\'s activities.',
+            'minLength' => 1,
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:app.bsky.actor.defs#profileViewBasic',
+            ),
+          ),
+        ),
+      ),
+      'activitySubjectGroup' => 
+      array (
+        'type' => 'object',
+        'description' => 'Activities in one collection sharing a target, by at least two distinct actors, positioned at the newest group item. Article recommendations and shares group separately across the returned page without a time window. Article creations are not subject-group items. Publication subscriptions and gallery favorites retain age-based grouping windows.',
+        'required' => 
+        array (
+          0 => 'id',
+          1 => 'collection',
+          2 => 'indexedAt',
+          3 => 'subject',
+          4 => 'activities',
+          5 => 'actors',
+        ),
+        'properties' => 
+        array (
+          'id' => 
+          array (
+            'type' => 'string',
+          ),
+          'collection' => 
+          array (
+            'type' => 'string',
+            'format' => 'nsid',
+          ),
+          'indexedAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+          'subject' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.unspecced.getAtmosphereTimeline#activitySubject',
+          ),
+          'activities' => 
+          array (
+            'type' => 'array',
+            'description' => 'Visible group items in newest-first timeline order. Every activity has the group\'s collection.',
             'minLength' => 2,
             'items' => 
             array (
               'type' => 'ref',
-              'ref' => 'lex:app.bsky.unspecced.getAtmosphereTimeline#activityItem',
+              'ref' => 'lex:app.bsky.unspecced.getAtmosphereTimeline#activityGroupItem',
             ),
+          ),
+          'actors' => 
+          array (
+            'type' => 'array',
+            'description' => 'Unique actors in first-appearance order among group items. At least two distinct actors are required.',
+            'minLength' => 2,
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:app.bsky.actor.defs#profileViewBasic',
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
+  'app.bsky.unspecced.getAtmosphereTimelineV2' => 
+  array (
+    'lexicon' => 1,
+    'id' => 'app.bsky.unspecced.getAtmosphereTimelineV2',
+    'defs' => 
+    array (
+      'main' => 
+      array (
+        'type' => 'query',
+        'description' => 'Get the requesting account\'s Atmosphere activity timeline, pre-grouped for rendering. Requires auth.',
+        'parameters' => 
+        array (
+          'type' => 'params',
+          'properties' => 
+          array (
+            'cursor' => 
+            array (
+              'type' => 'string',
+            ),
+          ),
+        ),
+        'output' => 
+        array (
+          'encoding' => 'application/json',
+          'schema' => 
+          array (
+            'type' => 'object',
+            'required' => 
+            array (
+              0 => 'feed',
+              1 => 'relatedViews',
+            ),
+            'properties' => 
+            array (
+              'cursor' => 
+              array (
+                'type' => 'string',
+              ),
+              'feed' => 
+              array (
+                'type' => 'array',
+                'description' => 'Activities and activity groups, sorted newest first by indexedAt. Groups and relatedActivity only contain activities from the same page of results. Activities by actors unavailable to the viewer are omitted before grouping. Clients should ignore entry types they do not recognize.',
+                'items' => 
+                array (
+                  'type' => 'union',
+                  'refs' => 
+                  array (
+                    0 => 'lex:app.bsky.unspecced.getAtmosphereTimelineV2#activityItem',
+                    1 => 'lex:app.bsky.unspecced.getAtmosphereTimelineV2#activityActorGroup',
+                    2 => 'lex:app.bsky.unspecced.getAtmosphereTimelineV2#activitySubjectGroup',
+                  ),
+                ),
+              ),
+              'relatedViews' => 
+              array (
+                'type' => 'array',
+                'description' => 'Reusable views referenced by feed entries. Views shared across entries appear once to avoid duplication. Always includes the profile of the actor of every activityItem and activityActorGroup, plus the profiles of at most the newest 3 distinct actors in each activitySubjectGroup and in each collection of an activityItem\'s relatedActivity. Ex: for a subject group of 12 recommendations, only the profiles of the 3 newest recommenders are included; clients can fetch the rest with app.bsky.actor.getProfiles.',
+                'items' => 
+                array (
+                  'type' => 'union',
+                  'refs' => 
+                  array (
+                    0 => 'lex:app.bsky.actor.defs#profileViewBasic',
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+      'activityItem' => 
+      array (
+        'type' => 'object',
+        'description' => 'A single activity with its hydrated subject. An activity that creates content, such as publishing an article, is always a standalone item when other activities on the same page target that content; those activities are attached as relatedActivity. Activities whose subject is unavailable to the viewer are omitted from the timeline.',
+        'required' => 
+        array (
+          0 => 'ref',
+          1 => 'collection',
+          2 => 'indexedAt',
+          3 => 'actor',
+          4 => 'subject',
+        ),
+        'properties' => 
+        array (
+          'ref' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:com.atproto.repo.strongRef',
+          ),
+          'collection' => 
+          array (
+            'type' => 'string',
+            'format' => 'nsid',
+            'description' => 'The collection of the activity record. Ex: site.standard.graph.recommend.',
+          ),
+          'indexedAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+            'description' => 'When the activity was indexed. Determines the item\'s position in the feed, even when relatedActivity contains newer activities.',
+          ),
+          'actor' => 
+          array (
+            'type' => 'string',
+            'format' => 'did',
+          ),
+          'subject' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.unspecced.getAtmosphereTimelineV2#activitySubject',
+          ),
+          'relatedActivity' => 
+          array (
+            'type' => 'array',
+            'description' => 'All available activities on the same page that target content created by this activity, newest first. Ex: recommendations of a newly published article. Only present on activities that create content. Activities targeting content created on an earlier page appear as their own feed entries instead.',
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:app.bsky.unspecced.getAtmosphereTimelineV2#activityItemRelatedActivity',
+            ),
+          ),
+        ),
+      ),
+      'activityItemRelatedActivity' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'ref',
+          1 => 'collection',
+          2 => 'indexedAt',
+          3 => 'actor',
+        ),
+        'properties' => 
+        array (
+          'ref' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:com.atproto.repo.strongRef',
+          ),
+          'collection' => 
+          array (
+            'type' => 'string',
+            'format' => 'nsid',
+          ),
+          'indexedAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+          ),
+          'actor' => 
+          array (
+            'type' => 'string',
+            'format' => 'did',
+          ),
+        ),
+      ),
+      'activitySubject' => 
+      array (
+        'type' => 'object',
+        'description' => 'The hydrated content an activity targets. For activities that create content, such as publishing an article, the subject is the created record itself.',
+        'required' => 
+        array (
+          0 => 'ref',
+          1 => 'view',
+        ),
+        'properties' => 
+        array (
+          'ref' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:com.atproto.repo.strongRef',
+            'description' => 'The record backing the view. Ex: the site.standard.document of an article.',
+          ),
+          'view' => 
+          array (
+            'type' => 'union',
+            'refs' => 
+            array (
+              0 => 'lex:app.bsky.embed.external#viewArticle',
+              1 => 'lex:app.bsky.embed.external#viewArticlePublication',
+              2 => 'lex:app.bsky.embed.external#viewGallery',
+              3 => 'lex:app.bsky.embed.external#viewLivestream',
+            ),
+          ),
+          'bskyPostRef' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:com.atproto.repo.strongRef',
+            'description' => 'The Bluesky post associated with the subject, as declared by its author. The referenced post may not be available.',
+          ),
+          'bskyPostView' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.feed.defs#postView',
+            'description' => 'The hydrated Bluesky post associated with the subject. Omitted when the post is unavailable to the viewer. May reflect a newer version of the post than the CID in bskyPostRef.',
+          ),
+        ),
+      ),
+      'activityActorGroup' => 
+      array (
+        'type' => 'object',
+        'description' => 'Activities by one actor in one collection close together in time, such as several articles published by the same author. Activities that create content with relatedActivity are never grouped. Positioned in the feed at its newest activity.',
+        'required' => 
+        array (
+          0 => 'collection',
+          1 => 'indexedAt',
+          2 => 'actor',
+          3 => 'subjects',
+          4 => 'activities',
+        ),
+        'properties' => 
+        array (
+          'collection' => 
+          array (
+            'type' => 'string',
+            'format' => 'nsid',
+          ),
+          'indexedAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+            'description' => 'When the group\'s newest activity was indexed.',
+          ),
+          'actor' => 
+          array (
+            'type' => 'string',
+            'format' => 'did',
+          ),
+          'subjects' => 
+          array (
+            'type' => 'array',
+            'description' => 'Hydrated subjects of the group\'s activities, newest first. Currently only the newest subject is included; clients can hydrate the rest from the subject URIs in activities.',
+            'minLength' => 1,
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:app.bsky.unspecced.getAtmosphereTimelineV2#activitySubject',
+            ),
+          ),
+          'activities' => 
+          array (
+            'type' => 'array',
+            'description' => 'All activities in the group, newest first.',
+            'minLength' => 2,
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:app.bsky.unspecced.getAtmosphereTimelineV2#activityActorGroupItem',
+            ),
+          ),
+        ),
+      ),
+      'activityActorGroupItem' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'ref',
+          1 => 'indexedAt',
+          2 => 'subject',
+        ),
+        'properties' => 
+        array (
+          'ref' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:com.atproto.repo.strongRef',
+          ),
+          'indexedAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
           ),
           'subject' => 
           array (
             'type' => 'string',
             'format' => 'at-uri',
+            'description' => 'The content the activity targets. Matches ref.uri for activities that create content.',
+          ),
+        ),
+      ),
+      'activitySubjectGroup' => 
+      array (
+        'type' => 'object',
+        'description' => 'Activities by at least two actors in one collection targeting the same subject, such as several recommendations of an article published on an earlier page. Positioned in the feed at its newest activity.',
+        'required' => 
+        array (
+          0 => 'collection',
+          1 => 'indexedAt',
+          2 => 'subject',
+          3 => 'activities',
+        ),
+        'properties' => 
+        array (
+          'collection' => 
+          array (
+            'type' => 'string',
+            'format' => 'nsid',
+          ),
+          'indexedAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
+            'description' => 'When the group\'s newest activity was indexed.',
+          ),
+          'subject' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:app.bsky.unspecced.getAtmosphereTimelineV2#activitySubject',
+          ),
+          'activities' => 
+          array (
+            'type' => 'array',
+            'description' => 'All activities in the group, newest first.',
+            'minLength' => 2,
+            'items' => 
+            array (
+              'type' => 'ref',
+              'ref' => 'lex:app.bsky.unspecced.getAtmosphereTimelineV2#activitySubjectGroupItem',
+            ),
+          ),
+        ),
+      ),
+      'activitySubjectGroupItem' => 
+      array (
+        'type' => 'object',
+        'required' => 
+        array (
+          0 => 'ref',
+          1 => 'indexedAt',
+          2 => 'actor',
+        ),
+        'properties' => 
+        array (
+          'ref' => 
+          array (
+            'type' => 'ref',
+            'ref' => 'lex:com.atproto.repo.strongRef',
+          ),
+          'indexedAt' => 
+          array (
+            'type' => 'string',
+            'format' => 'datetime',
           ),
           'actor' => 
           array (
@@ -24515,698 +25847,6 @@ return array (
           array (
             'type' => 'integer',
             'minimum' => 1,
-          ),
-        ),
-      ),
-    ),
-  ),
-  'app.bsky.embed.external' => 
-  array (
-    'lexicon' => 1,
-    'id' => 'app.bsky.embed.external',
-    'defs' => 
-    array (
-      'main' => 
-      array (
-        'type' => 'object',
-        'description' => 'A representation of some externally linked content (eg, a URL and \'card\'), embedded in a Bluesky record (eg, a post).',
-        'required' => 
-        array (
-          0 => 'external',
-        ),
-        'properties' => 
-        array (
-          'external' => 
-          array (
-            'type' => 'ref',
-            'ref' => 'lex:app.bsky.embed.external#external',
-          ),
-        ),
-      ),
-      'external' => 
-      array (
-        'type' => 'object',
-        'required' => 
-        array (
-          0 => 'uri',
-          1 => 'title',
-          2 => 'description',
-        ),
-        'properties' => 
-        array (
-          'uri' => 
-          array (
-            'type' => 'string',
-            'format' => 'uri',
-          ),
-          'title' => 
-          array (
-            'type' => 'string',
-          ),
-          'description' => 
-          array (
-            'type' => 'string',
-          ),
-          'thumb' => 
-          array (
-            'type' => 'blob',
-            'accept' => 
-            array (
-              0 => 'image/*',
-            ),
-            'maxSize' => 1000000,
-          ),
-          'associatedRefs' => 
-          array (
-            'type' => 'array',
-            'items' => 
-            array (
-              'type' => 'ref',
-              'ref' => 'lex:com.atproto.repo.strongRef',
-            ),
-            'description' => 'StrongRefs (uri+cid) of the Atmosphere records that backed this view.',
-          ),
-        ),
-      ),
-      'view' => 
-      array (
-        'type' => 'object',
-        'required' => 
-        array (
-          0 => 'external',
-        ),
-        'properties' => 
-        array (
-          'external' => 
-          array (
-            'type' => 'ref',
-            'ref' => 'lex:app.bsky.embed.external#viewExternal',
-          ),
-        ),
-      ),
-      'viewExternal' => 
-      array (
-        'type' => 'object',
-        'required' => 
-        array (
-          0 => 'uri',
-          1 => 'title',
-          2 => 'description',
-        ),
-        'properties' => 
-        array (
-          'uri' => 
-          array (
-            'type' => 'string',
-            'format' => 'uri',
-          ),
-          'title' => 
-          array (
-            'type' => 'string',
-          ),
-          'description' => 
-          array (
-            'type' => 'string',
-          ),
-          'thumb' => 
-          array (
-            'type' => 'string',
-            'format' => 'uri',
-          ),
-          'createdAt' => 
-          array (
-            'type' => 'string',
-            'format' => 'datetime',
-            'description' => 'When the external content was created, if available. Example: a publication date, for an article.',
-          ),
-          'updatedAt' => 
-          array (
-            'type' => 'string',
-            'format' => 'datetime',
-            'description' => 'When the external content was updated, if available.',
-          ),
-          'readingTime' => 
-          array (
-            'type' => 'integer',
-            'description' => 'Estimated reading time in minutes, if applicable and available.',
-          ),
-          'labels' => 
-          array (
-            'type' => 'array',
-            'items' => 
-            array (
-              'type' => 'ref',
-              'ref' => 'lex:com.atproto.label.defs#label',
-            ),
-          ),
-          'source' => 
-          array (
-            'type' => 'ref',
-            'ref' => 'lex:app.bsky.embed.external#viewExternalSource',
-          ),
-          'associatedRefs' => 
-          array (
-            'type' => 'array',
-            'items' => 
-            array (
-              'type' => 'ref',
-              'ref' => 'lex:com.atproto.repo.strongRef',
-            ),
-            'description' => 'StrongRefs (uri+cid) of the Atmosphere records that backed this view.',
-          ),
-          'associatedProfiles' => 
-          array (
-            'type' => 'array',
-            'items' => 
-            array (
-              'type' => 'ref',
-              'ref' => 'lex:app.bsky.actor.defs#profileViewBasic',
-            ),
-            'description' => 'Profiles of the owners of the Atmosphere records that backed this view.',
-          ),
-        ),
-      ),
-      'viewExternalSource' => 
-      array (
-        'type' => 'object',
-        'description' => 'The source of an external embed, such as a standard.site publication.',
-        'required' => 
-        array (
-          0 => 'uri',
-          1 => 'title',
-        ),
-        'properties' => 
-        array (
-          'uri' => 
-          array (
-            'type' => 'string',
-            'format' => 'uri',
-            'description' => 'URI of the source, if available. Example: the https:// URL of a site.standard.publication record.',
-          ),
-          'icon' => 
-          array (
-            'type' => 'string',
-            'format' => 'uri',
-            'description' => 'Fully-qualified URL where an icon representing the source can be fetched. For example, CDN location provided by the App View.',
-          ),
-          'title' => 
-          array (
-            'type' => 'string',
-          ),
-          'description' => 
-          array (
-            'type' => 'string',
-          ),
-          'theme' => 
-          array (
-            'type' => 'ref',
-            'ref' => 'lex:app.bsky.embed.external#viewExternalSourceTheme',
-          ),
-        ),
-      ),
-      'viewExternalSourceTheme' => 
-      array (
-        'type' => 'object',
-        'description' => 'The theme colors of an external source, such as a site.standard.publication. These colors may be used when rendering an embed from that source.',
-        'properties' => 
-        array (
-          'backgroundRGB' => 
-          array (
-            'type' => 'ref',
-            'ref' => 'lex:app.bsky.embed.external#colorRGB',
-          ),
-          'foregroundRGB' => 
-          array (
-            'type' => 'ref',
-            'ref' => 'lex:app.bsky.embed.external#colorRGB',
-          ),
-          'accentRGB' => 
-          array (
-            'type' => 'ref',
-            'ref' => 'lex:app.bsky.embed.external#colorRGB',
-          ),
-          'accentForegroundRGB' => 
-          array (
-            'type' => 'ref',
-            'ref' => 'lex:app.bsky.embed.external#colorRGB',
-          ),
-        ),
-      ),
-      'colorRGB' => 
-      array (
-        'type' => 'object',
-        'description' => 'RGB color definition, inspired by site.standard.theme.color#rgb',
-        'required' => 
-        array (
-          0 => 'r',
-          1 => 'g',
-          2 => 'b',
-        ),
-        'properties' => 
-        array (
-          'r' => 
-          array (
-            'type' => 'integer',
-            'minimum' => 0,
-            'maximum' => 255,
-          ),
-          'g' => 
-          array (
-            'type' => 'integer',
-            'minimum' => 0,
-            'maximum' => 255,
-          ),
-          'b' => 
-          array (
-            'type' => 'integer',
-            'minimum' => 0,
-            'maximum' => 255,
-          ),
-        ),
-      ),
-      'viewArticle' => 
-      array (
-        'type' => 'object',
-        'required' => 
-        array (
-          0 => 'uri',
-          1 => 'title',
-          2 => 'description',
-        ),
-        'properties' => 
-        array (
-          'uri' => 
-          array (
-            'type' => 'string',
-            'format' => 'uri',
-          ),
-          'title' => 
-          array (
-            'type' => 'string',
-          ),
-          'description' => 
-          array (
-            'type' => 'string',
-          ),
-          'createdAt' => 
-          array (
-            'type' => 'string',
-            'format' => 'datetime',
-          ),
-          'updatedAt' => 
-          array (
-            'type' => 'string',
-            'format' => 'datetime',
-          ),
-          'labels' => 
-          array (
-            'type' => 'array',
-            'items' => 
-            array (
-              'type' => 'ref',
-              'ref' => 'lex:com.atproto.label.defs#label',
-            ),
-          ),
-          'associatedRefs' => 
-          array (
-            'type' => 'array',
-            'items' => 
-            array (
-              'type' => 'ref',
-              'ref' => 'lex:com.atproto.repo.strongRef',
-            ),
-          ),
-          'associatedProfiles' => 
-          array (
-            'type' => 'array',
-            'items' => 
-            array (
-              'type' => 'ref',
-              'ref' => 'lex:app.bsky.actor.defs#profileViewBasic',
-            ),
-          ),
-          'image' => 
-          array (
-            'type' => 'string',
-            'format' => 'uri',
-          ),
-          'publisher' => 
-          array (
-            'type' => 'ref',
-            'ref' => 'lex:app.bsky.embed.external#viewArticlePublication',
-          ),
-          'readingTime' => 
-          array (
-            'type' => 'integer',
-            'minimum' => 1,
-          ),
-          'likeCount' => 
-          array (
-            'type' => 'integer',
-            'minimum' => 0,
-          ),
-          'likers' => 
-          array (
-            'type' => 'array',
-            'maxLength' => 3,
-            'description' => 'Available profile previews. Selected deterministically by DID; not a ranking.',
-            'items' => 
-            array (
-              'type' => 'ref',
-              'ref' => 'lex:app.bsky.actor.defs#profileViewBasic',
-            ),
-          ),
-        ),
-      ),
-      'viewArticlePublication' => 
-      array (
-        'type' => 'object',
-        'required' => 
-        array (
-          0 => 'uri',
-          1 => 'title',
-          2 => 'description',
-        ),
-        'properties' => 
-        array (
-          'uri' => 
-          array (
-            'type' => 'string',
-            'format' => 'uri',
-          ),
-          'title' => 
-          array (
-            'type' => 'string',
-          ),
-          'description' => 
-          array (
-            'type' => 'string',
-          ),
-          'createdAt' => 
-          array (
-            'type' => 'string',
-            'format' => 'datetime',
-          ),
-          'updatedAt' => 
-          array (
-            'type' => 'string',
-            'format' => 'datetime',
-          ),
-          'labels' => 
-          array (
-            'type' => 'array',
-            'items' => 
-            array (
-              'type' => 'ref',
-              'ref' => 'lex:com.atproto.label.defs#label',
-            ),
-          ),
-          'associatedRefs' => 
-          array (
-            'type' => 'array',
-            'items' => 
-            array (
-              'type' => 'ref',
-              'ref' => 'lex:com.atproto.repo.strongRef',
-            ),
-          ),
-          'associatedProfiles' => 
-          array (
-            'type' => 'array',
-            'items' => 
-            array (
-              'type' => 'ref',
-              'ref' => 'lex:app.bsky.actor.defs#profileViewBasic',
-            ),
-          ),
-          'logo' => 
-          array (
-            'type' => 'string',
-            'format' => 'uri',
-          ),
-          'image' => 
-          array (
-            'type' => 'string',
-            'format' => 'uri',
-          ),
-          'theme' => 
-          array (
-            'type' => 'ref',
-            'ref' => 'lex:app.bsky.embed.external#viewArticlePublicationTheme',
-          ),
-          'subscriptionCount' => 
-          array (
-            'type' => 'integer',
-            'minimum' => 0,
-          ),
-          'subscribers' => 
-          array (
-            'type' => 'array',
-            'maxLength' => 3,
-            'description' => 'Available profile previews. Selected deterministically by DID; not a ranking.',
-            'items' => 
-            array (
-              'type' => 'ref',
-              'ref' => 'lex:app.bsky.actor.defs#profileViewBasic',
-            ),
-          ),
-        ),
-      ),
-      'viewArticlePublicationTheme' => 
-      array (
-        'type' => 'object',
-        'properties' => 
-        array (
-          'background' => 
-          array (
-            'type' => 'string',
-            'description' => 'Hex color string, if available. Example: \'#ffffff\'.',
-          ),
-          'foreground' => 
-          array (
-            'type' => 'string',
-            'description' => 'Hex color string, if available. Example: \'#ffffff\'.',
-          ),
-          'accent' => 
-          array (
-            'type' => 'string',
-            'description' => 'Hex color string, if available. Example: \'#ffffff\'.',
-          ),
-          'accentForeground' => 
-          array (
-            'type' => 'string',
-            'description' => 'Hex color string, if available. Example: \'#ffffff\'.',
-          ),
-        ),
-      ),
-      'viewGallery' => 
-      array (
-        'type' => 'object',
-        'required' => 
-        array (
-          0 => 'uri',
-          1 => 'title',
-          2 => 'description',
-          3 => 'items',
-        ),
-        'properties' => 
-        array (
-          'uri' => 
-          array (
-            'type' => 'string',
-            'format' => 'uri',
-          ),
-          'title' => 
-          array (
-            'type' => 'string',
-          ),
-          'description' => 
-          array (
-            'type' => 'string',
-          ),
-          'createdAt' => 
-          array (
-            'type' => 'string',
-            'format' => 'datetime',
-          ),
-          'updatedAt' => 
-          array (
-            'type' => 'string',
-            'format' => 'datetime',
-          ),
-          'labels' => 
-          array (
-            'type' => 'array',
-            'items' => 
-            array (
-              'type' => 'ref',
-              'ref' => 'lex:com.atproto.label.defs#label',
-            ),
-          ),
-          'associatedRefs' => 
-          array (
-            'type' => 'array',
-            'items' => 
-            array (
-              'type' => 'ref',
-              'ref' => 'lex:com.atproto.repo.strongRef',
-            ),
-          ),
-          'associatedProfiles' => 
-          array (
-            'type' => 'array',
-            'items' => 
-            array (
-              'type' => 'ref',
-              'ref' => 'lex:app.bsky.actor.defs#profileViewBasic',
-            ),
-          ),
-          'items' => 
-          array (
-            'type' => 'array',
-            'items' => 
-            array (
-              'type' => 'union',
-              'refs' => 
-              array (
-                0 => 'lex:app.bsky.embed.external#viewGalleryImage',
-              ),
-            ),
-            'description' => 'The media items in the gallery. Each item may be of a different type, but all types must be supported by the client.',
-          ),
-          'likeCount' => 
-          array (
-            'type' => 'integer',
-            'minimum' => 0,
-          ),
-          'likers' => 
-          array (
-            'type' => 'array',
-            'maxLength' => 3,
-            'description' => 'Available profile previews. Selected deterministically by DID; not a ranking.',
-            'items' => 
-            array (
-              'type' => 'ref',
-              'ref' => 'lex:app.bsky.actor.defs#profileViewBasic',
-            ),
-          ),
-        ),
-      ),
-      'viewGalleryImage' => 
-      array (
-        'type' => 'object',
-        'required' => 
-        array (
-          0 => 'thumbnail',
-          1 => 'fullsize',
-        ),
-        'properties' => 
-        array (
-          'thumbnail' => 
-          array (
-            'type' => 'string',
-            'format' => 'uri',
-            'description' => 'Fully-qualified URL where a thumbnail of the image can be fetched. For example, CDN location provided by the App View.',
-          ),
-          'fullsize' => 
-          array (
-            'type' => 'string',
-            'format' => 'uri',
-            'description' => 'Fully-qualified URL where a large version of the image can be fetched. May or may not be the exact original blob. For example, CDN location provided by the App View.',
-          ),
-          'alt' => 
-          array (
-            'type' => 'string',
-            'description' => 'Alt text description of the image, for accessibility.',
-          ),
-          'aspectRatio' => 
-          array (
-            'type' => 'ref',
-            'ref' => 'lex:app.bsky.embed.defs#aspectRatio',
-          ),
-        ),
-      ),
-      'viewLivestream' => 
-      array (
-        'type' => 'object',
-        'required' => 
-        array (
-          0 => 'uri',
-          1 => 'title',
-          2 => 'description',
-          3 => 'active',
-        ),
-        'properties' => 
-        array (
-          'uri' => 
-          array (
-            'type' => 'string',
-            'format' => 'uri',
-          ),
-          'title' => 
-          array (
-            'type' => 'string',
-          ),
-          'description' => 
-          array (
-            'type' => 'string',
-          ),
-          'createdAt' => 
-          array (
-            'type' => 'string',
-            'format' => 'datetime',
-          ),
-          'updatedAt' => 
-          array (
-            'type' => 'string',
-            'format' => 'datetime',
-          ),
-          'labels' => 
-          array (
-            'type' => 'array',
-            'items' => 
-            array (
-              'type' => 'ref',
-              'ref' => 'lex:com.atproto.label.defs#label',
-            ),
-          ),
-          'associatedRefs' => 
-          array (
-            'type' => 'array',
-            'items' => 
-            array (
-              'type' => 'ref',
-              'ref' => 'lex:com.atproto.repo.strongRef',
-            ),
-          ),
-          'associatedProfiles' => 
-          array (
-            'type' => 'array',
-            'items' => 
-            array (
-              'type' => 'ref',
-              'ref' => 'lex:app.bsky.actor.defs#profileViewBasic',
-            ),
-          ),
-          'image' => 
-          array (
-            'type' => 'string',
-            'format' => 'uri',
-          ),
-          'active' => 
-          array (
-            'type' => 'boolean',
-            'description' => 'True if the livestream is currently active at the time this view is served, false if it has ended.',
-          ),
-          'startedAt' => 
-          array (
-            'type' => 'string',
-            'format' => 'datetime',
-          ),
-          'endedAt' => 
-          array (
-            'type' => 'string',
-            'format' => 'datetime',
           ),
         ),
       ),

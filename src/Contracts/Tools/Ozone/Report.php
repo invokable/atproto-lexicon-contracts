@@ -27,6 +27,7 @@ interface Report
     public const getReport = 'tools.ozone.report.getReport';
     public const listActivities = 'tools.ozone.report.listActivities';
     public const queryActivities = 'tools.ozone.report.queryActivities';
+    public const queryModeratorActivity = 'tools.ozone.report.queryModeratorActivity';
     public const queryReports = 'tools.ozone.report.queryReports';
     public const reassignQueue = 'tools.ozone.report.reassignQueue';
     public const refreshStats = 'tools.ozone.report.refreshStats';
@@ -105,7 +106,7 @@ interface Report
     /**
      * Get details about a single moderation report by ID.
      *
-     * @return array{id: int, eventId: int, status: string, subject: array{type: array, subject: string, status: array, repo: array, profile: array, record: array}, reportType: string, priorityLevel: string, priorityScore: int, priorityTargetMinutes: int, resolutionTimeSec: int, priorityTargetMet: bool, reportedBy: string, reporter: array{type: array, subject: string, status: array, repo: array, profile: array, record: array}, comment: string, createdAt: string, updatedAt: string, queuedAt: string, actionEventIds: array, actions: array{id: int, event: array, subject: array, subjectBlobCids: array, createdBy: string, createdAt: string, creatorHandle: string, subjectHandle: string, modTool: array}[], actionNote: string, subjectStatus: array{id: int, subject: array, hosting: array, subjectBlobCids: array, subjectRepoHandle: string, updatedAt: string, createdAt: string, reviewState: array, comment: string, priorityScore: int, muteUntil: string, muteReportingUntil: string, lastReviewedBy: string, lastReviewedAt: string, lastReportedAt: string, lastAppealedAt: string, takendown: bool, appealed: bool, suspendUntil: string, tags: array, accountStats: array, recordsStats: array, accountStrike: array, ageAssuranceState: string, ageAssuranceUpdatedBy: string}, relatedReportCount: int, assignment: mixed, queue: array{id: int, name: string, subjectTypes: array, collection: string, reportTypes: array, reporterTags: array, accountTags: array, description: string, recommendedPolicies: array, recommendedLabels: array, createdBy: string, createdAt: string, updatedAt: string, enabled: bool, deletedAt: string, stats: array, strictAccess: bool}, isMuted: bool, isAutomated: bool}
+     * @return array{id: int, eventId: int, status: string, subject: array{type: array, subject: string, status: array, repo: array, profile: array, record: array}, reportType: string, priorityLevel: string, priorityScore: int, priorityTargetMinutes: int, resolutionTimeSec: int, priorityTargetMet: bool, reportedBy: string, reporter: array{type: array, subject: string, status: array, repo: array, profile: array, record: array}, comment: string, createdAt: string, updatedAt: string, queuedAt: string, actionEventIds: array, actions: array{id: int, event: array, subject: array, subjectBlobCids: array, createdBy: string, createdAt: string, creatorHandle: string, subjectHandle: string, modTool: array}[], actionNote: string, subjectStatus: array{id: int, subject: array, hosting: array, subjectBlobCids: array, subjectRepoHandle: string, updatedAt: string, createdAt: string, reviewState: array, comment: string, priorityScore: int, muteUntil: string, muteReportingUntil: string, lastReviewedBy: string, lastReviewedAt: string, lastReportedAt: string, lastAppealedAt: string, takendown: bool, appealed: bool, suspendUntil: string, tags: array, accountStrike: array, ageAssuranceState: string, ageAssuranceUpdatedBy: string}, relatedReportCount: int, assignment: mixed, queue: array{id: int, name: string, subjectTypes: array, collection: string, reportTypes: array, reporterTags: array, accountTags: array, description: string, recommendedPolicies: array, recommendedLabels: array, createdBy: string, createdAt: string, updatedAt: string, enabled: bool, deletedAt: string, stats: array, strictAccess: bool}, isMuted: bool, isAutomated: bool}
      *
      * @link https://docs.bsky.app/docs/api/tools-ozone-report-get-report
      */
@@ -131,6 +132,16 @@ interface Report
      */
     #[Get, NSID(self::queryActivities)]
     public function queryActivities(?array $activityTypes = null, #[Format('datetime')] ?string $createdAfter = null, #[Format('datetime')] ?string $createdBefore = null, ?string $sortDirection = 'desc', ?int $limit = 50, ?string $cursor = null);
+
+    /**
+     * Read authorized moderator events and report activity in one chronological history.
+     *
+     * @return array{rows: array{source: string, id: int, createdAt: string, createdBy: string, type: string, subject: string, reportId: int, actionEventId: int, event: array, activity: array}[], cursor: string}
+     *
+     * @link https://docs.bsky.app/docs/api/tools-ozone-report-query-moderator-activity
+     */
+    #[Get, NSID(self::queryModeratorActivity)]
+    public function queryModeratorActivity(#[Format('did')] string $moderator, #[Format('datetime')] string $createdAfter, #[Format('datetime')] string $createdBefore, ?array $types = null, ?int $limit = 50, ?string $cursor = null);
 
     /**
      * View moderation reports. Reports are individual instances of content being reported, as opposed to subject statuses which aggregate reports at the subject level.
